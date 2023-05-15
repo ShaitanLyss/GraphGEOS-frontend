@@ -17,9 +17,11 @@ export class ProblemNode extends Node {
 		this.addInput(
 			'solvers',
 			new Input(
-				new Socket('Solvers', {
+				new Socket({
+					name: 'Solvers',
 					isArray: true,
-					isRequired: true
+					isRequired: true,
+					type: 'solver'
 				}),
 				'Solvers',
 				true
@@ -29,7 +31,9 @@ export class ProblemNode extends Node {
 		this.addInput(
 			'mesh',
 			new Input(
-				new Socket('Mesh', {
+				new Socket({
+					name: 'Mesh',
+					type: 'mesh',
 					isArray: false,
 					isRequired: true
 				}),
@@ -41,9 +45,11 @@ export class ProblemNode extends Node {
 		this.addInput(
 			'geometry',
 			new Input(
-				new Socket('Geometry', {
+				new Socket({
+					name: 'Geometry',
 					isArray: true,
-					isRequired: false
+					isRequired: false,
+					type: 'geometry'
 				}),
 				'Geometry',
 				true

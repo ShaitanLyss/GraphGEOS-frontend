@@ -12,7 +12,10 @@ const dataflowEngine = new DataflowEngine<Schemes>();
 let editor: NodeEditor<Schemes>;
 
 function resetSuccessors(node: Node) {
-	structures(editor).successors(node.id).nodes().forEach((n) => dataflowEngine.reset(n.id));
+	structures(editor)
+		.successors(node.id)
+		.nodes()
+		.forEach((n) => dataflowEngine.reset(n.id));
 }
 
 export function setupMyTypes(_area: AreaPlugin<Schemes, AreaExtra>, _editor: NodeEditor<Schemes>) {
@@ -34,8 +37,9 @@ export function process(node: Node) {
 }
 
 export class Node
-	extends ClassicPreset.Node<{ [x: string | number]: Socket }, { [x: string | number]: Socket }>
-	implements DataflowNode {
+	extends ClassicPreset.Node<{ [x: string]: Socket }, { [x: string]: Socket }>
+	implements DataflowNode
+{
 	width = 190;
 	height = 120;
 
@@ -43,7 +47,9 @@ export class Node
 		super(name);
 	}
 
-	processDataflow = () => process(this);
+	processDataflow = () => { 
+		process(this); 
+	}
 
 	data(
 		inputs?: Record<string, unknown>
@@ -57,6 +63,6 @@ export class Node
 	}
 }
 
-export class Connection<A extends Node, B extends Node> extends ClassicPreset.Connection<A, B> { }
+export class Connection extends ClassicPreset.Connection<Node, Node> {}
 
-export const socket = new Socket('socket', { isArray: false });
+export const socket = new Socket({ isArray: false, type: 'any' });

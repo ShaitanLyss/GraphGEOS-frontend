@@ -1,5 +1,6 @@
 import { ClassicPreset } from 'rete';
-import { Node, socket } from '../MyTypes';
+import { Node } from '../MyTypes';
+import { Socket } from '../../socket/Socket';
 
 /**
  * This node displays the value of the input.
@@ -12,7 +13,7 @@ export class DisplayNode extends Node {
 		super('Display');
 
 		// Setup input
-		const input = new ClassicPreset.Input(socket, '');
+		const input = new ClassicPreset.Input(new Socket(), '');
 		input.addControl(new ClassicPreset.InputControl('number', { initial, change }));
 		this.addInput('input', input);
 

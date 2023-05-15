@@ -12,7 +12,7 @@ export class NumberNode extends Node {
 			'value',
 			new ClassicPreset.InputControl('number', { initial, change: this.processDataflow })
 		);
-		this.addOutput('value', new ClassicPreset.Output(new Socket('output'), 'Number'));
+		this.addOutput('value', new ClassicPreset.Output(new Socket({type: 'number'}), 'Number'));
 	}
 
 	data(): { value: number } {

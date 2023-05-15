@@ -1,15 +1,16 @@
 import { ClassicPreset as Classic, ClassicPreset, NodeEditor } from 'rete';
 import { DataflowEngine } from 'rete-engine';
 import type DataflowNode from 'rete-engine';
-import { Node, socket } from '../MyTypes';
+import { Node } from '../MyTypes';
+import { Socket } from '../../socket/Socket';
 
 export class AddNode extends Node {
 	constructor({ a = 0, b = 0 } = {}) {
 		super('Add');
 		this.height = 160;
 
-		const left = new ClassicPreset.Input(socket, '');
-		const right = new ClassicPreset.Input(socket, '');
+		const left = new ClassicPreset.Input(new Socket({ type: 'number' }), '');
+		const right = new ClassicPreset.Input(new Socket({ type: 'number' }), '');
 
 		left.addControl(
 			new ClassicPreset.InputControl('number', { initial: a, change: this.processDataflow })
@@ -21,7 +22,7 @@ export class AddNode extends Node {
 		this.addInput('left', left);
 		this.addInput('right', right);
 
-		this.addOutput('value', new ClassicPreset.Output(socket, 'Number'));
+		this.addOutput('value', new ClassicPreset.Output(new Socket({ type: 'number' }), ''));
 	}
 
 	data(inputs: { left?: number[]; right?: number[] }): { value: number } {
@@ -29,9 +30,17 @@ export class AddNode extends Node {
 
 		const rightControl = this.inputs.right?.control as ClassicPreset.InputControl<'number'>;
 
+		// iterates inputs and foreach input update the value of the control
+		for (const input in inputs) {
+			console.log('input', input);
+		};
+
 		const { left, right } = inputs;
 		const value =
 			(left ? left[0] : leftControl.value || 0) + (right ? right[0] : rightControl.value || 0);
+
+		if (this.outputs.value)
+			this.outputs.value.socket.value = value;
 
 		// this.controls.value.setValue(value);
 

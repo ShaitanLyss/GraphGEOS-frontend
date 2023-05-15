@@ -40,13 +40,13 @@ export function CustomClassicSocket<T extends Socket>(props: { data: T }) {
 	if (props.data.isRequired)
 		return (
 			<Hoverable>
-				<RequiredStyles title={props.data.name} />
+				<RequiredStyles title={props.data.value? String(props.data.value) : props.data.name} />
 			</Hoverable>
 		);
 	else
 		return (
 			<Hoverable>
-				<Styles title={props.data.name} />
+				<Styles title={props.data.value ? String(props.data.value) : props.data.name} />
 			</Hoverable>
 		);
 }

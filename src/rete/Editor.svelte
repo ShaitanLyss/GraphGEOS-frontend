@@ -15,12 +15,15 @@
 	import { setupContextMenu } from './plugin/context-menu';
 	import { setupMinimap } from './plugin/minimap';
 	import { structures } from 'rete-structures';
+	import { TypedSocketsPlugin } from './plugin/typed-sockets';
 
 	const editor = new NodeEditor<Schemes>();
 
 	let container: HTMLDivElement;
 
 	const arrange = new AutoArrangePlugin<Schemes>();
+	const typedSocketsPlugin = new TypedSocketsPlugin<Schemes>();
+	editor.use(typedSocketsPlugin);
 	arrange.addPreset(ArrangePresets.classic.setup());
 
 	onMount(() => {
@@ -44,7 +47,7 @@
 			await editor.addNode(addNode);
 			await editor.addNode(new ProblemNode());
 
-			await editor.addConnection(new Connection<Node, Node>(numberNode, 'value', addNode, 'left'));
+			await editor.addConnection(new Connection(numberNode, 'value', addNode, 'left'));
 
 			const displayNode = new DisplayNode(3);
 			await editor.addNode(displayNode);
@@ -69,8 +72,9 @@
 
 		editor.addPipe((context) => {
 			if (['connectioncreated', 'connectionremoved'].includes(context.type)) {
-				process((context as unknown as {data: {target: Node}}).data.target);
+				process((context as unknown as { data: { target: Node } }).data.target);
 			}
+
 			return context;
 		});
 		return () => area.destroy();
