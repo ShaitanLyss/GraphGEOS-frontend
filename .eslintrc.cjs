@@ -4,7 +4,8 @@ module.exports = {
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
 		'plugin:svelte/recommended',
-		'prettier'
+		'prettier',
+		'plugin:react-hooks/recommended'
 	],
 	parser: '@typescript-eslint/parser',
 	plugins: ['@typescript-eslint'],
@@ -17,6 +18,11 @@ module.exports = {
 		browser: true,
 		es2017: true,
 		node: true
+	},
+
+	rules: {
+		'no-unused-vars': 'off',
+		'@typescript-eslint/no-unused-vars': 'off'
 	},
 	overrides: [
 		{
