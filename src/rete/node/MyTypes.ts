@@ -47,9 +47,9 @@ export class Node
 		super(name);
 	}
 
-	processDataflow = () => { 
-		process(this); 
-	}
+	processDataflow = () => {
+		process(this);
+	};
 
 	data(
 		inputs?: Record<string, unknown>

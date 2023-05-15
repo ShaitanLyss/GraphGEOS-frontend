@@ -1,7 +1,15 @@
 import { BaseSchemes, Root, Scope } from 'rete';
 import type { Connection } from '../node/MyTypes';
 
-export type SocketType = 'any' | 'vector3' | 'number' | 'string' | 'boolean' | 'mesh' | 'geometry' | 'solver';
+export type SocketType =
+	| 'any'
+	| 'vector3'
+	| 'number'
+	| 'string'
+	| 'boolean'
+	| 'mesh'
+	| 'geometry'
+	| 'solver';
 
 export class TypedSocketsPlugin<Schemes extends BaseSchemes> extends Scope<never, [Root<Schemes>]> {
 	constructor() {
@@ -11,14 +19,18 @@ export class TypedSocketsPlugin<Schemes extends BaseSchemes> extends Scope<never
 	setParent(scope: Scope<Root<Schemes>>): void {
 		super.setParent(scope);
 
-        // Prevent connections between incompatible sockets
+		// Prevent connections between incompatible sockets
 		this.addPipe(async (ctx) => {
-            let conn;
+			let conn;
 			if (ctx.type === 'connectioncreate' && (conn = ctx.data as Connection)) {
 				const outputSocketType = this.getOutputSocketType(conn.source, conn.sourceOutput);
 				const inputSocketType = this.getInputSocketType(conn.target, conn.targetInput);
-                
-				if (outputSocketType !== inputSocketType && outputSocketType !== 'any' && inputSocketType !== 'any') {
+
+				if (
+					outputSocketType !== inputSocketType &&
+					outputSocketType !== 'any' &&
+					inputSocketType !== 'any'
+				) {
 					console.log(
 						`Connection between ${conn.source} and ${conn.target} is not allowed. Output socket type is ${outputSocketType} and input socket type is ${inputSocketType}`
 					);

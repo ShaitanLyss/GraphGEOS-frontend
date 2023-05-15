@@ -1,4 +1,3 @@
-import { ClassicPreset } from 'rete';
 import { Node } from '../MyTypes';
 import { Socket } from '../../socket/Socket';
 import { Input } from '../../Input';

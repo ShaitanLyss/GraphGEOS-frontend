@@ -33,14 +33,13 @@ export class AddNode extends Node {
 		// iterates inputs and foreach input update the value of the control
 		for (const input in inputs) {
 			console.log('input', input);
-		};
+		}
 
 		const { left, right } = inputs;
 		const value =
 			(left ? left[0] : leftControl.value || 0) + (right ? right[0] : rightControl.value || 0);
 
-		if (this.outputs.value)
-			this.outputs.value.socket.value = value;
+		if (this.outputs.value) this.outputs.value.socket.value = value;
 
 		// this.controls.value.setValue(value);
 

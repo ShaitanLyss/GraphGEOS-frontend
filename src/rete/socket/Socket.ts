@@ -7,14 +7,12 @@ export class Socket extends ClassicPreset.Socket {
 	public readonly type: SocketType;
 	public value: unknown;
 
-	constructor(
-		{
-			name = '',
-			isArray = false,
-			isRequired = false,
-			type = 'any'
-		}: { name?: string, isArray?: boolean; isRequired?: boolean; type?: SocketType } = {}
-	) {
+	constructor({
+		name = '',
+		isArray = false,
+		isRequired = false,
+		type = 'any'
+	}: { name?: string; isArray?: boolean; isRequired?: boolean; type?: SocketType } = {}) {
 		super(name);
 		this.isArray = isArray;
 		this.isRequired = isRequired;
