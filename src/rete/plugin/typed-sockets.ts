@@ -2,6 +2,8 @@ import { BaseSchemes, Root, Scope } from 'rete';
 import type { Connection } from '../node/MyTypes';
 
 export type SocketType =
+	| string
+	| 'exec'
 	| 'any'
 	| 'vector3'
 	| 'number'
@@ -21,12 +23,20 @@ export class TypedSocketsPlugin<Schemes extends BaseSchemes> extends Scope<never
 
 		// Prevent connections between incompatible sockets
 		this.addPipe(async (ctx) => {
-			let conn;
+			console.log('ctx', ctx);
+			let conn: Connection;
+
+			// TODO : restore removed connection if it was removed for an impossible connection
+			if (ctx.type === 'connectionremove' && (conn = ctx.data as Connection)) {
+				
+			}
+			
 			if (ctx.type === 'connectioncreate' && (conn = ctx.data as Connection)) {
 				const outputSocketType = this.getOutputSocketType(conn.source, conn.sourceOutput);
 				const inputSocketType = this.getInputSocketType(conn.target, conn.targetInput);
 
 				if (
+					outputSocketType == 'exec' && inputSocketType !== 'exec' ||
 					outputSocketType !== inputSocketType &&
 					outputSocketType !== 'any' &&
 					inputSocketType !== 'any'

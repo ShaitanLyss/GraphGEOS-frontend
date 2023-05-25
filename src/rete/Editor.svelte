@@ -14,7 +14,7 @@
 	import { setupRender } from './customization/render';
 	import { setupContextMenu } from './plugin/context-menu';
 	import { setupMinimap } from './plugin/minimap';
-	import { structures } from 'rete-structures';
+	import { StartNode } from './node/control/StartNode';
 	import { TypedSocketsPlugin } from './plugin/typed-sockets';
 
 	const editor = new NodeEditor<Schemes>();
@@ -52,6 +52,9 @@
 			const displayNode = new DisplayNode(3);
 			await editor.addNode(displayNode);
 			await editor.addConnection(new Connection(addNode, 'value', displayNode, 'input'));
+
+			const start = new StartNode();
+			await editor.addNode(start);
 
 			connection.addPreset(ConnectionPresets.classic.setup());
 			area.use(connection);
