@@ -12,7 +12,7 @@
 	import type { Schemes } from './node/Schemes';
 	import { ProblemNode } from './node/makutu/ProblemNode';
 	import { setupRender } from './customization/render';
-	import { setupContextMenu } from './plugin/context-menu';
+	import { setupContextMenu } from './plugin/context-menu/context-menu';
 	import { setupMinimap } from './plugin/minimap';
 	import { structures } from 'rete-structures';
 	import { TypedSocketsPlugin } from './plugin/typed-sockets';
@@ -26,10 +26,10 @@
 	editor.use(typedSocketsPlugin);
 	arrange.addPreset(ArrangePresets.classic.setup());
 
-	onMount(() => {
+	onMount(async () => {
 		const area = new AreaPlugin<Schemes, AreaExtra>(container);
 		editor.use(area);
-		setupContextMenu(area);
+
 		setupRender(editor, area);
 		setupMinimap(area);
 		setupMyTypes(area, editor);
@@ -77,6 +77,9 @@
 
 			return context;
 		});
+
+		await setupContextMenu(area);
+
 		return () => area.destroy();
 	});
 </script>

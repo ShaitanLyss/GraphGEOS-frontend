@@ -26,7 +26,7 @@ export function setupRender(editor: NodeEditor<Schemes>, area: AreaPlugin<Scheme
 		})
 	);
 
-	render.addPreset(Presets.contextMenu.setup());
+	render.addPreset(Presets.contextMenu.setup({ delay: 50 }));
 	render.addPreset(Presets.minimap.setup({ size: 200 }));
 
 	area.use(render);

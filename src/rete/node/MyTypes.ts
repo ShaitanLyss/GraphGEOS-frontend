@@ -43,7 +43,7 @@ export class Node
 	width = 190;
 	height = 120;
 
-	constructor(name: string) {
+	constructor(name = '', public readonly path = '') {
 		super(name);
 	}
 
