@@ -8,6 +8,7 @@ import type { NodeEditor } from 'rete';
 import { CustomArraySocket } from './CustomArraySocket';
 import { Socket } from '../socket/Socket';
 import { CustomClassicSocket } from './CustomClassicSocket';
+import { CustomExecSocket } from './CustomExecSocket';
 
 const render = new ReactRenderPlugin<Schemes, AreaExtra>({ createRoot });
 
@@ -17,6 +18,7 @@ export function setupRender(editor: NodeEditor<Schemes>, area: AreaPlugin<Scheme
 			customize: {
 				socket(context) {
 					if (context.payload instanceof Socket) {
+						if (context.payload.type === 'exec') return CustomExecSocket;
 						return context.payload.isArray ? CustomArraySocket : CustomClassicSocket;
 					}
 

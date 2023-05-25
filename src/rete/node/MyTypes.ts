@@ -1,11 +1,13 @@
 import { ClassicPreset, NodeEditor } from 'rete';
 import type { AreaPlugin } from 'rete-area-plugin';
-import { DataflowEngine, DataflowNode } from 'rete-engine';
+import { ControlFlowNodeSetup, DataflowEngine, DataflowNode } from 'rete-engine';
 import type { AreaExtra } from './AreaExtra';
 import type { Schemes } from './Schemes';
 import type { GetRenderTypes } from 'rete-area-plugin/_types/types';
 import { Socket } from '../socket/Socket';
 import { structures } from 'rete-structures';
+import { Output } from '../Output';
+import { Input } from '../Input';
 
 let area: AreaPlugin<Schemes, AreaExtra>;
 const dataflowEngine = new DataflowEngine<Schemes>();
@@ -45,6 +47,17 @@ export class Node
 
 	constructor(name = '', public readonly path = '') {
 		super(name);
+	}
+	execute(input: string, forward: (output: string) => any) {
+		throw new Error('Method not implemented.');
+	}
+
+	addInExec(name = 'exec', displayName = '') {
+		this.addInput(name, new Input(new Socket({ name: displayName, type: 'exec' })));
+	}
+
+	addOutExec(name = 'exec', displayName = '') {
+		this.addOutput(name, new Output(new Socket({ name: displayName, type: 'exec' }), displayName));
 	}
 
 	processDataflow = () => {
