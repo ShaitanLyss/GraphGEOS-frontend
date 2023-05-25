@@ -5,7 +5,7 @@ import { DisplayNode } from '../../node/math/DisplayNode';
 import type { Schemes } from '../../node/Schemes';
 import type { AreaPlugin } from 'rete-area-plugin';
 import type { AreaExtra } from '../../node/AreaExtra';
-import { Node } from '../../node/MyTypes';
+import { Node } from '../../node/Node';
 import { capitalize } from '../../../utils/string';
 
 type Entry = Map<string, Entry | (() => Node | Promise<Node>)>;

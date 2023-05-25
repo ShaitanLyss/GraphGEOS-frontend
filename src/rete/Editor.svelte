@@ -5,7 +5,7 @@
 	import { ConnectionPlugin, Presets as ConnectionPresets } from 'rete-connection-plugin';
 	import { AddNode } from './node/math/AddNode';
 	import { AutoArrangePlugin, Presets as ArrangePresets } from 'rete-auto-arrange-plugin';
-	import { Node, Connection, setupMyTypes, process } from './node/MyTypes';
+	import { Node, Connection, setupMyTypes, process } from './node/Node';
 	import { NumberNode } from './node/math/NumberNode';
 	import { DisplayNode } from './node/math/DisplayNode';
 	import type { AreaExtra } from './node/AreaExtra';
@@ -16,7 +16,9 @@
 	import { setupMinimap } from './plugin/minimap';
 	import { StartNode } from './node/control/StartNode';
 	import { TypedSocketsPlugin } from './plugin/typed-sockets';
-
+	import { Message, messageApi } from './Message';
+	import { hooks } from 'svelte-preprocess-react';
+	import { message } from 'antd';
 	const editor = new NodeEditor<Schemes>();
 
 	let container: HTMLDivElement;
@@ -27,6 +29,8 @@
 	arrange.addPreset(ArrangePresets.classic.setup());
 
 	onMount(async () => {
+		
+		
 		const area = new AreaPlugin<Schemes, AreaExtra>(container);
 		editor.use(area);
 
@@ -38,6 +42,7 @@
 		AreaExtensions.showInputControl(area);
 
 		async function createNodes() {
+
 			const numberNode = new NumberNode(2);
 			const connection = new ConnectionPlugin<Schemes, AreaExtra>();
 
@@ -70,6 +75,7 @@
 
 			AreaExtensions.zoomAt(area, editor.getNodes());
 		}
+		
 
 		createNodes();
 
@@ -88,3 +94,5 @@
 </script>
 
 <div bind:this={container} style="border:4px solid violet; height:50vh;" />
+<react:Message/>
+

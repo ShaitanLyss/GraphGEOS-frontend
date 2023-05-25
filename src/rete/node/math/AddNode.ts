@@ -1,7 +1,7 @@
 import { ClassicPreset as Classic, ClassicPreset, NodeEditor } from 'rete';
 import { DataflowEngine } from 'rete-engine';
 import type DataflowNode from 'rete-engine';
-import { Node } from '../MyTypes';
+import { Node } from '../Node';
 import { Socket } from '../../socket/Socket';
 
 export class AddNode extends Node {

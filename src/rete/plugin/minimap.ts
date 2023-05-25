@@ -1,5 +1,5 @@
 import { MinimapPlugin } from 'rete-minimap-plugin';
-import type { Connection, Node } from '../node/MyTypes';
+import type { Connection, Node } from '../node/Node';
 import type { Schemes } from '../node/Schemes';
 import type { AreaExtra } from '../node/AreaExtra';
 import type { AreaPlugin } from 'rete-area-plugin';

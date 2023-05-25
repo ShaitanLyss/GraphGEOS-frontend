@@ -8,8 +8,8 @@ const InnerTriangle = styled.div`
 	position: relative;
 	height: 0;
 	width: 0;
-	top: -13px;
-	left: -26px;
+	top: -14px;
+	left: -27px;
 	border-top: 14px solid transparent;
 	border-bottom: 14px solid transparent;
 	border-left: 24px solid #b479b6;

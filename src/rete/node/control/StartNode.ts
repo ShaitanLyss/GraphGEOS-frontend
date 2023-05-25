@@ -1,5 +1,5 @@
 import { Output } from '../../Output';
-import { Node } from '../MyTypes';
+import { Node } from '../Node';
 
 export class StartNode extends Node {
 	constructor() {

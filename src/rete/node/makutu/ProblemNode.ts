@@ -1,4 +1,4 @@
-import { Node } from '../MyTypes';
+import { Node } from '../Node';
 import { Socket } from '../../socket/Socket';
 import { Input } from '../../Input';
 

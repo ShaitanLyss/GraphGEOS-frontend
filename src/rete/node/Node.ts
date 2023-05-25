@@ -1,16 +1,44 @@
 import { ClassicPreset, NodeEditor } from 'rete';
 import type { AreaPlugin } from 'rete-area-plugin';
-import { ControlFlowNodeSetup, DataflowEngine, DataflowNode } from 'rete-engine';
+import { ControlFlowEngine, ControlFlowNodeSetup, DataflowEngine, DataflowNode } from 'rete-engine';
 import type { AreaExtra } from './AreaExtra';
 import type { Schemes } from './Schemes';
 import type { GetRenderTypes } from 'rete-area-plugin/_types/types';
 import { Socket } from '../socket/Socket';
+import { ExecSocket } from '../socket/ExecSocket';
 import { structures } from 'rete-structures';
 import { Output } from '../Output';
 import { Input } from '../Input';
-
+import type { TypedSocketsPlugin } from '../plugin/typed-sockets';
+ 
 let area: AreaPlugin<Schemes, AreaExtra>;
-const dataflowEngine = new DataflowEngine<Schemes>();
+let typedSocketsPlugin: TypedSocketsPlugin<Schemes>;
+
+
+const dataflowEngine = new DataflowEngine<Schemes>(({ inputs, outputs }) => {
+	return {
+		inputs: () =>
+			Object.entries(inputs)
+				.filter(([_, input]) => !(input.socket instanceof ExecSocket))
+				.map(([name]) => name),
+		outputs: () =>
+			Object.entries(outputs)
+				.filter(([_, output]) => !(output.socket instanceof ExecSocket))
+				.map(([name]) => name)
+	};
+});
+const engine = new ControlFlowEngine<Schemes>(({ inputs, outputs }) => {
+	return {
+		inputs: () =>
+			Object.entries(inputs)
+				.filter(([_, input]) => input.socket instanceof ExecSocket)
+				.map(([name]) => name),
+		outputs: () =>
+			Object.entries(outputs)
+				.filter(([_, output]) => output.socket instanceof ExecSocket)
+				.map(([name]) => name)
+	};
+});
 let editor: NodeEditor<Schemes>;
 
 function resetSuccessors(node: Node) {
@@ -48,16 +76,16 @@ export class Node
 	constructor(name = '', public readonly path = '') {
 		super(name);
 	}
+
 	execute(input: string, forward: (output: string) => any) {
-		throw new Error('Method not implemented.');
 	}
 
 	addInExec(name = 'exec', displayName = '') {
-		this.addInput(name, new Input(new Socket({ name: displayName, type: 'exec' })));
+		this.addInput(name, new Input(new ExecSocket({ name: displayName })));
 	}
 
 	addOutExec(name = 'exec', displayName = '') {
-		this.addOutput(name, new Output(new Socket({ name: displayName, type: 'exec' }), displayName));
+		this.addOutput(name, new Output(new ExecSocket({ name: displayName }), displayName));
 	}
 
 	processDataflow = () => {
@@ -67,7 +95,7 @@ export class Node
 	data(
 		inputs?: Record<string, unknown>
 	): Record<string, unknown> | Promise<Record<string, unknown>> {
-		throw new Error('Method not implemented.');
+		return {};
 	}
 
 	updateElement(type: GetRenderTypes<AreaExtra>, id: string): void {

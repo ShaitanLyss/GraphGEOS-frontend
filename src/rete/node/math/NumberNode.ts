@@ -1,5 +1,5 @@
 import { ClassicPreset } from 'rete';
-import { Node } from '../MyTypes';
+import { Node } from '../Node';
 import { Socket } from '../../socket/Socket';
 
 export class NumberNode extends Node {
