@@ -57,10 +57,8 @@ const RequiredStyles = styled(InnerTriangle)`
 
 export function CustomExecSocket<T extends Socket>(props: { data: T }) {
 	return (
-
 		<OuterTriangle>
 			<InnerTriangle title={props.data.value ? String(props.data.value) : props.data.name} />
 		</OuterTriangle>
-
 	);
 }

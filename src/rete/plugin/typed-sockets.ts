@@ -25,23 +25,18 @@ export class TypedSocketsPlugin<Schemes extends BaseSchemes> extends Scope<never
 
 		// Prevent connections between incompatible sockets
 		this.addPipe(async (ctx) => {
-			console.log('ctx', ctx);
+			// console.log('ctx', ctx);
 			let conn: Connection;
 
-			// TODO : restore removed connection if it was removed for an impossible connection
-			if (ctx.type === 'connectionremove' && (conn = ctx.data as Connection)) {
-				
-			}
-			
 			if (ctx.type === 'connectioncreate' && (conn = ctx.data as Connection)) {
 				const outputSocket = this.getOutputSocket(conn.source, conn.sourceOutput);
 				const inputSocket = this.getInputSocket(conn.target, conn.targetInput);
 
 				if (
 					outputSocket instanceof ExecSocket !== inputSocket instanceof ExecSocket ||
-					outputSocket.type !== inputSocket.type &&
-					outputSocket.type !== 'any' &&
-					inputSocket.type !== 'any'
+					(outputSocket.type !== inputSocket.type &&
+						outputSocket.type !== 'any' &&
+						inputSocket.type !== 'any')
 				) {
 					console.log(
 						`Connection between ${conn.source} and ${conn.target} is not allowed. Output socket type is ${outputSocket.type} and input socket type is ${inputSocket.type}`
@@ -59,7 +54,7 @@ export class TypedSocketsPlugin<Schemes extends BaseSchemes> extends Scope<never
 		return this.parent.getNode(nodeId).inputs[socketName]?.socket;
 	}
 
-	getOutputSocket(nodeId: string, socketName: string | number) : Socket{
+	getOutputSocket(nodeId: string, socketName: string | number): Socket {
 		return this.parent.getNode(nodeId).outputs[socketName]?.socket;
 	}
 }
