@@ -32,7 +32,7 @@ export class AddNode extends Node {
 
 		// iterates inputs and foreach input update the value of the control
 		for (const input in inputs) {
-			console.log('input', input);
+			// console.log('input', input);
 		}
 
 		const { left, right } = inputs;
