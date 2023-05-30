@@ -1,5 +1,5 @@
 import { ClassicPreset } from 'rete';
-import { Node } from '../Node'
+import { Node } from '../Node';
 import { Socket } from '../../socket/Socket';
 
 /**
