@@ -12,6 +12,20 @@ import { CustomExecSocket } from './CustomExecSocket';
 
 const render = new ReactRenderPlugin<Schemes, AreaExtra>({ createRoot });
 
+const controlCustomization = [];
+
+export function addCustomization(type: 'socket' | 'control', customize) {
+	switch (type) {
+		case 'socket':
+			console.log('chaussette');
+			break;
+		case 'control':
+			controlCustomization.push(customize);
+
+			break;
+	}
+}
+
 export function setupRender(editor: NodeEditor<Schemes>, area: AreaPlugin<Schemes, AreaExtra>) {
 	render.addPreset(
 		Presets.classic.setup({
@@ -23,6 +37,15 @@ export function setupRender(editor: NodeEditor<Schemes>, area: AreaPlugin<Scheme
 					}
 
 					return Presets.classic.Socket;
+				},
+				control(data) {
+					for (const customization of controlCustomization) {
+						let customizationResult;
+						if ((customizationResult = customization(data))) {
+							return customizationResult;
+						}
+					}
+					return Presets.classic.Control;
 				}
 			}
 		})
