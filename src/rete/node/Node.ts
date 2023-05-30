@@ -79,7 +79,11 @@ export class Node
 		this.height = height;
 	}
 
-	execute(input: string, forward: (output: string) => unknown) {
+	async fetchInputs() {
+		return await dataflowEngine.fetchInputs(this.id);
+	}
+
+	async execute(input: string, forward: (output: string) => unknown) {
 		if (this.outputs.exec) forward('exec');
 	}
 
