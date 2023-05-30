@@ -2,7 +2,11 @@
 	import { ClassicPreset, NodeEditor } from 'rete';
 	import { AreaExtensions, AreaPlugin } from 'rete-area-plugin';
 	import { onMount } from 'svelte';
-	import { ConnectionPlugin, Presets as ConnectionPresets } from 'rete-connection-plugin';
+	import {
+		ClassicFlow,
+		ConnectionPlugin,
+		Presets as ConnectionPresets
+	} from 'rete-connection-plugin';
 	import { AddNode } from './node/math/AddNode';
 	import { AutoArrangePlugin, Presets as ArrangePresets } from 'rete-auto-arrange-plugin';
 	import { Node, Connection, setupMyTypes, process } from './node/Node';
@@ -15,10 +19,11 @@
 	import { setupContextMenu } from './plugin/context-menu/context-menu';
 	import { setupMinimap } from './plugin/minimap';
 	import { StartNode } from './node/control/StartNode';
-	import { TypedSocketsPlugin } from './plugin/typed-sockets';
+	import { TypedSocketsPlugin, isConnectionInvalid } from './plugin/typed-sockets';
 	import { Message, messageApi } from './Message';
 	import { hooks } from 'svelte-preprocess-react';
 	import { message } from 'antd';
+	import type { Socket } from './socket/Socket';
 	const editor = new NodeEditor<Schemes>();
 
 	let container: HTMLDivElement;
@@ -29,8 +34,6 @@
 	arrange.addPreset(ArrangePresets.classic.setup());
 
 	onMount(async () => {
-		
-		
 		const area = new AreaPlugin<Schemes, AreaExtra>(container);
 		editor.use(area);
 
@@ -42,9 +45,22 @@
 		AreaExtensions.showInputControl(area);
 
 		async function createNodes() {
-
 			const numberNode = new NumberNode(2);
 			const connection = new ConnectionPlugin<Schemes, AreaExtra>();
+			ConnectionPresets.classic.setup();
+			connection.addPreset(
+				() =>
+					new ClassicFlow({
+						canMakeConnection(from, to) {
+							connection.drop();
+							// this function checks if the old connection should be removed
+							return !isConnectionInvalid(
+								(from as unknown as { payload: Socket }).payload,
+								(to as unknown as { payload: Socket }).payload
+							);
+						}
+					})
+			);
 
 			editor.addNode(numberNode);
 
@@ -75,7 +91,6 @@
 
 			AreaExtensions.zoomAt(area, editor.getNodes());
 		}
-		
 
 		createNodes();
 
@@ -94,5 +109,4 @@
 </script>
 
 <div bind:this={container} style="border:4px solid violet; height:50vh;" />
-<react:Message/>
-
+<react:Message />

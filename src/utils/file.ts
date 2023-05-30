@@ -14,7 +14,7 @@ export function walkSync(dir: string, prefix: string, filelist: string[]): strin
 		if (fs.statSync(path.join(dir, file)).isDirectory()) {
 			filelist = walkSync(path.join(dir, file), path.join(prefix, file), filelist);
 		} else {
-			filelist.push(path.join(prefix, file));
+			filelist.push((path.join(prefix, file)));
 		}
 	});
 	return filelist;

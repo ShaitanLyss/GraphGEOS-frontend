@@ -37,17 +37,21 @@ function getMenuArray(items: Map<string, Entry>) {
 export async function setupContextMenu(area: AreaPlugin<Schemes, AreaExtra>) {
 	const response = await fetch('/menu');
 	const nodeFiles = await response.json();
+	const re = /[/\\]/i;
 
 	// console.log(nodeFiles);
 	const items = new Map<string, Entry>();
 	for (const file of nodeFiles) {
 		const objects = await import(/* @vite-ignore */ `../../node/${file}`);
+		
+		
 		Object.values(objects)
 			.filter((value: unknown) => (value as { prototype }).prototype instanceof Node)
-			.forEach((node) => pushMenuItem(items, file.split('/'), node as typeof Node));
+			.forEach((node) => pushMenuItem(items, file.split(re), node as typeof Node));
 
 		// items.push([file, () => new node()]);
 	}
+	
 
 	const contextMenu = new ContextMenuPlugin<Schemes>({
 		items: Presets.classic.setup(getMenuArray(items))

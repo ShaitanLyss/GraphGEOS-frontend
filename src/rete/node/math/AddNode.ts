@@ -31,9 +31,9 @@ export class AddNode extends Node {
 		const rightControl = this.inputs.right?.control as ClassicPreset.InputControl<'number'>;
 
 		// iterates inputs and foreach input update the value of the control
-		for (const input in inputs) {
-			console.log('input', input);
-		}
+		// for (const input in inputs) {
+		// 	console.log('input', input);
+		// }
 
 		const { left, right } = inputs;
 		const value =
