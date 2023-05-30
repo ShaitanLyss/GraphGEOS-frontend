@@ -83,12 +83,19 @@ export class Node
 		return await dataflowEngine.fetchInputs(this.id);
 	}
 
-	async execute(input: string, forward: (output: string) => unknown) {
+	execute(input: string, forward: (output: string) => unknown) {
 		if (this.outputs.exec) forward('exec');
 	}
 
 	addInExec(name = 'exec', displayName = '') {
 		this.addInput(name, new Input(new ExecSocket({ name: displayName })));
+	}
+
+	addOutData({ name = 'data', displayName = '', isArray = false, type = 'any' } = {}) {
+		this.addOutput(name, new Output(new Socket({ name: displayName, isArray:isArray, type:type }), displayName));
+	}
+	addInData({ name = 'data', displayName = '', isArray = false, type = 'any' } = {}) {
+		this.addInput(name, new Input(new Socket({ name: displayName, isArray:isArray, type:type })));
 	}
 
 	addOutExec(name = 'exec', displayName = '') {

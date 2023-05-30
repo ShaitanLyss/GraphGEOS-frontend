@@ -5,14 +5,14 @@ import { notifications } from '@mantine/notifications';
 import { ClassicPreset } from 'rete';
 
 export class LogNode extends Node {
-	constructor() {
+	constructor({message= 'Hello'} ={}) {
 		super('Log');
 		this.height = 200;
 		this.addInExec();
 		this.addOutExec();
 		
 		const messageInput = new Input(new Socket(), 'Message');
-		messageInput.addControl(new ClassicPreset.InputControl('text', { initial: 'Hello' }));
+		messageInput.addControl(new ClassicPreset.InputControl('text', { initial: message }));
 		this.addInput('message', messageInput);
 	}
 
