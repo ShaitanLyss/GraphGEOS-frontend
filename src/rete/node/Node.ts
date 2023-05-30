@@ -10,32 +10,31 @@ import { structures } from 'rete-structures';
 import { Output } from '../Output';
 import { Input } from '../Input';
 import type { TypedSocketsPlugin } from '../plugin/typed-sockets';
- 
+
 let area: AreaPlugin<Schemes, AreaExtra>;
 let typedSocketsPlugin: TypedSocketsPlugin<Schemes>;
-
 
 const dataflowEngine = new DataflowEngine<Schemes>(({ inputs, outputs }) => {
 	return {
 		inputs: () =>
 			Object.entries(inputs)
-				.filter(([_, input]) => !(input.socket instanceof ExecSocket))
+				.filter(([_, input]) => input && !(input.socket instanceof ExecSocket))
 				.map(([name]) => name),
 		outputs: () =>
 			Object.entries(outputs)
-				.filter(([_, output]) => !(output.socket instanceof ExecSocket))
+				.filter(([_, output]) => output && !(output.socket instanceof ExecSocket))
 				.map(([name]) => name)
 	};
 });
-const engine = new ControlFlowEngine<Schemes>(({ inputs, outputs }) => {
+export const controlflowEngine = new ControlFlowEngine<Schemes>(({ inputs, outputs }) => {
 	return {
 		inputs: () =>
 			Object.entries(inputs)
-				.filter(([_, input]) => input.socket instanceof ExecSocket)
+				.filter(([_, input]) => input && input.socket instanceof ExecSocket)
 				.map(([name]) => name),
 		outputs: () =>
 			Object.entries(outputs)
-				.filter(([_, output]) => output.socket instanceof ExecSocket)
+				.filter(([_, output]) => output && output.socket instanceof ExecSocket)
 				.map(([name]) => name)
 	};
 });
@@ -52,6 +51,7 @@ export function setupMyTypes(_area: AreaPlugin<Schemes, AreaExtra>, _editor: Nod
 	area = _area;
 	editor = _editor;
 	editor.use(dataflowEngine);
+	editor.use(controlflowEngine);
 }
 
 export function process(node: Node) {
@@ -73,15 +73,29 @@ export class Node
 	width = 190;
 	height = 120;
 
-	constructor(name = '', public readonly path = '') {
+	constructor(name = '', {width = 190, height = 120, path = ''} : {width?: number, height?:number, path?: string} = {}) {
 		super(name);
+		this.width = width;
+		this.height = height;
 	}
 
-	execute(input: string, forward: (output: string) => any) {
+	async fetchInputs() {
+		return await dataflowEngine.fetchInputs(this.id);
+	}
+
+	execute(input: string, forward: (output: string) => unknown) {
+		if (this.outputs.exec) forward('exec');
 	}
 
 	addInExec(name = 'exec', displayName = '') {
 		this.addInput(name, new Input(new ExecSocket({ name: displayName })));
+	}
+
+	addOutData({ name = 'data', displayName = '', isArray = false, type = 'any' } = {}) {
+		this.addOutput(name, new Output(new Socket({ name: displayName, isArray:isArray, type:type }), displayName));
+	}
+	addInData({ name = 'data', displayName = '', isArray = false, type = 'any' } = {}) {
+		this.addInput(name, new Input(new Socket({ name: displayName, isArray:isArray, type:type })));
 	}
 
 	addOutExec(name = 'exec', displayName = '') {

@@ -76,7 +76,7 @@ export class TypedSocketsPlugin<Schemes extends BaseSchemes> extends Scope<never
 		return this.parent.getNode(nodeId).inputs[socketName]?.socket;
 	}
 
-	getOutputSocket(nodeId: string, socketName: string | number) : Socket{
+	getOutputSocket(nodeId: string, socketName: string | number): Socket {
 		return this.parent.getNode(nodeId).outputs[socketName]?.socket;
 	}
 }
