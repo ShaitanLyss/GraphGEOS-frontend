@@ -13,7 +13,7 @@ const InnerTriangle = styled.div`
 	border-top: 14px solid transparent;
 	border-bottom: 14px solid transparent;
 	border-left: 24px solid #b479b6;
-	display: inline-block;
+	/* display: inline-block; */
 	cursor: pointer;
 	/*width: ${$socketsize}px;
 	height: ${$socketsize}px;*/
@@ -23,7 +23,7 @@ const InnerTriangle = styled.div`
 	z-index: 2;
 	box-sizing: border-box;
 	&:hover {
-		top: -11px;
+		top: -10px;
 		left: -24px;
 		border-top: 10px solid transparent;
 		border-bottom: 10px solid transparent;
@@ -37,13 +37,16 @@ const InnerTriangle = styled.div`
 const OuterTriangle = styled.div`
 	height: 0;
 	width: 0;
+	/* margin-left: 10px; */
 	display: inline-block;
 	border-top: 16px solid transparent;
 	border-bottom: 16px solid transparent;
 	padding-left: -10px;
 	border-left: 28px solid white;
+	box-sizing: border-box;
+	/* z-index: 1; */
 	&:hover ${InnerTriangle} {
-		top: -11px;
+		top: -10px;
 		left: -24px;
 		border-top: 10px solid transparent;
 		border-bottom: 10px solid transparent;
