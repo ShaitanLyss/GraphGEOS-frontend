@@ -10,7 +10,7 @@ export class AcousticSEM extends Node {
 	width = 180;
 
 	constructor() {
-		super('AcousticSEM', 'makutu/solver');
+		super('AcousticSEM');
 
 		// Setup input
 		this.addInput(

@@ -43,7 +43,7 @@ export class TypedSocketsPlugin<Schemes extends BaseSchemes> extends Scope<never
 
 			// TODO : restore removed connection if it was removed for an impossible connection
 			if (ctx.type === 'connectionremove' && (conn = ctx.data as Connection)) {
-				console.log(ctx);
+				// console.log(ctx);
 
 				this.lastConnectionRemove = conn;
 			}
