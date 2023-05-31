@@ -5,7 +5,7 @@ import { ButtonControl } from '../../control/button/button';
 
 export class StartNode extends Node {
 	constructor() {
-		super('Start', {height: 130});
+		super('Start', { height: 130 });
 		this.addOutExec();
 		this.addControl('playBtn', new ButtonControl('Play', () => controlflowEngine.execute(this.id)));
 	}
