@@ -25,7 +25,6 @@ export class MakeArrayNode extends Node {
 
 	addPin() {
 		// console.log('Adding input pin with key data-' + Object.keys(this.inputs).length);
-		console.log(this);
 
 		this.addInData({
 			name: `data-${Object.keys(this.inputs).length}`,
