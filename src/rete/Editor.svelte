@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {  NodeEditor } from 'rete';
+	import { NodeEditor } from 'rete';
 	import { AreaExtensions, AreaPlugin } from 'rete-area-plugin';
 	import { onMount } from 'svelte';
 	import {
@@ -21,9 +21,10 @@
 	import { StartNode } from './node/control/StartNode';
 	import { TypedSocketsPlugin, isConnectionInvalid } from './plugin/typed-sockets';
 	import { LogNode } from './node/io/LogNode';
-	import { MakeArrayNode} from './node/data/MakeArrayNode';
+	import { MakeArrayNode } from './node/data/MakeArrayNode';
 	import { ForEachNode } from './node/control/ForEachNode';
 	import type { Socket } from './socket/Socket';
+	import { notifications } from '@mantine/notifications';
 
 	const editor = new NodeEditor<Schemes>();
 
@@ -55,10 +56,19 @@
 						canMakeConnection(from, to) {
 							connection.drop();
 							// this function checks if the old connection should be removed
-							return !isConnectionInvalid(
-								(from as unknown as { payload: Socket }).payload,
-								(to as unknown as { payload: Socket }).payload
-							);
+							if (
+								isConnectionInvalid(
+									(from as unknown as { payload: Socket }).payload,
+									(to as unknown as { payload: Socket }).payload
+								)
+							) {
+								notifications.show({
+									title: 'Erreur',
+									message: 'Connection invalide !',
+									color: 'red'
+								});
+								return false;
+							} else return true;
 						}
 					})
 			);
@@ -78,7 +88,7 @@
 			const start = new StartNode();
 			await editor.addNode(start);
 
-			const log = new LogNode({ message: "Hello I'll show you some numbers"});
+			const log = new LogNode({ message: "Hello I'll show you some numbers" });
 			await editor.addNode(log);
 
 			await editor.addConnection(new Connection(start, 'exec', log, 'exec'));
@@ -104,13 +114,9 @@
 			await editor.addNode(logItem);
 			await editor.addConnection(new Connection(forEach, 'item', logItem, 'message'));
 			await editor.addConnection(new Connection(forEach, 'loop', logItem, 'exec'));
-			const logEnd = new LogNode({ message: "I'm done!"});
+			const logEnd = new LogNode({ message: "I'm done!" });
 			await editor.addNode(logEnd);
 			await editor.addConnection(new Connection(forEach, 'exec', logEnd, 'exec'));
-			
-
-	
-
 
 			connection.addPreset(ConnectionPresets.classic.setup());
 			area.use(connection);
