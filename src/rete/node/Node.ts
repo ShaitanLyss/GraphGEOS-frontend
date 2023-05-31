@@ -73,6 +73,8 @@ export class Node
 	width = 190;
 	height = 120;
 
+	private resolveEndExecute?: () => void;
+
 	constructor(
 		name = '',
 		{
@@ -86,12 +88,37 @@ export class Node
 		this.height = height;
 	}
 
-	async fetchInputs() {
-		return await dataflowEngine.fetchInputs(this.id);
+	fetchInputs() {
+		return dataflowEngine.fetchInputs(this.id);
 	}
 
-	execute(input: string, forward: (output: string) => unknown) {
-		if (this.outputs.exec) forward('exec');
+	getDataflowEngine() {
+		return dataflowEngine;
+	}
+
+	getEditor() {
+		return editor;
+	}
+
+	// Callback called at the end of execute
+	onEndExecute() {
+		if (this.resolveEndExecute) {
+			this.resolveEndExecute();
+		}
+		this.resolveEndExecute = undefined;
+	}
+
+	waitForEndExecutePromise(): Promise<void> {
+		return new Promise<void>((resolve) => {
+			this.resolveEndExecute = resolve;
+		});
+	}
+
+	execute(input: string, forward: (output: string) => unknown, forwardExec = true) {
+		if (forwardExec && this.outputs.exec) {
+			forward('exec');
+		}
+		this.onEndExecute();
 	}
 
 	addInExec(name = 'exec', displayName = '') {

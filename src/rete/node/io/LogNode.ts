@@ -23,11 +23,12 @@ export class LogNode extends Node {
 			message: string[];
 		};
 		const res = inputs.message ? inputs.message[0] : messageControl.value;
-		console.log(res);
+		// console.log(res);
 
 		notifications.show({ title: 'Log', message: res });
 
 		forward('exec');
+		super.execute(input, forward, false);
 	}
 
 	data() {
