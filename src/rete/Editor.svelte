@@ -73,17 +73,17 @@
 					})
 			);
 
-			editor.addNode(numberNode);
+			// editor.addNode(numberNode);
 
-			const addNode = new AddNode({ b: 3 });
-			await editor.addNode(addNode);
-			await editor.addNode(new ProblemNode());
+			// const addNode = new AddNode({ b: 3 });
+			// await editor.addNode(addNode);
+			// await editor.addNode(new ProblemNode());
 
-			await editor.addConnection(new Connection(numberNode, 'value', addNode, 'left'));
+			// await editor.addConnection(new Connection(numberNode, 'value', addNode, 'left'));
 
-			const displayNode = new DisplayNode(3);
-			await editor.addNode(displayNode);
-			await editor.addConnection(new Connection(addNode, 'value', displayNode, 'input'));
+			// const displayNode = new DisplayNode(3);
+			// await editor.addNode(displayNode);
+			// await editor.addConnection(new Connection(addNode, 'value', displayNode, 'input'));
 
 			const start = new StartNode();
 			await editor.addNode(start);
@@ -149,4 +149,4 @@
 	});
 </script>
 
-<div bind:this={container} style="border:4px solid violet; height:50vh;" />
+<div bind:this={container} style="border:4px solid violet; height:75vh;" />
