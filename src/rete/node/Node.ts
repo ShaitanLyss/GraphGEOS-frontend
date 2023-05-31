@@ -73,7 +73,14 @@ export class Node
 	width = 190;
 	height = 120;
 
-	constructor(name = '', {width = 190, height = 120, path = ''} : {width?: number, height?:number, path?: string} = {}) {
+	constructor(
+		name = '',
+		{
+			width = 190,
+			height = 120,
+			path = ''
+		}: { width?: number; height?: number; path?: string } = {}
+	) {
 		super(name);
 		this.width = width;
 		this.height = height;
@@ -88,14 +95,17 @@ export class Node
 	}
 
 	addInExec(name = 'exec', displayName = '') {
-		this.addInput(name, new Input(new ExecSocket({ name: displayName })));
+		this.addInput(name, new Input(new ExecSocket({ name: displayName }), undefined, true));
 	}
 
 	addOutData({ name = 'data', displayName = '', isArray = false, type = 'any' } = {}) {
-		this.addOutput(name, new Output(new Socket({ name: displayName, isArray:isArray, type:type }), displayName));
+		this.addOutput(
+			name,
+			new Output(new Socket({ name: displayName, isArray: isArray, type: type }), displayName)
+		);
 	}
 	addInData({ name = 'data', displayName = '', isArray = false, type = 'any' } = {}) {
-		this.addInput(name, new Input(new Socket({ name: displayName, isArray:isArray, type:type })));
+		this.addInput(name, new Input(new Socket({ name: displayName, isArray: isArray, type: type })));
 	}
 
 	addOutExec(name = 'exec', displayName = '') {
