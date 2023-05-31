@@ -38,7 +38,7 @@ export class TypedSocketsPlugin<Schemes extends BaseSchemes> extends Scope<never
 		// Prevent connections between incompatible sockets
 
 		this.addPipe(async (ctx) => {
-			console.log(ctx);
+			// console.log(ctx);
 			let conn: Connection;
 
 			// TODO : restore removed connection if it was removed for an impossible connection
@@ -71,8 +71,14 @@ export class TypedSocketsPlugin<Schemes extends BaseSchemes> extends Scope<never
 					if (outputSocket instanceof ExecSocket) {
 						const connections = nodeEditor.getConnections();
 						const outgoingConnections = connections
-							.filter((connection) => connection.source === conn.source)
-							.forEach((conn) => nodeEditor.removeConnection(conn.id));
+							.filter(
+								(connection) =>
+									connection.source === conn.source &&
+									(connection as Connection).sourceOutput === conn.sourceOutput
+							)
+							.forEach((connection) => {
+								nodeEditor.removeConnection(connection.id);
+							});
 					}
 				}
 			}
