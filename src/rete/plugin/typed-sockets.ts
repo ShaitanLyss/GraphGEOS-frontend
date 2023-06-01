@@ -14,6 +14,8 @@ export type SocketType =
 	| 'boolean'
 	| 'mesh'
 	| 'geometry'
+	| 'pythonObject'
+	| 'pythonProperty'
 	| 'solver';
 
 export function isConnectionInvalid(outputSocket: Socket, inputSocket: Socket) {
@@ -70,7 +72,7 @@ export class TypedSocketsPlugin<Schemes extends BaseSchemes> extends Scope<never
 				if ((nodeEditor = scope as NodeEditor<Schemes>)) {
 					if (outputSocket instanceof ExecSocket) {
 						const connections = nodeEditor.getConnections();
-						const outgoingConnections = connections
+						connections
 							.filter(
 								(connection) =>
 									connection.source === conn.source &&
