@@ -3,14 +3,15 @@ import { Connection, Node } from '../Node';
 
 // Class defining a For Each Node
 export class ForEachNode extends Node {
-	currentItemIndex = 0;
+	currentItemIndex?: number = undefined;
 
 	constructor() {
-		super('For Each', { height: 235 });
+		super('For Each', { height: 275 });
 		this.addInExec();
 		this.addOutExec('loop', 'Loop');
 		this.addInData({ name: 'array', displayName: 'Array', isArray: true });
 		this.addOutData({ name: 'item', displayName: 'Item' });
+		this.addOutData({ name: 'index', displayName: 'Index' });
 		this.addOutExec('exec', 'Done');
 	}
 	// Executes the node
@@ -26,28 +27,34 @@ export class ForEachNode extends Node {
 			)
 			.map((connection) => this.getEditor().getNode(connection.target))[0];
 
-		const leavesFromLoopExec = structures(this.getEditor())
-			.outgoers(loopNode.id)
-			.union({ nodes: [loopNode], connections: [] })
-			.leaves()
-			.nodes();
+		if (loopNode) {
+			const leavesFromLoopExec = structures(this.getEditor())
+				.outgoers(loopNode.id)
+				.union({ nodes: [loopNode], connections: [] })
+				.leaves()
+				.nodes();
 
-		for (let i = 0; i < array.length; i++) {
-			this.currentItemIndex = i;
+			for (let i = 0; i < array.length; i++) {
+				this.currentItemIndex = i;
 
-			this.getDataflowEngine().reset(this.id);
-			forward('loop');
+				this.getDataflowEngine().reset(this.id);
+				forward('loop');
 
-			await Promise.all(leavesFromLoopExec.map((node) => node.waitForEndExecutePromise()));
+				await Promise.all(leavesFromLoopExec.map((node) => node.waitForEndExecutePromise()));
+			}
 		}
 
 		forward('exec');
 	}
 	// Gets the data
-	data(inputs: { array?: unknown[][] }): { item: unknown } {
+	data(inputs: { array?: unknown[][] }): { item: unknown; index?: number } {
+		if (this.currentItemIndex === undefined) {
+			return { item: undefined, index: undefined };
+		}
+
 		const array = inputs.array ? inputs.array[0] : [];
 
 		const item = array[this.currentItemIndex];
-		return { item };
+		return { item, index: this.currentItemIndex };
 	}
 }
