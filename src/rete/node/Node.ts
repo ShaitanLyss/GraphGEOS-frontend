@@ -9,7 +9,7 @@ import { ExecSocket } from '../socket/ExecSocket';
 import { structures } from 'rete-structures';
 import { Output } from '../Output';
 import { Input } from '../Input';
-import type { TypedSocketsPlugin } from '../plugin/typed-sockets';
+import type { SocketType, TypedSocketsPlugin } from '../plugin/typed-sockets';
 
 let area: AreaPlugin<Schemes, AreaExtra>;
 let typedSocketsPlugin: TypedSocketsPlugin<Schemes>;
@@ -64,6 +64,14 @@ export function process(node: Node) {
 		.getNodes()
 		// .filter((n) => n instanceof AddNode || n instanceof DisplayNode)
 		.forEach((n) => dataflowEngine.fetch(n.id));
+}
+interface DataParams {
+	inputLabel?: string;
+	name: string;
+	displayName?: string;
+	withControl?: boolean;
+	isArray?: boolean;
+	type?: SocketType;
 }
 
 export class Node
@@ -125,14 +133,29 @@ export class Node
 		this.addInput(name, new Input(new ExecSocket({ name: displayName }), undefined, true));
 	}
 
-	addOutData({ name = 'data', displayName = '', isArray = false, type = 'any' } = {}) {
+	addOutData({ name = 'data', displayName = '', isArray = false, type = 'any' }: DataParams) {
 		this.addOutput(
 			name,
 			new Output(new Socket({ name: displayName, isArray: isArray, type: type }), displayName)
 		);
 	}
-	addInData({ name = 'data', displayName = '', isArray = false, type = 'any' } = {}) {
-		this.addInput(name, new Input(new Socket({ name: displayName, isArray: isArray, type: type })));
+
+	addInData({
+		name = 'data',
+		displayName = '',
+		inputLabel = undefined,
+		withControl = false,
+		isArray = false,
+		type = 'any'
+	}: DataParams) {
+		const input = new Input(
+			new Socket({ name: displayName, isArray: isArray, type: type }),
+			inputLabel
+		);
+		if (withControl) {
+			input.addControl(new ClassicPreset.InputControl('text'));
+		}
+		this.addInput(name, input);
 	}
 
 	addOutExec(name = 'exec', displayName = '') {
