@@ -45,7 +45,15 @@ export async function setupContextMenu(area: AreaPlugin<Schemes, AreaExtra>) {
 		const objects = await import(/* @vite-ignore */ `../../node/${file}`);
 
 		Object.values(objects)
-			.filter((value: unknown) => (value as { prototype }).prototype instanceof Node)
+			.filter((value: unknown) => {
+				const prototype = (value as { prototype }).prototype;
+
+				return (
+					prototype instanceof Node &&
+					prototype.constructor &&
+					!Object.prototype.hasOwnProperty.call(prototype.constructor, '__isAbstract')
+				);
+			})
 			.forEach((node) => pushMenuItem(items, file.split(re), node as typeof Node));
 
 		// items.push([file, () => new node()]);
