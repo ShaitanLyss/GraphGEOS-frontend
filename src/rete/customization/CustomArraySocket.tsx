@@ -2,11 +2,17 @@ import * as React from 'react';
 import styled from 'styled-components';
 import { $socketcolor, $socketsize } from './vars';
 import type { Socket } from '../socket/Socket';
+import { assignColor } from './utils';
 
-const Styles = styled.div`
+interface StylesProps {
+	borderColor: string;
+	isRequired: boolean;
+}
+
+const Styles = styled.div<StylesProps>`
 	display: inline-block;
 	cursor: pointer;
-	border: 4px dashed ${$socketcolor};
+	border: 4px dashed ${(props) => props.borderColor};
 	width: ${$socketsize}px;
 	height: ${$socketsize}px;
 	vertical-align: middle;
@@ -27,6 +33,11 @@ const RequiredStyles = styled(Styles)`
 `;
 
 export function CustomArraySocket<T extends Socket>(props: { data: T }) {
-	if (props.data.isRequired) return <RequiredStyles title={props.data.name} />;
-	else return <Styles title={props.data.name} />;
+	return (
+		<Styles
+			title={props.data.name}
+			borderColor={assignColor(props.data)}
+			isRequired={props.data.isRequired}
+		/>
+	);
 }

@@ -3,9 +3,14 @@ import type { ClassicPreset } from 'rete';
 import styled from 'styled-components';
 
 import { $socketcolor, $socketmargin, $socketsize } from './vars';
+import { assignColor } from './utils';
 import type { Socket } from '../socket/Socket';
 
-const Styles = styled.div`
+interface StylesProps {
+	background: string;
+}
+
+const Styles = styled.div<StylesProps>`
 	display: inline-block;
 	cursor: pointer;
 	border: 1px solid white;
@@ -13,7 +18,7 @@ const Styles = styled.div`
 	width: ${$socketsize}px;
 	height: ${$socketsize}px;
 	vertical-align: middle;
-	background: ${$socketcolor};
+	background: ${(props) => props.background};
 	z-index: 2;
 	box-sizing: border-box;
 	&:hover {
@@ -36,17 +41,17 @@ const RequiredStyles = styled(Styles)`
 	background: #b38a8a;
 `;
 
+const StringStyles = styled(Styles)`
+	background: #b3799d;
+`;
+
 export function CustomClassicSocket<T extends Socket>(props: { data: T }) {
-	if (props.data.isRequired)
-		return (
-			<Hoverable>
-				<RequiredStyles title={props.data.value ? String(props.data.value) : props.data.name} />
-			</Hoverable>
-		);
-	else
-		return (
-			<Hoverable>
-				<Styles title={props.data.value ? String(props.data.value) : props.data.name} />
-			</Hoverable>
-		);
+	return (
+		<Hoverable>
+			<Styles
+				title={props.data.value ? String(props.data.value) : props.data.name}
+				background={assignColor(props.data)}
+			/>
+		</Hoverable>
+	);
 }
