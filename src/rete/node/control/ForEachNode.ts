@@ -1,5 +1,6 @@
 import { structures } from 'rete-structures';
 import { Connection, Node } from '../Node';
+import { getLeavesFromOutput } from '../utils';
 
 // Class defining a For Each Node
 export class ForEachNode extends Node {
@@ -19,33 +20,25 @@ export class ForEachNode extends Node {
 		const inputs = await this.fetchInputs();
 		const array = inputs.array[0];
 
-		const connections = this.getEditor().getConnections();
-		const loopNode = connections
-			.filter(
-				(connection) =>
-					connection.source === this.id && (connection as Connection).sourceOutput === 'loop'
-			)
-			.map((connection) => this.getEditor().getNode(connection.target))[0];
-
-		if (loopNode) {
-			const leavesFromLoopExec = structures(this.getEditor())
-				.outgoers(loopNode.id)
-				.union({ nodes: [loopNode], connections: [] })
-				.leaves()
-				.nodes();
-
-			for (let i = 0; i < array.length; i++) {
-				this.currentItemIndex = i;
-
-				this.getDataflowEngine().reset(this.id);
-				forward('loop');
-
-				await Promise.all(leavesFromLoopExec.map((node) => node.waitForEndExecutePromise()));
-			}
+		const leavesFromLoopExec = getLeavesFromOutput(this, 'loop');
+		if (leavesFromLoopExec.length === 0) {
+			super.execute(input, forward);
+			return;
 		}
 
-		forward('exec');
+		for (let i = 0; i < array.length; i++) {
+			this.currentItemIndex = i;
+
+			this.getDataflowEngine().reset(this.id);
+			const promises = this.getWaitPromises(leavesFromLoopExec);
+			forward('loop');
+
+			await Promise.all(promises);
+		}
+
+		super.execute(input, forward);
 	}
+
 	// Gets the data
 	data(inputs: { array?: unknown[][] }): { item: unknown; index?: number } {
 		if (this.currentItemIndex === undefined) {

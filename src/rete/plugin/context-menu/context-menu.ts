@@ -1,7 +1,4 @@
 import { ContextMenuPlugin, Presets } from 'rete-context-menu-plugin';
-import { AddNode } from '../../node/math/AddNode';
-import { NumberNode } from '../../node/math/NumberNode';
-import { DisplayNode } from '../../node/math/DisplayNode';
 import type { Schemes } from '../../node/Schemes';
 import type { AreaPlugin } from 'rete-area-plugin';
 import type { AreaExtra } from '../../node/AreaExtra';

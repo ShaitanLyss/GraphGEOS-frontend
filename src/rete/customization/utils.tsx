@@ -8,7 +8,9 @@ export function assignColor(s: Socket): string {
 	const colorMap: { [key: SocketType]: string } = {
 		string: '#d88cbb',
 		pythonObject: '#616796',
-		pythonProperty: '#949cd3'
+		pythonProperty: '#949cd3',
+		number: '#d8b38c',
+		boolean: '#d88c8c'
 	};
 	return colorMap[s.type] || $socketcolor;
 }

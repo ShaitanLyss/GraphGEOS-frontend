@@ -1,6 +1,6 @@
 import { ClassicPreset, NodeEditor } from 'rete';
 import type { AreaPlugin } from 'rete-area-plugin';
-import { ControlFlowEngine, ControlFlowNodeSetup, DataflowEngine, DataflowNode } from 'rete-engine';
+import { ControlFlowEngine, DataflowEngine, DataflowNode } from 'rete-engine';
 import type { AreaExtra } from './AreaExtra';
 import type { Schemes } from './Schemes';
 import type { GetRenderTypes } from 'rete-area-plugin/_types/types';
@@ -10,6 +10,12 @@ import { structures } from 'rete-structures';
 import { Output } from '../Output';
 import { Input } from '../Input';
 import type { SocketType, TypedSocketsPlugin } from '../plugin/typed-sockets';
+import {
+	InputControl,
+	InputControlOptions,
+	InputControlTypes,
+	InputControlValueType
+} from '../control/Control';
 
 let area: AreaPlugin<Schemes, AreaExtra>;
 let typedSocketsPlugin: TypedSocketsPlugin<Schemes>;
@@ -65,13 +71,26 @@ export function process(node: Node) {
 		// .filter((n) => n instanceof AddNode || n instanceof DisplayNode)
 		.forEach((n) => dataflowEngine.fetch(n.id));
 }
-interface DataParams {
-	inputLabel?: string;
+
+interface ControlParams<N> {
+	type: InputControlTypes;
+	options?: InputControlOptions<N>;
+}
+
+interface DataParams<N> {
+	socketLabel?: string;
 	name: string;
 	displayName?: string;
-	withControl?: boolean;
+	initial?: unknown;
+	control?: ControlParams<N>;
+	isRequired?: boolean;
 	isArray?: boolean;
 	type?: SocketType;
+}
+
+export interface NodeParams {
+	width?: number;
+	height?: number;
 }
 
 export class Node
@@ -133,27 +152,30 @@ export class Node
 		this.addInput(name, new Input(new ExecSocket({ name: displayName }), undefined, true));
 	}
 
-	addOutData({ name = 'data', displayName = '', isArray = false, type = 'any' }: DataParams) {
+	addOutData<N>({ name = 'data', displayName = '', isArray = false, type = 'any' }: DataParams<N>) {
 		this.addOutput(
 			name,
 			new Output(new Socket({ name: displayName, isArray: isArray, type: type }), displayName)
 		);
 	}
 
-	addInData({
+	addInData<N>({
 		name = 'data',
 		displayName = '',
-		inputLabel = undefined,
-		withControl = false,
+		socketLabel = '',
+		control = undefined,
 		isArray = false,
+		isRequired = false,
 		type = 'any'
-	}: DataParams) {
+	}: DataParams<N>) {
 		const input = new Input(
-			new Socket({ name: displayName, isArray: isArray, type: type }),
-			inputLabel
+			new Socket({ name: socketLabel, isArray: isArray, type: type, isRequired: isRequired }),
+			displayName,
+			false,
+			{ isRequired: isRequired }
 		);
-		if (withControl) {
-			input.addControl(new ClassicPreset.InputControl('text'));
+		if (control) {
+			input.addControl(new InputControl(control.type, control.options));
 		}
 		this.addInput(name, input);
 	}
@@ -165,6 +187,28 @@ export class Node
 	processDataflow = () => {
 		process(this);
 	};
+
+	getWaitPromises(nodes: Node[]): Promise<void>[] {
+		return nodes.map((node) => node.waitForEndExecutePromise());
+	}
+
+	getData<T extends InputControlTypes, N = InputControlValueType<T>>(
+		key: string,
+		inputs?: Record<string, unknown>
+	): N | undefined {
+		const checkedInputs = inputs as Record<string, N[]>;
+
+		if (checkedInputs && key in checkedInputs) {
+			console.log(checkedInputs);
+			return checkedInputs[key][0];
+		}
+		const inputControl = this.inputs[key]?.control as InputControl<T, N>;
+
+		if (inputControl) {
+			return inputControl.value;
+		}
+		return undefined;
+	}
 
 	data(
 		inputs?: Record<string, unknown>

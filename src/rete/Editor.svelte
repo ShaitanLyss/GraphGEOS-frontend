@@ -18,7 +18,9 @@
 	import type { Socket } from './socket/Socket';
 	import { notifications } from '@mantine/notifications';
 	import { acquisitionModelingExample } from './example/acquisition-modelling';
+	import './control/imports';
 	import { NodeEditor } from './NodeEditor';
+	import { timeloopExample } from './example/timeloop';
 
 	const editor = new NodeEditor();
 
@@ -70,7 +72,8 @@
 			connection.addPreset(ConnectionPresets.classic.setup());
 			area.use(connection);
 
-			await acquisitionModelingExample(editor);
+			// const nodesToFocus = await timeloopExample(editor);
+			const nodesToFocus = await acquisitionModelingExample(editor);
 
 			AreaExtensions.zoomAt(area, editor.getNodes());
 
@@ -81,7 +84,7 @@
 			await arrange.layout();
 			AreaExtensions.simpleNodesOrder(area);
 
-			AreaExtensions.zoomAt(area, editor.getNodes());
+			AreaExtensions.zoomAt(area, nodesToFocus);
 		}
 
 		createNodes();

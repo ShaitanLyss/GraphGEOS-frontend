@@ -21,7 +21,7 @@ function CustomButton(props: { data: ButtonControl }) {
 	);
 }
 
-addCustomization('control', (data) => {
+addCustomization('control', (data: { payload: unknown }) => {
 	if (data.payload instanceof ButtonControl) {
 		return CustomButton;
 	}

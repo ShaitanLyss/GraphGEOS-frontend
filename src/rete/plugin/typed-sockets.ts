@@ -23,7 +23,9 @@ export function isConnectionInvalid(outputSocket: Socket, inputSocket: Socket) {
 		outputSocket instanceof ExecSocket !== inputSocket instanceof ExecSocket ||
 		(outputSocket.type !== inputSocket.type &&
 			outputSocket.type !== 'any' &&
-			inputSocket.type !== 'any')
+			inputSocket.type !== 'any' &&
+			!(outputSocket.type === 'pythonObject' && inputSocket.type === 'pythonProperty') &&
+			!(outputSocket.type === 'pythonProperty' && inputSocket.type === 'pythonObject'))
 	);
 }
 
