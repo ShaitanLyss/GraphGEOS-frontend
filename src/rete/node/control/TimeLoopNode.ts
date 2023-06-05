@@ -70,7 +70,7 @@ export class TimeLoopNode extends Node {
 			socketLabel: 'Time',
 			type: 'number'
 		});
-		this.addOutExec('done', 'Done');
+		this.addOutExec('done', 'Done', true);
 	}
 
 	override async execute(
@@ -84,14 +84,7 @@ export class TimeLoopNode extends Node {
 		const end = this.getData<'number'>('end', inputs);
 		const step = this.getData<'number'>('step', inputs);
 
-		const leavesFromLoopExec = getLeavesFromOutput(this, 'loop');
-
-		if (
-			start === undefined ||
-			end === undefined ||
-			step === undefined ||
-			leavesFromLoopExec.length === 0
-		) {
+		if (start === undefined || end === undefined || step === undefined) {
 			forward('done');
 			super.execute(input, forward, forwardExec);
 			return;
@@ -109,10 +102,12 @@ export class TimeLoopNode extends Node {
 			}
 
 			this.getDataflowEngine().reset(this.id);
+			const leavesFromLoopExec = getLeavesFromOutput(this, 'loop');
 			const promises = this.getWaitPromises(leavesFromLoopExec);
 			forward('loop');
 
 			await Promise.all(promises);
+
 			cycle++;
 			this.currentTime = step * cycle + start;
 		}

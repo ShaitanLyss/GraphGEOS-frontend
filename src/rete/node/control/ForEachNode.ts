@@ -20,16 +20,11 @@ export class ForEachNode extends Node {
 		const inputs = await this.fetchInputs();
 		const array = inputs.array[0];
 
-		const leavesFromLoopExec = getLeavesFromOutput(this, 'loop');
-		if (leavesFromLoopExec.length === 0) {
-			super.execute(input, forward);
-			return;
-		}
-
 		for (let i = 0; i < array.length; i++) {
 			this.currentItemIndex = i;
 
 			this.getDataflowEngine().reset(this.id);
+			const leavesFromLoopExec = getLeavesFromOutput(this, 'loop');
 			const promises = this.getWaitPromises(leavesFromLoopExec);
 			forward('loop');
 

@@ -1,5 +1,7 @@
 <script>
 	import Editor from '../rete/Editor.svelte';
+
+	import '../rete/imports';
 </script>
 
 <h1>Welcome to SvelteKit</h1>

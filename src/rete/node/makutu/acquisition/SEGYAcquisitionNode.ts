@@ -7,8 +7,12 @@ export class SEGYAcquisitionNode extends APINode {
 			name: 'segdir',
 			displayName: 'Seg Directory',
 			type: 'string',
-			withControl: true,
-			initial: 'acquisition/'
+			control: {
+				type: 'text',
+				options: {
+					initial: 'acquisition/'
+				}
+			}
 		});
 		this.addOutData({
 			name: 'shots',

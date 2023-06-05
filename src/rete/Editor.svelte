@@ -18,7 +18,7 @@
 	import type { Socket } from './socket/Socket';
 	import { notifications } from '@mantine/notifications';
 	import { acquisitionModelingExample } from './example/acquisition-modelling';
-	import './control/imports';
+
 	import { NodeEditor } from './NodeEditor';
 	import { timeloopExample } from './example/timeloop';
 

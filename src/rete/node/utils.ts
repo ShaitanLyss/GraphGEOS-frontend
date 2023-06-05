@@ -1,6 +1,9 @@
 import { structures } from 'rete-structures';
 import { Connection, Node } from './Node';
 import { EveryNode } from './control/EveryNode';
+import { useDebugValue } from 'react';
+import { NodeEditor } from 'rete';
+import { Schemes } from './Schemes';
 
 // TODO : make the leave every or every leave based on every node current
 export function getLeavesFromOutput(node: Node, key: string): Node[] {
@@ -15,23 +18,22 @@ export function getLeavesFromOutput(node: Node, key: string): Node[] {
 
 	if (!loopNode) return [];
 
-	const struct = structures(node.getEditor());
-	const successors = struct.successors(node.id);
-	const tree = struct.successors(loopNode.id);
-	
-	const everyNodes = tree.filter((node) => node instanceof EveryNode && !node.isFlowing()).nodes();
-	const everyNodesSuccessors = everyNodes.map((node) => struct.successors(node.id).nodes()).flat();
+	return getNodesToWaitFor(loopNode, structures(node.getEditor()));
+}
 
-	const cleanedTree = tree.difference({
-		nodes: [...everyNodes, ...everyNodesSuccessors],
-		connections: []
-	});
+function getNodesToWaitFor(node: Node, struct): Node[] {
+	const outExec = node.getNaturalFlow();
+	// console.log("outExec", outExec);
 
-	const leaves = cleanedTree.leaves().nodes();
-	console.log(everyNodes);
-	
-	
-	console.log([...leaves, ...everyNodes]);
-	
-	return [...leaves, ...everyNodes];
+	if (outExec === undefined || !(outExec in node.outputs)) return [node];
+	const editor = node.getEditor();
+	const nextNodes = editor
+		.getConnections()
+		.filter((connection) => connection.source === node.id && connection.sourceOutput === outExec)
+		.map((connection) => editor.getNode(connection.target));
+
+	if (nextNodes.length === 0) return [node];
+	const nextNode = nextNodes[0];
+
+	return getNodesToWaitFor(nextNode, struct);
 }

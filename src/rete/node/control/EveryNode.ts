@@ -1,10 +1,12 @@
+import { _ } from 'svelte-i18n';
 import { Node } from '../Node';
 
 export class EveryNode extends Node {
-	current = 0;
+	private current = 0;
 
-	constructor() {
+	constructor(count = 100) {
 		super('Every', { height: 200, width: 200 });
+
 		this.addInExec();
 		this.addOutExec();
 		this.addInData({
@@ -15,11 +17,13 @@ export class EveryNode extends Node {
 			control: {
 				type: 'number',
 				options: {
-					initial: 100,
+					initial: count,
 					label: 'Count'
 				}
 			}
 		});
+
+		// this.addInExec('reset', 'Reset');
 	}
 
 	isFlowing() {
@@ -39,5 +43,9 @@ export class EveryNode extends Node {
 
 		this.current++;
 		super.execute(input, forward, false);
+	}
+
+	override getNaturalFlow(): string | undefined {
+		return this.isFlowing() ? 'exec' : undefined;
 	}
 }

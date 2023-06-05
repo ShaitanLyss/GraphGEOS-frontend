@@ -10,13 +10,15 @@ import { ApplyInitialConditionsNode } from '../node/makutu/solver/ApplyInitialCo
 import { UpdateSourcesAndReceiversNode } from '../node/makutu/solver/UpdateSourceAndReceivers';
 import { UpdateVtkOutputNode } from '../node/makutu/solver/UpdateVtkOutput';
 import { AppendNode } from '../node/io/AppendNode';
-import { DisplayNode } from '../node/io/DisplayNode';
 import { TimeLoopNode } from '../node/control/TimeLoopNode';
-import { AreaExtensions } from 'rete-area-plugin';
 import { OutputVtkNode } from '../node/makutu/solver/OutputVtk';
 import { EveryNode } from '../node/control/EveryNode';
 import { MakeArrayNode } from '../node/data/MakeArrayNode';
-import {NumberNode} from '../node/math/NumberNode'
+import { NumberNode } from '../node/math/NumberNode';
+import { SequenceNode } from '../node/control/SequenceNode';
+import { LogNode } from '../node/io/LogNode';
+import { ExecuteNode } from '../node/makutu/solver/ExecuteNode';
+import { FormatNode } from '../node/io/FormatNode';
 
 export async function acquisitionModelingExample(editor: NodeEditor) {
 	const start = new StartNode();
@@ -51,7 +53,7 @@ export async function acquisitionModelingExample(editor: NodeEditor) {
 	await editor.addNode(initializeSolver);
 
 	await editor.addNewConnection(breakShot, 'xml', initializeSolver, 'xml');
-	await editor.addNewConnection(foreachShot, 'loop', initializeSolver, 'exec');
+	// await editor.addNewConnection(foreachShot, 'loop', initializeSolver, 'exec');
 
 	const solver = new AcousticSEMNode();
 	await editor.addNode(solver);
@@ -106,15 +108,37 @@ export async function acquisitionModelingExample(editor: NodeEditor) {
 
 	await editor.addExecConnection(updateVtkOutput, timeLoop);
 
+	const sequence = new SequenceNode();
+
+	await editor.addNode(sequence);
+
 	const outputVtk = new OutputVtkNode();
 	await editor.addNode(outputVtk);
 
-	const every = new EveryNode();
+	const every = new EveryNode(50);
 	await editor.addNode(every);
-
-	await editor.addNewConnection(timeLoop, 'loop', every, 'exec');
+	await editor.addNewConnection(sequence, 'exec-0', every, 'exec');
 	await editor.addExecConnection(every, outputVtk);
 
-	// return [timeLoop, update_source_receivers];
-	return editor.getNodes();
+	await editor.addNewConnection(timeLoop, 'loop', sequence, 'exec');
+
+	const executeSolver = new ExecuteNode();
+	await editor.addNode(executeSolver);
+	await editor.addNewConnection(sequence, 'exec-1', executeSolver, 'exec');
+
+	const format = new FormatNode() 
+	await editor.addNode(format);
+	const sequenceAfterForEach = new SequenceNode();
+	await editor.addNode(sequenceAfterForEach);
+	const logShotDone = new LogNode();
+	await editor.addNode(logShotDone);
+	await editor.addNewConnection(foreachShot, 'loop', sequenceAfterForEach, 'exec');
+	
+	await editor.addNewConnection(sequenceAfterForEach, 'exec-0', initializeSolver, 'exec');
+	await editor.addNewConnection(sequenceAfterForEach, 'exec-1', logShotDone, 'exec');
+	await editor.addNewConnection(format, 'result', logShotDone, 'message');
+	
+
+	return [foreachShot, logShotDone];
+	// return editor.getNodes();
 }

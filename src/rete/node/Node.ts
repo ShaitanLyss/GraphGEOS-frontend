@@ -9,6 +9,8 @@ import { ExecSocket } from '../socket/ExecSocket';
 import { structures } from 'rete-structures';
 import { Output } from '../Output';
 import { Input } from '../Input';
+import { format } from 'svelte-i18n';
+import { Stack } from '../../types/Stack';
 import type { SocketType, TypedSocketsPlugin } from '../plugin/typed-sockets';
 import {
 	InputControl,
@@ -100,7 +102,8 @@ export class Node
 	width = 190;
 	height = 120;
 
-	private resolveEndExecute?: () => void;
+	private resolveEndExecutes = new Stack<() => void>();
+	private naturalFlowExec: string | undefined = 'exec';
 
 	constructor(
 		name = '',
@@ -111,8 +114,17 @@ export class Node
 		}: { width?: number; height?: number; path?: string } = {}
 	) {
 		super(name);
+		format.subscribe((_) => (this.label = _(name)));
 		this.width = width;
 		this.height = height;
+	}
+
+	setNaturalFlow(outExec: string | undefined) {
+		this.naturalFlowExec = outExec;
+	}
+
+	getNaturalFlow(): string | undefined {
+		return this.naturalFlowExec;
 	}
 
 	fetchInputs() {
@@ -129,15 +141,14 @@ export class Node
 
 	// Callback called at the end of execute
 	onEndExecute() {
-		if (this.resolveEndExecute) {
-			this.resolveEndExecute();
+		if (!this.resolveEndExecutes.isEmpty()) {
+			this.resolveEndExecutes.pop()!();
 		}
-		this.resolveEndExecute = undefined;
 	}
 
 	waitForEndExecutePromise(): Promise<void> {
 		return new Promise<void>((resolve) => {
-			this.resolveEndExecute = resolve;
+			this.resolveEndExecutes.push(resolve);
 		});
 	}
 
@@ -180,7 +191,8 @@ export class Node
 		this.addInput(name, input);
 	}
 
-	addOutExec(name = 'exec', displayName = '') {
+	addOutExec(name = 'exec', displayName = '', isNaturalFlow = false) {
+		if (isNaturalFlow) this.naturalFlowExec = name;
 		this.addOutput(name, new Output(new ExecSocket({ name: displayName }), displayName));
 	}
 
@@ -196,10 +208,20 @@ export class Node
 		key: string,
 		inputs?: Record<string, unknown>
 	): N | undefined {
+		const checkedInputs2 = inputs as Record<string, N>;
+		if (checkedInputs2 && key in checkedInputs2) {
+			return checkedInputs2[key];
+		}
 		const checkedInputs = inputs as Record<string, N[]>;
 
 		if (checkedInputs && key in checkedInputs) {
-			console.log(checkedInputs);
+			// console.log(checkedInputs);
+			return checkedInputs[key][0];
+		}
+		
+
+		if (checkedInputs && key in checkedInputs) {
+			// console.log(checkedInputs);
 			return checkedInputs[key][0];
 		}
 		const inputControl = this.inputs[key]?.control as InputControl<T, N>;

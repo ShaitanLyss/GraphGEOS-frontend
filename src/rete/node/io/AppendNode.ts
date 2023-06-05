@@ -9,26 +9,40 @@ interface AppendNodeParams extends NodeParams {
 
 export class AppendNode extends Node {
 	constructor({ a = '', sep = ' ', b = '' } = {}) {
-		super('Append', { height: 200 });
+		super('Append', { height: 220 });
 		this.addInData({
 			name: 'a',
 			displayName: 'A',
 			type: 'any',
-			withControl: true,
-			initial: a
+			control: {
+				type: 'text',
+				options: {
+					initial: a
+				}
+			}
 		});
 		this.addInData({
 			name: 'sep',
 			displayName: 'Separator',
 			type: 'string',
-			withControl: true,
-			initial: sep
+			control: {
+				type: 'text',
+				options: {
+					initial: sep,
+					label: 'Separator'
+				}
+			}
 		});
 		this.addInData({
 			name: 'b',
 			displayName: 'B',
 			type: 'any',
-			withControl: true,
+			control: {
+				type: 'text',
+				options: {
+					initial: sep
+				}
+			},
 			initial: b
 		});
 		this.addOutData({
@@ -41,21 +55,15 @@ export class AppendNode extends Node {
 	): Record<string, unknown> | Promise<Record<string, unknown>> {
 		const res = { result: '' };
 		if (!inputs) return { ...super.data(inputs), res };
-
-		const aControl = this.inputs.a?.control as ClassicPreset.InputControl<'text'>;
-		const bControl = this.inputs.b?.control as ClassicPreset.InputControl<'text'>;
-		const sepControl = this.inputs.sep?.control as ClassicPreset.InputControl<'text'>;
-
-		const { a, b, sep } = inputs;
-		const aValue = a ? a[0] : aControl.value;
-		const bValue = b ? b[0] : bControl.value;
-		const sepValue = sep ? sep[0] : sepControl.value;
+		const a = this.getData<'text'>('a', inputs);
+		const b = this.getData<'text'>('b', inputs);
+		const sep = this.getData<'text'>('sep', inputs);
 
 		// console.log("" + aValue + sepValue + bValue);
 
 		return {
 			...super.data(inputs),
-			result: '' + aValue + sepValue + bValue
+			result: '' + a + sep + b
 		};
 	}
 }

@@ -2,14 +2,24 @@ import { InputControl, InputControlTypes, InputControlValueType } from './Contro
 import * as React from 'react';
 import { Drag } from 'rete-react-render-plugin';
 import { addCustomization } from '../customization/render';
-import { Checkbox, NumberInput, NumberInputHandlers } from '@mantine/core';
+import { Checkbox, NumberInput, NumberInputHandlers, TextInput, Textarea, Text } from '@mantine/core';
+import { useDebouncedState, useDebouncedValue } from '@mantine/hooks';
 
 function InputControlComponent<T extends InputControlTypes>(props: { data: InputControl<T> }) {
 	const options = props.data.options;
 	const [value, setValue] = React.useState<InputControlValueType<T> | undefined>(props.data.value);
 	const ref = React.useRef<HTMLInputElement>(null);
+	const divRef = React.useRef<HTMLDivElement>(null);
+	const [debouncedValue] = useDebouncedValue(value, 200, {leading: false});
+	// const [debouncedValue, debouncedSetValue] = useDebouncedState('', 200, {leading: true});
+	React.useEffect(() => {
+		if (props.data.options?.change)
+			props.data.options?.change(debouncedValue as InputControlValueType<T>);
+		
+	}, [debouncedValue])
 
 	Drag.useNoDrag(ref);
+	Drag.useNoDrag(divRef);
 
 	// React.useEffect(() => {
 	// 	setValue(props.data.value);
@@ -54,6 +64,43 @@ function InputControlComponent<T extends InputControlTypes>(props: { data: Input
 					}}
 					sx={{ ['& .mantine-NumberInput-label']: { color: 'white' } }}
 				/>
+			);
+		case 'text':
+			return (
+				<TextInput
+					value={value as string}
+					label={options?.label}
+					ref={ref}
+					readOnly={props.data.readonly}
+					onChange={(e) => {
+						if (props.data.options?.change)
+							props.data.options?.change(e.currentTarget.value as InputControlValueType<T>);
+						const val = e.currentTarget.value as InputControlValueType<T>;
+						props.data.setValue(val);
+						setValue(val);
+					}}
+					sx={{ ['& .mantine-TextInput-label']: { color: 'white' } }}
+				/>
+			);
+		case 'textarea':
+			return (
+				<><div ref={divRef}>
+					<Textarea
+						value={value as string}
+						label={options?.label}
+						autosize
+						readOnly={props.data.readonly}
+					
+						onChange={(e) => {
+							// if (props.data.options?.change)
+							// 	props.data.options?.change(e.currentTarget.value as InputControlValueType<T>);
+							
+							const val = e.currentTarget.value as InputControlValueType<T>;
+							// props.data.setValue(val);
+							setValue(val);
+						} }
+						sx={{ ['& .mantine-Textarea-label']: { color: 'white' } }} />
+				</div></>
 			);
 	}
 }
