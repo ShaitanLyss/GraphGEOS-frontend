@@ -32,9 +32,7 @@ export class FormatNode extends Node {
 					debouncedOnChange: (value) => {
 						this.updateDataInputs();
 					},
-					onHeightChange: (height, info) => {
-                        console.log(height);
-                        
+					onHeightChange: (height, info) => {                        
 						this.height -= this.formatInputHeight;
 						this.formatInputHeight = height;
 						this.height += height;
