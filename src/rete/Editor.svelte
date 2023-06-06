@@ -82,12 +82,13 @@
 			});
 
 			await arrange.layout();
+			
 			AreaExtensions.simpleNodesOrder(area);
 
 			AreaExtensions.zoomAt(area, nodesToFocus);
 		}
 
-		createNodes();
+		await createNodes();
 
 		editor.addPipe((context) => {
 			if (['connectioncreated', 'connectionremoved'].includes(context.type)) {
