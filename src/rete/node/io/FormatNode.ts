@@ -15,7 +15,8 @@ export class FormatNode extends Node {
 		super('Format', { height: 124.181818 });
 		this.addOutData({
 			name: 'result',
-			displayName: ''
+			displayName: '',
+            type: 'string',
 		});
 		this.addInData({
 			name: 'format',
