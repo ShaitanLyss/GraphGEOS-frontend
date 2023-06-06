@@ -82,7 +82,7 @@
 			});
 
 			await arrange.layout();
-			
+
 			AreaExtensions.simpleNodesOrder(area);
 
 			AreaExtensions.zoomAt(area, nodesToFocus);

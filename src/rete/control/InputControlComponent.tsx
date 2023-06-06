@@ -25,11 +25,10 @@ function InputControlComponent<T extends InputControlTypes>(props: { data: Input
 			setFirstDebounce(false);
 			return;
 		}
-		
+
 		if (props.data.options?.debouncedOnChange)
 			props.data.options?.debouncedOnChange(debouncedValue as InputControlValueType<T>);
 	}, [debouncedValue, firstDebounce, props.data.options]);
-
 
 	const mergedRef = useMergedRef(divRef);
 

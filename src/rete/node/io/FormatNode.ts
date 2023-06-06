@@ -12,12 +12,12 @@ export class FormatNode extends Node {
 	updateHeight = true;
 
 	constructor({ format = 'Hello {name}!', vars = { name: 'Lyss' } }: FormatNodeParams = {}) {
-		super('Format', { height: 124.181818 + 43.818182});
-        this.formatInputHeight = 43.818182;
+		super('Format', { height: 124.181818 + 43.818182 });
+		this.formatInputHeight = 43.818182;
 		this.addOutData({
 			name: 'result',
 			displayName: '',
-            type: 'string',
+			type: 'string'
 		});
 		this.addInData({
 			name: 'format',
@@ -32,7 +32,7 @@ export class FormatNode extends Node {
 					debouncedOnChange: (value) => {
 						this.updateDataInputs();
 					},
-					onHeightChange: (height, info) => {                        
+					onHeightChange: (height, info) => {
 						this.height -= this.formatInputHeight;
 						this.formatInputHeight = height;
 						this.height += height;
