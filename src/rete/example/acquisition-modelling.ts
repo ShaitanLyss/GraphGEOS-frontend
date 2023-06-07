@@ -138,6 +138,12 @@ export async function acquisitionModelingExample(editor: NodeEditor) {
 	await editor.addNewConnection(sequenceAfterForEach, 'exec-1', logShotDone, 'exec');
 	await editor.addNewConnection(format, 'result', logShotDone, 'message');
 	
+	const logGatheringAndExportingSeismos = new LogNode({message: "Gathering and exporting seismos"});
+	await editor.addNode(logGatheringAndExportingSeismos);
+	await editor.addExecConnection(logShotDone, logGatheringAndExportingSeismos);
+
+	
+	
 
 	return [foreachShot, logShotDone];
 	// return editor.getNodes();
