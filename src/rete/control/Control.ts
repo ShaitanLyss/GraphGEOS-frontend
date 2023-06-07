@@ -15,6 +15,8 @@ export type InputControlOptions<N> = {
 	readonly?: boolean;
 	initial?: N;
 	change?: (value: N) => void;
+	debouncedOnChange?: (value: N) => void;
+	onHeightChange?: (height: number, info: unknown) => void;
 	label?: string;
 };
 

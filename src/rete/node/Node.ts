@@ -142,7 +142,10 @@ export class Node
 	// Callback called at the end of execute
 	onEndExecute() {
 		if (!this.resolveEndExecutes.isEmpty()) {
-			this.resolveEndExecutes.pop()!();
+			const resolve = this.resolveEndExecutes.pop();
+			if (resolve) {
+				resolve();
+			}
 		}
 	}
 
@@ -218,7 +221,6 @@ export class Node
 			// console.log(checkedInputs);
 			return checkedInputs[key][0];
 		}
-		
 
 		if (checkedInputs && key in checkedInputs) {
 			// console.log(checkedInputs);

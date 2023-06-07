@@ -2,21 +2,35 @@ import { InputControl, InputControlTypes, InputControlValueType } from './Contro
 import * as React from 'react';
 import { Drag } from 'rete-react-render-plugin';
 import { addCustomization } from '../customization/render';
-import { Checkbox, NumberInput, NumberInputHandlers, TextInput, Textarea, Text } from '@mantine/core';
-import { useDebouncedState, useDebouncedValue } from '@mantine/hooks';
+import {
+	Checkbox,
+	NumberInput,
+	NumberInputHandlers,
+	TextInput,
+	Textarea,
+	Text
+} from '@mantine/core';
+import { useDebouncedState, useDebouncedValue, useFocusTrap, useMergedRef } from '@mantine/hooks';
 
 function InputControlComponent<T extends InputControlTypes>(props: { data: InputControl<T> }) {
 	const options = props.data.options;
 	const [value, setValue] = React.useState<InputControlValueType<T> | undefined>(props.data.value);
 	const ref = React.useRef<HTMLInputElement>(null);
 	const divRef = React.useRef<HTMLDivElement>(null);
-	const [debouncedValue] = useDebouncedValue(value, 200, {leading: false});
+	const [debouncedValue] = useDebouncedValue(value, 200, { leading: true });
 	// const [debouncedValue, debouncedSetValue] = useDebouncedState('', 200, {leading: true});
+	const [firstDebounce, setFirstDebounce] = React.useState(true);
 	React.useEffect(() => {
-		if (props.data.options?.change)
-			props.data.options?.change(debouncedValue as InputControlValueType<T>);
-		
-	}, [debouncedValue])
+		if (firstDebounce) {
+			setFirstDebounce(false);
+			return;
+		}
+
+		if (props.data.options?.debouncedOnChange)
+			props.data.options?.debouncedOnChange(debouncedValue as InputControlValueType<T>);
+	}, [debouncedValue, firstDebounce, props.data.options]);
+
+	const mergedRef = useMergedRef(divRef);
 
 	Drag.useNoDrag(ref);
 	Drag.useNoDrag(divRef);
@@ -84,23 +98,29 @@ function InputControlComponent<T extends InputControlTypes>(props: { data: Input
 			);
 		case 'textarea':
 			return (
-				<><div ref={divRef}>
-					<Textarea
-						value={value as string}
-						label={options?.label}
-						autosize
-						readOnly={props.data.readonly}
-					
-						onChange={(e) => {
-							// if (props.data.options?.change)
-							// 	props.data.options?.change(e.currentTarget.value as InputControlValueType<T>);
-							
-							const val = e.currentTarget.value as InputControlValueType<T>;
-							// props.data.setValue(val);
-							setValue(val);
-						} }
-						sx={{ ['& .mantine-Textarea-label']: { color: 'white' } }} />
-				</div></>
+				<>
+					<div ref={mergedRef}>
+						<Textarea
+							value={value as string}
+							label={options?.label}
+							autosize
+							readOnly={props.data.readonly}
+							onChange={(e) => {
+								// if (props.data.options?.change)
+								// 	props.data.options?.change(e.currentTarget.value as InputControlValueType<T>);
+
+								const val = e.currentTarget.value as InputControlValueType<T>;
+								props.data.setValue(val);
+
+								setValue(val);
+							}}
+							sx={{ ['& .mantine-Textarea-label']: { color: 'white' } }}
+							onHeightChange={(height, info) => {
+								options?.onHeightChange && options?.onHeightChange(height, info);
+							}}
+						/>
+					</div>
+				</>
 			);
 	}
 }

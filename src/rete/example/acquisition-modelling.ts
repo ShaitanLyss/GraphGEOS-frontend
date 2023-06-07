@@ -126,14 +126,15 @@ export async function acquisitionModelingExample(editor: NodeEditor) {
 	await editor.addNode(executeSolver);
 	await editor.addNewConnection(sequence, 'exec-1', executeSolver, 'exec');
 
-	const format = new FormatNode() 
+	const format = new FormatNode({ format: 'Shot {index} done' });
 	await editor.addNode(format);
+	await editor.addNewConnection(foreachShot, 'index', format, 'data-index');
 	const sequenceAfterForEach = new SequenceNode();
 	await editor.addNode(sequenceAfterForEach);
 	const logShotDone = new LogNode();
 	await editor.addNode(logShotDone);
 	await editor.addNewConnection(foreachShot, 'loop', sequenceAfterForEach, 'exec');
-	
+
 	await editor.addNewConnection(sequenceAfterForEach, 'exec-0', initializeSolver, 'exec');
 	await editor.addNewConnection(sequenceAfterForEach, 'exec-1', logShotDone, 'exec');
 	await editor.addNewConnection(format, 'result', logShotDone, 'message');
