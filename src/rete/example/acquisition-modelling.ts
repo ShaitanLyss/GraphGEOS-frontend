@@ -35,14 +35,7 @@ export async function acquisitionModelingExample(editor: NodeEditor) {
 	await editor.addExecConnection(segy, foreachShot);
 	// await editor.addConnection(new Connection(segy, 'shots', foreachShot, 'array'));
 
-	const tmpArray = new MakeArrayNode();
-	tmpArray.addPin();
-	await editor.addNode(tmpArray);
-	await editor.addConnection(new Connection(tmpArray, 'array', foreachShot, 'array'));
-	const nbr = new NumberNode(0);
-	await editor.addNode(nbr);
-	await editor.addConnection(new Connection(nbr, 'value', tmpArray, 'data-1'));
-	await editor.addConnection(new Connection(nbr, 'value', tmpArray, 'data-0'));
+	await editor.addNewConnection(segy, 'shots', foreachShot, 'array')
 
 	const breakShot = new BreakNode();
 	await editor.addNode(breakShot);
@@ -57,6 +50,8 @@ export async function acquisitionModelingExample(editor: NodeEditor) {
 
 	const solver = new AcousticSEMNode();
 	await editor.addNode(solver);
+	await editor.addExecConnection(start, solver);
+	await editor.addExecConnection(solver, segy);
 
 	await editor.addConnection(new Connection(solver, 'solver', initializeSolver, 'solver'));
 
@@ -142,6 +137,8 @@ export async function acquisitionModelingExample(editor: NodeEditor) {
 	const logGatheringAndExportingSeismos = new LogNode({message: "Gathering and exporting seismos"});
 	await editor.addNode(logGatheringAndExportingSeismos);
 	await editor.addExecConnection(logShotDone, logGatheringAndExportingSeismos);
+	await editor.addNewConnection(updateVtkOutput, 'solver', executeSolver, 'solver');
+	await editor.addNewConnection(updateVtkOutput, 'solver', outputVtk, 'solver');
 
 	
 	

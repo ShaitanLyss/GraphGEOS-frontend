@@ -36,17 +36,17 @@ export class ObjectAPINode extends APINode {
 		});
 	}
 
-	override data(
-		inputs?: Record<string, unknown> | undefined
-	): Record<string, unknown> | Promise<Record<string, unknown>> {
-		const res = {};
-		res[this.objectKey] = undefined;
-		if (!inputs || inputs[this.objectKey] === undefined) return res;
+	// override data(
+	// 	inputs?: Record<string, unknown> | undefined
+	// ): Record<string, unknown> | Promise<Record<string, unknown>> {
+	// 	const res = {};
+	// 	res[this.objectKey] = undefined;
+	// 	if (!inputs || inputs[this.objectKey] === undefined) return res;
 
-		res[this.objectKey] = (inputs[this.objectKey] as PythonObject[])[0];
+	// 	res[this.objectKey] = (inputs[this.objectKey] as PythonObject[])[0];
 
-		return res;
-	}
+	// 	return res;
+	// }
 }
 
 // add property __abstract to ObjectAPINode

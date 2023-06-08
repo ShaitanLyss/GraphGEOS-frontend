@@ -4,7 +4,7 @@ export class UpdateSourcesAndReceiversNode extends SolverAPINode {
 	constructor() {
 		super(
 			'Update Sources and Receivers',
-			'http://localhost:3000/api/v1/solver/update_source_receivers',
+			'/update_sources_receivers',
 			{
 				height: 300,
 				width: 180

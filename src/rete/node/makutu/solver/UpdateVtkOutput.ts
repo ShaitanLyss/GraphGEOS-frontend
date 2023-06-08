@@ -2,7 +2,7 @@ import { SolverAPINode } from './SolverAPINode';
 
 export class UpdateVtkOutputNode extends SolverAPINode {
 	constructor() {
-		super('Update VTK Output', 'http://localhost:3000/api/v1/solver/update_vtk_output', {
+		super('Update VTK Output', '/update_vtk_output', {
 			height: 300,
 			width: 180
 		});

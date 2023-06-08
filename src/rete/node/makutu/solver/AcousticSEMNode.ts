@@ -2,26 +2,33 @@ import { Node } from '../../Node';
 import { Socket } from '../../../socket/Socket';
 import { Input } from '../../../Input';
 import { PythonObject } from '../../../../backend-interaction/python';
+import { SolverAPINode } from './SolverAPINode';
+import { APINode } from '../../APINode';
+
 /**
  * This node displays the value of the input.
  */
-export class AcousticSEMNode extends Node {
-	height = 150;
+export class AcousticSEMNode extends APINode {
+	// height = 150;
 	width = 180;
 
 	constructor() {
-		super('AcousticSEM');
+		super('Create AcousticSEM', {
+			url: '/makutu/solver/create-acoustic-sem',
+			height: 180,
+		});
 
 		this.addOutData({
 			name: 'solver',
+			displayName: 'Solver',
 			socketLabel: 'Solver',
 			type: 'pythonObject'
-		});
+		})
 
 		// Display value
 	}
 
-	data(inputs: Record<string, object>): Record<string, object> | Promise<Record<string, object>> {
-		return { solver: new PythonObject(10n) };
-	}
+	// data(inputs: Record<string, object>): Record<string, object> | Promise<Record<string, object>> {
+	// 	return { solver: new PythonObject(10) };
+	// }
 }
