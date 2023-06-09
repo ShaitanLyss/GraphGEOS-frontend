@@ -2,7 +2,7 @@ import { APINode } from '../../APINode';
 
 export class SEGYAcquisitionNode extends APINode {
 	constructor() {
-		super('SEGY Acquisition', { url: 'http://localhost:3000/api/v1/acquisition/segy' });
+		super('SEGY Acquisition', { url: '/makutu/acquisition/segy' });
 		this.addInData({
 			name: 'segdir',
 			displayName: 'Seg Directory',
@@ -20,9 +20,10 @@ export class SEGYAcquisitionNode extends APINode {
 			type: 'pythonObject',
 			isArray: true
 		});
-	}
 
-	override data(inputs?: Record<string, unknown> | undefined): { shots: unknown[] } {
-		return { shots: [] };
+		// setInterval(() => {
+		// 	console.log(this.get);
+			
+		// });
 	}
 }
