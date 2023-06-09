@@ -121,10 +121,19 @@
     debug "^4.1.0"
     globals "^11.1.0"
 
-"@babel/types@^7.18.6", "@babel/types@^7.21.0", "@babel/types@^7.21.4", "@babel/types@^7.21.5":
+"@babel/types@^7.18.6", "@babel/types@^7.21.0", "@babel/types@^7.21.5":
   version "7.21.5"
   resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.21.5.tgz#18dfbd47c39d3904d5db3d3dc2cc80bedb60e5b6"
   integrity sha512-m4AfNvVF2mVC/F7fDEdH2El3HzUg9It/XsCxZiOTTA3m3qYfcSVSbTfM6Q9xG+hYDniZssYhlXKKUMD5m8tF4Q==
+  dependencies:
+    "@babel/helper-string-parser" "^7.21.5"
+    "@babel/helper-validator-identifier" "^7.19.1"
+    to-fast-properties "^2.0.0"
+
+"@babel/types@^7.21.4":
+  version "7.22.4"
+  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.22.4.tgz#56a2653ae7e7591365dabf20b76295410684c071"
+  integrity sha512-Tx9x3UBHTTsMSW85WB2kphxYQVvrZ/t1FxD88IpSgIjiUJlCm9z+xWIDwyo1vffTwSqteqyznB8ZE9vYYk16zA==
   dependencies:
     "@babel/helper-string-parser" "^7.21.5"
     "@babel/helper-validator-identifier" "^7.19.1"
@@ -176,9 +185,9 @@
   integrity sha512-W2P2c/VRW1/1tLox0mVUalvnWXxavmv/Oum2aPsRcoDJuob75FC3Y8FbpfLwUegRcxINtGUMPq0tFCvYNTBXNA==
 
 "@emotion/react@^11.11.0":
-  version "11.11.0"
-  resolved "https://registry.yarnpkg.com/@emotion/react/-/react-11.11.0.tgz#408196b7ef8729d8ad08fc061b03b046d1460e02"
-  integrity sha512-ZSK3ZJsNkwfjT3JpDAWJZlrGD81Z3ytNDsxw1LKq1o+xkmO5pnWfr6gmCC8gHEFf3nSSX/09YrG67jybNPxSUw==
+  version "11.11.1"
+  resolved "https://registry.yarnpkg.com/@emotion/react/-/react-11.11.1.tgz#b2c36afac95b184f73b08da8c214fdf861fa4157"
+  integrity sha512-5mlW1DquU5HaxjLkfkGN1GA/fvVGdyHURRiX/0FHl2cfIfRxSOfmxEH5YS43edp0OldZrZ+dkBKbngxcNCdZvA==
   dependencies:
     "@babel/runtime" "^7.18.3"
     "@emotion/babel-plugin" "^11.11.0"
@@ -681,9 +690,9 @@
     picomatch "^2.3.1"
 
 "@skeletonlabs/skeleton@^1.6.2":
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/@skeletonlabs/skeleton/-/skeleton-1.6.2.tgz#437a86acc78f4f9012769464a4c06179bc43adb6"
-  integrity sha512-Xp+gCAgxEfzwa6lUzeFHhIiTzPe7wKAWZJzo0UnNJfgMCuJy4Txu2bDXz6ZCyu9+B6+i8lShFPxPuENqTfP14w==
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/@skeletonlabs/skeleton/-/skeleton-1.7.1.tgz#0ab1d884923a638b02c798fbeec34004ea6e6dd0"
+  integrity sha512-464uXRBzKzhZ5UgoBk7JvUDbYvcZpbThuC0ZLEiG8XKQhcabDUEdgZtVUAXmR8+L/vs247iVZZP1OHpW8Uexgg==
   dependencies:
     esm-env "1.0.0"
     svelte "3.58.0"
@@ -696,9 +705,9 @@
     import-meta-resolve "^3.0.0"
 
 "@sveltejs/kit@^1.5.0":
-  version "1.20.1"
-  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.20.1.tgz#5aa18d063974ddc8c1beb9ee5ea7934e1c8d4e9d"
-  integrity sha512-iZ7PvbM45sdLR3KIXFTbwIwP4PmeO/7JdNdpKRc/T9xMgDabNlPhL1gnJ/Hi1w00g4nc3Zpo/HNrzbRmuOnUjQ==
+  version "1.20.2"
+  resolved "https://registry.yarnpkg.com/@sveltejs/kit/-/kit-1.20.2.tgz#4167cdc04387c67216b7b3d5875c3553c7315e78"
+  integrity sha512-MtR1i+HtmYWcRgtubw1GQqT/+CWXL/z24PegE0xYAdObbhdr7YtEfmoe705D/JZMtMmoPXrmSk4W0MfL5A3lYw==
   dependencies:
     "@sveltejs/vite-plugin-svelte" "^2.4.1"
     "@types/cookie" "^0.5.1"
@@ -2554,9 +2563,9 @@ rete-minimap-plugin@^2.0.0-beta.6:
     "@babel/runtime" "^7.21.0"
 
 rete-react-render-plugin@^2.0.0-beta.19:
-  version "2.0.0-beta.21"
-  resolved "https://registry.yarnpkg.com/rete-react-render-plugin/-/rete-react-render-plugin-2.0.0-beta.21.tgz#d85f6fc4204bf6995dc02e2b025c678aee11244e"
-  integrity sha512-MvcAT2EwzBTjYqb93M7KSAVMToRd9iYRyGF22KOURaSU9sd4+NkpsVebzBn5mcRuQmPiQeqaneAVNtqzntb5Pw==
+  version "2.0.0-beta.22"
+  resolved "https://registry.yarnpkg.com/rete-react-render-plugin/-/rete-react-render-plugin-2.0.0-beta.22.tgz#9a22510b4889ba521952ad16755468a30ce99060"
+  integrity sha512-Tcqk6sQMqD8p6+bssarNczZT+MnLv9M1WngmZrfsJ36C1jFckR2A1rmJhqSmXiIE00wcmvBeXblKTHqdFln/Kw==
   dependencies:
     "@babel/runtime" "^7.21.0"
     usehooks-ts "^2.9.1"
