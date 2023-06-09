@@ -19,6 +19,7 @@ import { SequenceNode } from '../node/control/SequenceNode';
 import { LogNode } from '../node/io/LogNode';
 import { ExecuteNode } from '../node/makutu/solver/ExecuteNode';
 import { FormatNode } from '../node/io/FormatNode';
+import { GetPressuresAtReceiversNode } from '../node/makutu/solver/GetPressureAtReceiversNode';
 
 export async function acquisitionModelingExample(editor: NodeEditor) {
 	const start = new StartNode();
@@ -143,9 +144,12 @@ export async function acquisitionModelingExample(editor: NodeEditor) {
 	await editor.addNode(logGatheringAndExportingSeismos);
 	await editor.addExecConnection(logShotDone, logGatheringAndExportingSeismos);
 
+	const pressure = new GetPressuresAtReceiversNode();
+	await editor.addNode(pressure);
+	await editor.addExecConnection(logGatheringAndExportingSeismos, pressure);
 	
 	
 
-	return [foreachShot, logShotDone];
+	return [foreachShot, logShotDone, logGatheringAndExportingSeismos, pressure];
 	// return editor.getNodes();
 }
