@@ -43,7 +43,6 @@
 		AreaExtensions.showInputControl(area);
 
 		async function createNodes() {
-			const numberNode = new NumberNode(2);
 			const connection = new ConnectionPlugin<Schemes, AreaExtra>();
 			ConnectionPresets.classic.setup();
 			connection.addPreset(

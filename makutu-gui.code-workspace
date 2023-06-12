@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "../../makutu (1)/examples/vtkOutput"
 		}
 	],
 	"settings": {
