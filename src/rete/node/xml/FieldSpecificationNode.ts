@@ -1,31 +1,42 @@
 import { XmlNode } from './XmlNode';
 
 export class FieldSpecificationNode extends XmlNode {
-    constructor() {
+    constructor(initialValues: Record<string, unknown> = {}) {
         super('Field Specification', {
+            height: 340,
             outData: {
                 name: 'fieldSpecification',
                 displayName: 'Field Specification',
                 type: 'fieldSpecification'
             },
+            initialValues: initialValues,
             xmlProperties: [
                 {
                     name: "objectPath",
-                    type: "string"
+                    type: "string",
+                    controlType: "text"
                 },
                 {
                     name: "fieldName",
-                    type: "string"
+                    type: "string",
+                    controlType: "text"
                 },
                 {
                     name: "scale",
-                    type: "number"
+                    type: "number",
+                    controlType: "number"
                 },
                 {
                     name: "setNames",
                     type: "string",
-                    isArray: true
-                }
+                    isArray: true,
+                },
+                {
+                    name: "initialCondition",
+                    type: "boolean",
+                    controlType: "checkbox"
+                },
+                
             ]
             });
 

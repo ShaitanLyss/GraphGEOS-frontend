@@ -6,6 +6,7 @@ import type { InputControlTypes } from '../../control/Control';
 
 type XmlNodeParams = NodeParams & {
     outData?: OutDataParams;
+    initialValues?: Record<string, unknown>;
     xmlProperties?: XmlProperty[];
 };
 
@@ -19,17 +20,23 @@ export abstract class XmlNode extends Node {
         XmlNode.count++;
         super(name, config);
         const { outData, xmlProperties } = config;
+        let { initialValues } = config;
+        initialValues = initialValues !==  undefined ? initialValues : {};
 
         if (xmlProperties)
-            xmlProperties.forEach(({name, type, isArray}) => {
+            xmlProperties.forEach(({name, type, isArray, controlType}) => {
                 this.addInData({
                     name:name,
                     displayName: titlelize(name),
                     socketLabel: titlelize(name),
                     type: type,
                     isArray: isArray,
-                    control: {
-                        type: type as InputControlTypes,
+                    control: controlType && {
+                        type: controlType,
+                        options: {
+                            label: titlelize(name),
+                            initial: initialValues[name],
+                        },
                     }
                 });
             });
@@ -37,7 +44,7 @@ export abstract class XmlNode extends Node {
         if (outData)
             this.addOutData({
                 name: 'value',
-                displayName: outData.displayName,
+                displayName: "",
                 socketLabel: outData.socketLabel,
                 type: outData.type,
             });

@@ -15,25 +15,21 @@ export class MakeArrayNode extends Node {
 		this.addInData({ name: 'data-0' });
 
 		this.getEditor().addPipe((context) => {
-			
-			console.log("pipe");
-			
-			
-			
+
 			if (!(['connectionremoved', 'connectioncreated'].includes(context.type)))
-			return context;
-			console.log(typeof context.data);
-			
+				return context;
+
+			if (!("data" in context))
+				return context;
+
 			if (!(context.data instanceof Connection))
-			return context;
-			
+				return context;
+
 			const conn = context.data;
-			
-			console.log("context", context);
+
 			if (conn.target !== this.id && conn.source !== this.id)
 				return context;
 
-			console.log(conn);
 
 
 
@@ -43,7 +39,7 @@ export class MakeArrayNode extends Node {
 					this.changeType('any');
 			} else if (context.type === 'connectioncreated') {
 				this.numConnections++;
-				
+
 
 				if (this.type !== 'any')
 					return context;
@@ -62,7 +58,6 @@ export class MakeArrayNode extends Node {
 				}
 			}
 
-			console.log("numConnections", this.numConnections);
 			return context;
 		});
 

@@ -13,6 +13,12 @@ export function assignColor(s: Socket): string {
 		boolean: '#d88c8c',
 		solver: '#bc8cd8',
 		output: '#d88c8c',
+		fieldSpecification: '#8cd8b3',
+		constitutive: '#8c8dd8',
+		elementRegion: '#8cd8d8',
+		numericalMethod: '#d8b78c',
+		geometry: '#d8d08c',
+		mesh: '#ad8c71',
 	};
 
 	return colorMap[s.type] || $socketcolor;

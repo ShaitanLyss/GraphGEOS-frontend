@@ -1,3 +1,4 @@
+import type { InputControlTypes } from "../../control/Control";
 import type { SocketType } from "../../plugin/typed-sockets";
 
 export type XmlData = {
@@ -11,6 +12,7 @@ type PropertyNames<T> = {
 export type XmlProperty = {
     name: string;
     type: SocketType;
+    controlType?: InputControlTypes;
     isArray?: boolean;
 }
 
