@@ -23,7 +23,7 @@ export class SEGYAcquisitionNode extends APINode {
 
 		// setInterval(() => {
 		// 	console.log(this.get);
-			
+
 		// });
 	}
 }

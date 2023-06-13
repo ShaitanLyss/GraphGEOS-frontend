@@ -18,7 +18,7 @@
 	import type { Socket } from './socket/Socket';
 	import { notifications } from '@mantine/notifications';
 	import { acquisitionModelingExample } from './example/acquisition-modelling';
-
+	import { acquisitionXmlExample } from './example/acquisition-xml';
 	import { NodeEditor } from './NodeEditor';
 	import { timeloopExample } from './example/timeloop';
 
@@ -43,12 +43,21 @@
 		AreaExtensions.showInputControl(area);
 
 		async function createNodes() {
-			const numberNode = new NumberNode(2);
 			const connection = new ConnectionPlugin<Schemes, AreaExtra>();
 			ConnectionPresets.classic.setup();
 			connection.addPreset(
 				() =>
 					new ClassicFlow({
+						makeConnection(from, to, context) {
+					
+							const forward = from.side === 'output' && to.side === 'input';
+							const backward = from.side === 'input' && to.side === 'output';
+							const [source, target] = forward ? [from, to] : backward ? [to, from] : [];
+
+							if (!source || !target) return false;
+							editor.addNewConnection(editor.getNode(source.nodeId), source.key, editor.getNode(target.nodeId), target.key);
+							return true;
+						},
 						canMakeConnection(from, to) {
 							connection.drop();
 							// this function checks if the old connection should be removed
@@ -58,9 +67,12 @@
 									(to as unknown as { payload: Socket }).payload
 								)
 							) {
+								console.log(
+									`Connection between ${from.nodeId} and ${to.nodeId} is not allowed. From socket type is ${from.payload.type} and to socket type is ${to.payload.type}`
+								);
 								notifications.show({
 									title: 'Erreur',
-									message: 'Connection invalide !',
+									message: `Connection invalide entre types "${from.payload.type}" et "${to.payload.type}" !`,
 									color: 'red'
 								});
 								return false;
@@ -73,7 +85,8 @@
 			area.use(connection);
 
 			// const nodesToFocus = await timeloopExample(editor);
-			const nodesToFocus = await acquisitionModelingExample(editor);
+			// const nodesToFocus = await acquisitionModelingExample(editor);
+			const nodesToFocus = await acquisitionXmlExample(editor);
 
 			AreaExtensions.zoomAt(area, editor.getNodes());
 

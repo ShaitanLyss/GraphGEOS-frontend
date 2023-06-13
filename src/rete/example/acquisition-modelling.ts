@@ -36,7 +36,7 @@ export async function acquisitionModelingExample(editor: NodeEditor) {
 	await editor.addExecConnection(segy, foreachShot);
 	// await editor.addConnection(new Connection(segy, 'shots', foreachShot, 'array'));
 
-	await editor.addNewConnection(segy, 'shots', foreachShot, 'array')
+	await editor.addNewConnection(segy, 'shots', foreachShot, 'array');
 
 	const breakShot = new BreakNode();
 	await editor.addNode(breakShot);
@@ -134,8 +134,10 @@ export async function acquisitionModelingExample(editor: NodeEditor) {
 	await editor.addNewConnection(sequenceAfterForEach, 'exec-0', initializeSolver, 'exec');
 	await editor.addNewConnection(sequenceAfterForEach, 'exec-1', logShotDone, 'exec');
 	await editor.addNewConnection(format, 'result', logShotDone, 'message');
-	
-	const logGatheringAndExportingSeismos = new LogNode({message: "Gathering and exporting seismos"});
+
+	const logGatheringAndExportingSeismos = new LogNode({
+		message: 'Gathering and exporting seismos'
+	});
 	await editor.addNode(logGatheringAndExportingSeismos);
 	await editor.addExecConnection(logShotDone, logGatheringAndExportingSeismos);
 	await editor.addNewConnection(updateVtkOutput, 'solver', executeSolver, 'solver');
@@ -144,8 +146,6 @@ export async function acquisitionModelingExample(editor: NodeEditor) {
 	const pressure = new GetPressuresAtReceiversNode();
 	await editor.addNode(pressure);
 	await editor.addExecConnection(logGatheringAndExportingSeismos, pressure);
-	
-	
 
 	return [foreachShot, logShotDone, logGatheringAndExportingSeismos, pressure];
 	// return editor.getNodes();

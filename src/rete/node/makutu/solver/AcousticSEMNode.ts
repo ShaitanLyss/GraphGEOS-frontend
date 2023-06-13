@@ -15,7 +15,7 @@ export class AcousticSEMNode extends APINode {
 	constructor() {
 		super('Create AcousticSEM', {
 			url: '/makutu/solver/create-acoustic-sem',
-			height: 180,
+			height: 180
 		});
 
 		this.addOutData({
@@ -23,7 +23,7 @@ export class AcousticSEMNode extends APINode {
 			displayName: 'Solver',
 			socketLabel: 'Solver',
 			type: 'pythonObject'
-		})
+		});
 
 		// Display value
 	}

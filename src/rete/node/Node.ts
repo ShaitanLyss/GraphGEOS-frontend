@@ -79,7 +79,15 @@ interface ControlParams<N> {
 	options?: InputControlOptions<N>;
 }
 
-interface DataParams<N> {
+export interface OutDataParams {
+	socketLabel?: string;
+	name: string;
+	displayName?: string;
+	isArray?: boolean;
+	type?: SocketType;
+}
+
+export interface InDataParams<N> {
 	socketLabel?: string;
 	name: string;
 	displayName?: string;
@@ -101,7 +109,7 @@ export class Node
 {
 	width = 190;
 	height = 120;
-	private outData: Record<string, unknown> = {}
+	private outData: Record<string, unknown> = {};
 	private resolveEndExecutes = new Stack<() => void>();
 	private naturalFlowExec: string | undefined = 'exec';
 
@@ -166,7 +174,7 @@ export class Node
 		this.addInput(name, new Input(new ExecSocket({ name: displayName }), undefined, true));
 	}
 
-	addOutData<N>({ name = 'data', displayName = '', isArray = false, type = 'any' }: DataParams<N>) {
+	addOutData({ name = 'data', displayName = '', isArray = false, type = 'any' }: OutDataParams) {
 		this.addOutput(
 			name,
 			new Output(new Socket({ name: displayName, isArray: isArray, type: type }), displayName)
@@ -181,7 +189,7 @@ export class Node
 		isArray = false,
 		isRequired = false,
 		type = 'any'
-	}: DataParams<N>) {
+	}: InDataParams<N>) {
 		const input = new Input(
 			new Socket({ name: socketLabel, isArray: isArray, type: type, isRequired: isRequired }),
 			displayName,
@@ -211,21 +219,19 @@ export class Node
 		key: string,
 		inputs?: Record<string, unknown>
 	): N | undefined {
-		
-		
 		// const checkedInputs2 = inputs as Record<string, N>;
 		// if (checkedInputs2 && key in checkedInputs2) {
 		// 	console.log("get", checkedInputs2[key]);
-			
+
 		// 	return checkedInputs2[key];
 		// }
-		
+
 		const checkedInputs = inputs as Record<string, unknown[]>;
 
 		if (checkedInputs && key in checkedInputs) {
 			// console.log(checkedInputs);
-			console.log("get0", checkedInputs[key][0]);
-			
+			console.log('get0', checkedInputs[key][0]);
+
 			return checkedInputs[key][0];
 		}
 
@@ -241,29 +247,28 @@ export class Node
 		return undefined;
 	}
 
-		data(inputs?: Record<string, unknown> | undefined): Record<string, unknown> | Promise<Record<string, unknown>> {
+	data(
+		inputs?: Record<string, unknown> | undefined
+	): Record<string, unknown> | Promise<Record<string, unknown>> {
 		const res: Record<string, unknown> = {};
 		for (const key in this.outputs) {
-			if (!(this.outputs[key]?.socket instanceof ExecSocket))
-				res[key] = undefined;
-		}		
-		
-		return {...res, ...this.getOutData()};
+			if (!(this.outputs[key]?.socket instanceof ExecSocket)) res[key] = undefined;
+		}
+
+		return { ...res, ...this.getOutData() };
 	}
-	
 
 	setData(key: string, value: unknown) {
 		this.outData[key] = value;
 		console.log(key, value);
-		
+
 		// this.getDataflowEngine().reset(this.id);
-		this.processDataflow()
+		this.processDataflow();
 	}
 
 	getOutData() {
 		return this.outData;
 	}
-	
 
 	updateElement(type: GetRenderTypes<AreaExtra>, id: string): void {
 		if (area) area.update(type, id);

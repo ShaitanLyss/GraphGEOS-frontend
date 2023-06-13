@@ -16,7 +16,7 @@
 	},
 	"include": [
 		"src/**/*.tsn",
-		"src/rete/node/makutu/ProblemNode.ts",
+		"src/rete/node/xml/ProblemNode.ts",
 		"src/rete/node/makutu/solver/AcousticSEMNode.ts"
 	]
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias

@@ -2,14 +2,10 @@ import { SolverAPINode } from './SolverAPINode';
 
 export class UpdateSourcesAndReceiversNode extends SolverAPINode {
 	constructor() {
-		super(
-			'Update Sources and Receivers',
-			'/update_sources_receivers',
-			{
-				height: 300,
-				width: 180
-			}
-		);
+		super('Update Sources and Receivers', '/update_sources_receivers', {
+			height: 300,
+			width: 180
+		});
 
 		this.addInData({
 			name: 'sourceCoords',
