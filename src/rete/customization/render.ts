@@ -9,6 +9,7 @@ import { CustomArraySocket } from './CustomArraySocket';
 import { Socket } from '../socket/Socket';
 import { CustomClassicSocket } from './CustomClassicSocket';
 import { CustomExecSocket } from './CustomExecSocket';
+import { Node } from './classic/components/Node';
 
 const render = new ReactRenderPlugin<Schemes, AreaExtra>({ createRoot });
 
@@ -46,6 +47,9 @@ export function setupRender(editor: NodeEditor<Schemes>, area: AreaPlugin<Scheme
 						}
 					}
 					return Presets.classic.Control;
+				},
+				node(data) {
+					return Node;
 				}
 			}
 		})

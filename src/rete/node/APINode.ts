@@ -23,12 +23,12 @@ export abstract class APINode extends Node {
 		for (const key in this.inputs) {
 			if (key != 'exec') {
 				const data = this.getData(key, inputs);
-				console.log(data);
+				// console.log(data);
 
 				body[key] = data;
 			}
 		}
-		console.log('body:', JSON.stringify(body));
+		// console.log("body:",JSON.stringify(body));
 
 		return body;
 	}

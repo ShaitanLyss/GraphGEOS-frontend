@@ -230,7 +230,7 @@ export class Node
 
 		if (checkedInputs && key in checkedInputs) {
 			// console.log(checkedInputs);
-			console.log('get0', checkedInputs[key][0]);
+			// console.log("get0", checkedInputs[key][0]);
 
 			return checkedInputs[key][0];
 		}
@@ -260,7 +260,6 @@ export class Node
 
 	setData(key: string, value: unknown) {
 		this.outData[key] = value;
-		console.log(key, value);
 
 		// this.getDataflowEngine().reset(this.id);
 		this.processDataflow();

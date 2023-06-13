@@ -3,10 +3,13 @@ import { SolverAPINode } from './SolverAPINode';
 
 export class GetPressuresAtReceiversNode extends SolverAPINode {
 	constructor() {
-		super('Get Pressures At Receivers', 'http://localhost:8000/solver/get_pressures_at_receivers');
+		super('Get Pressures At Receivers', '/get_pressures_at_receivers', {
+			height: 250
+		});
 		this.addOutData({
 			name: 'seismos',
-			type: 'PythonObject'
+			type: 'pythonObject',
+			displayName: 'Seismos'
 		});
 	}
 }

@@ -147,6 +147,8 @@ export async function acquisitionModelingExample(editor: NodeEditor) {
 	await editor.addNode(pressure);
 	await editor.addExecConnection(logGatheringAndExportingSeismos, pressure);
 
+	await editor.addNewConnection(initializeSolver, 'solver', pressure, 'solver');
+
 	return [foreachShot, logShotDone, logGatheringAndExportingSeismos, pressure];
 	// return editor.getNodes();
 }
