@@ -9,7 +9,7 @@ export class ProblemNode extends XmlNode {
 	width = 180;
 
 	constructor() {
-		super('Problem', {height: 340});
+		super('Problem', { height: 340, xmlTag: 'Problem' });
 
 		this.addInData({
 			name: 'mesh',

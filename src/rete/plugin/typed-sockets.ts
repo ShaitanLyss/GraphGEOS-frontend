@@ -12,7 +12,7 @@ export type SocketType =
 	| 'numericalMethod'
 	| 'any'
 	| 'sameType'
-	| 'vector3'
+	| 'vector'
 	| 'number'
 	| 'string'
 	| 'boolean'

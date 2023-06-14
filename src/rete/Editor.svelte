@@ -49,13 +49,17 @@
 				() =>
 					new ClassicFlow({
 						makeConnection(from, to, context) {
-					
 							const forward = from.side === 'output' && to.side === 'input';
 							const backward = from.side === 'input' && to.side === 'output';
 							const [source, target] = forward ? [from, to] : backward ? [to, from] : [];
 
 							if (!source || !target) return false;
-							editor.addNewConnection(editor.getNode(source.nodeId), source.key, editor.getNode(target.nodeId), target.key);
+							editor.addNewConnection(
+								editor.getNode(source.nodeId),
+								source.key,
+								editor.getNode(target.nodeId),
+								target.key
+							);
 							return true;
 						},
 						canMakeConnection(from, to) {

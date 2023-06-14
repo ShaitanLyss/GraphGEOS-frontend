@@ -1,18 +1,18 @@
-import type { InputControlTypes } from "../../control/Control";
-import type { SocketType } from "../../plugin/typed-sockets";
+import type { InputControlTypes } from '../../control/Control';
+import type { SocketType } from '../../plugin/typed-sockets';
 
 export type XmlData = {
-    name: string;
-}
+	name: string;
+	xmlTag: string;
+};
 
 type PropertyNames<T> = {
-    [K in keyof T]: K;
+	[K in keyof T]: K;
 }[keyof T];
 
 export type XmlProperty = {
-    name: string;
-    type: SocketType;
-    controlType?: InputControlTypes;
-    isArray?: boolean;
-}
-
+	name: string;
+	type: SocketType;
+	controlType?: InputControlTypes;
+	isArray?: boolean;
+};

@@ -1,21 +1,21 @@
-import * as React from 'react'
+import * as React from 'react';
 
-type RefUpdate = (ref: HTMLElement) => void
-type BaseProps = { init: RefUpdate, unmount: RefUpdate } & Record<string, unknown>
+type RefUpdate = (ref: HTMLElement) => void;
+type BaseProps = { init: RefUpdate; unmount: RefUpdate } & Record<string, unknown>;
 
 export function RefComponent<Props extends BaseProps>({ init, unmount, ...props }: Props) {
-  const ref = React.useRef<HTMLSpanElement>(null)
+	const ref = React.useRef<HTMLSpanElement>(null);
 
-  React.useEffect(() => {
-    const element = ref.current
+	React.useEffect(() => {
+		const element = ref.current;
 
-    return () => {
-      if (element) unmount(element)
-    }
-  }, [])
-  React.useEffect(() => {
-    if (ref.current) init(ref.current)
-  })
+		return () => {
+			if (element) unmount(element);
+		};
+	}, []);
+	React.useEffect(() => {
+		if (ref.current) init(ref.current);
+	});
 
-  return <span {...props} ref={ref} />
+	return <span {...props} ref={ref} />;
 }

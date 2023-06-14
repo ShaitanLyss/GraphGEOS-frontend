@@ -1,3 +1,4 @@
+import { InputControlTypes } from '../control/Control';
 import { SocketType } from '../plugin/typed-sockets';
 import { Socket } from '../socket/Socket';
 import { $socketcolor } from './vars';
@@ -19,7 +20,19 @@ export function assignColor(s: Socket): string {
 		numericalMethod: '#d8b78c',
 		geometry: '#d8d08c',
 		mesh: '#ad8c71',
+		vector: '#efec78',
 	};
 
 	return colorMap[s.type] || $socketcolor;
+}
+
+export function assignControl(socketType: SocketType): InputControlTypes | undefined {
+	const controlMap: { [key in SocketType]?: InputControlTypes } = {
+		string: 'text',
+		number: 'number',
+		boolean: 'checkbox',
+		vector: 'vector',
+	};
+
+	return controlMap[socketType];
 }

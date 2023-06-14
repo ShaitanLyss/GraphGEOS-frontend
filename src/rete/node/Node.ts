@@ -13,6 +13,7 @@ import { format } from 'svelte-i18n';
 import { Stack } from '../../types/Stack';
 import type { SocketType, TypedSocketsPlugin } from '../plugin/typed-sockets';
 import {
+	Control,
 	InputControl,
 	InputControlOptions,
 	InputControlTypes,
@@ -103,8 +104,20 @@ export interface NodeParams {
 	height?: number;
 }
 
-export class Node
-	extends ClassicPreset.Node<{ [x: string]: Socket }, { [x: string]: Socket }>
+export class Node<Inputs extends {
+	[key in string]?: Socket;
+} = {
+		[key in string]?: Socket;
+	}, Outputs extends {
+		[key in string]?: Socket;
+	} = {
+		[key in string]?: Socket;
+	}, Controls extends {
+		[key in string]?: Control;
+	} = {
+		[key in string]?: Control;
+	}>
+	extends ClassicPreset.Node<Inputs, Outputs, Controls>
 	implements DataflowNode
 {
 	width = 190;
@@ -262,7 +275,7 @@ export class Node
 		this.outData[key] = value;
 
 		// this.getDataflowEngine().reset(this.id);
-		this.processDataflow();
+		// this.processDataflow();
 	}
 
 	getOutData() {
