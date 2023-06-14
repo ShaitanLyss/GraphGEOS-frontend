@@ -3,7 +3,7 @@ import { Schemes } from '../node/Schemes';
 import { NumberNode } from '../node/math/NumberNode';
 import { AddNode } from '../node/math/AddNode';
 import { Connection } from '../node/Node';
-import { DisplayNode } from '../node/math/DisplayNode';
+import { DisplayNode } from '../node/io/DisplayNode';
 
 export async function sumExample(editor: NodeEditor<Schemes>) {
 	const numberNode = new NumberNode(2);
@@ -20,4 +20,6 @@ export async function sumExample(editor: NodeEditor<Schemes>) {
 	const displayNode = new DisplayNode(3);
 	await editor.addNode(displayNode);
 	await editor.addConnection(new Connection(addNode, 'value', displayNode, 'input'));
+
+	return editor.getNodes();
 }

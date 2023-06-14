@@ -62,7 +62,7 @@ export function setupMyTypes(_area: AreaPlugin<Schemes, AreaExtra>, _editor: Nod
 	editor.use(controlflowEngine);
 }
 
-export function process(node: Node) {
+export function process(node?: Node) {
 	if (node) {
 		dataflowEngine.reset(node.id);
 		resetSuccessors(node);
