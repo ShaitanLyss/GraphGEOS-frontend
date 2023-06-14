@@ -6,14 +6,16 @@ import { Schemes } from "../node/Schemes";
 import { Setup } from "./Setup";
 import { MinimapSetup } from "./MinimapSetup";
 import { NodeFactory } from "../node/NodeFactory";
+import { ContextMenuSetup } from "../plugin/context-menu/context-menu";
 
 export class MegaSetup extends Setup {
-    renderSetup = new RenderSetup();
-    minimapSetup = new MinimapSetup();
+    toSetup: Setup[] = [new RenderSetup(), new MinimapSetup(), new ContextMenuSetup()]
+    
 
     setup(editor: NodeEditor, area: AreaPlugin<Schemes, AreaExtra>, factory: NodeFactory) {
-        this.renderSetup.setup(editor, area, factory)
-        this.minimapSetup.setup(editor, area, factory);
+        for (const setup of this.toSetup) {
+            setup.setup(editor, area, factory);
+        }
     }
 
 }

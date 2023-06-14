@@ -80,8 +80,8 @@ export class Node<
 	protected factory: NodeFactory;
 
 	constructor(
+		name = '',
 		{
-			name = '',
 			width = 190,
 			height = 120,
 			factory
@@ -89,6 +89,9 @@ export class Node<
 	) {
 		super(name);
 		this.factory = factory;
+		if (factory === undefined) {
+			throw new Error(name + ': Factory is undefined');
+		}
 		format.subscribe((_) => (this.label = _(name)));
 		this.width = width;
 		this.height = height;

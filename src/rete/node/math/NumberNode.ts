@@ -7,7 +7,7 @@ export class NumberNode extends Node {
 	height = 120;
 	width = 180;
 
-	constructor(factory: NodeFactory, initial: number, change?: () => void) {
+	constructor({factory, initial = 0, change}: {factory: NodeFactory, initial: number, change?: () => void}) {
 		super('Number', { factory });
 		this.addControl(
 			'value',

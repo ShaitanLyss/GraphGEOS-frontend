@@ -4,7 +4,7 @@ import { NodeFactory } from '../NodeFactory';
 import { getLeavesFromOutput } from '../utils';
 
 export class SequenceNode extends Node {
-	constructor({factory} : {factory: NodeFactor) {
+	constructor({factory} : {factory: NodeFactory}) {
 		super('Sequence', { factory, height: 220 });
 		this.addInExec();
 		this.addOutExec('exec-0', '0');

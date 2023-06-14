@@ -8,7 +8,7 @@ import { NodeFactory } from '../NodeFactory';
 export class TimeLoopNode extends Node {
 	currentTime?: number;
 
-	constructor({factory} : {factory: NodeFactor) {
+	constructor({factory} : {factory: NodeFactory}) {
 		super('Time Loop', { factory, height: 440, width: 200 });
 		this.addInExec();
 
