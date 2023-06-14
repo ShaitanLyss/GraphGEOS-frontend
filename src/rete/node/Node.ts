@@ -13,6 +13,7 @@ import { format } from 'svelte-i18n';
 import { Stack } from '../../types/Stack';
 import type { SocketType, TypedSocketsPlugin } from '../plugin/typed-sockets';
 import {
+	Control,
 	InputControl,
 	InputControlOptions,
 	InputControlTypes,
@@ -79,7 +80,15 @@ interface ControlParams<N> {
 	options?: InputControlOptions<N>;
 }
 
-interface DataParams<N> {
+export interface OutDataParams {
+	socketLabel?: string;
+	name: string;
+	displayName?: string;
+	isArray?: boolean;
+	type?: SocketType;
+}
+
+export interface InDataParams<N> {
 	socketLabel?: string;
 	name: string;
 	displayName?: string;
@@ -95,8 +104,20 @@ export interface NodeParams {
 	height?: number;
 }
 
-export class Node
-	extends ClassicPreset.Node<{ [x: string]: Socket }, { [x: string]: Socket }>
+export class Node<Inputs extends {
+	[key in string]?: Socket;
+} = {
+		[key in string]?: Socket;
+	}, Outputs extends {
+		[key in string]?: Socket;
+	} = {
+		[key in string]?: Socket;
+	}, Controls extends {
+		[key in string]?: Control;
+	} = {
+		[key in string]?: Control;
+	}>
+	extends ClassicPreset.Node<Inputs, Outputs, Controls>
 	implements DataflowNode
 {
 	width = 190;
@@ -166,7 +187,7 @@ export class Node
 		this.addInput(name, new Input(new ExecSocket({ name: displayName }), undefined, true));
 	}
 
-	addOutData<N>({ name = 'data', displayName = '', isArray = false, type = 'any' }: DataParams<N>) {
+	addOutData({ name = 'data', displayName = '', isArray = false, type = 'any' }: OutDataParams) {
 		this.addOutput(
 			name,
 			new Output(new Socket({ name: displayName, isArray: isArray, type: type }), displayName)
@@ -181,7 +202,7 @@ export class Node
 		isArray = false,
 		isRequired = false,
 		type = 'any'
-	}: DataParams<N>) {
+	}: InDataParams<N>) {
 		const input = new Input(
 			new Socket({ name: socketLabel, isArray: isArray, type: type, isRequired: isRequired }),
 			displayName,
@@ -254,7 +275,7 @@ export class Node
 		this.outData[key] = value;
 
 		// this.getDataflowEngine().reset(this.id);
-		this.processDataflow();
+		// this.processDataflow();
 	}
 
 	getOutData() {

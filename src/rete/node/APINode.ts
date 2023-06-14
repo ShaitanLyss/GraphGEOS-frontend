@@ -53,6 +53,7 @@ export abstract class APINode extends Node {
 		for (const key in responseData) {
 			this.setData(key, responseData[key]);
 		}
+		this.processDataflow();
 	}
 }
 

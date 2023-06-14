@@ -4,7 +4,7 @@ import type { SocketType } from '../plugin/typed-sockets';
 export class Socket extends ClassicPreset.Socket {
 	public readonly isArray: boolean;
 	public readonly isRequired: boolean;
-	public readonly type: SocketType;
+	public type: SocketType;
 	public value: unknown;
 
 	constructor({

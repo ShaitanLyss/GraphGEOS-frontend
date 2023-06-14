@@ -15,10 +15,9 @@ function CustomButton(props: { data: ButtonControl }) {
 			onPointerDown={(e) => e.stopPropagation()}
 			onDoubleClick={(e) => e.stopPropagation()}
 			onClick={props.data.onClick}
-			styles={{root: {backgroundColor: "#228be6 !important"}}}
+			styles={{ root: { backgroundColor: '#228be6 !important' } }}
 		>
 			{props.data.label}
-
 		</Button>
 	);
 }

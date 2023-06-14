@@ -5,15 +5,21 @@ import { ExecSocket } from '../socket/ExecSocket';
 import { structures } from 'rete-structures';
 
 export type SocketType =
-	| string
+	// | string
 	| 'exec'
+	| 'constitutive'
+	| 'elementRegion'
+	| 'numericalMethod'
 	| 'any'
-	| 'vector3'
+	| 'sameType'
+	| 'vector'
 	| 'number'
 	| 'string'
 	| 'boolean'
 	| 'mesh'
 	| 'geometry'
+	| 'fieldSpecification'
+	| 'output'
 	| 'pythonObject'
 	| 'pythonProperty'
 	| 'solver';
