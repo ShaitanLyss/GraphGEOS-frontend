@@ -1,6 +1,10 @@
 <script>
 	import ExampleSwitcher from '$lib/ExampleSwitcher.svelte';
+	import { AppShell } from '@skeletonlabs/skeleton';
 	import '../rete/imports';
 </script>
 
-<ExampleSwitcher />
+<AppShell>
+	<!-- <svelte:fragment slot="sidebarLeft">Sidebar left</svelte:fragment> -->
+	<ExampleSwitcher />
+</AppShell>

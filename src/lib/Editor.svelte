@@ -21,11 +21,11 @@
 			console.log('destroyed');
 		};
 	});
-	
+
 	$: if (!hidden) {
 		if (firstShown && onFirstShown) {
-			firstShown = false;
 			onFirstShown();
+			firstShown = false;
 			console.log("first shown");
 			
 		}

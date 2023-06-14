@@ -34,15 +34,21 @@
 		</div>
 	</TabGroup>
 {:else}
-	<section class="card w-full">
-		<div class="card-header flex justify-between items-center">
+	<div class="flex justify-left space-x-4 p-4 " >
+		<div class="placeholder w-12 " />
+		<div class="placeholder w-20" />
+		<div class="placeholder w-20" />
+		<div class="placeholder w-24" />
+	</div>
+	<section class="card w-full h-96">
+		<div class="card-header flex justify-between items-center ">
 			<div class="flex justify-center items-center space-x-4" class:animate-pulse={true}>
 				<div class="placeholder-circle w-16" />
 				<div class="placeholder-circle w-14" />
 				<div class="placeholder-circle w-10" />
 			</div>
 		</div>
-		<div class="p-4 space-y-4" class:animate-pulse={true}>
+		<div class="p-4 space-y-4 h-full" class:animate-pulse={true}>
 			<div class="placeholder" />
 			<div class="grid grid-cols-4 gap-4">
 				<div class="placeholder" />
