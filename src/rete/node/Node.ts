@@ -53,24 +53,25 @@ export interface NodeParams {
 }
 
 export class Node<
-	Inputs extends {
-		[key in string]?: Socket;
-	} = {
-		[key in string]?: Socket;
-	},
-	Outputs extends {
-		[key in string]?: Socket;
-	} = {
-		[key in string]?: Socket;
-	},
-	Controls extends {
-		[key in string]?: Control;
-	} = {
-		[key in string]?: Control;
-	}
->
+		Inputs extends {
+			[key in string]?: Socket;
+		} = {
+			[key in string]?: Socket;
+		},
+		Outputs extends {
+			[key in string]?: Socket;
+		} = {
+			[key in string]?: Socket;
+		},
+		Controls extends {
+			[key in string]?: Control;
+		} = {
+			[key in string]?: Control;
+		}
+	>
 	extends ClassicPreset.Node<Inputs, Outputs, Controls>
-	implements DataflowNode {
+	implements DataflowNode
+{
 	width = 190;
 	height = 120;
 	static activeFactory: NodeFactory | undefined;
@@ -79,14 +80,7 @@ export class Node<
 	private naturalFlowExec: string | undefined = 'exec';
 	protected factory: NodeFactory;
 
-	constructor(
-		name = '',
-		{
-			width = 190,
-			height = 120,
-			factory
-		}: NodeParams
-	) {
+	constructor(name = '', { width = 190, height = 120, factory }: NodeParams) {
 		super(name);
 		this.factory = factory;
 		if (factory === undefined) {
@@ -104,7 +98,6 @@ export class Node<
 	getNaturalFlow(): string | undefined {
 		return this.naturalFlowExec;
 	}
-
 
 	fetchInputs() {
 		return this.factory.dataflowEngine.fetchInputs(this.id);
@@ -250,6 +243,6 @@ export class Node<
 	}
 }
 
-export class Connection<A extends Node, B extends Node> extends ClassicPreset.Connection<A, B> { }
+export class Connection<A extends Node, B extends Node> extends ClassicPreset.Connection<A, B> {}
 
 export const socket = new Socket({ isArray: false, type: 'any' });

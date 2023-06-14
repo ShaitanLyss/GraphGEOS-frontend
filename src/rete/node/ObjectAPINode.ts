@@ -21,7 +21,7 @@ export class ObjectAPINode extends APINode {
 			factory
 		}: ObjectAPINodeParams
 	) {
-		super(name, { url: url, height: height, width: width, factory});
+		super(name, { url: url, height: height, width: width, factory });
 		this.objectKey = objectKey;
 		this.addInData({
 			name: objectKey,

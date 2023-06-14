@@ -9,22 +9,22 @@ import { EditorExample } from './types';
 
 export const timeloopExample: EditorExample = async (factory: NodeFactory) => {
 	const editor = factory.getEditor();
-	const start = new StartNode({factory});
+	const start = new StartNode({ factory });
 	await editor.addNode(start);
 
-	const timeLoop = new TimeLoopNode({factory});
+	const timeLoop = new TimeLoopNode({ factory });
 	await editor.addNode(timeLoop);
 
 	await editor.addExecConnection(start, timeLoop);
 
-	const outputVtk = new LogNode({factory, message: "Hello!"});
+	const outputVtk = new LogNode({ factory, message: 'Hello!' });
 	await editor.addNode(outputVtk);
 
-	const every = new EveryNode({factory});
+	const every = new EveryNode({ factory });
 	await editor.addNode(every);
 
 	await editor.addNewConnection(timeLoop, 'loop', every, 'exec');
 	await editor.addExecConnection(every, outputVtk);
 
 	return editor.getNodes();
-}
+};

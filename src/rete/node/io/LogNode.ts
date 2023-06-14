@@ -6,8 +6,8 @@ import { ClassicPreset } from 'rete';
 import { NodeFactory } from '../NodeFactory';
 
 export class LogNode extends Node {
-	constructor({ message = 'Hello', factory }: { message?: string; factory: NodeFactory} ) {
-		super('Log', {factory});
+	constructor({ message = 'Hello', factory }: { message?: string; factory: NodeFactory }) {
+		super('Log', { factory });
 		this.height = 200;
 		this.addInExec();
 		this.addOutExec();

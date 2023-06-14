@@ -10,8 +10,16 @@ export class DisplayNode extends Node {
 	height = 120;
 	width = 180;
 
-	constructor({factory, initial = 0, change} : { factory: NodeFactory, initial?: unknown , change?: () => void}) {
-		super('Display', { factory});
+	constructor({
+		factory,
+		initial = 0,
+		change
+	}: {
+		factory: NodeFactory;
+		initial?: unknown;
+		change?: () => void;
+	}) {
+		super('Display', { factory });
 
 		// Setup input
 		const input = new ClassicPreset.Input(new Socket(), '');

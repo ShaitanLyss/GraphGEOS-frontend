@@ -12,9 +12,8 @@
 	// Finally, your application's global stylesheet (sometimes labeled 'app.css')
 	// import 'app.css'
 	import '../app.postcss';
-	
+
 	import { AppShell } from '@skeletonlabs/skeleton';
-	
 </script>
 
 <slot />

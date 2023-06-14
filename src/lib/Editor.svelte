@@ -13,7 +13,7 @@
 	let onFirstShown: Function;
 
 	onMount(async () => {
-		const tools = (await setupEditor(container, loadExample));
+		const tools = await setupEditor(container, loadExample);
 		destroyEditor = tools.destroy;
 		onFirstShown = tools.firstDisplay;
 		return () => {
@@ -26,8 +26,7 @@
 		if (firstShown && onFirstShown) {
 			onFirstShown();
 			firstShown = false;
-			console.log("first shown");
-			
+			console.log('first shown');
 		}
 	}
 </script>

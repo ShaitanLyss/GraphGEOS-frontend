@@ -16,7 +16,6 @@ import { InputControlComponent } from '../control/InputControlComponent';
 import { NodeFactory } from '../node/NodeFactory';
 import { Setup } from '../setup/Setup';
 
-
 export class RenderSetup implements Setup {
 	private render = new ReactRenderPlugin<Schemes, AreaExtra>({ createRoot });
 
@@ -39,7 +38,7 @@ export class RenderSetup implements Setup {
 						if (data.payload instanceof ButtonControl) {
 							return CustomButton;
 						}
-						
+
 						return Presets.classic.Control;
 					},
 					node(data) {
@@ -54,6 +53,4 @@ export class RenderSetup implements Setup {
 
 		area.use(this.render);
 	}
-
 }
-

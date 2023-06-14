@@ -23,17 +23,17 @@ import { GetPressuresAtReceiversNode } from '../node/makutu/solver/GetPressureAt
 import { EditorExample } from './types';
 import { NodeFactory } from '../node/NodeFactory';
 
-export const acquisitionModelingExample: EditorExample= async (factory: NodeFactory) => {
+export const acquisitionModelingExample: EditorExample = async (factory: NodeFactory) => {
 	const editor = factory.getEditor();
-	const start = new StartNode({factory});
+	const start = new StartNode({ factory });
 	await editor.addNode(start);
 
-	const segy = new SEGYAcquisitionNode({factory});
+	const segy = new SEGYAcquisitionNode({ factory });
 	await editor.addNode(segy);
 
 	await editor.addExecConnection(start, segy);
 
-	const foreachShot = new ForEachNode({factory});
+	const foreachShot = new ForEachNode({ factory });
 	await editor.addNode(foreachShot);
 
 	await editor.addExecConnection(segy, foreachShot);
@@ -41,31 +41,31 @@ export const acquisitionModelingExample: EditorExample= async (factory: NodeFact
 
 	await editor.addNewConnection(segy, 'shots', foreachShot, 'array');
 
-	const breakShot = new BreakNode({factory});
+	const breakShot = new BreakNode({ factory });
 	await editor.addNode(breakShot);
 
 	await editor.addNewConnection(foreachShot, 'item', breakShot, 'object');
 
-	const initializeSolver = new InitializeSolverNode({factory});
+	const initializeSolver = new InitializeSolverNode({ factory });
 	await editor.addNode(initializeSolver);
 
 	await editor.addNewConnection(breakShot, 'xml', initializeSolver, 'xml');
 	// await editor.addNewConnection(foreachShot, 'loop', initializeSolver, 'exec');
 
-	const solver = new AcousticSEMNode({factory});
+	const solver = new AcousticSEMNode({ factory });
 	await editor.addNode(solver);
 	await editor.addExecConnection(start, solver);
 	await editor.addExecConnection(solver, segy);
 
 	await editor.addNewConnection(solver, 'solver', initializeSolver, 'solver');
 
-	const applyInitialConditions = new ApplyInitialConditionsNode({factory});
+	const applyInitialConditions = new ApplyInitialConditionsNode({ factory });
 	await editor.addNode(applyInitialConditions);
 
 	await editor.addExecConnection(initializeSolver, applyInitialConditions);
 	await editor.addNewConnection(initializeSolver, 'solver', applyInitialConditions, 'solver');
 
-	const update_source_receivers = new UpdateSourcesAndReceiversNode({factory});
+	const update_source_receivers = new UpdateSourcesAndReceiversNode({ factory });
 	await editor.addNode(update_source_receivers);
 
 	await editor.addExecConnection(applyInitialConditions, update_source_receivers);
@@ -84,7 +84,7 @@ export const acquisitionModelingExample: EditorExample= async (factory: NodeFact
 		'receiverCoords'
 	);
 
-	const updateVtkOutput = new UpdateVtkOutputNode({factory});
+	const updateVtkOutput = new UpdateVtkOutputNode({ factory });
 	await editor.addNode(updateVtkOutput);
 
 	await editor.addExecConnection(update_source_receivers, updateVtkOutput);
@@ -102,35 +102,35 @@ export const acquisitionModelingExample: EditorExample= async (factory: NodeFact
 
 	await editor.addNewConnection(breakShot, 'id', append, 'b');
 
-	const timeLoop = new TimeLoopNode({factory});
+	const timeLoop = new TimeLoopNode({ factory });
 	await editor.addNode(timeLoop);
 
 	await editor.addExecConnection(updateVtkOutput, timeLoop);
 
-	const sequence = new SequenceNode({factory});
+	const sequence = new SequenceNode({ factory });
 
 	await editor.addNode(sequence);
 
-	const outputVtk = new OutputVtkNode({factory});
+	const outputVtk = new OutputVtkNode({ factory });
 	await editor.addNode(outputVtk);
 
-	const every = new EveryNode({factory, count: 50});
+	const every = new EveryNode({ factory, count: 50 });
 	await editor.addNode(every);
 	await editor.addNewConnection(sequence, 'exec-0', every, 'exec');
 	await editor.addExecConnection(every, outputVtk);
 
 	await editor.addNewConnection(timeLoop, 'loop', sequence, 'exec');
 
-	const executeSolver = new ExecuteNode({factory});
+	const executeSolver = new ExecuteNode({ factory });
 	await editor.addNode(executeSolver);
 	await editor.addNewConnection(sequence, 'exec-1', executeSolver, 'exec');
 
-	const format = new FormatNode({factory, format: 'Shot {index} done' });
+	const format = new FormatNode({ factory, format: 'Shot {index} done' });
 	await editor.addNode(format);
 	await editor.addNewConnection(foreachShot, 'index', format, 'data-index');
-	const sequenceAfterForEach = new SequenceNode({factory});
+	const sequenceAfterForEach = new SequenceNode({ factory });
 	await editor.addNode(sequenceAfterForEach);
-	const logShotDone = new LogNode({factory});
+	const logShotDone = new LogNode({ factory });
 	await editor.addNode(logShotDone);
 	await editor.addNewConnection(foreachShot, 'loop', sequenceAfterForEach, 'exec');
 
@@ -138,7 +138,8 @@ export const acquisitionModelingExample: EditorExample= async (factory: NodeFact
 	await editor.addNewConnection(sequenceAfterForEach, 'exec-1', logShotDone, 'exec');
 	await editor.addNewConnection(format, 'result', logShotDone, 'message');
 
-	const logGatheringAndExportingSeismos = new LogNode({factory,
+	const logGatheringAndExportingSeismos = new LogNode({
+		factory,
 		message: 'Gathering and exporting seismos'
 	});
 	await editor.addNode(logGatheringAndExportingSeismos);
@@ -146,7 +147,7 @@ export const acquisitionModelingExample: EditorExample= async (factory: NodeFact
 	await editor.addNewConnection(updateVtkOutput, 'solver', executeSolver, 'solver');
 	await editor.addNewConnection(updateVtkOutput, 'solver', outputVtk, 'solver');
 
-	const pressure = new GetPressuresAtReceiversNode({factory});
+	const pressure = new GetPressuresAtReceiversNode({ factory });
 	await editor.addNode(pressure);
 	await editor.addExecConnection(logGatheringAndExportingSeismos, pressure);
 
@@ -154,4 +155,4 @@ export const acquisitionModelingExample: EditorExample= async (factory: NodeFact
 
 	// return [foreachShot, logShotDone, logGatheringAndExportingSeismos, pressure];
 	return editor.getNodes();
-}
+};

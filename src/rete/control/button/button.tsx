@@ -9,11 +9,10 @@ export class ButtonControl extends ClassicPreset.Control {
 }
 
 export function CustomButton(props: { data: ButtonControl }) {
-	const [customizationAdded, setCustomizationAdded ]  = React.useState<boolean>(false);
+	const [customizationAdded, setCustomizationAdded] = React.useState<boolean>(false);
 
 	if (!customizationAdded) {
 		setCustomizationAdded(true);
-		
 	}
 
 	return (

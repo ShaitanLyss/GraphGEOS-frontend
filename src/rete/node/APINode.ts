@@ -40,7 +40,6 @@ export abstract class APINode extends Node {
 					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify(await this.getBody())
-
 			});
 			const responseData = await response.json();
 			await this.processResponseData(responseData);

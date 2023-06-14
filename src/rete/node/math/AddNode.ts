@@ -6,8 +6,8 @@ import { Socket } from '../../socket/Socket';
 import { NodeFactory } from '../NodeFactory';
 
 export class AddNode extends Node {
-	constructor({factory, a = 0, b = 0 }: {factory: NodeFactory; a?: number; b?: number}) {
-		super('Add', {factory});
+	constructor({ factory, a = 0, b = 0 }: { factory: NodeFactory; a?: number; b?: number }) {
+		super('Add', { factory });
 		this.height = 160;
 
 		const left = new ClassicPreset.Input(new Socket({ type: 'number' }), '');
@@ -26,7 +26,10 @@ export class AddNode extends Node {
 		this.addOutput('value', new ClassicPreset.Output(new Socket({ type: 'number' }), ''));
 	}
 
-	data(inputs: { left?: number[]; right?: number[] }): Record<string, unknown> | Promise<Record<string, unknown>> {
+	data(inputs: {
+		left?: number[];
+		right?: number[];
+	}): Record<string, unknown> | Promise<Record<string, unknown>> {
 		const leftControl = this.inputs.left?.control as ClassicPreset.InputControl<'number'>;
 
 		const rightControl = this.inputs.right?.control as ClassicPreset.InputControl<'number'>;

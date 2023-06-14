@@ -2,7 +2,7 @@ import { NodeFactory } from '../../NodeFactory';
 import { SolverAPINode } from './SolverAPINode';
 
 export class UpdateSourcesAndReceiversNode extends SolverAPINode {
-	constructor({factory} : {factory: NodeFactory}) {
+	constructor({ factory }: { factory: NodeFactory }) {
 		super('Update Sources and Receivers', '/update_sources_receivers', {
 			height: 300,
 			width: 180,

@@ -5,7 +5,7 @@ import { NodeFactory } from '../NodeFactory';
 export class EveryNode extends Node {
 	private current = 0;
 
-	constructor({count = 100, factory} : {count?: number, factory: NodeFactory}) {
+	constructor({ count = 100, factory }: { count?: number; factory: NodeFactory }) {
 		super('Every', { factory, height: 200, width: 200 });
 
 		this.addInExec();

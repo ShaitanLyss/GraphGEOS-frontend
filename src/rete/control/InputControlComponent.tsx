@@ -1,17 +1,12 @@
 import { InputControl, InputControlTypes, InputControlValueType } from './Control';
 import * as React from 'react';
 import { Drag } from 'rete-react-render-plugin';
-import {
-	Checkbox,
-	NumberInput,
-	TextInput,
-	Textarea,
-	Text,
-	Group
-} from '@mantine/core';
+import { Checkbox, NumberInput, TextInput, Textarea, Text, Group } from '@mantine/core';
 import { useDebouncedState, useDebouncedValue, useFocusTrap, useMergedRef } from '@mantine/hooks';
 
-export function InputControlComponent<T extends InputControlTypes>(props: { data: InputControl<T> }) {
+export function InputControlComponent<T extends InputControlTypes>(props: {
+	data: InputControl<T>;
+}) {
 	const options = props.data.options;
 	const [value, setValue] = React.useState<InputControlValueType<T> | undefined>(props.data.value);
 	const ref = React.useRef<HTMLInputElement>(null);

@@ -1,97 +1,96 @@
-import type { AreaPlugin } from "rete-area-plugin";
-import type { NodeEditor } from "../NodeEditor";
-import type { AreaExtra } from "./AreaExtra";
-import type { Schemes } from "./Schemes";
-import { ControlFlowEngine, DataflowEngine } from "rete-engine";
-import { ExecSocket } from "../socket/ExecSocket";
-import { structures } from "rete-structures";
-import { Node } from "./Node";
+import type { AreaPlugin } from 'rete-area-plugin';
+import type { NodeEditor } from '../NodeEditor';
+import type { AreaExtra } from './AreaExtra';
+import type { Schemes } from './Schemes';
+import { ControlFlowEngine, DataflowEngine } from 'rete-engine';
+import { ExecSocket } from '../socket/ExecSocket';
+import { structures } from 'rete-structures';
+import { Node } from './Node';
 
 function createDataflowEngine() {
-    return new DataflowEngine<Schemes>(({ inputs, outputs }) => {
-        return {
-            inputs: () =>
-                Object.entries(inputs)
-                    .filter(([_, input]) => input && !(input.socket instanceof ExecSocket))
-                    .map(([name]) => name),
-            outputs: () =>
-                Object.entries(outputs)
-                    .filter(([_, output]) => output && !(output.socket instanceof ExecSocket))
-                    .map(([name]) => name)
-        };
-    });
+	return new DataflowEngine<Schemes>(({ inputs, outputs }) => {
+		return {
+			inputs: () =>
+				Object.entries(inputs)
+					.filter(([_, input]) => input && !(input.socket instanceof ExecSocket))
+					.map(([name]) => name),
+			outputs: () =>
+				Object.entries(outputs)
+					.filter(([_, output]) => output && !(output.socket instanceof ExecSocket))
+					.map(([name]) => name)
+		};
+	});
 }
 
 function createControlflowEngine() {
-    return new ControlFlowEngine<Schemes>(({ inputs, outputs }) => {
-        return {
-            inputs: () =>
-                Object.entries(inputs)
-                    .filter(([_, input]) => input && input.socket instanceof ExecSocket)
-                    .map(([name]) => name),
-            outputs: () =>
-                Object.entries(outputs)
-                    .filter(([_, output]) => output && output.socket instanceof ExecSocket)
-                    .map(([name]) => name)
-        };
-    });
+	return new ControlFlowEngine<Schemes>(({ inputs, outputs }) => {
+		return {
+			inputs: () =>
+				Object.entries(inputs)
+					.filter(([_, input]) => input && input.socket instanceof ExecSocket)
+					.map(([name]) => name),
+			outputs: () =>
+				Object.entries(outputs)
+					.filter(([_, output]) => output && output.socket instanceof ExecSocket)
+					.map(([name]) => name)
+		};
+	});
 }
 
 export class NodeFactory {
-    private area: AreaPlugin<Schemes, AreaExtra>;
-    private editor: NodeEditor;
-    
-    public readonly dataflowEngine = createDataflowEngine();
-    private readonly controlflowEngine = createControlflowEngine();
+	private area: AreaPlugin<Schemes, AreaExtra>;
+	private editor: NodeEditor;
 
-    constructor(editor: NodeEditor, area: AreaPlugin<Schemes, AreaExtra>) {
-        this.area = area;
-        this.editor = editor;
-        editor.use(this.dataflowEngine);
-        editor.use(this.controlflowEngine);
-    }
+	public readonly dataflowEngine = createDataflowEngine();
+	private readonly controlflowEngine = createControlflowEngine();
 
-    enable() {
-        Node.activeFactory = this;
-    }
+	constructor(editor: NodeEditor, area: AreaPlugin<Schemes, AreaExtra>) {
+		this.area = area;
+		this.editor = editor;
+		editor.use(this.dataflowEngine);
+		editor.use(this.controlflowEngine);
+	}
 
-    disable() {
-        Node.activeFactory = undefined;
-    }
+	enable() {
+		Node.activeFactory = this;
+	}
 
-    create<T extends Node>(type: (new () => T)): T {
-        return new type();
-    }
+	disable() {
+		Node.activeFactory = undefined;
+	}
 
-    getEditor(): NodeEditor {
-        return this.editor;
-    }
+	create<T extends Node>(type: new () => T): T {
+		return new type();
+	}
 
-    getControlFlowEngine(): ControlFlowEngine<Schemes> {
-        return this.controlflowEngine;
-    }
+	getEditor(): NodeEditor {
+		return this.editor;
+	}
 
-    getArea(): AreaPlugin<Schemes, AreaExtra> {
-        return this.area;
-    }
-    
+	getControlFlowEngine(): ControlFlowEngine<Schemes> {
+		return this.controlflowEngine;
+	}
 
-    resetSuccessors(node: Node) {
-        structures(this.editor)
-            .successors(node.id)
-            .nodes()
-            .forEach((n) => this.dataflowEngine.reset(n.id));
-    }
+	getArea(): AreaPlugin<Schemes, AreaExtra> {
+		return this.area;
+	}
 
-    process(node?: Node) {
-        if (node) {
-            this.dataflowEngine.reset(node.id);
-            this.resetSuccessors(node);
-        }
-        // dataflowEngine.reset();
-        this.editor
-            .getNodes()
-            // .filter((n) => n instanceof AddNode || n instanceof DisplayNode)
-            .forEach((n) => this.dataflowEngine.fetch(n.id));
-    }
+	resetSuccessors(node: Node) {
+		structures(this.editor)
+			.successors(node.id)
+			.nodes()
+			.forEach((n) => this.dataflowEngine.reset(n.id));
+	}
+
+	process(node?: Node) {
+		if (node) {
+			this.dataflowEngine.reset(node.id);
+			this.resetSuccessors(node);
+		}
+		// dataflowEngine.reset();
+		this.editor
+			.getNodes()
+			// .filter((n) => n instanceof AddNode || n instanceof DisplayNode)
+			.forEach((n) => this.dataflowEngine.fetch(n.id));
+	}
 }
