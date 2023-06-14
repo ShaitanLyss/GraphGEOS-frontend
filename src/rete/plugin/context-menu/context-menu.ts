@@ -55,7 +55,6 @@ export class ContextMenuSetup extends Setup {
 		// console.log(nodeFiles);
 		const items = new Map<string, Entry>();
 		const modules = import.meta.glob('../../node/**/*.ts');
-		console.log(modules);
 		for (const [path, module] of Object.entries(modules)) {
 			const objects = await module();
 			const menuPath = path.slice('../../node/'.length);
