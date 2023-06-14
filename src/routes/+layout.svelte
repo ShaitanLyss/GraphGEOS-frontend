@@ -1,7 +1,7 @@
 <script>
+	import '../localization/i18n';
 	import '../app.postcss';
 	import { Notifications } from '@mantine/notifications';
-	import '../localization/i18n';
 
 	// Your selected Skeleton theme:
 	import '@skeletonlabs/skeleton/themes/theme-gold-nouveau.css';

@@ -3,6 +3,9 @@ import { defineConfig } from 'vitest/config';
 import dynamicImport from 'vite-plugin-dynamic-import';
 
 export default defineConfig({
+	build: {
+		target: 'esnext'
+	},
 	plugins: [
 		dynamicImport(),
 		sveltekit(),
