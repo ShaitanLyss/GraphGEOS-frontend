@@ -1,5 +1,6 @@
 Pour cacher des messages d'erreurs inutiles
 -/(rem|flush|cancell)/
+TODO: https://vite-plugin-ssr.com/client-only-components to allow use of SSR and fix styled.div issue
 
 # create-svelte
 
