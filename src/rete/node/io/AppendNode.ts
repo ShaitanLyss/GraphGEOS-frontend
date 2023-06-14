@@ -8,8 +8,8 @@ interface AppendNodeParams extends NodeParams {
 }
 
 export class AppendNode extends Node {
-	constructor({ a = '', sep = ' ', b = '' } = {}) {
-		super('Append', { height: 220 });
+	constructor({ a = '', sep = ' ', b = '', factory }: AppendNodeParams) {
+		super('Append', { height: 220, factory });
 		this.addInData({
 			name: 'a',
 			displayName: 'A',

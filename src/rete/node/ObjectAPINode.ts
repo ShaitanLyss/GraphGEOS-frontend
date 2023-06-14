@@ -17,10 +17,11 @@ export class ObjectAPINode extends APINode {
 			objectKey = 'object',
 			objectLabel = 'Object',
 			height = 235,
-			width
+			width,
+			factory
 		}: ObjectAPINodeParams
 	) {
-		super(name, { url: url, height: height, width: width });
+		super(name, { url: url, height: height, width: width, factory});
 		this.objectKey = objectKey;
 		this.addInData({
 			name: objectKey,

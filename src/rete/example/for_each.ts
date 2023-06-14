@@ -6,8 +6,12 @@ import { LogNode } from '../node/io/LogNode';
 import { MakeArrayNode } from '../node/data/MakeArrayNode';
 import { NumberNode } from '../node/math/NumberNode';
 import { ForEachNode } from '../node/control/ForEachNode';
+import { EditorExample } from './types';
+import { NodeFactory } from '../node/NodeFactory';
 
-export async function forEachExample(editor: NodeEditor<Schemes>) {
+export const forEachExample: EditorExample = async (factory: NodeFactory) => {
+	const editor = factory.getEditor();
+	factory.enable();
 	const start = new StartNode();
 	await editor.addNode(start);
 
@@ -40,4 +44,6 @@ export async function forEachExample(editor: NodeEditor<Schemes>) {
 	const logEnd = new LogNode({ message: "I'm done!" });
 	await editor.addNode(logEnd);
 	await editor.addConnection(new Connection(forEach, 'exec', logEnd, 'exec'));
+
+	return editor.getNodes();
 }

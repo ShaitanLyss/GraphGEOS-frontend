@@ -10,53 +10,50 @@ import { Socket } from '../socket/Socket';
 import { CustomClassicSocket } from './CustomClassicSocket';
 import { CustomExecSocket } from './CustomExecSocket';
 import { Node } from './classic/components/Node';
+import { ButtonControl, CustomButton } from '../control/button/button';
+import { InputControl } from '../control/Control';
+import { InputControlComponent } from '../control/InputControlComponent';
+import { NodeFactory } from '../node/NodeFactory';
+import { Setup } from '../setup/Setup';
 
-const render = new ReactRenderPlugin<Schemes, AreaExtra>({ createRoot });
 
-const controlCustomization = [];
+export class RenderSetup implements Setup {
+	private render = new ReactRenderPlugin<Schemes, AreaExtra>({ createRoot });
 
-export function addCustomization(type: 'socket' | 'control', customize) {
-	switch (type) {
-		case 'socket':
-			console.log('chaussette');
-			break;
-		case 'control':
-			controlCustomization.push(customize);
-
-			break;
-	}
-}
-
-export function setupRender(editor: NodeEditor<Schemes>, area: AreaPlugin<Schemes, AreaExtra>) {
-	render.addPreset(
-		Presets.classic.setup({
-			customize: {
-				socket(context) {
-					if (context.payload instanceof Socket) {
-						if (context.payload.type === 'exec') return CustomExecSocket;
-						return context.payload.isArray ? CustomArraySocket : CustomClassicSocket;
-					}
-
-					return Presets.classic.Socket;
-				},
-				control(data) {
-					for (const customization of controlCustomization) {
-						let customizationResult;
-						if ((customizationResult = customization(data))) {
-							return customizationResult;
+	setup(editor: NodeEditor<Schemes>, area: AreaPlugin<Schemes, AreaExtra>, factory: NodeFactory) {
+		this.render.addPreset(
+			Presets.classic.setup({
+				customize: {
+					socket(context) {
+						if (context.payload instanceof Socket) {
+							if (context.payload.type === 'exec') return CustomExecSocket;
+							return context.payload.isArray ? CustomArraySocket : CustomClassicSocket;
 						}
+
+						return Presets.classic.Socket;
+					},
+					control(data) {
+						if (data.payload instanceof InputControl) {
+							return InputControlComponent;
+						}
+						if (data.payload instanceof ButtonControl) {
+							return CustomButton;
+						}
+						
+						return Presets.classic.Control;
+					},
+					node(data) {
+						return Node;
 					}
-					return Presets.classic.Control;
-				},
-				node(data) {
-					return Node;
 				}
-			}
-		})
-	);
+			})
+		);
 
-	render.addPreset(Presets.contextMenu.setup({ delay: 50 }));
-	render.addPreset(Presets.minimap.setup({ size: 200 }));
+		this.render.addPreset(Presets.contextMenu.setup({ delay: 50 }));
+		this.render.addPreset(Presets.minimap.setup({ size: 200 }));
 
-	area.use(render);
+		area.use(this.render);
+	}
+
 }
+

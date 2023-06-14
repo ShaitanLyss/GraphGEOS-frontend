@@ -1,10 +1,12 @@
+import { NodeFactory } from '../../NodeFactory';
 import { SolverAPINode } from './SolverAPINode';
 
 export class UpdateSourcesAndReceiversNode extends SolverAPINode {
-	constructor() {
+	constructor({factory} : {factory: NodeFactory}) {
 		super('Update Sources and Receivers', '/update_sources_receivers', {
 			height: 300,
-			width: 180
+			width: 180,
+			factory
 		});
 
 		this.addInData({

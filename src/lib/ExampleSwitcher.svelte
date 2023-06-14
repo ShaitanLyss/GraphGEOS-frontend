@@ -3,7 +3,7 @@
 	import { localStorageStore } from '@skeletonlabs/skeleton';
 
 	import type { Writable } from 'svelte/store';
-	import Editor from '../rete/Editor.svelte';
+	import Editor from './Editor.svelte';
 	import { sumExample } from '../rete/example/math';
 
 	type tab = 'math' | 'timeloop' | 'for_each' | 'acquisition';

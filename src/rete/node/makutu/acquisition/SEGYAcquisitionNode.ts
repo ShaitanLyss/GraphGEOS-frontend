@@ -1,8 +1,9 @@
 import { APINode } from '../../APINode';
+import { NodeFactory } from '../../NodeFactory';
 
 export class SEGYAcquisitionNode extends APINode {
-	constructor() {
-		super('SEGY Acquisition', { url: '/makutu/acquisition/segy' });
+	constructor({factory} : {factory: NodeFactory}) {
+		super('SEGY Acquisition', { factory, url: '/makutu/acquisition/segy' });
 		this.addInData({
 			name: 'segdir',
 			displayName: 'Seg Directory',

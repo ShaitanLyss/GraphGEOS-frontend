@@ -2,7 +2,6 @@ import { BaseSchemes, NodeEditor, Root, Scope } from 'rete';
 import type { Connection } from '../node/Node';
 import type { Socket } from '../socket/Socket';
 import { ExecSocket } from '../socket/ExecSocket';
-import { structures } from 'rete-structures';
 
 export type SocketType =
 	// | string

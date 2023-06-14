@@ -1,10 +1,11 @@
 import { ButtonControl } from '../../control/button/button';
 import { Node } from '../Node';
+import { NodeFactory } from '../NodeFactory';
 import { getLeavesFromOutput } from '../utils';
 
 export class SequenceNode extends Node {
-	constructor() {
-		super('Sequence', { height: 220 });
+	constructor({factory} : {factory: NodeFactor) {
+		super('Sequence', { factory, height: 220 });
 		this.addInExec();
 		this.addOutExec('exec-0', '0');
 		this.addOutExec('exec-1', '1', false);

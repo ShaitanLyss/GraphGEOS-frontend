@@ -1,7 +1,8 @@
+import { NodeFactory } from '../../NodeFactory';
 import { SolverAPINode } from './SolverAPINode';
 
 export class OutputVtkNode extends SolverAPINode {
-	constructor() {
-		super('Output VTK', '/output_vtk');
+	constructor({factory} : {factory: NodeFactory}) {
+		super('Output VTK', '/output_vtk', {factory});
 	}
 }

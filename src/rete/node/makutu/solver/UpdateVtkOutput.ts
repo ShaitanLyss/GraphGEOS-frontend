@@ -1,10 +1,12 @@
+import { NodeFactory } from '../../NodeFactory';
 import { SolverAPINode } from './SolverAPINode';
 
 export class UpdateVtkOutputNode extends SolverAPINode {
-	constructor() {
+	constructor({factory} : {factory: NodeFactory}) {
 		super('Update VTK Output', '/update_vtk_output', {
 			height: 300,
-			width: 180
+			width: 180,
+			factory
 		});
 
 		this.addInData({

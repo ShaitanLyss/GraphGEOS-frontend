@@ -3,12 +3,13 @@ import { InputControl } from '../../control/Control';
 import { Connection, Node } from '../Node';
 import { notifications } from '@mantine/notifications';
 import { getLeavesFromOutput } from '../utils';
+import { NodeFactory } from '../NodeFactory';
 
 export class TimeLoopNode extends Node {
 	currentTime?: number;
 
-	constructor() {
-		super('Time Loop', { height: 440, width: 200 });
+	constructor({factory} : {factory: NodeFactor) {
+		super('Time Loop', { factory, height: 440, width: 200 });
 		this.addInExec();
 
 		this.addInData({

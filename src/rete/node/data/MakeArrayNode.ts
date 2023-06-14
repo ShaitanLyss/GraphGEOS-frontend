@@ -6,14 +6,15 @@ import { SocketType } from '../../plugin/typed-sockets';
 import { ClassicPreset } from 'rete';
 import { InputControl } from '../../control/Control';
 import { assignControl } from '../../customization/utils';
+import { NodeFactory } from '../NodeFactory';
 
 export class MakeArrayNode extends Node {
 	type: SocketType = 'any';
 	initialValues: Record<string, unknown>;
 	numConnections = 0;
 
-	constructor(initialValues: Record<string, unknown> = {}) {
-		super('Make Array', { height: 160, width: 150 });
+	constructor({factory, initialValues={}}:  {factory: NodeFactory, initialValues: Record<string, unknown>}) {
+		super('Make Array', { factory, height: 160, width: 150 });
 		this.initialValues = initialValues;
 		this.addOutData({ name: 'array', isArray: true, type: 'any' });
 		this.addInData({ name: 'data-0' });

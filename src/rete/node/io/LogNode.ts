@@ -3,10 +3,11 @@ import { Socket } from '../../socket/Socket';
 import { Node } from '../Node';
 import { notifications } from '@mantine/notifications';
 import { ClassicPreset } from 'rete';
+import { NodeFactory } from '../NodeFactory';
 
 export class LogNode extends Node {
-	constructor({ message = 'Hello' } = {}) {
-		super('Log');
+	constructor({ message = 'Hello', factory }: { message?: string; factory: NodeFactory} ) {
+		super('Log', {factory});
 		this.height = 200;
 		this.addInExec();
 		this.addOutExec();

@@ -11,8 +11,8 @@ export class FormatNode extends Node {
 	formatInputHeight = 0;
 	updateHeight = true;
 
-	constructor({ format = 'Hello {name}!', vars = { name: 'Lyss' } }: FormatNodeParams = {}) {
-		super('Format', { height: 124.181818 + 43.818182 });
+	constructor({ factory, format = 'Hello {name}!', vars = { name: 'Lyss' } }: FormatNodeParams) {
+		super('Format', { factory, height: 124.181818 + 43.818182 });
 		this.formatInputHeight = 43.818182;
 		this.addOutData({
 			name: 'result',

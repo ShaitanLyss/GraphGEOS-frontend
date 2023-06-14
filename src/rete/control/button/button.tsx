@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Button } from '@mantine/core';
 import { ClassicPreset } from 'rete';
-import { addCustomization } from '../../customization/render';
 
 export class ButtonControl extends ClassicPreset.Control {
 	constructor(public label: string, public onClick: () => void) {
@@ -9,7 +8,14 @@ export class ButtonControl extends ClassicPreset.Control {
 	}
 }
 
-function CustomButton(props: { data: ButtonControl }) {
+export function CustomButton(props: { data: ButtonControl }) {
+	const [customizationAdded, setCustomizationAdded ]  = React.useState<boolean>(false);
+
+	if (!customizationAdded) {
+		setCustomizationAdded(true);
+		
+	}
+
 	return (
 		<Button
 			onPointerDown={(e) => e.stopPropagation()}
@@ -21,9 +27,3 @@ function CustomButton(props: { data: ButtonControl }) {
 		</Button>
 	);
 }
-
-addCustomization('control', (data: { payload: unknown }) => {
-	if (data.payload instanceof ButtonControl) {
-		return CustomButton;
-	}
-});

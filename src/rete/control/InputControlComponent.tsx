@@ -1,11 +1,9 @@
 import { InputControl, InputControlTypes, InputControlValueType } from './Control';
 import * as React from 'react';
 import { Drag } from 'rete-react-render-plugin';
-import { addCustomization } from '../customization/render';
 import {
 	Checkbox,
 	NumberInput,
-	NumberInputHandlers,
 	TextInput,
 	Textarea,
 	Text,
@@ -13,7 +11,7 @@ import {
 } from '@mantine/core';
 import { useDebouncedState, useDebouncedValue, useFocusTrap, useMergedRef } from '@mantine/hooks';
 
-function InputControlComponent<T extends InputControlTypes>(props: { data: InputControl<T> }) {
+export function InputControlComponent<T extends InputControlTypes>(props: { data: InputControl<T> }) {
 	const options = props.data.options;
 	const [value, setValue] = React.useState<InputControlValueType<T> | undefined>(props.data.value);
 	const ref = React.useRef<HTMLInputElement>(null);
@@ -191,8 +189,8 @@ function InputControlComponent<T extends InputControlTypes>(props: { data: Input
 	}
 }
 
-addCustomization('control', (data: { payload: unknown }) => {
-	if (data.payload instanceof InputControl) {
-		return InputControlComponent;
-	}
-});
+// addCustomization('control', (data: { payload: unknown }) => {
+// 	if (data.payload instanceof InputControl) {
+// 		return InputControlComponent;
+// 	}
+// });

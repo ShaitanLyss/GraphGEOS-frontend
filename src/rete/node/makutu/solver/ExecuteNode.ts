@@ -1,7 +1,8 @@
+import { NodeFactory } from '../../NodeFactory';
 import { SolverAPINode } from './SolverAPINode';
 
 export class ExecuteNode extends SolverAPINode {
-	constructor() {
-		super('Execute Solver', '/execute');
+	constructor({factory} : {factory: NodeFactory}) {
+		super('Execute Solver', '/execute', { factory });
 	}
 }

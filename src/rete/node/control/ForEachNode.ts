@@ -1,13 +1,14 @@
 import { structures } from 'rete-structures';
 import { Connection, Node } from '../Node';
 import { getLeavesFromOutput } from '../utils';
+import { NodeFactory } from '../NodeFactory';
 
 // Class defining a For Each Node
 export class ForEachNode extends Node {
 	currentItemIndex?: number = undefined;
 
-	constructor() {
-		super('For Each', { height: 275 });
+	constructor({factory}: {factory: NodeFactory}) {
+		super('For Each', {factory, height: 275 });
 		this.addInExec();
 		this.addOutExec('loop', 'Loop');
 		this.addInData({ name: 'array', displayName: 'Array', isArray: true });
