@@ -5,4 +5,4 @@
 	import '../rete/imports';
 </script>
 
-<ExampleSwitcher/>
+<ExampleSwitcher />

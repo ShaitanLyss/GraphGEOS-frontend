@@ -1,6 +1,6 @@
 import { ClassicPreset, getUID } from 'rete';
 
-export class Control extends ClassicPreset.Control { }
+export class Control extends ClassicPreset.Control {}
 
 export type InputControlTypes = 'text' | 'number' | 'checkbox' | 'textarea' | 'vector';
 export type InputControlValueType<T extends InputControlTypes> = T extends 'text'
@@ -12,7 +12,7 @@ export type InputControlValueType<T extends InputControlTypes> = T extends 'text
 	: T extends 'textarea'
 	? string
 	: T extends 'vector'
-	? { x: number, y: number, z: number }
+	? { x: number; y: number; z: number }
 	: never;
 
 export type InputControlOptions<N> = {
@@ -38,8 +38,8 @@ export class InputControl<
 		this.readonly = options?.readonly ? options.readonly : false;
 
 		let initial = options?.initial;
-		
-		if (initial === undefined) {			
+
+		if (initial === undefined) {
 			switch (type) {
 				case 'text':
 					initial = '';
@@ -56,12 +56,10 @@ export class InputControl<
 				case 'vector':
 					initial = { x: 0, y: 0, z: 0 };
 					break;
-					
 			}
 		}
 
-
-		this.value = initial;		
+		this.value = initial;
 	}
 
 	setValue(value?: N) {

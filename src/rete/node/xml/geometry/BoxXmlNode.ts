@@ -9,8 +9,8 @@ export class BoxXmlNode extends XmlNode {
 				displayName: 'Box',
 				type: 'geometry'
 			},
-            width: 260,
-            initialValues: initialValues,
+			width: 260,
+			initialValues: initialValues,
 			xmlProperties: [
 				{
 					name: 'xMin',

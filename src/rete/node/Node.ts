@@ -104,19 +104,23 @@ export interface NodeParams {
 	height?: number;
 }
 
-export class Node<Inputs extends {
-	[key in string]?: Socket;
-} = {
-		[key in string]?: Socket;
-	}, Outputs extends {
-		[key in string]?: Socket;
-	} = {
-		[key in string]?: Socket;
-	}, Controls extends {
-		[key in string]?: Control;
-	} = {
-		[key in string]?: Control;
-	}>
+export class Node<
+		Inputs extends {
+			[key in string]?: Socket;
+		} = {
+			[key in string]?: Socket;
+		},
+		Outputs extends {
+			[key in string]?: Socket;
+		} = {
+			[key in string]?: Socket;
+		},
+		Controls extends {
+			[key in string]?: Control;
+		} = {
+			[key in string]?: Control;
+		}
+	>
 	extends ClassicPreset.Node<Inputs, Outputs, Controls>
 	implements DataflowNode
 {

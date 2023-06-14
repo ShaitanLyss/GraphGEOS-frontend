@@ -11,9 +11,6 @@ export function titlelize(str: string): string {
 
 // remove spaces and capitalize all but first letter
 export function camlelcaseize(str: string): string {
-	const capitalized = str
-		.split(' ')
-		.map(capitalize)
-		.join('');
+	const capitalized = str.split(' ').map(capitalize).join('');
 	return capitalized.charAt(0).toLowerCase() + capitalized.slice(1);
 }

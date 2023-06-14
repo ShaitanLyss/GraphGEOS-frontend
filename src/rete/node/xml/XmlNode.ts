@@ -5,34 +5,32 @@ import type { InputControlTypes } from '../../control/Control';
 import type { Socket } from '../../socket/Socket';
 
 export type XmlNodeParams = NodeParams & {
-    xmlTag: string;
+	xmlTag: string;
 	outData?: OutDataParams;
 	initialValues?: Record<string, unknown>;
 	xmlProperties?: XmlProperty[];
 };
 
-export abstract class XmlNode extends Node<Record<string,Socket>, { value: Socket }> {
+export abstract class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 	static __isAbstract = true;
 	static counts: Record<string, bigint> = {};
 	name = '';
-    xmlTag: string;
+	xmlTag: string;
 
 	constructor(name: string, config: XmlNodeParams) {
 		super(name, config);
-        XmlNode.counts[name] = XmlNode.counts[name] ? XmlNode.counts[name] + BigInt(1) : BigInt(1);
-        this.name = camlelcaseize(name) + XmlNode.counts[name];
-        this.xmlTag = config.xmlTag;
-        console.log(this.name);
-        
-        
-        // this.name = name + XmlNode.count;
+		XmlNode.counts[name] = XmlNode.counts[name] ? XmlNode.counts[name] + BigInt(1) : BigInt(1);
+		this.name = camlelcaseize(name) + XmlNode.counts[name];
+		this.xmlTag = config.xmlTag;
+		console.log(this.name);
+
+		// this.name = name + XmlNode.count;
 		const { outData, xmlProperties } = config;
 		let { initialValues } = config;
 		initialValues = initialValues !== undefined ? initialValues : {};
 
 		if (xmlProperties)
 			xmlProperties.forEach(({ name, type, isArray, controlType }) => {
-                
 				this.addInData({
 					name: name,
 					displayName: titlelize(name),
@@ -47,7 +45,7 @@ export abstract class XmlNode extends Node<Record<string,Socket>, { value: Socke
 						}
 					}
 				});
-                this.height += 45;
+				this.height += 45;
 			});
 
 		if (outData)
@@ -66,10 +64,9 @@ export abstract class XmlNode extends Node<Record<string,Socket>, { value: Socke
 			res['value'][key] = this.getData(key, inputs);
 		}
 
-        res['value']['name'] = this.name;
-        res['value']['xmlTag'] = this.xmlTag;
-        console.log(res['value']);
-        
+		res['value']['name'] = this.name;
+		res['value']['xmlTag'] = this.xmlTag;
+		console.log(res['value']);
 
 		return res;
 	}

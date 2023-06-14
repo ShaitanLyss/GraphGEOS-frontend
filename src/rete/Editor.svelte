@@ -19,7 +19,7 @@
 	import { acquisitionModelingExample } from './example/acquisition-modelling';
 	import { acquisitionXmlExample } from './example/acquisition-xml';
 	import { NodeEditor } from './NodeEditor';
-	
+
 	const editor = new NodeEditor();
 	export let loadExample: ((editor: NodeEditor) => Promise<Node[]>) | undefined = undefined;
 	export let hidden = false;
@@ -116,8 +116,7 @@
 			if (['connectioncreated', 'connectionremoved'].includes(context.type)) {
 				process((context as unknown as { data: { target: Node } }).data.target);
 			}
-			
-			
+
 			return context;
 		});
 

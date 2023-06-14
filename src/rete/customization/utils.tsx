@@ -20,7 +20,7 @@ export function assignColor(s: Socket): string {
 		numericalMethod: '#d8b78c',
 		geometry: '#d8d08c',
 		mesh: '#ad8c71',
-		vector: '#efec78',
+		vector: '#efec78'
 	};
 
 	return colorMap[s.type] || $socketcolor;
@@ -31,7 +31,7 @@ export function assignControl(socketType: SocketType): InputControlTypes | undef
 		string: 'text',
 		number: 'number',
 		boolean: 'checkbox',
-		vector: 'vector',
+		vector: 'vector'
 	};
 
 	return controlMap[socketType];

@@ -78,29 +78,31 @@ export const acquisitionXmlExample: XmlExample = async (editor: NodeEditor) => {
 		'setNames'
 	);
 
-    const fieldSpecification3SetNamesArray = new MakeArrayNode();
-    await editor.addNode(fieldSpecification3SetNamesArray);
-    await editor.addNewConnection(fieldSpecification3SetNamesArray, 'array', fieldSpecification3, 'setNames');
+	const fieldSpecification3SetNamesArray = new MakeArrayNode();
+	await editor.addNode(fieldSpecification3SetNamesArray);
+	await editor.addNewConnection(
+		fieldSpecification3SetNamesArray,
+		'array',
+		fieldSpecification3,
+		'setNames'
+	);
 
-    
+	// Geometry
+	const geometryArray = new MakeArrayNode();
+	await editor.addNode(geometryArray);
+	const box = new BoxXmlNode({
+		xMin: { x: -0.01, y: -0.01, z: 499.99 },
+		xMax: { x: 500.01, y: 500.01, z: 500.01 }
+	});
+	await editor.addNode(box);
+	await editor.addNewConnection(box, 'value', geometryArray, 'data-0');
+	await editor.addNewConnection(geometryArray, 'array', problem, 'geometry');
 
-    // Geometry
-    const geometryArray = new MakeArrayNode();
-    await editor.addNode(geometryArray);
-    const box = new BoxXmlNode({
-        xMin: { x: -0.01, y: -0.01, z: 499.99 },
-        xMax: { x: 500.01, y: 500.01, z: 500.01 }
-    });
-    await editor.addNode(box);
-    await editor.addNewConnection(box, 'value', geometryArray, 'data-0');
-    await editor.addNewConnection(geometryArray, 'array', problem, 'geometry');
+	const getBoxName = new GetNameNode();
+	await editor.addNode(getBoxName);
+	await editor.addNewConnection(box, 'value', getBoxName, 'xml');
 
-    const getBoxName = new GetNameNode();
-    await editor.addNode(getBoxName);
-    await editor.addNewConnection(box, 'value', getBoxName, 'xml')
-
-    await editor.addNewConnection(getBoxName, 'name', fieldSpecification3SetNamesArray, 'data-0');
-
+	await editor.addNewConnection(getBoxName, 'name', fieldSpecification3SetNamesArray, 'data-0');
 
 	return editor.getNodes();
 };

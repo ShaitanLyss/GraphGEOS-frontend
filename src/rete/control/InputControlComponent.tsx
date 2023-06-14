@@ -127,70 +127,67 @@ function InputControlComponent<T extends InputControlTypes>(props: { data: Input
 			return (
 				<>
 					<div ref={mergedRef}>
-						<Text style={{color: 'white'}}>{options?.label}</Text>
+						<Text style={{ color: 'white' }}>{options?.label}</Text>
 						<Group>
-						<NumberInput
-							value={value?.x as number}
-							// label='X'
-							ref={ref}
-							readOnly={props.data.readonly}
-							step={0.01}
-							precision={3}
-							rightSectionWidth={"0.001"}
-							removeTrailingZeros={true}
-							style={{width: "7ch"}}
-							hideControls={true}
-							// styles={{rightSection: {width: "1.65em"}}}
-							onChange={(number) => {
-								const val = { ...value, x: number } as InputControlValueType<T>;
-								props.data.setValue(val);
-								setValue(val);
-							}
-						}
-							sx={{ ['& .mantine-NumberInput-label']: { color: 'white' } }}
-						/>
-						<NumberInput
-							value={value?.y as number}
-							// label='Y'
-							ref={ref}
-							readOnly={props.data.readonly}
-							step={0.01}
-							precision={3}
-							style={{width: "7ch"}}
-							hideControls={true}
-							// styles={{rightSection: {width: "1.65em"}}}
-							removeTrailingZeros={true}
-							onChange={(number) => {
-								const val = { ...value, y: number } as InputControlValueType<T>;
-								props.data.setValue(val);
-								setValue(val);
-							}}
-							sx={{ ['& .mantine-NumberInput-label']: { color: 'white' } }}
-						/>
-						<NumberInput
-							value={value?.z as number}
-							// label='Z'
-							ref={ref}
-							readOnly={props.data.readonly}
-							step={0.01}
-							precision={3}
-							style={{width: "7ch"}}
-							hideControls={true}
-							// styles={{rightSection: {width: "1.65em"}}}
-							removeTrailingZeros={true}
-							onChange={(number) => {
-								const val = { ...value, z: number } as InputControlValueType<T>;
-								props.data.setValue(val);
-								setValue(val);
-							}}
-							sx={{ ['& .mantine-NumberInput-label']: { color: 'white' } }}
-						/>
+							<NumberInput
+								value={value?.x as number}
+								// label='X'
+								ref={ref}
+								readOnly={props.data.readonly}
+								step={0.01}
+								precision={3}
+								rightSectionWidth={'0.001'}
+								removeTrailingZeros={true}
+								style={{ width: '7ch' }}
+								hideControls={true}
+								// styles={{rightSection: {width: "1.65em"}}}
+								onChange={(number) => {
+									const val = { ...value, x: number } as InputControlValueType<T>;
+									props.data.setValue(val);
+									setValue(val);
+								}}
+								sx={{ ['& .mantine-NumberInput-label']: { color: 'white' } }}
+							/>
+							<NumberInput
+								value={value?.y as number}
+								// label='Y'
+								ref={ref}
+								readOnly={props.data.readonly}
+								step={0.01}
+								precision={3}
+								style={{ width: '7ch' }}
+								hideControls={true}
+								// styles={{rightSection: {width: "1.65em"}}}
+								removeTrailingZeros={true}
+								onChange={(number) => {
+									const val = { ...value, y: number } as InputControlValueType<T>;
+									props.data.setValue(val);
+									setValue(val);
+								}}
+								sx={{ ['& .mantine-NumberInput-label']: { color: 'white' } }}
+							/>
+							<NumberInput
+								value={value?.z as number}
+								// label='Z'
+								ref={ref}
+								readOnly={props.data.readonly}
+								step={0.01}
+								precision={3}
+								style={{ width: '7ch' }}
+								hideControls={true}
+								// styles={{rightSection: {width: "1.65em"}}}
+								removeTrailingZeros={true}
+								onChange={(number) => {
+									const val = { ...value, z: number } as InputControlValueType<T>;
+									props.data.setValue(val);
+									setValue(val);
+								}}
+								sx={{ ['& .mantine-NumberInput-label']: { color: 'white' } }}
+							/>
 						</Group>
 					</div>
 				</>
 			);
-
-
 	}
 }
 

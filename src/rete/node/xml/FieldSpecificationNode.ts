@@ -4,7 +4,7 @@ export class FieldSpecificationNode extends XmlNode {
 	constructor(initialValues: Record<string, unknown> = {}) {
 		super('Field Specification', {
 			// height: 340,
-            xmlTag: 'FieldSpecification',
+			xmlTag: 'FieldSpecification',
 			outData: {
 				name: 'fieldSpecification',
 				displayName: 'Field Specification',
