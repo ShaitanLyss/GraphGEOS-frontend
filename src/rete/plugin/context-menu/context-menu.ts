@@ -12,7 +12,7 @@ type Entry = Map<string, Entry | (() => Node | Promise<Node>)>;
 
 function pushMenuItem(items: Entry, prefix: string[], item: typeof Node, factory: NodeFactory): void {
 	if (prefix.length == 1) {
-		items.set(prefix[0].split('.')[0], () => new item({factory: factory}));
+		items.set(prefix[0].split('.')[0], () => new item({ factory: factory }));
 	} else {
 		const entry = prefix[0];
 		if (!items.has(entry)) {
@@ -36,14 +36,19 @@ function getMenuArray(items: Map<string, Entry>) {
 
 export class ContextMenuSetup extends Setup {
 	async setup(editor: NodeEditor, area: AreaPlugin<Schemes, AreaExtra>, factory: NodeFactory): Promise<void> {
-		const response = await fetch('/menu');
-		const nodeFiles = await response.json();
 		const re = /[/\\]/i;
 
 		// console.log(nodeFiles);
 		const items = new Map<string, Entry>();
-		for (const file of nodeFiles) {
-			const objects = await import(/* @vite-ignore */ `../../node/${file}`);
+		const modules = import.meta.glob('../../node/**/*.ts');
+		console.log(
+			modules);
+		for (const [path, module] of Object.entries(modules)) {
+			const objects = await module();
+			const menuPath = path.slice("../../node/".length);
+			
+		// for (const file of nodeFiles) {
+		// 	const objects = await import(/* @vite-ignore */ `../../node/${file}`);
 
 			Object.values(objects)
 				.filter((value: unknown) => {
@@ -55,7 +60,7 @@ export class ContextMenuSetup extends Setup {
 						!Object.prototype.hasOwnProperty.call(prototype.constructor, '__isAbstract')
 					);
 				})
-				.forEach((node) => pushMenuItem(items, file.split(re), node as typeof Node, factory));
+				.forEach((node) => pushMenuItem(items, menuPath.split(re), node as typeof Node, factory));
 
 			// items.push([file, () => new node()]);
 		}
