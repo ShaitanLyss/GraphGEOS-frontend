@@ -12,38 +12,38 @@ import { NodeFactory } from '../node/NodeFactory';
 export const forEachExample: EditorExample = async (factory: NodeFactory) => {
 	const editor = factory.getEditor();
 	factory.enable();
-	const start = new StartNode();
+	const start = new StartNode({factory});
 	await editor.addNode(start);
 
-	const log = new LogNode({ message: "Hello I'll show you some numbers" });
+	const log = new LogNode({factory,  message: "Hello I'll show you some numbers" });
 	await editor.addNode(log);
 
-	await editor.addConnection(new Connection(start, 'exec', log, 'exec'));
-	const makeArray = new MakeArrayNode();
+	await editor.addNewConnection(start, 'exec', log, 'exec');
+	const makeArray = new MakeArrayNode({factory});
 	await editor.addNode(makeArray);
 	makeArray.addPin();
 	makeArray.addPin();
-	const number1 = new NumberNode(1);
+	const number1 = new NumberNode({factory, initial: 1});
 	await editor.addNode(number1);
-	const number2 = new NumberNode(2);
+	const number2 = new NumberNode({factory, initial:2});
 	await editor.addNode(number2);
-	const number3 = new NumberNode(3);
+	const number3 = new NumberNode({ factory, initial: 3 });
 	await editor.addNode(number3);
-	await editor.addConnection(new Connection(number1, 'value', makeArray, 'data-0'));
-	await editor.addConnection(new Connection(number2, 'value', makeArray, 'data-1'));
-	await editor.addConnection(new Connection(number3, 'value', makeArray, 'data-2'));
+	await editor.addNewConnection(number1, 'value', makeArray, 'data-0');
+	await editor.addNewConnection(number2, 'value', makeArray, 'data-1');
+	await editor.addNewConnection(number3, 'value', makeArray, 'data-2');
 
-	const forEach = new ForEachNode();
+	const forEach = new ForEachNode({factory});
 	await editor.addNode(forEach);
-	await editor.addConnection(new Connection(makeArray, 'array', forEach, 'array'));
-	await editor.addConnection(new Connection(log, 'exec', forEach, 'exec'));
-	const logItem = new LogNode({});
+	await editor.addNewConnection(makeArray, 'array', forEach, 'array');
+	await editor.addNewConnection(log, 'exec', forEach, 'exec');
+	const logItem = new LogNode({factory});
 	await editor.addNode(logItem);
-	await editor.addConnection(new Connection(forEach, 'item', logItem, 'message'));
-	await editor.addConnection(new Connection(forEach, 'loop', logItem, 'exec'));
-	const logEnd = new LogNode({ message: "I'm done!" });
+	await editor.addNewConnection(forEach, 'item', logItem, 'message');
+	await editor.addNewConnection(forEach, 'loop', logItem, 'exec');
+	const logEnd = new LogNode({ factory, message: "I'm done!" });
 	await editor.addNode(logEnd);
-	await editor.addConnection(new Connection(forEach, 'exec', logEnd, 'exec'));
+	await editor.addNewConnection(forEach, 'exec', logEnd, 'exec');
 
 	return editor.getNodes();
 }

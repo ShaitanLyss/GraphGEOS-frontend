@@ -13,7 +13,7 @@ export class MakeArrayNode extends Node {
 	initialValues: Record<string, unknown>;
 	numConnections = 0;
 
-	constructor({factory, initialValues={}}:  {factory: NodeFactory, initialValues: Record<string, unknown>}) {
+	constructor({factory, initialValues={}}:  {factory: NodeFactory, initialValues?: Record<string, unknown>}) {
 		super('Make Array', { factory, height: 160, width: 150 });
 		this.initialValues = initialValues;
 		this.addOutData({ name: 'array', isArray: true, type: 'any' });

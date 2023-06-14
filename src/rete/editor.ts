@@ -91,11 +91,11 @@ export async function setupEditor(container: HTMLElement, loadExample: EditorExa
     let nodesToFocus: Node[] = [];
     if (loadExample) {
         nodesToFocus = await loadExample(nodeFactory);
+        await arrange.layout();
     }
 
     AreaExtensions.simpleNodesOrder(area);
-    arrange.layout();
-    AreaExtensions.zoomAt(area, nodesToFocus);
+    // await AreaExtensions.zoomAt(area, nodesToFocus);
 
 
     nodeFactory.process();
@@ -110,6 +110,5 @@ export async function setupEditor(container: HTMLElement, loadExample: EditorExa
 
     console.log('Editor setup');
 
-    return { destroy: () => area.destroy(), firstDisplay: () => { arrange.layout(); AreaExtensions.zoomAt(area, nodesToFocus); console.log(nodesToFocus);
-    } };
+    return { destroy: () => area.destroy(), firstDisplay: async () => {  await arrange.layout(); AreaExtensions.zoomAt(area, nodesToFocus);  } };
 }

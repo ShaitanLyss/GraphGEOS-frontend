@@ -5,6 +5,9 @@
 	import type { Writable } from 'svelte/store';
 	import Editor from './Editor.svelte';
 	import { sumExample } from '../rete/example/math';
+	import { forEachExample } from '../rete/example/for_each';
+	import { timeloopExample } from '../rete/example/timeloop';
+	import { acquisitionModelingExample } from '../rete/example/acquisition-modeling';
 
 	type tab = 'math' | 'timeloop' | 'for_each' | 'acquisition';
 
@@ -18,7 +21,9 @@
 	<Tab bind:group={$tabSet} name="tab3" value={'acquisition'}>Acquisition Modelling</Tab>
 	<div slot="panel">
 		<Editor hidden={$tabSet !== 'math'} loadExample={sumExample} />
-		<Editor hidden={$tabSet !== 'for_each'} loadExample={sumExample} />
+		<Editor hidden={$tabSet !== 'for_each'} loadExample={forEachExample} />
+		<Editor hidden={$tabSet !== 'timeloop'} loadExample={timeloopExample} />
+		<Editor hidden={$tabSet !== 'acquisition'} loadExample={acquisitionModelingExample} />
 	</div>
 
 	<!-- 

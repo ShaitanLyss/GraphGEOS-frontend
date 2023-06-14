@@ -4,20 +4,23 @@ import { TimeLoopNode } from '../node/control/TimeLoopNode';
 import { LogNode } from '../node/io/LogNode';
 import { OutputVtkNode } from '../node/makutu/solver/OutputVtk';
 import { EveryNode } from '../node/control/EveryNode';
+import { NodeFactory } from '../node/NodeFactory';
+import { EditorExample } from './types';
 
-export async function timeloopExample(editor: NodeEditor) {
-	const start = new StartNode();
+export const timeloopExample: EditorExample = async (factory: NodeFactory) => {
+	const editor = factory.getEditor();
+	const start = new StartNode({factory});
 	await editor.addNode(start);
 
-	const timeLoop = new TimeLoopNode();
+	const timeLoop = new TimeLoopNode({factory});
 	await editor.addNode(timeLoop);
 
 	await editor.addExecConnection(start, timeLoop);
 
-	const outputVtk = new OutputVtkNode();
+	const outputVtk = new LogNode({factory, message: "Hello!"});
 	await editor.addNode(outputVtk);
 
-	const every = new EveryNode();
+	const every = new EveryNode({factory});
 	await editor.addNode(every);
 
 	await editor.addNewConnection(timeLoop, 'loop', every, 'exec');

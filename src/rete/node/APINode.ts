@@ -1,6 +1,4 @@
-import { ExecSocket } from '../socket/ExecSocket';
 import { Node, NodeParams } from './Node';
-import { notifications } from '@mantine/notifications';
 
 export interface APINodeParams extends NodeParams {
 	url: string;
@@ -35,18 +33,25 @@ export abstract class APINode extends Node {
 
 	override async execute(input: string, forward: (output: string) => unknown): Promise<void> {
 		// notifications.show({ title: 'API Node', message: `Execution de l'appel API ${this.url}` });
-		const response = await fetch(this.url, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(await this.getBody())
-		});
+		try {
+			const response = await fetch(this.url, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(await this.getBody())
 
-		const responseData = await response.json();
-		await this.processResponseData(responseData);
+			});
+			const responseData = await response.json();
+			await this.processResponseData(responseData);
 
-		super.execute(input, forward);
+			super.execute(input, forward);
+		} catch (error) {
+			{
+				super.execute(input, forward);
+				return;
+			}
+		}
 	}
 
 	async processResponseData(responseData: Record<string, unknown>) {

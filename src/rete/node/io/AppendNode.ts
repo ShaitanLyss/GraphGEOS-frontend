@@ -2,9 +2,9 @@ import { ClassicPreset } from 'rete';
 import { Node, NodeParams } from '../Node';
 
 interface AppendNodeParams extends NodeParams {
-	a: string;
-	b: string;
-	sep: string;
+	a?: string;
+	b?: string;
+	sep?: string;
 }
 
 export class AppendNode extends Node {
