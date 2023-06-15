@@ -113,5 +113,6 @@ export async function setupEditor(container: HTMLElement, loadExample?: EditorEx
 			AreaExtensions.zoomAt(area, nodesToFocus);
 		},
 		editor,
+		factory: nodeFactory
 	};
 }

@@ -7,8 +7,9 @@ export interface APINodeParams extends NodeParams {
 export abstract class APINode extends Node {
 	url: string;
 
-	constructor(name: string, { url, height = 225, width = 150, factory }: APINodeParams) {
-		super(name, { height: height, width: width, factory });
+	constructor(params: APINodeParams) {
+		const { url, label = 'API', height = 225, width = 150, factory } = params;
+		super({label, height: height, width: width, factory });
 		this.url = 'http://localhost:8000/api/v1' + url;
 
 		this.addInExec();

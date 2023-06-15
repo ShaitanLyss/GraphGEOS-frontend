@@ -9,16 +9,23 @@
 	import DownloadGraphButton from '$lib/editor/DownloadGraphButton.svelte';
 	import SaveGraphButton from './SaveGraphButton.svelte';
 	import EditorButton from './EditorButton.svelte';
+	import LoadGraphFromFileButton from './LoadGraphFromFileButton.svelte';
+	import type { NodeFactory } from '$rete/node/NodeFactory';
+	import type { NodeEditor } from '$rete/NodeEditor';
 	
 	// import {} from '@fortawesome/free-regular-svg-icons';
 
 	export let loadExample: EditorExample | undefined;
 	export let hidden = false;
+	export let name: string;
+	export let onNameChange: (name: string) => void = () => {};
 
 	let firstShown = true;
 
 	let container: HTMLDivElement;
-	let editor: any;
+	let editor: NodeEditor;
+	let factory: NodeFactory;
+	
 	let destroyEditor: Function;
 	let onFirstShown: Function;
 
@@ -27,12 +34,17 @@
 		destroyEditor = tools.destroy;
 		onFirstShown = tools.firstDisplay;
 		editor = tools.editor;
+		editor.setName(name);
+		editor.addOnChangeNameListener(onNameChange);
+		factory = tools.factory;
+
 		return () => {
 			destroyEditor();
 			console.log('destroyed');
 		};
 	});
-
+	$: if (editor) editor.setName(name, false);
+	
 	$: if (!hidden) {
 		if (firstShown && onFirstShown) {
 			onFirstShown();
@@ -63,7 +75,8 @@
 			<svelte:fragment slot="header">
 				<div class="flex justify-between w-full p-2">
 					<div class="space-x-4">
-						<SaveGraphButton/>
+						<SaveGraphButton {editor}/>
+						<LoadGraphFromFileButton {factory}/>
 					</div>
 					<div class="space-x-4">
 						<DownloadGraphButton {editor}/>

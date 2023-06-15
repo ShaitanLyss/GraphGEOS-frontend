@@ -3,6 +3,7 @@ import { SolverAPINode } from './SolverAPINode';
 
 export class OutputVtkNode extends SolverAPINode {
 	constructor({ factory }: { factory: NodeFactory }) {
-		super('Output VTK', '/output_vtk', { factory });
+		// super('Output VTK', '/output_vtk', { factory });
+		super({ label: 'Output VTK', url: '/output_vtk', factory });
 	}
 }

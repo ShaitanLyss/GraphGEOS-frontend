@@ -9,7 +9,8 @@ interface AppendNodeParams extends NodeParams {
 
 export class AppendNode extends Node {
 	constructor({ a = '', sep = ' ', b = '', factory }: AppendNodeParams) {
-		super('Append', { height: 220, factory });
+		// super('Append', { height: 220, factory });
+		super({ label: 'Append', height: 220, factory, params: { a, b, sep } });
 		this.addInData({
 			name: 'a',
 			displayName: 'A',

@@ -11,17 +11,14 @@ export class ObjectAPINode extends APINode {
 	static __isAbstract: boolean;
 
 	constructor(
-		name: string,
-		{
-			url = '',
+		params: ObjectAPINodeParams
+	) {
+		const {
 			objectKey = 'object',
 			objectLabel = 'Object',
-			height = 235,
-			width,
-			factory
-		}: ObjectAPINodeParams
-	) {
-		super(name, { url: url, height: height, width: width, factory });
+		} = params;
+
+		super(params);
 		this.objectKey = objectKey;
 		this.addInData({
 			name: objectKey,

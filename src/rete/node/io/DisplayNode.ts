@@ -19,7 +19,8 @@ export class DisplayNode extends Node {
 		initial?: unknown;
 		change?: () => void;
 	}) {
-		super('Display', { factory });
+		// super('Display', { factory });
+		super({ label: 'Display', factory, params: { initial, change } });
 
 		// Setup input
 		const input = new ClassicPreset.Input(new Socket(), '');

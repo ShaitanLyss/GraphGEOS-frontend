@@ -4,10 +4,7 @@ import { SolverAPINode } from './SolverAPINode';
 
 export class InitializeSolverNode extends SolverAPINode {
 	constructor({ factory }: { factory: NodeFactory }) {
-		super('Initialize Solver', '/initialize', {
-			height: 250,
-			factory
-		});
+		super({ label: 'Initialize Solver', url: '/initialize', factory, height: 250 });
 
 		this.addInData({
 			name: 'xml',

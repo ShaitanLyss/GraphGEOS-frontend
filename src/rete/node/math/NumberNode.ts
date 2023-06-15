@@ -16,7 +16,8 @@ export class NumberNode extends Node {
 		initial: number;
 		change?: () => void;
 	}) {
-		super('Number', { factory });
+		// super('Number', { factory });
+		super({ label: 'Number', factory, params: { initial, change } });
 		this.addControl(
 			'value',
 			new ClassicPreset.InputControl('number', { initial, change: this.processDataflow })

@@ -1,11 +1,11 @@
-import type { AreaPlugin } from 'rete-area-plugin';
-import type { NodeEditor } from '../NodeEditor';
+import { AreaExtensions, AreaPlugin } from 'rete-area-plugin';
+import type { NodeEditor, NodeEditorSaveData } from '../NodeEditor';
 import type { AreaExtra } from './AreaExtra';
 import type { Schemes } from './Schemes';
 import { ControlFlowEngine, DataflowEngine } from 'rete-engine';
 import { ExecSocket } from '../socket/ExecSocket';
 import { structures } from 'rete-structures';
-import { Node } from './Node';
+import { Connection, Node } from './Node';
 
 function createDataflowEngine() {
 	return new DataflowEngine<Schemes>(({ inputs, outputs }) => {
@@ -38,6 +38,39 @@ function createControlflowEngine() {
 }
 
 export class NodeFactory {
+	private static classRegistry: Record<string, typeof Node> = {};
+	static registerClass(id: string, nodeClass: typeof Node) {
+		this.classRegistry[id] = nodeClass;
+	}
+
+	async loadGraph(editorSaveData: NodeEditorSaveData) {
+		await this.editor.clear();
+		this.editor.setName(editorSaveData.editorName)
+		const nodes = new Map<string, Node>();
+
+		for (const nodeSaveData of editorSaveData.nodes) {
+			const nodeClass = NodeFactory.classRegistry[nodeSaveData.type];
+			if (nodeClass) {
+				const node = new nodeClass({ ...nodeSaveData.params, factory: this });
+				node.id = nodeSaveData.id;
+				nodes.set(nodeSaveData.id, node);
+				await this.editor.addNode(node);
+				if (nodeSaveData.position)
+					this.area.translate(nodeSaveData.id, { x: nodeSaveData.position.x, y: nodeSaveData.position.y });
+			}
+		}
+
+		editorSaveData.connections.forEach(async (connectionSaveData) => {
+			await this.editor.addConnection(JSON.parse(connectionSaveData));
+			
+			// await this.editor.addConnection(JSON.parse(connectionSaveData));
+			
+			// await this.editor.addConnection(JSON.parse(connection))
+		});
+		AreaExtensions.zoomAt(this.area, this.editor.getNodes());
+
+
+	}
 	private area: AreaPlugin<Schemes, AreaExtra>;
 	private editor: NodeEditor;
 

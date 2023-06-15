@@ -62,7 +62,7 @@ export class ContextMenuSetup extends Setup {
 			// for (const file of nodeFiles) {
 			// 	const objects = await import(/* @vite-ignore */ `../../node/${file}`);
 
-			Object.values(objects)
+			const nodeClasses:(typeof Node)[] = Object.values(objects)
 				.filter((value: unknown) => {
 					const prototype = (value as { prototype }).prototype;
 
@@ -71,9 +71,13 @@ export class ContextMenuSetup extends Setup {
 						prototype.constructor &&
 						!Object.prototype.hasOwnProperty.call(prototype.constructor, '__isAbstract')
 					);
-				})
-				.forEach((node) => pushMenuItem(items, menuPath.split(re), node as typeof Node, factory));
+				}) as (typeof Node)[];
 
+			nodeClasses.forEach((node) => pushMenuItem(items, menuPath.split(re), node, factory));
+			
+			
+			// console.log(nodeClasses);
+			
 			// items.push([file, () => new node()]);
 		}
 

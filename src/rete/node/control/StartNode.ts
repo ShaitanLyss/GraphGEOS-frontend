@@ -4,7 +4,8 @@ import { NodeFactory } from '../NodeFactory';
 
 export class StartNode extends Node {
 	constructor({ factory }: { factory: NodeFactory }) {
-		super('Start', { height: 130, factory });
+
+		super({ label: 'Start', factory, height: 130 });
 		this.addOutExec();
 		this.addControl(
 			'playBtn',

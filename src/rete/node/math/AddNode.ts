@@ -7,7 +7,8 @@ import { NodeFactory } from '../NodeFactory';
 
 export class AddNode extends Node {
 	constructor({ factory, a = 0, b = 0 }: { factory: NodeFactory; a?: number; b?: number }) {
-		super('Add', { factory });
+		// super('Add', { factory });
+		super({ label: 'Add', factory });
 		this.height = 160;
 
 		const left = new ClassicPreset.Input(new Socket({ type: 'number' }), '');

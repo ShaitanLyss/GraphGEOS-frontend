@@ -46,10 +46,19 @@ export interface InDataParams<N> {
 }
 
 export interface NodeParams {
+	label?: string;
 	name?: string;
 	width?: number;
 	height?: number;
 	factory: NodeFactory;
+	params?:Record<string, unknown>;
+}
+
+export type NodeSaveData = {
+	params: Record<string, unknown>;
+	id: string;
+	type: string;
+	position?: {x: number, y: number};
 }
 
 export class Node<
@@ -79,16 +88,29 @@ export class Node<
 	private resolveEndExecutes = new Stack<() => void>();
 	private naturalFlowExec: string | undefined = 'exec';
 	protected factory: NodeFactory;
+	protected params: Record<string, unknown>;
+	static id: string;
 
-	constructor(name = '', { width = 190, height = 120, factory }: NodeParams) {
-		super(name);
+	constructor(params: NodeParams) {
+		const { label = '', width = 190, height = 120, factory } = params;
+		super(label);
+		this.params = params.params || {};
 		this.factory = factory;
 		if (factory === undefined) {
 			throw new Error(name + ': Factory is undefined');
 		}
-		format.subscribe((_) => (this.label = _(name)));
+		format.subscribe((_) => (this.label = _(label)));
 		this.width = width;
 		this.height = height;
+	}
+
+	toJSON(): NodeSaveData {		
+		return {
+			params: this.params,
+			id: this.id,
+			type: (this.constructor as typeof Node).id,
+			position:this.getArea().nodeViews.get(this.id)?.position,
+		};
 	}
 
 	setNaturalFlow(outExec: string | undefined) {

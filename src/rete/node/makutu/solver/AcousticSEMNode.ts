@@ -14,7 +14,8 @@ export class AcousticSEMNode extends APINode {
 	width = 180;
 
 	constructor({ factory }: { factory: NodeFactory }) {
-		super('Create AcousticSEM', {
+		super({
+			label: 'Create AcousticSEM',
 			factory,
 			url: '/makutu/solver/create-acoustic-sem',
 			height: 180
