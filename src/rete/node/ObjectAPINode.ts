@@ -10,13 +10,8 @@ export class ObjectAPINode extends APINode {
 	objectKey: string;
 	static __isAbstract: boolean;
 
-	constructor(
-		params: ObjectAPINodeParams
-	) {
-		const {
-			objectKey = 'object',
-			objectLabel = 'Object',
-		} = params;
+	constructor(params: ObjectAPINodeParams) {
+		const { objectKey = 'object', objectLabel = 'Object' } = params;
 
 		super(params);
 		this.objectKey = objectKey;

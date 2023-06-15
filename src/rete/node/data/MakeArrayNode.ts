@@ -21,8 +21,8 @@ export class MakeArrayNode extends Node {
 		initialValues?: Record<string, unknown>;
 	}) {
 		// super('Make Array', { factory, height: 160, width: 150 });
-		
-		super({ label: 'Make Array', factory, height: 160, width: 150, params: {initialValues} });
+
+		super({ label: 'Make Array', factory, height: 160, width: 150, params: { initialValues } });
 		this.initialValues = initialValues;
 		this.addOutData({ name: 'array', isArray: true, type: 'any' });
 		this.addInData({ name: 'data-0' });

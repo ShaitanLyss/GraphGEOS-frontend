@@ -10,12 +10,12 @@
 
 <AppShell>
 	<!-- <svelte:fragment slot="sidebarLeft">Sidebar left</svelte:fragment> -->
-	<EditorSwitcher 
-	 examples={[
-		{ key: 'math', example: sumExample, label: 'Math' },
-		{ key: 'timeloop', example: timeloopExample, label: 'Time Loop' },
-		{ key: 'for_each', example: forEachExample, label: 'For Each' },
-		{ key: 'acquisition', example: acquisitionModelingExample, label: 'Acquisition Modelling' }
-	]}
+	<EditorSwitcher
+		examples={[
+			{ key: 'math', example: sumExample, label: 'Math' },
+			{ key: 'timeloop', example: timeloopExample, label: 'Time Loop' },
+			{ key: 'for_each', example: forEachExample, label: 'For Each' },
+			{ key: 'acquisition', example: acquisitionModelingExample, label: 'Acquisition Modelling' }
+		]}
 	/>
 </AppShell>

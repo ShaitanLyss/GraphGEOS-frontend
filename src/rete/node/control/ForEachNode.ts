@@ -8,7 +8,7 @@ export class ForEachNode extends Node {
 	currentItemIndex?: number = undefined;
 
 	constructor({ factory }: { factory: NodeFactory }) {
-		super({label: 'For Each',  factory, height: 275 });
+		super({ label: 'For Each', factory, height: 275 });
 		this.addInExec();
 		this.addOutExec('loop', 'Loop');
 		this.addInData({ name: 'array', displayName: 'Array', isArray: true });

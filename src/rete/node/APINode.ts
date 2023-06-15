@@ -9,7 +9,7 @@ export abstract class APINode extends Node {
 
 	constructor(params: APINodeParams) {
 		const { url, label = 'API', height = 225, width = 150, factory } = params;
-		super({label, height: height, width: width, factory });
+		super({ label, height: height, width: width, factory });
 		this.url = 'http://localhost:8000/api/v1' + url;
 
 		this.addInExec();

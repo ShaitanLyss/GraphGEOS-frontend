@@ -45,7 +45,7 @@ export class NodeFactory {
 
 	async loadGraph(editorSaveData: NodeEditorSaveData) {
 		await this.editor.clear();
-		this.editor.setName(editorSaveData.editorName)
+		this.editor.setName(editorSaveData.editorName);
 		const nodes = new Map<string, Node>();
 
 		for (const nodeSaveData of editorSaveData.nodes) {
@@ -56,20 +56,21 @@ export class NodeFactory {
 				nodes.set(nodeSaveData.id, node);
 				await this.editor.addNode(node);
 				if (nodeSaveData.position)
-					this.area.translate(nodeSaveData.id, { x: nodeSaveData.position.x, y: nodeSaveData.position.y });
+					this.area.translate(nodeSaveData.id, {
+						x: nodeSaveData.position.x,
+						y: nodeSaveData.position.y
+					});
 			}
 		}
 
 		editorSaveData.connections.forEach(async (connectionSaveData) => {
 			await this.editor.addConnection(JSON.parse(connectionSaveData));
-			
+
 			// await this.editor.addConnection(JSON.parse(connectionSaveData));
-			
+
 			// await this.editor.addConnection(JSON.parse(connection))
 		});
 		AreaExtensions.zoomAt(this.area, this.editor.getNodes());
-
-
 	}
 	private area: AreaPlugin<Schemes, AreaExtra>;
 	private editor: NodeEditor;

@@ -51,15 +51,15 @@ export interface NodeParams {
 	width?: number;
 	height?: number;
 	factory: NodeFactory;
-	params?:Record<string, unknown>;
+	params?: Record<string, unknown>;
 }
 
 export type NodeSaveData = {
 	params: Record<string, unknown>;
 	id: string;
 	type: string;
-	position?: {x: number, y: number};
-}
+	position?: { x: number; y: number };
+};
 
 export class Node<
 		Inputs extends {
@@ -104,15 +104,15 @@ export class Node<
 		this.height = height;
 	}
 
-	toJSON(): NodeSaveData {	
+	toJSON(): NodeSaveData {
 		// TODO: for all nodes, move state to params
-		// TODO: add control values to JSON return	
+		// TODO: add control values to JSON return
 		// TODO: adapt node factory to adapt to new JSON format
 		return {
 			params: this.params,
 			id: this.id,
 			type: (this.constructor as typeof Node).id,
-			position:this.getArea().nodeViews.get(this.id)?.position,
+			position: this.getArea().nodeViews.get(this.id)?.position
 		};
 	}
 

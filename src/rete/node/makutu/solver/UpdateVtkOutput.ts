@@ -8,7 +8,13 @@ export class UpdateVtkOutputNode extends SolverAPINode {
 		// 	width: 180,
 		// 	factory
 		// });
-		super({ label: 'Update VTK Output', url: '/update_vtk_output', factory, height: 300, width: 180 });
+		super({
+			label: 'Update VTK Output',
+			url: '/update_vtk_output',
+			factory,
+			height: 300,
+			width: 180
+		});
 
 		this.addInData({
 			name: 'directory',

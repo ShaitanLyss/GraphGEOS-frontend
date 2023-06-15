@@ -1,6 +1,6 @@
-import { getLocaleFromNavigator, init } from "svelte-i18n";
+import { getLocaleFromNavigator, init } from 'svelte-i18n';
 
 init({
-    fallbackLocale: 'en',
-    initialLocale: getLocaleFromNavigator()
+	fallbackLocale: 'en',
+	initialLocale: getLocaleFromNavigator()
 });

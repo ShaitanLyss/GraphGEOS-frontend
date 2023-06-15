@@ -6,13 +6,12 @@ export type NodeEditorSaveData = {
 	nodes: NodeSaveData[];
 	connections: string[];
 	editorName: string;
-}
+};
 
 export class NodeEditor extends BaseNodeEditor<Schemes> {
 	setName(name: string, triggerListeners: boolean = true) {
 		this.name = name;
-		if (triggerListeners)
-		this.onChangeNameListeners.forEach((listener) => listener(name));
+		if (triggerListeners) this.onChangeNameListeners.forEach((listener) => listener(name));
 	}
 	name: string = 'New Editor';
 	onChangeNameListeners: ((name: string) => void)[] = [];
@@ -39,6 +38,6 @@ export class NodeEditor extends BaseNodeEditor<Schemes> {
 			nodes: this.getNodes().map((node) => node.toJSON()),
 			connections: this.getConnections().map((conn) => JSON.stringify(conn)),
 			editorName: this.name
-		}
+		};
 	}
 }

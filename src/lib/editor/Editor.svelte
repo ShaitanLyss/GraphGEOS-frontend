@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {  onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import { setupEditor } from '$rete/editor';
 	import type { EditorExample } from '../../rete/example/types';
 	import { AppShell, ModalSettings, modeCurrent } from '@skeletonlabs/skeleton';
@@ -12,7 +12,7 @@
 	import LoadGraphFromFileButton from './LoadGraphFromFileButton.svelte';
 	import type { NodeFactory } from '$rete/node/NodeFactory';
 	import type { NodeEditor } from '$rete/NodeEditor';
-	
+
 	// import {} from '@fortawesome/free-regular-svg-icons';
 
 	export let loadExample: EditorExample | undefined;
@@ -25,7 +25,7 @@
 	let container: HTMLDivElement;
 	let editor: NodeEditor;
 	let factory: NodeFactory;
-	
+
 	let destroyEditor: Function;
 	let onFirstShown: Function;
 
@@ -44,7 +44,7 @@
 		};
 	});
 	$: if (editor) editor.setName(name, false);
-	
+
 	$: if (!hidden) {
 		if (firstShown && onFirstShown) {
 			onFirstShown();
@@ -56,15 +56,18 @@
 	function openUploadGraphModal() {
 		const modal: ModalSettings = {
 			type: 'component',
-			component: 'uploadGraphModal',
-		}
+			component: 'uploadGraphModal'
+		};
 		modalStore.trigger(modal);
-
 	}
 </script>
 
-<div {hidden} class="relative border border-surface-500" style="/*border:4px solid violet;*/ height:75vh;">
-	<div bind:this={container} style="height:100%;" class:bg-white={$modeCurrent}/>
+<div
+	{hidden}
+	class="relative border border-surface-500"
+	style="/*border:4px solid violet;*/ height:75vh;"
+>
+	<div bind:this={container} style="height:100%;" class:bg-white={$modeCurrent} />
 
 	<!--  Overlay -->
 	{#if !hidden}
@@ -75,15 +78,12 @@
 			<svelte:fragment slot="header">
 				<div class="flex justify-between w-full p-2">
 					<div class="space-x-4">
-						<SaveGraphButton {editor}/>
-						<LoadGraphFromFileButton {factory}/>
+						<SaveGraphButton {editor} />
+						<LoadGraphFromFileButton {factory} />
 					</div>
 					<div class="space-x-4">
-						<DownloadGraphButton {editor}/>
-						<EditorButton
-							icon={faCloud}
-							onClick={openUploadGraphModal}
-						/>
+						<DownloadGraphButton {editor} />
+						<EditorButton icon={faCloud} onClick={openUploadGraphModal} />
 					</div>
 				</div>
 			</svelte:fragment>
