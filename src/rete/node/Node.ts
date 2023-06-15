@@ -104,7 +104,10 @@ export class Node<
 		this.height = height;
 	}
 
-	toJSON(): NodeSaveData {		
+	toJSON(): NodeSaveData {	
+		// TODO: for all nodes, move state to params
+		// TODO: add control values to JSON return	
+		// TODO: adapt node factory to adapt to new JSON format
 		return {
 			params: this.params,
 			id: this.id,
