@@ -3,11 +3,12 @@
 	import { notifications } from "@mantine/notifications";
 	import Fa from "svelte-fa";
 	import type { NodeEditor } from "$rete/NodeEditor";
+	import EditorButton from "./EditorButton.svelte";
 
 	export let editor: NodeEditor;
 	
 	function downloadGraph() {
-		notifications.show({title: 'Download', message: 'Downloading graph...'});
+		// notifications.show({title: 'Download', message: 'Downloading graph...'});
     const content = '{descr: "This is the content of the file."}';
     const filename = 'editor.txt';
     const blob = new Blob([content], { type: 'text/plain' });
@@ -23,7 +24,4 @@
 
 </script>
 
-<button class="btn-icon variant-ghost-secondary pointer-events-auto"
-							on:click={downloadGraph}
-							><Fa icon={faDownload}/></button
-						>
+<EditorButton onClick={downloadGraph} icon={faDownload} />

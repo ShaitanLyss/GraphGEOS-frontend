@@ -1,15 +1,14 @@
 <script lang="ts">
-	import { onDestroy, onMount } from 'svelte';
+	import {  onMount } from 'svelte';
 	import { setupEditor } from '$rete/editor';
 	import type { EditorExample } from '../../rete/example/types';
 	import { AppShell, ModalSettings, modeCurrent } from '@skeletonlabs/skeleton';
 	import Fa from 'svelte-fa';
-	import { faCloud, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
-	import { faDownload } from '@fortawesome/free-solid-svg-icons';
+	import { faCloud } from '@fortawesome/free-solid-svg-icons';
 	import { modalStore } from '@skeletonlabs/skeleton';
-	import { notifications } from '@mantine/notifications';
 	import DownloadGraphButton from '$lib/editor/DownloadGraphButton.svelte';
 	import SaveGraphButton from './SaveGraphButton.svelte';
+	import EditorButton from './EditorButton.svelte';
 	
 	// import {} from '@fortawesome/free-regular-svg-icons';
 
@@ -68,10 +67,10 @@
 					</div>
 					<div class="space-x-4">
 						<DownloadGraphButton {editor}/>
-						<button class="btn-icon variant-ghost-secondary pointer-events-auto"
-						 on:click={openUploadGraphModal}
-							><Fa icon={faCloud}/></button
-						>
+						<EditorButton
+							icon={faCloud}
+							onClick={openUploadGraphModal}
+						/>
 					</div>
 				</div>
 			</svelte:fragment>

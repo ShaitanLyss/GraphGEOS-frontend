@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
     import { notifications } from '@mantine/notifications';
-
-	import Fa from 'svelte-fa';
+	import EditorButton from './EditorButton.svelte';
 </script>
 
-<button class="btn-icon variant-ghost-secondary pointer-events-auto"
-    on:click={() => {
+<EditorButton
+    onClick={() => {
         notifications.show({title: 'Save', message: 'Saving graph...'});
     }}
-	><Fa icon={faFloppyDisk} /></button
->
+    icon={faFloppyDisk}
+/>
