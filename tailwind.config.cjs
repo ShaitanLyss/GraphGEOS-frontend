@@ -1,6 +1,7 @@
 import * as path from 'path';
 import getSkeletonPlugins from '@skeletonlabs/skeleton/tailwind/skeleton.cjs';
 import prosePlugin from '@tailwindcss/typography';
+import formPlugin from '@tailwindcss/forms';
 
 /** @type {import('tailwindcss').Config}*/
 const config = {
@@ -14,7 +15,7 @@ const config = {
 		extend: {}
 	},
 
-	plugins: [...getSkeletonPlugins(), prosePlugin]
+	plugins: [formPlugin, ...getSkeletonPlugins(), prosePlugin]
 };
 
 module.exports = config;

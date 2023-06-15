@@ -16,7 +16,7 @@ import { EditorExample } from './example/types';
 import { MegaSetup } from './setup/MegaSetup';
 import { NodeFactory } from './node/NodeFactory';
 
-export async function setupEditor(container: HTMLElement, loadExample: EditorExample) {
+export async function setupEditor(container: HTMLElement, loadExample?: EditorExample) {
 	const editor = new NodeEditor();
 	const arrange = new AutoArrangePlugin<Schemes>();
 	const typedSocketsPlugin = new TypedSocketsPlugin<Schemes>();
@@ -111,6 +111,7 @@ export async function setupEditor(container: HTMLElement, loadExample: EditorExa
 		firstDisplay: async () => {
 			await arrange.layout();
 			AreaExtensions.zoomAt(area, nodesToFocus);
-		}
+		},
+		editor,
 	};
 }

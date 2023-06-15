@@ -1,6 +1,6 @@
 <script>
 	import ExampleSwitcher from '$lib/ExampleSwitcher.svelte';
-	import { AppShell } from '@skeletonlabs/skeleton';
+	import { AppShell, LightSwitch } from '@skeletonlabs/skeleton';
 	import '../rete/imports';
 </script>
 

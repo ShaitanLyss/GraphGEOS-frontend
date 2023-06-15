@@ -1,5 +1,5 @@
 import { NodeEditor as BaseNodeEditor } from 'rete';
-import { Schemes } from './node/Schemes';
+import type { Schemes } from './node/Schemes';
 import { Connection, Node } from './node/Node';
 
 export class NodeEditor extends BaseNodeEditor<Schemes> {
