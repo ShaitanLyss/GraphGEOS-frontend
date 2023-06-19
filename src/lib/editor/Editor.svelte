@@ -12,6 +12,7 @@
 	import LoadGraphFromFileButton from './LoadGraphFromFileButton.svelte';
 	import type { NodeFactory } from '$rete/node/NodeFactory';
 	import type { NodeEditor } from '$rete/NodeEditor';
+	import OpenGraphDrawer from './OpenGraphDrawer.svelte';
 
 	// import {} from '@fortawesome/free-regular-svg-icons';
 
@@ -56,7 +57,9 @@
 	function openUploadGraphModal() {
 		const modal: ModalSettings = {
 			type: 'component',
-			component: 'uploadGraphModal'
+			component: 'uploadGraphModal',
+			meta: {editor}
+
 		};
 		modalStore.trigger(modal);
 	}
@@ -78,6 +81,7 @@
 			<svelte:fragment slot="header">
 				<div class="flex justify-between w-full p-2">
 					<div class="space-x-4">
+						<OpenGraphDrawer {editor} />
 						<SaveGraphButton {editor} />
 						<LoadGraphFromFileButton {factory} />
 					</div>

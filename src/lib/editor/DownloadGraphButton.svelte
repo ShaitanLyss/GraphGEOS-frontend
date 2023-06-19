@@ -16,7 +16,7 @@
 
 		const link = document.createElement('a');
 		link.href = URL.createObjectURL(blob);
-		link.download = editor.name;
+		link.download = editor.name + '.txt';
 		link.click();
 
 		URL.revokeObjectURL(link.href);

@@ -1,1 +1,15 @@
-{}
+{
+  "enter": {
+    "name": "Enter Name"
+  },
+  "prompt": {
+    "provide": {
+      "name": {
+        "graph": "Provide a new name for the graph."
+      }
+    }
+  },
+  "new": {
+    "editor": "New Editor"
+  }
+}

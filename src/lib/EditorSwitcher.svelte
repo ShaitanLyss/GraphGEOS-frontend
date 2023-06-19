@@ -8,6 +8,8 @@
 
 	import type { EditorView } from './editor/types';
 	import DownloadGraphButton from './editor/DownloadGraphButton.svelte';
+	import { _ } from 'svelte-i18n';
+	import LocaleSwitcher from './LocaleSwitcher.svelte';
 
 	let addButonClicked = -1;
 
@@ -25,8 +27,8 @@
 	function addEditor() {
 		console.log('addEditor');
 		const key = `newEditor${editors.length}`;
-		editors = [...editors, { key: key, label: 'New Editor' }];
-		tabNames[editors.length - 1] = 'New Editor';
+		editors = [...editors, { key: key, label: $_('new.editor') }];
+		tabNames[editors.length - 1] = $_('new.editor');
 		$tabSet = key;
 		setTimeout(() => {
 			addButonClicked = -1;
@@ -43,8 +45,8 @@
 		const changeTabName: ModalSettings = {
 			type: 'prompt',
 			// Data
-			title: 'Enter Name',
-			body: 'Provide a new name for the graph.',
+			title: $_('enter.name'),
+			body: $_('prompt.provide.name.graph'),
 			// Populates the input value and attributes
 			value: tabNames[tabIndex],
 			valueAttr: { type: 'text', required: true },
@@ -79,18 +81,20 @@
 				/>
 			{/each}
 		</div>
-		<div class="ml-auto pe-4 my-auto">
+		<div class="ml-auto pe-4 my-auto flex h-full space-x-3 items-center justify-end">
+			<LocaleSwitcher />
 			<LightSwitch />
 		</div>
 	</TabGroup>
 {:else}
+<div class="h-full">
 	<div class="flex justify-left space-x-4 p-4">
 		<div class="placeholder w-12" />
 		<div class="placeholder w-20" />
 		<div class="placeholder w-20" />
 		<div class="placeholder w-24" />
 	</div>
-	<section class="card w-full h-96">
+	<section class="card w-full" style="height: 75%;">
 		<div class="card-header flex justify-between items-center">
 			<div class="flex justify-center items-center space-x-4" class:animate-pulse={true}>
 				<div class="placeholder-circle w-16" />
@@ -110,4 +114,5 @@
 			<div class="placeholder" />
 		</div>
 	</section>
+</div>
 {/if}
