@@ -50,6 +50,9 @@
 			// Populates the input value and attributes
 			value: tabNames[tabIndex],
 			valueAttr: { type: 'text', required: true },
+			buttonTextCancel: $_('button.cancel'),
+			buttonTextSubmit: $_('button.confirm'),
+
 			// Returns the updated response value
 			response: (r: string) => {
 				if (r) tabNames[tabIndex] = r;
@@ -61,7 +64,6 @@
 </script>
 
 {#if ready}
-
 		<TabGroup>
 			{#each editors as editor, index (index)}
 				<div on:dblclick={() => openChangeTabNameModal(index)}>
@@ -77,7 +79,7 @@
 				<LightSwitch />
 			</div>
 		</TabGroup>
-		<div class="flex-grow">
+		<div class="flex-grow h-full">
 			{#each editors as editor, index (index)}
 				<Editor
 					bind:this={editorComponents[index]}

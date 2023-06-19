@@ -21,7 +21,7 @@
 
 	// import {} from '@fortawesome/free-regular-svg-icons';
 
-	export let loadExample: EditorExample | undefined;
+	export let loadExample: EditorExample | undefined = undefined;
 	export let hidden = false;
 	export let name: string;
 	export let onNameChange: (name: string) => void = () => {};
@@ -130,10 +130,10 @@
 
 <div
 	{hidden}
-	class="relative border border-surface-500 h-full"
+	class="relative border-surface-500 h-full"
 	style="/*border:4px solid violet;*/ /*height:75vh;*/"
 >
-	<AppShell>
+	<AppShell slotSidebarLeft="h-full">
 		<svelte:fragment>
 			<div class="relative h-full">
 				<!--  Overlay -->

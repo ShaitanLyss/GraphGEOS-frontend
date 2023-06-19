@@ -23,5 +23,9 @@
     "favorite": "Favorites",
     "recent": "Recent",
     "recents": "Recents"
+  },
+  "button": {
+    "cancel": "Cancel",
+    "confirm": "Confirm"
   }
 }
