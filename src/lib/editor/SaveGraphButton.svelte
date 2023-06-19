@@ -8,7 +8,6 @@
 
 	function saveGraph() {
 		notifications.show({ title: 'Save', message: 'Saving graph...' });
-		const nodes = editor.getNodes();
 		console.log(JSON.stringify(editor));
 	}
 </script>
