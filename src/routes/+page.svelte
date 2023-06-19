@@ -8,7 +8,7 @@
 	import { acquisitionModelingExample } from '$rete/example/acquisition-modeling';
 </script>
 
-<AppShell>
+<AppShell slotPageContent="flex flex-col">
 	<!-- <svelte:fragment slot="sidebarLeft">Sidebar left</svelte:fragment> -->
 	<EditorSwitcher
 		examples={[

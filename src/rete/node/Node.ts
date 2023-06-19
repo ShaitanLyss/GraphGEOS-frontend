@@ -104,6 +104,10 @@ export class Node<
 		this.height = height;
 	}
 
+	getPosition(): { x: number; y: number } | undefined {
+		return this.getArea().nodeViews.get(this.id)?.position;
+	}
+
 	toJSON(): NodeSaveData {
 		// TODO: for all nodes, move state to params
 		// TODO: add control values to JSON return

@@ -61,16 +61,23 @@
 </script>
 
 {#if ready}
-	<TabGroup>
-		{#each editors as editor, index (index)}
-			<div on:dblclick={() => openChangeTabNameModal(index)}>
-				<Tab bind:group={$tabSet} name="tab{index}" value={editor.key}>{tabNames[index]}</Tab>
+
+		<TabGroup>
+			{#each editors as editor, index (index)}
+				<div on:dblclick={() => openChangeTabNameModal(index)}>
+					<Tab bind:group={$tabSet} name="tab{index}" value={editor.key}>{tabNames[index]}</Tab>
+				</div>
+			{/each}
+			<Tab on:click={addEditor} bind:group={addButonClicked} name="addEditorBtn" value={undefined}
+				>+</Tab
+			>
+
+			<div class="ml-auto pe-4 my-auto flex h-full space-x-3 items-center justify-end">
+				<LocaleSwitcher />
+				<LightSwitch />
 			</div>
-		{/each}
-		<Tab on:click={addEditor} bind:group={addButonClicked} name="addEditorBtn" value={undefined}
-			>+</Tab
-		>
-		<div slot="panel">
+		</TabGroup>
+		<div class="h-full flex-1">
 			{#each editors as editor, index (index)}
 				<Editor
 					bind:this={editorComponents[index]}
@@ -80,39 +87,35 @@
 					onNameChange={(name) => (tabNames[index] = name)}
 				/>
 			{/each}
-		</div>
-		<div class="ml-auto pe-4 my-auto flex h-full space-x-3 items-center justify-end">
-			<LocaleSwitcher />
-			<LightSwitch />
-		</div>
-	</TabGroup>
-{:else}
-<div class="h-full">
-	<div class="flex justify-left space-x-4 p-4">
-		<div class="placeholder w-12" />
-		<div class="placeholder w-20" />
-		<div class="placeholder w-20" />
-		<div class="placeholder w-24" />
+
 	</div>
-	<section class="card w-full" style="height: 75%;">
-		<div class="card-header flex justify-between items-center">
-			<div class="flex justify-center items-center space-x-4" class:animate-pulse={true}>
-				<div class="placeholder-circle w-16" />
-				<div class="placeholder-circle w-14" />
-				<div class="placeholder-circle w-10" />
-			</div>
+{:else}
+	<div class="h-full">
+		<div class="flex justify-left space-x-4 p-4">
+			<div class="placeholder w-12" />
+			<div class="placeholder w-20" />
+			<div class="placeholder w-20" />
+			<div class="placeholder w-24" />
 		</div>
-		<div class="p-4 space-y-4 h-full" class:animate-pulse={true}>
-			<div class="placeholder" />
-			<div class="grid grid-cols-4 gap-4">
+		<section class="card w-full" style="height: 75%;">
+			<div class="card-header flex justify-between items-center">
+				<div class="flex justify-center items-center space-x-4" class:animate-pulse={true}>
+					<div class="placeholder-circle w-16" />
+					<div class="placeholder-circle w-14" />
+					<div class="placeholder-circle w-10" />
+				</div>
+			</div>
+			<div class="p-4 space-y-4 h-full" class:animate-pulse={true}>
 				<div class="placeholder" />
-				<div class="placeholder" />
+				<div class="grid grid-cols-4 gap-4">
+					<div class="placeholder" />
+					<div class="placeholder" />
+					<div class="placeholder" />
+					<div class="placeholder" />
+				</div>
 				<div class="placeholder" />
 				<div class="placeholder" />
 			</div>
-			<div class="placeholder" />
-			<div class="placeholder" />
-		</div>
-	</section>
-</div>
+		</section>
+	</div>
 {/if}

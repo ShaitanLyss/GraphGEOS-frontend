@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { locale, locales } from 'svelte-i18n';
-
+	
+	// TODO: this is a hack to fix the locale for fr-FR
+	if ($locale === 'fr-FR')
+		$locale = 'fr';
 	// add a property for adding classes to the select
 </script>
 

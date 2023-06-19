@@ -53,6 +53,7 @@
 		"svelte-fa": "^3.0.4",
 		"svelte-preprocess": "^5.0.3",
 		"svelte-preprocess-react": "^0.15.0",
+		"svelte-watch-resize": "^1.0.3",
 		"tailwindcss": "^3.3.1",
 		"tslib": "^2.4.1",
 		"typescript": "^5.0.0",
