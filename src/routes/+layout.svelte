@@ -28,3 +28,4 @@
 <react:Notifications position="top-right" />
 <Modal components={modalComponentRegistry} />
 <svelte:head>{@html `<\u{73}cript>(${setInitialClassState.toString()})();</script>`}</svelte:head>
+

@@ -11,5 +11,17 @@
   },
   "new": {
     "editor": "Nouvel éditeur"
+  },
+  "browser": {
+    "tab": {
+      "favorite": "Favoris",
+      "user": "Utilisateur",
+      "shared": "Partagé"
+    }
+  },
+  "title": {
+    "favorite": "Favoris",
+    "recent": "Récent",
+    "recents": "Récents"
   }
 }

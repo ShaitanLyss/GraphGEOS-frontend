@@ -77,7 +77,7 @@
 				<LightSwitch />
 			</div>
 		</TabGroup>
-		<div class="h-full flex-1">
+		<div class="flex-grow">
 			{#each editors as editor, index (index)}
 				<Editor
 					bind:this={editorComponents[index]}

@@ -7,8 +7,8 @@
 	import { forEachExample } from '$rete/example/for_each';
 	import { acquisitionModelingExample } from '$rete/example/acquisition-modeling';
 </script>
-
-<AppShell slotPageContent="flex flex-col">
+<div class="h-screen">
+<AppShell slotPageContent="flex flex-col h-full">
 	<!-- <svelte:fragment slot="sidebarLeft">Sidebar left</svelte:fragment> -->
 	<EditorSwitcher
 		examples={[
@@ -19,3 +19,4 @@
 		]}
 	/>
 </AppShell>
+</div>
