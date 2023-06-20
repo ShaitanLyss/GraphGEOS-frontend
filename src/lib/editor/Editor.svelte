@@ -50,7 +50,12 @@
 		editor.addOnChangeNameListener(onNameChange);
 		factory = tools.factory;
 		const { watchResize } = await import('svelte-watch-resize');
-		watchResize(container, () => debouncedHandler(() => console.log('resize')));
+		watchResize(container, () => {
+			if (nodesToFocus === undefined) {
+				nodesToFocus = getVisibleNodes();
+			}
+			debouncedHandler(() => console.log('resize'));
+		});
 
 		return () => {
 			destroyEditor();
@@ -88,11 +93,10 @@
 		setTimeout(() => {
 			if (!nodesToFocus) return;
 			console.log('focusing', nodesToFocus);
-			
-			AreaExtensions.zoomAt(factory.getArea(), nodesToFocus)
+
+			AreaExtensions.zoomAt(factory.getArea(), nodesToFocus);
 			nodesToFocus = undefined;
 		}, 0);
-		
 	}
 
 	function getVisibleNodes(): Node[] {
@@ -133,39 +137,38 @@
 	class="relative border-surface-500 h-full"
 	style="/*border:4px solid violet;*/ /*height:75vh;*/"
 >
-	<AppShell slotSidebarLeft="h-full">
-		<svelte:fragment>
-			<div class="relative h-full">
-				<!--  Overlay -->
-				{#if !hidden}
-					<AppShell
-						class="absolute inset-0 flex justify-center items-center pointer-events-none z-10"
-						slotHeader="w-full"
-					>
-						<!-- Toolbar -->
-						<svelte:fragment slot="pageHeader">
-							<div class="flex justify-between w-full p-2">
-								<div class="space-x-4">
-									<EditorButton onClick={toggleNodeBrowser} icon={faCubes} />
-									<SaveGraphButton {editor} />
-									<LoadGraphFromFileButton {factory} />
-								</div>
-								<div class="space-x-4">
-									<DownloadGraphButton {editor} />
-									<EditorButton icon={faCloud} onClick={openUploadGraphModal} />
-								</div>
+	<AppShell regionPage="h-full" slotSidebarLeft="h-full" slotPageContent="h-full">
+		<div class="h-full">
+			<!--  Overlay -->
+			{#if !hidden}
+				<AppShell
+					class="absolute inset-0 flex justify-center items-center pointer-events-none z-10"
+					slotHeader="w-full"
+				>
+					<!-- Toolbar -->
+					<svelte:fragment slot="pageHeader">
+						<div class="flex justify-between w-full p-2">
+							<div class="space-x-4">
+								<EditorButton onClick={toggleNodeBrowser} icon={faCubes} />
+								<SaveGraphButton {editor} />
+								<LoadGraphFromFileButton {factory} />
 							</div>
-						</svelte:fragment>
-					</AppShell>
-				{/if}
-				<!-- Editor -->
-				<div bind:this={container} class="h-full" class:bg-white={$modeCurrent} />
-			</div>
-		</svelte:fragment>
-		<svelte:fragment slot="sidebarLeft">
+							<div class="space-x-4">
+								<DownloadGraphButton {editor} />
+								<EditorButton icon={faCloud} onClick={openUploadGraphModal} />
+							</div>
+						</div>
+					</svelte:fragment>
+				</AppShell>
+			{/if}
+			<!-- Editor -->
+			<div bind:this={container} class="h-full" class:bg-white={$modeCurrent} />
+		</div>
+
+		<!-- <svelte:fragment slot="sidebarLeft">
 			{#if !isNodeBrowserHidden}
 				<NodeBrowser />
 			{/if}
-		</svelte:fragment>
+		</svelte:fragment> -->
 	</AppShell>
 </div>

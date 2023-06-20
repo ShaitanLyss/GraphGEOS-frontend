@@ -1,15 +1,23 @@
 <script lang="ts">
-	import { TabGroup, Tab, LightSwitch, ModalSettings, modalStore } from '@skeletonlabs/skeleton';
+	import {
+		TabGroup,
+		Tab,
+		LightSwitch,
+		ModalSettings,
+		modalStore,
+		AppShell
+	} from '@skeletonlabs/skeleton';
 	import { localStorageStore } from '@skeletonlabs/skeleton';
 
 	import type { Writable } from 'svelte/store';
-	import Editor from './editor/Editor.svelte';
+	import Editor from '$lib/editor/Editor.svelte';
+	import Editor2 from '$lib/editor/Editor2.svelte';
 	import { onMount } from 'svelte';
 
 	import type { EditorView } from './editor/types';
-	import DownloadGraphButton from './editor/DownloadGraphButton.svelte';
 	import { _ } from 'svelte-i18n';
 	import LocaleSwitcher from './LocaleSwitcher.svelte';
+	import NodeBrowser from './editor/NodeBrowser.svelte';
 
 	let addButonClicked = -1;
 
@@ -64,22 +72,29 @@
 </script>
 
 {#if ready}
-		<TabGroup>
-			{#each editors as editor, index (index)}
-				<div on:dblclick={() => openChangeTabNameModal(index)}>
-					<Tab bind:group={$tabSet} name="tab{index}" value={editor.key}>{tabNames[index]}</Tab>
-				</div>
-			{/each}
-			<Tab on:click={addEditor} bind:group={addButonClicked} name="addEditorBtn" value={undefined}
-				>+</Tab
-			>
+	<AppShell>
+		<svelte:fragment slot="header">
+			<TabGroup>
+				{#each editors as editor, index (index)}
+					<div on:dblclick={() => openChangeTabNameModal(index)}>
+						<Tab bind:group={$tabSet} name="tab{index}" value={editor.key}>{tabNames[index]}</Tab>
+					</div>
+				{/each}
+				<Tab on:click={addEditor} bind:group={addButonClicked} name="addEditorBtn" value={undefined}
+					>+</Tab
+				>
 
-			<div class="ml-auto pe-4 my-auto flex h-full space-x-3 items-center justify-end">
-				<LocaleSwitcher />
-				<LightSwitch />
-			</div>
-		</TabGroup>
-		<div class="flex-grow h-full">
+				<div class="ml-auto pe-4 my-auto flex h-full space-x-3 items-center justify-end">
+					<LocaleSwitcher />
+					<LightSwitch />
+				</div>
+			</TabGroup>
+		</svelte:fragment>
+		<svelte:fragment slot="sidebarLeft">
+			<NodeBrowser/>
+		</svelte:fragment>
+
+		<svelte:fragment>
 			{#each editors as editor, index (index)}
 				<Editor
 					bind:this={editorComponents[index]}
@@ -89,8 +104,8 @@
 					onNameChange={(name) => (tabNames[index] = name)}
 				/>
 			{/each}
-
-	</div>
+		</svelte:fragment>
+	</AppShell>
 {:else}
 	<div class="h-full">
 		<div class="flex justify-left space-x-4 p-4">

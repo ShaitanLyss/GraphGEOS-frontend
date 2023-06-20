@@ -5,7 +5,7 @@
 	import GraphItem from './GraphItem.svelte';
 </script>
 
-<div class=" relative px-4 overflow-auto h-full box-border pb-36">
+<div class="px-4 pb-32">
 	<!-- Searchbar -->
 	<div class="flex flex-row items-center justify-between p-2 mb-2">
 		<div class="flex flex-row items-center">

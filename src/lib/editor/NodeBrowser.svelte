@@ -18,7 +18,7 @@
 	}
 </script>
 
-<div class="flex relative h-full">
+<div class="flex h-full">
 	<AppRail regionDefault="select-none">
 		<AppRailTile
 			bind:group={currentTile}
@@ -59,8 +59,8 @@
 		</AppRailTile>
 	</AppRail>
 	{#if currentTile === 'favorites'}
-		<div class="flex flex-col variant-filled-surface overflow-auto relative" style="height: calc(100% - 4rem);">
-			<GraphSearchPanel />
-		</div>
+	<div class="max-h-full overflow-y-auto">
+	<GraphSearchPanel />
+	</div>
 	{/if}
 </div>
