@@ -42,6 +42,19 @@
 	}
 
 	onMount(async () => {
+		setupEditorInContainer();
+		ready = true;
+
+		return () => {
+			if (destroyEditor)
+				destroyEditor();
+			console.log('destroyed');
+		};
+	});
+	$: if (editor) editor.setName(name, false);
+	let ready = false;
+
+	async function setupEditorInContainer() {
 		const tools = await setupEditor(container, loadExample);
 		destroyEditor = tools.destroy;
 		onFirstShown = tools.firstDisplay;
@@ -49,26 +62,23 @@
 		editor.setName(name);
 		editor.addOnChangeNameListener(onNameChange);
 		factory = tools.factory;
+		AreaExtensions.zoomAt(factory.getArea(), factory.getEditor().getNodes());
 		const { watchResize } = await import('svelte-watch-resize');
 		watchResize(container, () => {
 			if (nodesToFocus === undefined) {
 				nodesToFocus = getVisibleNodes();
 			}
-			debouncedHandler(() => console.log('resize'));
+			// debouncedHandler(() => console.log('resize'));
 		});
-
-		return () => {
-			destroyEditor();
-			console.log('destroyed');
-		};
-	});
-	$: if (editor) editor.setName(name, false);
+	}
 
 	$: if (!hidden) {
-		if (firstShown && onFirstShown) {
-			onFirstShown();
-			firstShown = false;
+		if (firstShown && ready) {
 			console.log('first shown');
+			if (onFirstShown)
+				onFirstShown();
+			firstShown = false;
+			// setupEditorInContainer();
 		}
 	}
 
@@ -91,8 +101,8 @@
 		// console.log('focusing', nodesToFocus);
 
 		setTimeout(() => {
-			if (!nodesToFocus) return;
-			console.log('focusing', nodesToFocus);
+			if (!nodesToFocus || nodesToFocus.length == 0) return;
+			// console.log('focusing', nodesToFocus);
 
 			AreaExtensions.zoomAt(factory.getArea(), nodesToFocus);
 			nodesToFocus = undefined;

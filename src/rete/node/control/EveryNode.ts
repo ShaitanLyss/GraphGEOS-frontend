@@ -3,11 +3,12 @@ import { Node, NodeParams } from '../Node';
 import { NodeFactory } from '../NodeFactory';
 
 export class EveryNode extends Node {
-	private current = 0;
+	current = 0;
+	// state: { current: number } = { current: 0 };
 
 	constructor({ count = 100, factory }: { count?: number; factory: NodeFactory }) {
 		super({ label: 'Every', factory, height: 200, width: 200, params: { count } });
-
+		
 		this.addInExec();
 		this.addOutExec();
 		this.addInData({

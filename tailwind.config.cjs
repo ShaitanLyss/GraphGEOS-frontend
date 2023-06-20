@@ -14,7 +14,13 @@ const config = {
 	theme: {
 		extend: {}
 	},
-
+	compilerOptions: {
+		"baseUrl": ".",
+		"paths":{
+			"$rete/*": ["src/rete/*"]
+		}
+	},
+	include: ["src/**/*"],
 	plugins: [formPlugin, ...getSkeletonPlugins(), prosePlugin]
 };
 

@@ -59,6 +59,8 @@ export type NodeSaveData = {
 	id: string;
 	type: string;
 	position?: { x: number; y: number };
+	state: Record<string, unknown>;
+	inputControlValues: Record<string, unknown>;
 };
 
 export class Node<
@@ -90,10 +92,12 @@ export class Node<
 	protected factory: NodeFactory;
 	protected params: Record<string, unknown>;
 	static id: string;
+	protected state: Record<string,unknown> = {};
 
 	constructor(params: NodeParams) {
 		const { label = '', width = 190, height = 120, factory } = params;
 		super(label);
+		this.state = {};
 		this.params = params.params || {};
 		this.factory = factory;
 		if (factory === undefined) {
@@ -103,12 +107,26 @@ export class Node<
 		this.width = width;
 		this.height = height;
 	}
+	setState(state: Record<string,unknown>) {
+		this.state = state;
+	}
 
 	getPosition(): { x: number; y: number } | undefined {
 		return this.getArea().nodeViews.get(this.id)?.position;
 	}
 
+	applyState() {
+	}
+
 	toJSON(): NodeSaveData {
+		const inputControlValues: Record<string, unknown> = {};
+		for (const key in this.inputs) {
+			const value = this.getData(key);
+			if (value !== undefined) {
+			inputControlValues[key] = value;
+			}
+		}
+
 		// TODO: for all nodes, move state to params
 		// TODO: add control values to JSON return
 		// TODO: adapt node factory to adapt to new JSON format
@@ -116,7 +134,9 @@ export class Node<
 			params: this.params,
 			id: this.id,
 			type: (this.constructor as typeof Node).id,
-			position: this.getArea().nodeViews.get(this.id)?.position
+			state: this.state,
+			position: this.getArea().nodeViews.get(this.id)?.position,
+			inputControlValues: inputControlValues
 		};
 	}
 

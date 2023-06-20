@@ -6,6 +6,8 @@ import { ControlFlowEngine, DataflowEngine } from 'rete-engine';
 import { ExecSocket } from '../socket/ExecSocket';
 import { structures } from 'rete-structures';
 import { Connection, Node } from './Node';
+import { ClassicPreset } from 'rete';
+import { InputControl } from '$rete/control/Control';
 
 function createDataflowEngine() {
 	return new DataflowEngine<Schemes>(({ inputs, outputs }) => {
@@ -53,6 +55,19 @@ export class NodeFactory {
 			if (nodeClass) {
 				const node = new nodeClass({ ...nodeSaveData.params, factory: this });
 				node.id = nodeSaveData.id;
+				node.setState(nodeSaveData.state);
+				node.applyState();
+				for (const key in nodeSaveData.inputControlValues) {
+					const inputControl = node.inputs[key]?.control;
+					if (key == "data-bob")
+						console.log(inputControl);
+
+					if (inputControl instanceof ClassicPreset.InputControl ||
+						inputControl instanceof InputControl) {
+						
+						inputControl.setValue(nodeSaveData.inputControlValues[key])
+					}
+				}
 				nodes.set(nodeSaveData.id, node);
 				await this.editor.addNode(node);
 				if (nodeSaveData.position)

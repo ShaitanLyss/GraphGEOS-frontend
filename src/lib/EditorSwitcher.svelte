@@ -11,7 +11,6 @@
 
 	import type { Writable } from 'svelte/store';
 	import Editor from '$lib/editor/Editor.svelte';
-	import Editor2 from '$lib/editor/Editor2.svelte';
 	import { onMount } from 'svelte';
 
 	import type { EditorView } from './editor/types';
