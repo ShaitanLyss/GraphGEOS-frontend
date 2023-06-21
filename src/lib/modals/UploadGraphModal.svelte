@@ -25,7 +25,7 @@
 		});
 
 		if (!formValidity) {
-			console.log('Form is valid');
+			console.log('Form is invalid');
 
 			return;
 		}
@@ -54,16 +54,13 @@
 		}
 
 		// Submit the form data to the API endpoint
-		const response = await fetch('http://localhost:8000/api/v1/graph', {
+		fetch('http://localhost:8000/api/v1/graph', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(data)
-		});
-
-		// Handle the API response here
-		if (response.ok) {
+		}).then((_) => {
 			notifications.show({
 				title: 'Success',
 				message: 'Graph uploaded successfully.',
@@ -71,14 +68,17 @@
 				variant: 'filled'
 			});
 			modalStore.close();
-		} else {
+		})
+		.catch((error) => {
+			
 			notifications.show({
 				title: 'Error',
 				message: 'There was an error uploading the graph.',
 				color: 'red',
 				variant: 'filled'
 			});
-		}
+			console.error(error);
+		})
 	};
 </script>
 

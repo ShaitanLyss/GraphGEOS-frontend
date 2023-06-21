@@ -4,6 +4,8 @@
 	// TODO: this is a hack to fix the locale for fr-FR
 	if ($locale === 'fr-FR')
 		$locale = 'fr';
+	if ($locale = 'en-EN')
+		$locale = 'en';
 	// add a property for adding classes to the select
 </script>
 
