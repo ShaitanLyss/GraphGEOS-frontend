@@ -1,13 +1,12 @@
-import { Connection, Node } from '../Node';
-import { ButtonControl } from '../../control/button/button';
+import { Connection } from '../Node';
 import { Input } from '../../Input';
 import { Socket } from '../../socket/Socket';
-import { SocketType } from '../../plugin/typed-sockets';
+import { type SocketType } from '../../plugin/typed-sockets';
 import { ClassicPreset } from 'rete';
 import { InputControl } from '../../control/Control';
 import { assignControl } from '../../customization/utils';
 import { NodeFactory } from '../NodeFactory';
-import { AddPinNode, AddPinNodeState } from '../AddPinNode';
+import { AddPinNode, type AddPinNodeState } from '../AddPinNode';
 
 export type MakeArrayNodeState = {
 	// Add any additional properties that you need
@@ -31,7 +30,6 @@ export class MakeArrayNode extends AddPinNode {
 		super({ label: 'Make Array', factory, height: 160, width: 150, params: { initialValues }, numPins: 1 });
 		
 		this.initialValues = initialValues;
-		console.log(this.state);
 		
 		this.addOutData({ name: 'array', isArray: true, type: this.state.type });
 		this.loadInitialValues();
@@ -82,8 +80,11 @@ export class MakeArrayNode extends AddPinNode {
 	}
 	changeType(to: SocketType) {
 		if (this.state.type === to) return;
+		
 		this.state.type = to;
+		
 		for (const input of Object.values(this.inputs)) {
+			
 			if (input) {
 				this.changeInputType(input, to);
 			}
@@ -113,6 +114,7 @@ export class MakeArrayNode extends AddPinNode {
 	}
 
 	onAddPin(index: number) {
+		
 		// console.log('Adding input pin with key data-' + index);	
 		const type = this.state.type !== undefined? this.state.type : 'any';
 		
@@ -124,7 +126,8 @@ export class MakeArrayNode extends AddPinNode {
 			name: `data-${index}`,
 			displayName: '',
 			isArray: false,
-			type: this.state.type || 'any'
+			type: this.state.type || 'any',
+			socketLabel: `data-${index}`
 		});
 		this.height += 36;
 		this.changeInputType(
@@ -143,6 +146,6 @@ export class MakeArrayNode extends AddPinNode {
 	}
 	override applyState(): void {
 		super.applyState();
-		this.changeType(this.state.type);
+		this.changeInputType(this.inputs['data-0'] as Input<Socket>, this.state.type)
 	}
 }
