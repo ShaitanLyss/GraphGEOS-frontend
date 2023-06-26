@@ -1,5 +1,4 @@
-import { structures } from 'rete-structures';
-import { Connection, Node } from '../Node';
+import { Node } from '../Node';
 import { getLeavesFromOutput } from '../utils';
 import { NodeFactory } from '../NodeFactory';
 

@@ -1,4 +1,3 @@
-import { ButtonControl } from '../../control/button/button';
 import { AddPinNode } from '../AddPinNode';
 import { NodeFactory } from '../NodeFactory';
 import { getLeavesFromOutput } from '../utils';

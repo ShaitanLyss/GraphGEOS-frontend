@@ -5,12 +5,31 @@
 		},
 		{
 			"path": "../../makutu (1)/examples/vtkOutput"
+		},
+		{
+			"path": "../../../../Production/Info/makutu-gui-back"
 		}
 	],
 	"settings": {
 		"i18n-ally.localesPaths": [
 			"src/localization/locales"
 		],
-		"i18n-ally.keystyle": "nested"
+		"i18n-ally.keystyle": "nested",
+		"sqltools.connections": [
+			{
+				"previewLimit": 50,
+				"server": "localhost",
+				"port": 5432,
+				"driver": "PostgreSQL",
+				"name": "Makutu - Postgres",
+				"database": "makutu",
+				"username": "postgres",
+				"password": "Nihal.31"
+			}
+		],
+		"[python]": {
+			"editor.defaultFormatter": "ms-python.black-formatter"
+		},
+		"python.formatting.provider": "none"
 	}
 }

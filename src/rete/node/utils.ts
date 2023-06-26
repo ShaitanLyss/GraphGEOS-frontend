@@ -1,9 +1,5 @@
 import { structures } from 'rete-structures';
 import { Connection, Node } from './Node';
-import { EveryNode } from './control/EveryNode';
-import { useDebugValue } from 'react';
-import { NodeEditor } from 'rete';
-import { Schemes } from './Schemes';
 
 // TODO : make the leave every or every leave based on every node current
 export function getLeavesFromOutput(node: Node, key: string): Node[] {

@@ -14,9 +14,9 @@ import type { SocketType, TypedSocketsPlugin } from '../plugin/typed-sockets';
 import {
 	Control,
 	InputControl,
-	InputControlOptions,
-	InputControlTypes,
-	InputControlValueType
+	type InputControlOptions,
+	type InputControlTypes,
+	type InputControlValueType
 } from '../control/Control';
 
 import type { NodeFactory } from './NodeFactory';

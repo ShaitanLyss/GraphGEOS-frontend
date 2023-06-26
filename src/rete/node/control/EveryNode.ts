@@ -1,5 +1,5 @@
 import { _ } from 'svelte-i18n';
-import { Node, NodeParams } from '../Node';
+import { Node} from '../Node';
 import { NodeFactory } from '../NodeFactory';
 
 export class EveryNode extends Node {

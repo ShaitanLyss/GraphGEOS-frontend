@@ -1,4 +1,4 @@
-import { XmlNode, XmlNodeParams } from '../XmlNode';
+import { XmlNode } from '../XmlNode';
 
 export class BoxXmlNode extends XmlNode {
 	constructor(initialValues: Record<string, unknown> = {}) {

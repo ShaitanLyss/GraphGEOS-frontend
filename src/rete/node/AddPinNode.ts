@@ -1,6 +1,6 @@
 import { ButtonControl } from "../control/button/button";
 import { Node } from "./Node";
-import { NodeParams } from "./Node";
+import { type NodeParams } from "./Node";
 
 interface AddPinNodeParams extends NodeParams {
     numPins?: number;

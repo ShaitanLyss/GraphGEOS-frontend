@@ -1,7 +1,6 @@
-import { InDataParams, Node, NodeParams, OutDataParams } from '../Node';
-import type { XmlData, XmlProperty } from './types';
+import { Node, type NodeParams, type OutDataParams } from '../Node';
+import type { XmlProperty } from './types';
 import { camlelcaseize, titlelize } from '../../../utils/string';
-import type { InputControlTypes } from '../../control/Control';
 import type { Socket } from '../../socket/Socket';
 
 export type XmlNodeParams = NodeParams & {
@@ -18,7 +17,7 @@ export abstract class XmlNode extends Node<Record<string, Socket>, { value: Sock
 	xmlTag: string;
 
 	constructor(name: string, config: XmlNodeParams) {
-		super(name, config);
+		super({label:name, config});
 		XmlNode.counts[name] = XmlNode.counts[name] ? XmlNode.counts[name] + BigInt(1) : BigInt(1);
 		this.name = camlelcaseize(name) + XmlNode.counts[name];
 		this.xmlTag = config.xmlTag;

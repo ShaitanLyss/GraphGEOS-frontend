@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { ClassicPreset, NodeId } from 'rete';
+import { ClassicPreset, type NodeId } from 'rete';
 
 // import { RefComponent } from '../../../../ref-component'
-import { ClassicScheme, GetSockets, ReactArea2D, Side } from '../../types';
+import type { ClassicScheme, GetSockets, ReactArea2D, Side } from '../../types';
 import { RefComponent } from 'rete-react-render-plugin';
 
 type Props<Scheme extends ClassicScheme> = {

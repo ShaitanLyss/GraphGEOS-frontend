@@ -1,4 +1,4 @@
-import { Node, NodeParams } from './Node';
+import { Node, type NodeParams } from './Node';
 
 export interface APINodeParams extends NodeParams {
 	url: string;
