@@ -7,6 +7,7 @@
 		modalStore,
 		AppShell
 	} from '@skeletonlabs/skeleton';
+	import { type DragOptions, draggable } from '@neodrag/svelte';
 	import { localStorageStore } from '@skeletonlabs/skeleton';
 
 	import type { Writable } from 'svelte/store';
@@ -16,7 +17,7 @@
 	import type { EditorView } from './editor/types';
 	import { _ } from 'svelte-i18n';
 	import LocaleSwitcher from './LocaleSwitcher.svelte';
-	import NodeBrowser from './editor/NodeBrowser.svelte';
+	import NodeBrowser from './editor/node-browser/NodeBrowser.svelte';
 
 	let addButonClicked = -1;
 
@@ -46,6 +47,14 @@
 		tabNames.push(editorTab.label);
 	}
 
+	const draggableTabOptions: DragOptions = {
+		// axis: 'x',
+		// bounds: 'parent',
+		onDragEnd({}) {
+			
+		}
+	};
+
 	let editorComponents: Editor[] = [];
 
 	function openChangeTabNameModal(tabIndex: number) {
@@ -73,24 +82,31 @@
 {#if ready}
 	<AppShell>
 		<svelte:fragment slot="header">
-			<TabGroup>
-				{#each editors as editor, index (index)}
-					<div on:dblclick={() => openChangeTabNameModal(index)}>
-						<Tab bind:group={$tabSet} name="tab{index}" value={editor.key}>{tabNames[index]}</Tab>
-					</div>
-				{/each}
-				<Tab on:click={addEditor} bind:group={addButonClicked} name="addEditorBtn" value={undefined}
-					>+</Tab
-				>
-
-				<div class="ml-auto pe-4 my-auto flex h-full space-x-3 items-center justify-end">
+			<div class="flex">
+				<TabGroup>
+					{#each editors as editor, index (index)}
+						<div
+							on:dblclick={() => openChangeTabNameModal(index)}
+							use:draggable={draggableTabOptions}
+						>
+							<Tab bind:group={$tabSet} name="tab{index}" value={editor.key}>{tabNames[index]}</Tab>
+						</div>
+					{/each}
+					<Tab
+						on:click={addEditor}
+						bind:group={addButonClicked}
+						name="addEditorBtn"
+						value={undefined}>+</Tab
+					>
+				</TabGroup>
+				<div class="ml-auto pe-4 pe- my-auto flex h-full space-x-3 items-center justify-end">
 					<LocaleSwitcher />
 					<LightSwitch />
 				</div>
-			</TabGroup>
+			</div>
 		</svelte:fragment>
 		<svelte:fragment slot="sidebarLeft">
-			<NodeBrowser/>
+			<NodeBrowser />
 		</svelte:fragment>
 
 		<svelte:fragment>

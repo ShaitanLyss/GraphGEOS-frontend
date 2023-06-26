@@ -5,9 +5,9 @@
 
 	import Fa from 'svelte-fa';
 	import { isLoading, _ } from 'svelte-i18n';
-	import GraphSearchPanel from './node-browser/GraphSearchPanel.svelte';
+	import GraphSearchPanel from './GraphSearchPanel.svelte';
 
-	let currentTile: string | undefined = 'favorites';
+	let currentTile: string | undefined = undefined;
 	let drawerMode = false;
 
 	function onTileClick(tile: string) {
@@ -22,7 +22,6 @@
 	<AppRail regionDefault="select-none">
 		<AppRailTile
 			bind:group={currentTile}
-            
 			name="favorites"
 			value={'favorites'}
 			tile="favorites"
@@ -50,7 +49,7 @@
 			name="shared"
 			value={'shared'}
 			tile="shared"
-			on:click={()=> onTileClick('shared')}
+			on:click={() => onTileClick('shared')}
 		>
 			<svelte:fragment slot="lead">
 				<Fa class="text-2xl mx-auto" icon={faGlobe} />
@@ -59,8 +58,8 @@
 		</AppRailTile>
 	</AppRail>
 	{#if currentTile === 'favorites'}
-	<div class="max-h-full overflow-y-auto">
-	<GraphSearchPanel />
-	</div>
+		<div class="max-h-full overflow-y-auto">
+			<GraphSearchPanel />
+		</div>
 	{/if}
 </div>

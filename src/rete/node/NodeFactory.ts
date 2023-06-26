@@ -59,13 +59,13 @@ export class NodeFactory {
 				node.applyState();
 				for (const key in nodeSaveData.inputControlValues) {
 					const inputControl = node.inputs[key]?.control;
-					if (key == "data-bob")
-						console.log(inputControl);
+					if (key == 'data-bob') console.log(inputControl);
 
-					if (inputControl instanceof ClassicPreset.InputControl ||
-						inputControl instanceof InputControl) {
-						
-						inputControl.setValue(nodeSaveData.inputControlValues[key])
+					if (
+						inputControl instanceof ClassicPreset.InputControl ||
+						inputControl instanceof InputControl
+					) {
+						inputControl.setValue(nodeSaveData.inputControlValues[key]);
 					}
 				}
 				nodes.set(nodeSaveData.id, node);

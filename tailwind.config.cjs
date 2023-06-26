@@ -15,12 +15,12 @@ const config = {
 		extend: {}
 	},
 	compilerOptions: {
-		"baseUrl": ".",
-		"paths":{
-			"$rete/*": ["src/rete/*"]
+		baseUrl: '.',
+		paths: {
+			'$rete/*': ['src/rete/*']
 		}
 	},
-	include: ["src/**/*"],
+	include: ['src/**/*'],
 	plugins: [formPlugin, ...getSkeletonPlugins(), prosePlugin]
 };
 

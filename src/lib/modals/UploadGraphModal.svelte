@@ -60,25 +60,25 @@
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(data)
-		}).then((_) => {
-			notifications.show({
-				title: 'Success',
-				message: 'Graph uploaded successfully.',
-				color: 'green',
-				variant: 'filled'
-			});
-			modalStore.close();
 		})
-		.catch((error) => {
-			
-			notifications.show({
-				title: 'Error',
-				message: 'There was an error uploading the graph.',
-				color: 'red',
-				variant: 'filled'
+			.then((_) => {
+				notifications.show({
+					title: 'Success',
+					message: 'Graph uploaded successfully.',
+					color: 'green',
+					variant: 'filled'
+				});
+				modalStore.close();
+			})
+			.catch((error) => {
+				notifications.show({
+					title: 'Error',
+					message: 'There was an error uploading the graph.',
+					color: 'red',
+					variant: 'filled'
+				});
+				console.error(error);
 			});
-			console.error(error);
-		})
 	};
 </script>
 

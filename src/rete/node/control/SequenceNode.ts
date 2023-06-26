@@ -3,13 +3,12 @@ import { NodeFactory } from '../NodeFactory';
 import { getLeavesFromOutput } from '../utils';
 
 export class SequenceNode extends AddPinNode {
-
 	constructor({ factory }: { factory: NodeFactory }) {
-		super({ label: 'Sequence', factory, height: 126, numPins:2 });
+		super({ label: 'Sequence', factory, height: 126, numPins: 2 });
 		this.addInExec();
 	}
 
-	override onAddPin(index: number) {		
+	override onAddPin(index: number) {
 		const newPinId = index;
 		this.addOutExec('exec-' + index, newPinId.toString());
 		this.height += 47;

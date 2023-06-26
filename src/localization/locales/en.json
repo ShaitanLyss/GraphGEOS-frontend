@@ -1,31 +1,31 @@
 {
-  "enter": {
-    "name": "Enter Name"
-  },
-  "prompt": {
-    "provide": {
-      "name": {
-        "graph": "Provide a new name for the graph."
-      }
-    }
-  },
-  "new": {
-    "editor": "New Editor"
-  },
-  "browser": {
-    "tab": {
-      "favorite": "Favorites",
-      "user": "User",
-      "shared": "Shared"
-    }
-  },
-  "title": {
-    "favorite": "Favorites",
-    "recent": "Recent",
-    "recents": "Recents"
-  },
-  "button": {
-    "cancel": "Cancel",
-    "confirm": "Confirm"
-  }
+	"enter": {
+		"name": "Enter Name"
+	},
+	"prompt": {
+		"provide": {
+			"name": {
+				"graph": "Provide a new name for the graph."
+			}
+		}
+	},
+	"new": {
+		"editor": "New Editor"
+	},
+	"browser": {
+		"tab": {
+			"favorite": "Favorites",
+			"user": "User",
+			"shared": "Shared"
+		}
+	},
+	"title": {
+		"favorite": "Favorites",
+		"recent": "Recent",
+		"recents": "Recents"
+	},
+	"button": {
+		"cancel": "Cancel",
+		"confirm": "Confirm"
+	}
 }

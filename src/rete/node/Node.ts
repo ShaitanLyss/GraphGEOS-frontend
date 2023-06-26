@@ -92,7 +92,7 @@ export class Node<
 	protected factory: NodeFactory;
 	protected params: Record<string, unknown>;
 	static id: string;
-	protected state: Record<string,unknown> = {};
+	protected state: Record<string, unknown> = {};
 
 	constructor(params: NodeParams) {
 		const { label = '', width = 190, height = 120, factory } = params;
@@ -107,7 +107,7 @@ export class Node<
 		this.width = width;
 		this.height = height;
 	}
-	setState(state: Record<string,unknown>) {
+	setState(state: Record<string, unknown>) {
 		this.state = state;
 	}
 
@@ -115,15 +115,14 @@ export class Node<
 		return this.getArea().nodeViews.get(this.id)?.position;
 	}
 
-	applyState() {
-	}
+	applyState() {}
 
 	toJSON(): NodeSaveData {
 		const inputControlValues: Record<string, unknown> = {};
 		for (const key in this.inputs) {
 			const value = this.getData(key);
 			if (value !== undefined) {
-			inputControlValues[key] = value;
+				inputControlValues[key] = value;
 			}
 		}
 

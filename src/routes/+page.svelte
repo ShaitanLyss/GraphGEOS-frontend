@@ -11,14 +11,12 @@
 <div class="h-screen">
 	<AppShell regionPage="h-full" slotPageContent="h-full">
 		<!-- <svelte:fragment slot="sidebarLeft">Sidebar left</svelte:fragment> -->
-		<svelte:fragment slot="sidebarLeft">
-			
-		</svelte:fragment>
+		<svelte:fragment slot="sidebarLeft" />
 		<EditorSwitcher
 			examples={[
 				// { key: 'math', example: sumExample, label: 'Math' },
 				// { key: 'timeloop', example: timeloopExample, label: 'Time Loop' },
-				// { key: 'for_each', example: forEachExample, label: 'For Each' },
+				{ key: 'for_each', example: forEachExample, label: 'For Each' }
 				// { key: 'acquisition', example: acquisitionModelingExample, label: 'Acquisition Modelling' }
 			]}
 		/>

@@ -13,7 +13,7 @@
 	import type { NodeFactory } from '$rete/node/NodeFactory';
 	import type { NodeEditor } from '$rete/NodeEditor';
 	import OpenGraphDrawer from './OpenGraphDrawer.svelte';
-	import NodeBrowser from './NodeBrowser.svelte';
+	import NodeBrowser from './node-browser/NodeBrowser.svelte';
 	import { AreaExtensions } from 'rete-area-plugin';
 	import type { Node } from '$rete/node/Node';
 
@@ -46,8 +46,7 @@
 		ready = true;
 
 		return () => {
-			if (destroyEditor)
-				destroyEditor();
+			if (destroyEditor) destroyEditor();
 			console.log('destroyed');
 		};
 	});
@@ -75,8 +74,7 @@
 	$: if (!hidden) {
 		if (firstShown && ready) {
 			console.log('first shown');
-			if (onFirstShown)
-				onFirstShown();
+			if (onFirstShown) onFirstShown();
 			firstShown = false;
 			// setupEditorInContainer();
 		}

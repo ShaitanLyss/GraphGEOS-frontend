@@ -1,5 +1,5 @@
 import { _ } from 'svelte-i18n';
-import { Node} from '../Node';
+import { Node } from '../Node';
 import { NodeFactory } from '../NodeFactory';
 
 export class EveryNode extends Node {
@@ -8,7 +8,7 @@ export class EveryNode extends Node {
 
 	constructor({ count = 100, factory }: { count?: number; factory: NodeFactory }) {
 		super({ label: 'Every', factory, height: 200, width: 200, params: { count } });
-		
+
 		this.addInExec();
 		this.addOutExec();
 		this.addInData({

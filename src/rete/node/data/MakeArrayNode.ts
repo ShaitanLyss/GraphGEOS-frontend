@@ -15,7 +15,7 @@ export type MakeArrayNodeState = {
 
 export class MakeArrayNode extends AddPinNode {
 	// type: SocketType = 'any';
-	state: MakeArrayNodeState ={...this.state, type:'any'};
+	state: MakeArrayNodeState = { ...this.state, type: 'any' };
 	initialValues: Record<string, unknown>;
 	numConnections = 0;
 
@@ -27,10 +27,17 @@ export class MakeArrayNode extends AddPinNode {
 		initialValues?: Record<string, unknown>;
 	}) {
 		// super('Make Array', { factory, height: 160, width: 150 });
-		super({ label: 'Make Array', factory, height: 160, width: 150, params: { initialValues }, numPins: 1 });
-		
+		super({
+			label: 'Make Array',
+			factory,
+			height: 160,
+			width: 150,
+			params: { initialValues },
+			numPins: 1
+		});
+
 		this.initialValues = initialValues;
-		
+
 		this.addOutData({ name: 'array', isArray: true, type: this.state.type });
 		this.loadInitialValues();
 
@@ -66,7 +73,6 @@ export class MakeArrayNode extends AddPinNode {
 
 			return context;
 		});
-
 	}
 
 	loadInitialValues() {
@@ -80,11 +86,10 @@ export class MakeArrayNode extends AddPinNode {
 	}
 	changeType(to: SocketType) {
 		if (this.state.type === to) return;
-		
+
 		this.state.type = to;
-		
+
 		for (const input of Object.values(this.inputs)) {
-			
 			if (input) {
 				this.changeInputType(input, to);
 			}
@@ -106,7 +111,7 @@ export class MakeArrayNode extends AddPinNode {
 		inputs?: Record<string, Input<Socket>> | undefined
 	): Record<string, unknown> | Promise<Record<string, unknown>> {
 		const data: undefined | unknown[] = [];
-		for (const key in this.inputs) {	
+		for (const key in this.inputs) {
 			data.push(this.getData(key, inputs));
 		}
 
@@ -114,12 +119,9 @@ export class MakeArrayNode extends AddPinNode {
 	}
 
 	onAddPin(index: number) {
-		
-		// console.log('Adding input pin with key data-' + index);	
-		const type = this.state.type !== undefined? this.state.type : 'any';
-		
-			
-		
+		// console.log('Adding input pin with key data-' + index);
+		const type = this.state.type !== undefined ? this.state.type : 'any';
+
 		// console.log('Adding input pin with key data-' + Object.keys(this.inputs).length);
 
 		this.addInData({
@@ -130,10 +132,7 @@ export class MakeArrayNode extends AddPinNode {
 			socketLabel: `data-${index}`
 		});
 		this.height += 36;
-		this.changeInputType(
-			this.inputs[`data-${index}`] as Input<Socket>,
-			this.state.type
-		);
+		this.changeInputType(this.inputs[`data-${index}`] as Input<Socket>, this.state.type);
 		this.loadInitialValues();
 		// this.getDataflowEngine().reset(this.id);
 		// this.factory.dataflowEngine?.reset(this.id);
@@ -146,6 +145,6 @@ export class MakeArrayNode extends AddPinNode {
 	}
 	override applyState(): void {
 		super.applyState();
-		this.changeInputType(this.inputs['data-0'] as Input<Socket>, this.state.type)
+		this.changeInputType(this.inputs['data-0'] as Input<Socket>, this.state.type);
 	}
 }

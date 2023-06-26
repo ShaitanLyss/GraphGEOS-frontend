@@ -21,7 +21,6 @@
 			</div>
 		</div>
 	</div>
-    
 
 	<div class="mb-4">
 		<h2 class="h2 mb-4">{$_('title.favorite')}</h2>

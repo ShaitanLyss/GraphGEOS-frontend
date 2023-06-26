@@ -17,7 +17,7 @@ export abstract class XmlNode extends Node<Record<string, Socket>, { value: Sock
 	xmlTag: string;
 
 	constructor(name: string, config: XmlNodeParams) {
-		super({label:name, config});
+		super({ label: name, config });
 		XmlNode.counts[name] = XmlNode.counts[name] ? XmlNode.counts[name] + BigInt(1) : BigInt(1);
 		this.name = camlelcaseize(name) + XmlNode.counts[name];
 		this.xmlTag = config.xmlTag;

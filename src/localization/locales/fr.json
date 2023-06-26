@@ -1,31 +1,31 @@
 {
-  "enter": {
-    "name": "Entrer un nom"
-  },
-  "prompt": {
-    "provide": {
-      "name": {
-        "graph": "Donnez un nouveau nom au graphique."
-      }
-    }
-  },
-  "new": {
-    "editor": "Nouvel éditeur"
-  },
-  "browser": {
-    "tab": {
-      "favorite": "Favoris",
-      "user": "Utilisateur",
-      "shared": "Partagé"
-    }
-  },
-  "title": {
-    "favorite": "Favoris",
-    "recent": "Récent",
-    "recents": "Récents"
-  },
-  "button": {
-    "cancel": "Annuler",
-    "confirm": "Confirmer"
-  }
+	"enter": {
+		"name": "Entrer un nom"
+	},
+	"prompt": {
+		"provide": {
+			"name": {
+				"graph": "Donnez un nouveau nom au graphique."
+			}
+		}
+	},
+	"new": {
+		"editor": "Nouvel éditeur"
+	},
+	"browser": {
+		"tab": {
+			"favorite": "Favoris",
+			"user": "Utilisateur",
+			"shared": "Partagé"
+		}
+	},
+	"title": {
+		"favorite": "Favoris",
+		"recent": "Récent",
+		"recents": "Récents"
+	},
+	"button": {
+		"cancel": "Annuler",
+		"confirm": "Confirmer"
+	}
 }

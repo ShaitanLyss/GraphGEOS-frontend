@@ -50,18 +50,17 @@
 	<!-- <svelte:fragment slot="sidebarLeft">
 		<GraphSearchPanel />
 	</svelte:fragment> -->
-	
-		<!-- <div class="h-full" bind:this={editorContainer} /> -->
-		{#each editors as editor, index (index)}
-			<Editor
-				bind:this={editorComponents[index]}
-				hidden={$tabSet !== editor.key}
-				loadExample={editor.example}
-				name={tabNames[index]}
-				onNameChange={(name) => (tabNames[index] = name)}
-			/>
-		{/each}
-	
+
+	<!-- <div class="h-full" bind:this={editorContainer} /> -->
+	{#each editors as editor, index (index)}
+		<Editor
+			bind:this={editorComponents[index]}
+			hidden={$tabSet !== editor.key}
+			loadExample={editor.example}
+			name={tabNames[index]}
+			onNameChange={(name) => (tabNames[index] = name)}
+		/>
+	{/each}
 </AppShell>
 <!-- <div class="flex flex-col h-screen">
   <div class="bg-gray-200 h-10 w-full">
