@@ -65,6 +65,8 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@auth/core": "^0.8.4",
+		"@auth/sveltekit": "^0.3.3",
 		"@types/react": "18",
 		"react": "18",
 		"react-dom": "18",
