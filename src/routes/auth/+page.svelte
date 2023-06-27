@@ -1,10 +1,40 @@
 <script>
   import { signIn, signOut } from "@auth/sveltekit/client"
   import { page } from "$app/stores"
+  import {onMount} from "svelte"
+  import { Notifications } from '@mantine/notifications';
+  import { notifications } from "@mantine/notifications"
+  
+
+  const searchParams = $page.url.searchParams;
+  let ready = false;
+
+
+  onMount(() => {
+    const userSetupSuccess = searchParams.get("userSetupSuccess") !== "false";
+      if (!userSetupSuccess && !$page.data.session) {
+        setTimeout(() => {
+          notifications.show({
+            title: "Error",
+            message: "There was an error setting up your account. Please try again.",
+            color: "red",
+            autoClose: 5000,
+          })
+        }, 0)
+      }
+
+    if (searchParams.has("userSetupSuccess") && $page.data.session) {
+      const userSetupSuccess = searchParams.get("userSetupSuccess") === "true";
+      if (!userSetupSuccess) {
+        signOut();
+      }
+    }
+    ready = true;
+  })
 
 </script>
-
 <h1>SvelteKit Auth Example</h1>
+{#if ready}
 <p>
   {#if $page.data.session}
     {#if $page.data.session.user?.image}
@@ -26,3 +56,6 @@
     </div>
   {/if}
 </p>
+{:else}
+<p>Checking session...</p>
+{/if}
