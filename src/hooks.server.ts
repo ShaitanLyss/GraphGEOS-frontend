@@ -4,8 +4,22 @@ import { SvelteKitAuth } from "@auth/sveltekit";
 import GitHub from "@auth/core/providers/github";
 import { sequence } from '@sveltejs/kit/hooks';
 import { GITHUB_ID, GITHUB_SECRET } from "$env/static/private";
+const { ENV } = import.meta.env;
+console.log("feugheiuzghie", ENV);
+import { MikroOrmAdapter } from "@auth/mikro-orm-adapter";
+import { PostgreSqlDriver } from "@mikro-orm/postgresql";
+
 
 const svelteKitAuth: Handle = SvelteKitAuth({
+	adapter: MikroOrmAdapter({
+		dbName: "makutu-ui",
+		driver: PostgreSqlDriver,
+		
+	}),
+	callbacks: {
+		
+	},
+
 	providers: [
 		GitHub({
 			clientId: GITHUB_ID,
