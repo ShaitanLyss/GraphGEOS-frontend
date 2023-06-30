@@ -8,7 +8,7 @@ import {
     ManyToOne,
     types,
 } from "@mikro-orm/core"
-import { User } from "./User"
+import { User } from "./User.js"
 
 // class Graph(Base):
 // __tablename__ = "graph"
@@ -24,7 +24,7 @@ import { User } from "./User"
 
 @Entity()
 export class Graph {
-    @PrimaryKey()
+    @PrimaryKey({ type: types.string})
     id: string = crypto.randomUUID()
 
     @Property({ type: types.string, nullable: true })

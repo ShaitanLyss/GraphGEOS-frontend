@@ -3,25 +3,32 @@ import { locale } from 'svelte-i18n';
 import { SvelteKitAuth } from "@auth/sveltekit";
 import GitHub from "@auth/core/providers/github";
 import { sequence } from '@sveltejs/kit/hooks';
-import { GITHUB_ID, GITHUB_SECRET, DB_PASSWD, APP_ENV } from "$env/static/private";
-const { ENV } = import.meta.env;
-console.log("feugheiuzghie", ENV);
+import { GITHUB_ID, GITHUB_SECRET, DB_PASSWD, APP_ENV, APP_DEBUG } from "$env/static/private";
 // import "@auth/mikro-orm-adapter/lib/entities.js"
-import { MikroOrmAdapter } from "@auth/mikro-orm-adapter";
+import { defaultEntities, MikroOrmAdapter } from "@auth/mikro-orm-adapter";
 import { PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { EntityCaseNamingStrategy, MikroORM, MongoNamingStrategy } from '@mikro-orm/core';
+import { Graph } from './entities/Graph';
+import { User } from './entities/User';
 
 const svelteKitAuth: Handle = SvelteKitAuth({
 	adapter: MikroOrmAdapter({
 		dbName: "makutu-ui-" + APP_ENV,
 		driver: PostgreSqlDriver,
 		password: DB_PASSWD,
-		debug: APP_ENV === "dev",
-		namingStrategy: MongoNamingStrategy
-		
+		debug: APP_DEBUG === "true" || APP_DEBUG?.includes("db"),
+		namingStrategy: MongoNamingStrategy,
+		entities: [
+			Graph,
+			User,
+			defaultEntities.Account,
+			defaultEntities.Session,
+			defaultEntities.VerificationToken
+		]
+
 	}),
 	callbacks: {
-		
+
 	},
 
 	providers: [
@@ -29,12 +36,12 @@ const svelteKitAuth: Handle = SvelteKitAuth({
 			clientId: GITHUB_ID,
 			clientSecret: GITHUB_SECRET,
 		}),
-		],
+	],
 });
 
 const public_routes = [
 	"/auth/**",
-	"/"
+	// "/"
 ];
 
 async function authorization({ event, resolve }) {
@@ -56,7 +63,7 @@ async function authorization({ event, resolve }) {
 	return resolve(event);
 }
 
-const localization: Handle = ({ event, resolve }) => {	
+const localization: Handle = ({ event, resolve }) => {
 	const lang = event.request.headers.get('accept-language')?.split(',')[0];
 	if (lang) {
 		locale.set(lang);

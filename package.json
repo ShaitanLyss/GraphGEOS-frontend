@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"private": true,
 	"mikro-orm": {
-		"useTsNode": true,
+		"useTsNode": false,
 		"configPaths": [
 			"./src/mikro-orm.config.ts",
 			"./src/mikro-orm.config.js"

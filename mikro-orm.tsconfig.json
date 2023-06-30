@@ -14,11 +14,11 @@
 		"preserveValueImports": false,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
-		"outDir": "./build"
+		"outDir": "./dist"
 	},
 	"ts-node": {
 		"esm": true,
 		"experimentalSpecifierResolution": "node"
 	},
-	"include": ["src/entities/**/*"]
+	"include": ["src/entities/**/*", "src/migrations"]
 }
