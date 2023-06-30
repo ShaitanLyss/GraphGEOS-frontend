@@ -9,7 +9,7 @@ type RemoveIndex<T> = {
 
 @Entity()
 export class User implements RemoveIndex<AdapterUser> {
-    @PrimaryKey()
+    @PrimaryKey({type: types.string})
     id: string = crypto.randomUUID()
 
     @Property({ type: types.string, nullable: true })

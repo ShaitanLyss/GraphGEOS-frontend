@@ -39,13 +39,6 @@
     preact "10.11.3"
     preact-render-to-string "5.2.3"
 
-"@auth/mikro-orm-adapter@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@auth/mikro-orm-adapter/-/mikro-orm-adapter-1.0.0.tgz#fb10737da5acbb121c25ad421e84bf80abe48d78"
-  integrity sha512-YGEiJ/iEyEWqsNb//pMyk53KKLZ9VGnRN+mwC89lamBE1y64YlA4dhqwIelpvQdAwNoe5veBoYWV01zu1nqG2w==
-  dependencies:
-    "@auth/core" "0.8.2"
-
 "@auth/sveltekit@^0.3.3":
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/@auth/sveltekit/-/sveltekit-0.3.3.tgz#100e0e2399b2deec1b4a2d2b10cf914a9d3c031f"

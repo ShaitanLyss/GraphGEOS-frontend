@@ -1,6 +1,11 @@
-<script>
+<script lang=ts>
 	import { faUser } from '@fortawesome/free-solid-svg-icons';
+	import type { Graph, User} from '../types';
 	import Fa from 'svelte-fa';
+	import { _ } from 'svelte-i18n';
+
+	export let graph: Graph;
+	export let userName: string;
 </script>
 
 <div class="card card-hover overflow-hidden variant-filled w-52">
@@ -20,7 +25,7 @@
 	<footer class="p-4 flex justify-start items-center space-x-4">
 		<Fa icon={faUser} class="w-8" />
 		<div class="flex-auto flex justify-between items-center">
-			<h6 class="font-bold">By Lyss</h6>
+			<h6 class="font-bold">{$_("card.graphItem.by_author", {values: {name: "Lyss"}})}</h6>
 			<small>On {new Date().toLocaleDateString()}</small>
 		</div>
 	</footer>

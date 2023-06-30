@@ -3,13 +3,14 @@ import { locale } from 'svelte-i18n';
 import { SvelteKitAuth } from "@auth/sveltekit";
 import GitHub from "@auth/core/providers/github";
 import { sequence } from '@sveltejs/kit/hooks';
-import { GITHUB_ID, GITHUB_SECRET, DB_PASSWD, APP_ENV, APP_DEBUG } from "$env/static/private";
-// import "@auth/mikro-orm-adapter/lib/entities.js"
-import { defaultEntities, MikroOrmAdapter } from "@auth/mikro-orm-adapter";
+import { GITHUB_ID, GITHUB_SECRET, FIREBASE_PROJECT_ID, DB_PASSWD, FIREBASE_PRIVATE_KEY, APP_ENV, APP_DEBUG } from "$env/static/private";
+import { defaultEntities, MikroOrmAdapter } from "./mikro-orm-adapter";
 import { PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { EntityCaseNamingStrategy, MikroORM, MongoNamingStrategy } from '@mikro-orm/core';
 import { Graph } from './entities/Graph';
 import { User } from './entities/User';
+
+// import serviceAccount from "../makutu-ui-firebase-adminsdk-xj056-228c3ee633.json"
 
 const svelteKitAuth: Handle = SvelteKitAuth({
 	adapter: MikroOrmAdapter({
@@ -28,6 +29,11 @@ const svelteKitAuth: Handle = SvelteKitAuth({
 
 	}),
 	callbacks: {
+		session: async ({session, user}) => {
+			session.user.id = user.id;
+			
+			return session;
+		},
 
 	},
 
