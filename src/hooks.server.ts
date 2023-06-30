@@ -3,17 +3,21 @@ import { locale } from 'svelte-i18n';
 import { SvelteKitAuth } from "@auth/sveltekit";
 import GitHub from "@auth/core/providers/github";
 import { sequence } from '@sveltejs/kit/hooks';
-import { GITHUB_ID, GITHUB_SECRET } from "$env/static/private";
+import { GITHUB_ID, GITHUB_SECRET, DB_PASSWD, APP_ENV } from "$env/static/private";
 const { ENV } = import.meta.env;
 console.log("feugheiuzghie", ENV);
+// import "@auth/mikro-orm-adapter/lib/entities.js"
 import { MikroOrmAdapter } from "@auth/mikro-orm-adapter";
 import { PostgreSqlDriver } from "@mikro-orm/postgresql";
-
+import { EntityCaseNamingStrategy, MikroORM, MongoNamingStrategy } from '@mikro-orm/core';
 
 const svelteKitAuth: Handle = SvelteKitAuth({
 	adapter: MikroOrmAdapter({
-		dbName: "makutu-ui",
+		dbName: "makutu-ui-" + APP_ENV,
 		driver: PostgreSqlDriver,
+		password: DB_PASSWD,
+		debug: APP_ENV === "dev",
+		namingStrategy: MongoNamingStrategy
 		
 	}),
 	callbacks: {

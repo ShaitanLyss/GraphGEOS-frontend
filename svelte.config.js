@@ -26,7 +26,8 @@ const config = {
 		},
 		alias: {
 			$rete: 'src/rete'
-		}
+		},
+		
 	}
 };
 
