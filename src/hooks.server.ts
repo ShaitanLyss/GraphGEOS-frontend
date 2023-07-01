@@ -2,8 +2,9 @@ import { redirect, type Handle } from '@sveltejs/kit';
 import { locale } from 'svelte-i18n';
 import { SvelteKitAuth } from "@auth/sveltekit";
 import GitHub from "@auth/core/providers/github";
+import Google from "@auth/core/providers/google";
 import { sequence } from '@sveltejs/kit/hooks';
-import { GITHUB_ID, GITHUB_SECRET, FIREBASE_PROJECT_ID, DB_PASSWD, FIREBASE_PRIVATE_KEY, APP_ENV, APP_DEBUG } from "$env/static/private";
+import { GITHUB_ID, GITHUB_SECRET, FIREBASE_PROJECT_ID, DB_PASSWD, FIREBASE_PRIVATE_KEY, APP_ENV, APP_DEBUG, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from "$env/static/private";
 import { defaultEntities, MikroOrmAdapter } from "./mikro-orm-adapter";
 import { PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { EntityCaseNamingStrategy, MikroORM, MongoNamingStrategy } from '@mikro-orm/core';
@@ -38,6 +39,10 @@ const svelteKitAuth: Handle = SvelteKitAuth({
 	},
 
 	providers: [
+		Google({
+			clientId: GOOGLE_CLIENT_ID,
+			clientSecret: GOOGLE_CLIENT_SECRET,
+		}),
 		GitHub({
 			clientId: GITHUB_ID,
 			clientSecret: GITHUB_SECRET,

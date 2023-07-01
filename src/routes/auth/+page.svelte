@@ -49,10 +49,11 @@
     </span>
     <button on:click={() => signOut()} class="button">Sign out</button>
   {:else}
-    <div class="flex flex-col">
+    <div class="flex flex-col space-y-5">
 
     <span class="notSignedInText">You are not signed in</span>
     <button class="btn variant-filled" on:click={() => signIn("github")}>Sign In with GitHub</button>
+    <button class="btn variant-filled" on:click={() => signIn("google")}>Sign In with Google</button>
     </div>
   {/if}
 </p>
