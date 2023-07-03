@@ -1,5 +1,5 @@
 import { getMessageFormatter, t } from 'svelte-i18n';
-import { Node, NodeParams } from '../Node';
+import { Node, type NodeParams } from '../Node';
 import { capitalize } from '../../../utils/string';
 
 export interface FormatNodeParams extends NodeParams {
@@ -32,6 +32,8 @@ export class FormatNode extends Node {
 					initial: format,
 					debouncedOnChange: (value) => {
 						this.updateDataInputs();
+
+						this.params.format = value;
 					},
 					onHeightChange: (height, info) => {
 						this.height -= this.formatInputHeight;

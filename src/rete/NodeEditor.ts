@@ -1,6 +1,6 @@
 import { NodeEditor as BaseNodeEditor } from 'rete';
 import type { Schemes } from './node/Schemes';
-import { Connection, Node, NodeSaveData } from './node/Node';
+import { Connection, Node, type NodeSaveData } from './node/Node';
 
 export type NodeEditorSaveData = {
 	nodes: NodeSaveData[];

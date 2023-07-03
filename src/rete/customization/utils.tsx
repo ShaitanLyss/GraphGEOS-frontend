@@ -1,5 +1,5 @@
-import { InputControlTypes } from '../control/Control';
-import { SocketType } from '../plugin/typed-sockets';
+import { type InputControlTypes } from '../control/Control';
+import { type SocketType } from '../plugin/typed-sockets';
 import { Socket } from '../socket/Socket';
 import { $socketcolor } from './vars';
 

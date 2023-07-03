@@ -22,6 +22,33 @@
   "title": {
     "favorite": "Favoris",
     "recent": "Récent",
-    "recents": "Récents"
+    "recents": "Récents",
+    "author": "Auteur",
+    "description": "Description"
+  },
+  "button": {
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "upload": "Mettre en ligne"
+  },
+  "form": {
+    "input": {
+      "make_public": "Rendre publique",
+      "graph": {
+        "description_placeholder": "Description courte du graphe"
+      }
+    }
+  },
+  "modal": {
+    "title": {
+      "graph": {
+        "upload": "Mettre graphe en ligne"
+      }
+    }
+  },
+  "card": {
+    "graphItem": {
+      "by_author": "Par {name}"
+    }
   }
 }

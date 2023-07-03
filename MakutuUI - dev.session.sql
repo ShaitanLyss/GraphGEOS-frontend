@@ -1,0 +1,1 @@
+delete from "user" where email = 'shaitan.lyssm@gmail.com';

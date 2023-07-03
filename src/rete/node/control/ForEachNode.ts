@@ -1,11 +1,14 @@
-import { structures } from 'rete-structures';
 import { Connection, Node } from '../Node';
 import { getLeavesFromOutput } from '../utils';
 import { NodeFactory } from '../NodeFactory';
+import { InputControl } from '../../control/Control';
+import { SocketType } from '../../plugin/typed-sockets';
 
 // Class defining a For Each Node
 export class ForEachNode extends Node {
 	currentItemIndex?: number = undefined;
+	state = { ...this.state, type: 'any',  }
+	numConnections = 0
 
 	constructor({ factory }: { factory: NodeFactory }) {
 		super({ label: 'For Each', factory, height: 275 });
@@ -15,6 +18,67 @@ export class ForEachNode extends Node {
 		this.addOutData({ name: 'item', displayName: 'Item' });
 		this.addOutData({ name: 'index', displayName: 'Index', type: 'number' });
 		this.addOutExec('exec', 'Done');
+
+		this.getEditor().addPipe((context) => {
+			if (!['connectionremoved', 'connectioncreated'].includes(context.type)) return context;
+
+			if (!('data' in context)) return context;
+
+			if (!(context.data instanceof Connection)) return context;
+
+			const conn = context.data;
+
+			if (
+				(conn.target !== this.id || conn.targetInput !== 'array') && (conn.source !== this.id || conn.sourceOutput !== 'item')	
+			) return context;
+
+			
+
+			if (context.type === 'connectionremoved') {
+				this.numConnections--;
+				console.log('numConnections', this.numConnections);
+				
+				if (this.numConnections === 0) this.changeType('any');
+			} else if (context.type === 'connectioncreated') {
+			// }
+				this.numConnections++;
+
+				if (this.state.type !== 'any') return context;
+
+				if (conn.target === this.id) {
+					const sourceNode = this.getEditor().getNode(conn.source);
+					const sourceOutput = sourceNode.outputs[conn.sourceOutput];
+					if (sourceOutput) this.changeType(sourceOutput.socket.type);
+				} else if (conn.source === this.id) {
+					const targetNode = this.getEditor().getNode(conn.target);
+					const targetInput = targetNode.inputs[conn.targetInput];
+					if (targetInput) this.changeType(targetInput.socket.type);
+				}
+			}
+
+			return context;
+		});
+	}
+	changeType(type: SocketType) {
+		console.log('changeType', type);
+		console.log('this.state.type', this.state.type);
+		
+		
+		if (type === this.state.type) return;
+		console.log('changeType', type);
+		
+		this.state.type = type;
+		const input = this.inputs.array;
+		
+		if (input)  {
+			input.socket.type = type;
+			
+		}
+		const output = this.outputs.item;
+		if (output) {
+			output.socket.type = type;
+		}
+		this.updateElement('node', this.id);
 	}
 	// Executes the node
 	override async execute(input: string, forward: (output: string) => unknown): Promise<void> {

@@ -1,5 +1,5 @@
 import { PythonObject } from '../../backend-interaction/python';
-import { APINode, APINodeParams } from './APINode';
+import { APINode, type APINodeParams } from './APINode';
 
 export interface ObjectAPINodeParams extends APINodeParams {
 	objectKey: string;

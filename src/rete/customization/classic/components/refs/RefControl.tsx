@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ClassicPreset } from 'rete';
 
 // import { RefComponent } from '../../../../ref-component'
-import { ClassicScheme, GetControls, ReactArea2D } from '../../types';
+import { type ClassicScheme, type GetControls, type ReactArea2D } from '../../types';
 import { RefComponent } from 'rete-react-render-plugin';
 
 type Props<Scheme extends ClassicScheme> = {

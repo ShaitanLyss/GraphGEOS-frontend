@@ -1,15 +1,21 @@
-import { Connection, Node } from '../Node';
-import { ButtonControl } from '../../control/button/button';
+import { Connection } from '../Node';
 import { Input } from '../../Input';
 import { Socket } from '../../socket/Socket';
-import { SocketType } from '../../plugin/typed-sockets';
+import { type SocketType } from '../../plugin/typed-sockets';
 import { ClassicPreset } from 'rete';
 import { InputControl } from '../../control/Control';
 import { assignControl } from '../../customization/utils';
 import { NodeFactory } from '../NodeFactory';
+import { AddPinNode, type AddPinNodeState } from '../AddPinNode';
 
-export class MakeArrayNode extends Node {
-	type: SocketType = 'any';
+export type MakeArrayNodeState = {
+	// Add any additional properties that you need
+	type: SocketType;
+} & AddPinNodeState;
+
+export class MakeArrayNode extends AddPinNode {
+	// type: SocketType = 'any';
+	state: MakeArrayNodeState = { ...this.state, type: 'any' };
 	initialValues: Record<string, unknown>;
 	numConnections = 0;
 
@@ -21,11 +27,18 @@ export class MakeArrayNode extends Node {
 		initialValues?: Record<string, unknown>;
 	}) {
 		// super('Make Array', { factory, height: 160, width: 150 });
+		super({
+			label: 'Make Array',
+			factory,
+			height: 160,
+			width: 150,
+			params: { initialValues },
+			numPins: 1
+		});
 
-		super({ label: 'Make Array', factory, height: 160, width: 150, params: { initialValues } });
 		this.initialValues = initialValues;
-		this.addOutData({ name: 'array', isArray: true, type: 'any' });
-		this.addInData({ name: 'data-0' });
+
+		this.addOutData({ name: 'array', isArray: true, type: this.state.type });
 		this.loadInitialValues();
 
 		this.getEditor().addPipe((context) => {
@@ -45,7 +58,7 @@ export class MakeArrayNode extends Node {
 			} else if (context.type === 'connectioncreated') {
 				this.numConnections++;
 
-				if (this.type !== 'any') return context;
+				if (this.state.type !== 'any') return context;
 
 				if (conn.target === this.id) {
 					const sourceNode = this.getEditor().getNode(conn.source);
@@ -60,21 +73,22 @@ export class MakeArrayNode extends Node {
 
 			return context;
 		});
-
-		this.addControl('addPinBtn', new ButtonControl('+', this.addPin.bind(this)));
 	}
 
 	loadInitialValues() {
 		for (const key in this.inputs) {
 			const input = this.inputs[key];
 			if (input) {
-				const control = input.control as InputControl;
+				const control = input.control as InputControl<unknown>;
 				if (control && key in this.initialValues) control.setValue(this.initialValues[key]);
 			}
 		}
 	}
 	changeType(to: SocketType) {
-		this.type = to;
+		if (this.state.type === to) return;
+
+		this.state.type = to;
+
 		for (const input of Object.values(this.inputs)) {
 			if (input) {
 				this.changeInputType(input, to);
@@ -87,8 +101,9 @@ export class MakeArrayNode extends Node {
 	}
 
 	changeInputType(input: ClassicPreset.Input<Socket>, to: SocketType) {
-		input.socket.type = to;
+		input.socket.type = to || 'any';
 		const controlType = assignControl(to);
+		input.removeControl();
 		if (controlType) input.addControl(new InputControl(controlType));
 	}
 
@@ -96,28 +111,40 @@ export class MakeArrayNode extends Node {
 		inputs?: Record<string, Input<Socket>> | undefined
 	): Record<string, unknown> | Promise<Record<string, unknown>> {
 		const data: undefined | unknown[] = [];
-		for (const key in inputs) {
+		for (const key in this.inputs) {
 			data.push(this.getData(key, inputs));
 		}
 
 		return { array: data };
 	}
 
-	addPin() {
+	onAddPin(index: number) {
+		// console.log('Adding input pin with key data-' + index);
+		const type = this.state.type !== undefined ? this.state.type : 'any';
+
 		// console.log('Adding input pin with key data-' + Object.keys(this.inputs).length);
 
 		this.addInData({
-			name: `data-${Object.keys(this.inputs).length}`,
+			name: `data-${index}`,
 			displayName: '',
 			isArray: false,
-			type: this.type
+			type: this.state.type || 'any',
+			socketLabel: `data-${index}`
 		});
 		this.height += 36;
-		this.changeInputType(
-			this.inputs[`data-${Object.keys(this.inputs).length - 1}`] as Input<Socket>,
-			this.type
-		);
+		this.changeInputType(this.inputs[`data-${index}`] as Input<Socket>, this.state.type);
 		this.loadInitialValues();
+		// this.getDataflowEngine().reset(this.id);
+		// this.factory.dataflowEngine?.reset(this.id);
 		this.updateElement('node', this.id);
+	}
+
+	addPin(): void {
+		super.addPin();
+		this.factory.dataflowEngine?.reset(this.id);
+	}
+	override applyState(): void {
+		super.applyState();
+		this.changeInputType(this.inputs['data-0'] as Input<Socket>, this.state.type);
 	}
 }

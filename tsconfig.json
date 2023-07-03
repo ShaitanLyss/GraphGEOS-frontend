@@ -1,6 +1,7 @@
 {
 	"extends": "./.svelte-kit/tsconfig.json",
 	"compilerOptions": {
+		"baseUrl": "./src/",
 		"allowJs": true,
 		"checkJs": true,
 		"esModuleInterop": true,
@@ -10,15 +11,20 @@
 		"sourceMap": true,
 		"jsx": "react",
 		"strict": true,
-		"preserveValueImports": false
-
+		"preserveValueImports": false,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
 		// "importsNotUsedAsValues":
 	},
-	"include": [
-		"src/**/*.tsn",
-		"src/rete/node/xml/ProblemNode.ts",
-		"src/rete/node/makutu/solver/AcousticSEMNode.ts"
-	]
+	"ts-node": {
+		"esm": true,
+		"experimentalSpecifierResolution": "node"
+	}
+	// "include": [
+	// 	"src/**/*.tsn",
+	// 	"src/rete/node/xml/ProblemNode.ts",
+	// 	"src/rete/node/makutu/solver/AcousticSEMNode.ts"
+	// ]
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
 	//
 	// If you want to overwrite includes/excludes, make sure to copy over the relevant includes/excludes

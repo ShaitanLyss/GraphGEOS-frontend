@@ -1,6 +1,4 @@
-import { structures } from 'rete-structures';
-import { InputControl } from '../../control/Control';
-import { Connection, Node } from '../Node';
+import { Node } from '../Node';
 import { notifications } from '@mantine/notifications';
 import { getLeavesFromOutput } from '../utils';
 import { NodeFactory } from '../NodeFactory';

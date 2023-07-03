@@ -15,7 +15,7 @@
 	// import 'app.css'
 	import '../app.postcss';
 
-	import { AppShell, LightSwitch, Modal, ModalComponent } from '@skeletonlabs/skeleton';
+	import { AppShell, LightSwitch, Modal, type ModalComponent } from '@skeletonlabs/skeleton';
 	const modalComponentRegistry: Record<string, ModalComponent> = {
 		uploadGraphModal: {
 			ref: UploadGraphModal
@@ -25,7 +25,7 @@
 </script>
 
 <slot />
-<react:Notifications position="top-right" />
+
+<react:Notifications position="top-right" zIndex="1000"/>
 <Modal components={modalComponentRegistry} />
 <svelte:head>{@html `<\u{73}cript>(${setInitialClassState.toString()})();</script>`}</svelte:head>
-

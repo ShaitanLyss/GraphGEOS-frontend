@@ -1,5 +1,4 @@
-import { ClassicPreset } from 'rete';
-import { Node, NodeParams } from '../Node';
+import { Node, type NodeParams } from '../Node';
 
 interface AppendNodeParams extends NodeParams {
 	a?: string;

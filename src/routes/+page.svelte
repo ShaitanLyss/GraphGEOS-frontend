@@ -7,16 +7,18 @@
 	import { forEachExample } from '$rete/example/for_each';
 	import { acquisitionModelingExample } from '$rete/example/acquisition-modeling';
 </script>
+
 <div class="h-screen">
-<AppShell slotPageContent="flex flex-col h-full">
-	<!-- <svelte:fragment slot="sidebarLeft">Sidebar left</svelte:fragment> -->
-	<EditorSwitcher
-		examples={[
-			{ key: 'math', example: sumExample, label: 'Math' },
-			{ key: 'timeloop', example: timeloopExample, label: 'Time Loop' },
-			{ key: 'for_each', example: forEachExample, label: 'For Each' },
-			{ key: 'acquisition', example: acquisitionModelingExample, label: 'Acquisition Modelling' }
-		]}
-	/>
-</AppShell>
+	<AppShell regionPage="h-full" slotPageContent="h-full">
+		<!-- <svelte:fragment slot="sidebarLeft">Sidebar left</svelte:fragment> -->
+		<svelte:fragment slot="sidebarLeft" />
+		<EditorSwitcher
+			examples={[
+				// { key: 'math', example: sumExample, label: 'Math' },
+				// { key: 'timeloop', example: timeloopExample, label: 'Time Loop' },
+				{ key: 'for_each', example: forEachExample, label: 'For Each' }
+				// { key: 'acquisition', example: acquisitionModelingExample, label: 'Acquisition Modelling' }
+			]}
+		/>
+	</AppShell>
 </div>

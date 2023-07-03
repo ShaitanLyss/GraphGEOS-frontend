@@ -22,6 +22,34 @@
   "title": {
     "favorite": "Favorites",
     "recent": "Recent",
-    "recents": "Recents"
+    "recents": "Recents",
+    "author": "Author",
+    "description": "Description"
+  },
+  "button": {
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "upload": "Upload"
+  },
+  "form": {
+    "input": {
+      "make_public": "Make public",
+      "description_placeholder": "Short description of your graph",
+      "graph": {
+        "description_placeholder": "Short description of your graph"
+      }
+    }
+  },
+  "modal": {
+    "title": {
+      "graph": {
+        "upload": "Upload Graph"
+      }
+    }
+  },
+  "card": {
+    "graphItem": {
+      "by_author": "By {name}"
+    }
   }
 }

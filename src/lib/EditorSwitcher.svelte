@@ -1,15 +1,23 @@
 <script lang="ts">
-	import { TabGroup, Tab, LightSwitch, ModalSettings, modalStore } from '@skeletonlabs/skeleton';
+	import {
+		TabGroup,
+		Tab,
+		LightSwitch,
+		ModalSettings,
+		modalStore,
+		AppShell
+	} from '@skeletonlabs/skeleton';
+	import { type DragOptions, draggable } from '@neodrag/svelte';
 	import { localStorageStore } from '@skeletonlabs/skeleton';
 
 	import type { Writable } from 'svelte/store';
-	import Editor from './editor/Editor.svelte';
+	import Editor from '$lib/editor/Editor.svelte';
 	import { onMount } from 'svelte';
 
 	import type { EditorView } from './editor/types';
-	import DownloadGraphButton from './editor/DownloadGraphButton.svelte';
 	import { _ } from 'svelte-i18n';
 	import LocaleSwitcher from './LocaleSwitcher.svelte';
+	import NodeBrowser from './editor/node-browser/NodeBrowser.svelte';
 
 	let addButonClicked = -1;
 
@@ -39,6 +47,14 @@
 		tabNames.push(editorTab.label);
 	}
 
+	const draggableTabOptions: DragOptions = {
+		// axis: 'x',
+		// bounds: 'parent',
+		onDragEnd({}) {
+			
+		}
+	};
+
 	let editorComponents: Editor[] = [];
 
 	function openChangeTabNameModal(tabIndex: number) {
@@ -50,6 +66,9 @@
 			// Populates the input value and attributes
 			value: tabNames[tabIndex],
 			valueAttr: { type: 'text', required: true },
+			buttonTextCancel: $_('button.cancel'),
+			buttonTextSubmit: $_('button.confirm'),
+
 			// Returns the updated response value
 			response: (r: string) => {
 				if (r) tabNames[tabIndex] = r;
@@ -61,23 +80,36 @@
 </script>
 
 {#if ready}
-
-		<TabGroup>
-			{#each editors as editor, index (index)}
-				<div on:dblclick={() => openChangeTabNameModal(index)}>
-					<Tab bind:group={$tabSet} name="tab{index}" value={editor.key}>{tabNames[index]}</Tab>
+	<AppShell>
+		<svelte:fragment slot="header">
+			<div class="flex">
+				<TabGroup>
+					{#each editors as editor, index (index)}
+						<div
+							on:dblclick={() => openChangeTabNameModal(index)}
+							use:draggable={draggableTabOptions}
+						>
+							<Tab bind:group={$tabSet} name="tab{index}" value={editor.key}>{tabNames[index]}</Tab>
+						</div>
+					{/each}
+					<Tab
+						on:click={addEditor}
+						bind:group={addButonClicked}
+						name="addEditorBtn"
+						value={undefined}>+</Tab
+					>
+				</TabGroup>
+				<div class="ml-auto pe-4 pe- my-auto flex h-full space-x-3 items-center justify-end">
+					<LocaleSwitcher />
+					<LightSwitch />
 				</div>
-			{/each}
-			<Tab on:click={addEditor} bind:group={addButonClicked} name="addEditorBtn" value={undefined}
-				>+</Tab
-			>
-
-			<div class="ml-auto pe-4 my-auto flex h-full space-x-3 items-center justify-end">
-				<LocaleSwitcher />
-				<LightSwitch />
 			</div>
-		</TabGroup>
-		<div class="flex-grow">
+		</svelte:fragment>
+		<svelte:fragment slot="sidebarLeft">
+			<NodeBrowser />
+		</svelte:fragment>
+
+		<svelte:fragment>
 			{#each editors as editor, index (index)}
 				<Editor
 					bind:this={editorComponents[index]}
@@ -87,8 +119,8 @@
 					onNameChange={(name) => (tabNames[index] = name)}
 				/>
 			{/each}
-
-	</div>
+		</svelte:fragment>
+	</AppShell>
 {:else}
 	<div class="h-full">
 		<div class="flex justify-left space-x-4 p-4">

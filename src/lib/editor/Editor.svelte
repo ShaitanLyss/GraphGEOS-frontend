@@ -13,7 +13,7 @@
 	import type { NodeFactory } from '$rete/node/NodeFactory';
 	import type { NodeEditor } from '$rete/NodeEditor';
 	import OpenGraphDrawer from './OpenGraphDrawer.svelte';
-	import NodeBrowser from './NodeBrowser.svelte';
+	import NodeBrowser from './node-browser/NodeBrowser.svelte';
 	import { AreaExtensions } from 'rete-area-plugin';
 	import type { Node } from '$rete/node/Node';
 
@@ -21,7 +21,7 @@
 
 	// import {} from '@fortawesome/free-regular-svg-icons';
 
-	export let loadExample: EditorExample | undefined;
+	export let loadExample: EditorExample | undefined = undefined;
 	export let hidden = false;
 	export let name: string;
 	export let onNameChange: (name: string) => void = () => {};
@@ -42,6 +42,18 @@
 	}
 
 	onMount(async () => {
+		setupEditorInContainer();
+		ready = true;
+
+		return () => {
+			if (destroyEditor) destroyEditor();
+			console.log('destroyed');
+		};
+	});
+	$: if (editor) editor.setName(name, false);
+	let ready = false;
+
+	async function setupEditorInContainer() {
 		const tools = await setupEditor(container, loadExample);
 		destroyEditor = tools.destroy;
 		onFirstShown = tools.firstDisplay;
@@ -49,21 +61,22 @@
 		editor.setName(name);
 		editor.addOnChangeNameListener(onNameChange);
 		factory = tools.factory;
+		AreaExtensions.zoomAt(factory.getArea(), factory.getEditor().getNodes());
 		const { watchResize } = await import('svelte-watch-resize');
-		watchResize(container, () => debouncedHandler(() => console.log('resize')));
-
-		return () => {
-			destroyEditor();
-			console.log('destroyed');
-		};
-	});
-	$: if (editor) editor.setName(name, false);
+		watchResize(container, () => {
+			if (nodesToFocus === undefined) {
+				nodesToFocus = getVisibleNodes();
+			}
+			// debouncedHandler(() => console.log('resize'));
+		});
+	}
 
 	$: if (!hidden) {
-		if (firstShown && onFirstShown) {
-			onFirstShown();
-			firstShown = false;
+		if (firstShown && ready) {
 			console.log('first shown');
+			if (onFirstShown) onFirstShown();
+			firstShown = false;
+			// setupEditorInContainer();
 		}
 	}
 
@@ -86,13 +99,12 @@
 		// console.log('focusing', nodesToFocus);
 
 		setTimeout(() => {
-			if (!nodesToFocus) return;
-			console.log('focusing', nodesToFocus);
-			
-			AreaExtensions.zoomAt(factory.getArea(), nodesToFocus)
+			if (!nodesToFocus || nodesToFocus.length == 0) return;
+			// console.log('focusing', nodesToFocus);
+
+			AreaExtensions.zoomAt(factory.getArea(), nodesToFocus);
 			nodesToFocus = undefined;
 		}, 0);
-		
 	}
 
 	function getVisibleNodes(): Node[] {
@@ -130,42 +142,41 @@
 
 <div
 	{hidden}
-	class="relative border border-surface-500 h-full"
+	class="relative border-surface-500 h-full"
 	style="/*border:4px solid violet;*/ /*height:75vh;*/"
 >
-	<AppShell>
-		<svelte:fragment>
-			<div class="relative h-full">
-				<!--  Overlay -->
-				{#if !hidden}
-					<AppShell
-						class="absolute inset-0 flex justify-center items-center pointer-events-none z-10"
-						slotHeader="w-full"
-					>
-						<!-- Toolbar -->
-						<svelte:fragment slot="pageHeader">
-							<div class="flex justify-between w-full p-2">
-								<div class="space-x-4">
-									<EditorButton onClick={toggleNodeBrowser} icon={faCubes} />
-									<SaveGraphButton {editor} />
-									<LoadGraphFromFileButton {factory} />
-								</div>
-								<div class="space-x-4">
-									<DownloadGraphButton {editor} />
-									<EditorButton icon={faCloud} onClick={openUploadGraphModal} />
-								</div>
+	<AppShell regionPage="h-full" slotSidebarLeft="h-full" slotPageContent="h-full">
+		<div class="h-full">
+			<!--  Overlay -->
+			{#if !hidden}
+				<AppShell
+					class="absolute inset-0 flex justify-center items-center pointer-events-none z-10"
+					slotHeader="w-full"
+				>
+					<!-- Toolbar -->
+					<svelte:fragment slot="pageHeader">
+						<div class="flex justify-between w-full p-2">
+							<div class="space-x-4">
+								<EditorButton onClick={toggleNodeBrowser} icon={faCubes} />
+								<SaveGraphButton {editor} />
+								<LoadGraphFromFileButton {factory} />
 							</div>
-						</svelte:fragment>
-					</AppShell>
-				{/if}
-				<!-- Editor -->
-				<div bind:this={container} class="h-full" class:bg-white={$modeCurrent} />
-			</div>
-		</svelte:fragment>
-		<svelte:fragment slot="sidebarLeft">
+							<div class="space-x-4">
+								<DownloadGraphButton {editor} />
+								<EditorButton icon={faCloud} onClick={openUploadGraphModal} />
+							</div>
+						</div>
+					</svelte:fragment>
+				</AppShell>
+			{/if}
+			<!-- Editor -->
+			<div bind:this={container} class="h-full" class:bg-white={$modeCurrent} />
+		</div>
+
+		<!-- <svelte:fragment slot="sidebarLeft">
 			{#if !isNodeBrowserHidden}
 				<NodeBrowser />
 			{/if}
-		</svelte:fragment>
+		</svelte:fragment> -->
 	</AppShell>
 </div>

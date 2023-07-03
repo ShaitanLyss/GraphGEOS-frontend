@@ -1,6 +1,6 @@
-import { ClassicPreset as Classic, GetSchemes, NodeId } from 'rete';
+import { ClassicPreset as Classic, type GetSchemes, type NodeId } from 'rete';
 
-import { Position, RenderSignal } from '../src/types';
+import type { Position, RenderSignal } from '../src/types';
 
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void
 	? I

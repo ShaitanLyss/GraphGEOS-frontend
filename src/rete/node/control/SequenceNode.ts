@@ -1,21 +1,16 @@
-import { ButtonControl } from '../../control/button/button';
-import { Node } from '../Node';
+import { AddPinNode } from '../AddPinNode';
 import { NodeFactory } from '../NodeFactory';
 import { getLeavesFromOutput } from '../utils';
 
-export class SequenceNode extends Node {
+export class SequenceNode extends AddPinNode {
 	constructor({ factory }: { factory: NodeFactory }) {
-		super({ label: 'Sequence', factory, height: 220 });
-
+		super({ label: 'Sequence', factory, height: 126, numPins: 2 });
 		this.addInExec();
-		this.addOutExec('exec-0', '0');
-		this.addOutExec('exec-1', '1', false);
-		this.addControl('addPinBtn', new ButtonControl('+', this.addPin.bind(this)));
 	}
 
-	addPin() {
-		const newPinId = Object.keys(this.outputs).length;
-		this.addOutExec('exec-' + Object.keys(this.outputs).length, newPinId.toString(), true);
+	override onAddPin(index: number) {
+		const newPinId = index;
+		this.addOutExec('exec-' + index, newPinId.toString());
 		this.height += 47;
 		this.updateElement('node', this.id);
 	}
