@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"name": "makutu-gui-front",
+			"path": "../"
+		},
+		{
+			"name": "back",
+			"path": "../../back"
+		},
+		{
+			"name": "vtkOutput",
+			"path": "../../../makutu (1)/examples/vtkOutput"
+		}
+	],
+	"settings": {}
+}
