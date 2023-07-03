@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../../makutu (1)/examples/vtkOutput"
+		},
+		{
+			"path": "../back"
 		}
 	],
 	"settings": {
