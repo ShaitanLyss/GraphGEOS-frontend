@@ -6,8 +6,8 @@ import { LogNode } from '../node/io/LogNode';
 import { MakeArrayNode } from '../node/data/MakeArrayNode';
 import { NumberNode } from '../node/math/NumberNode';
 import { ForEachNode } from '../node/control/ForEachNode';
-import { EditorExample } from './types';
-import { NodeFactory } from '../node/NodeFactory';
+import type { EditorExample } from './types';
+import type { NodeFactory } from '../node/NodeFactory';
 
 export const forEachExample: EditorExample = async (factory: NodeFactory) => {
 	const editor = factory.getEditor();
