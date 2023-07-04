@@ -12,3 +12,6 @@ vite.config.ts.timestamp-*
 temp/
 tmp/
 mikro-orm.config.js
+.vscode/work.code-workspace
+.vscode/work.code-workspace
+.vscode/makutu-gui.code-workspace
