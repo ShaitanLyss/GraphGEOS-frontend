@@ -1,21 +1,22 @@
-import { Node } from '../node/Node';
-import { NodeEditor } from '../NodeEditor';
 import { ProblemNode } from '../node/xml/ProblemNode';
 import { VtkOutputNode } from '../node/xml/VtkOutputNode';
 import { MakeArrayNode } from '../node/data/MakeArrayNode';
 import { FieldSpecificationNode } from '../node/xml/FieldSpecificationNode';
 import { BoxXmlNode } from '../node/xml/geometry/BoxXmlNode';
 import { GetNameNode } from '../node/xml/GetNameNode';
+import type { EditorExample } from './types';
+import type { NodeFactory } from 'rete/node/NodeFactory';
 
-interface XmlExample {
-	(editor: NodeEditor): Promise<Node[]>;
-}
+// interface XmlExample {
+// 	(editor: NodeEditor): Promise<Node[]>;
+// }
 
-export const acquisitionXmlExample: XmlExample = async (editor: NodeEditor) => {
+export const acquisitionXmlExample: EditorExample = async (factory: NodeFactory) => {
+	const editor = factory.getEditor();
 	const problem = new ProblemNode();
 	await editor.addNode(problem);
 
-	const outputMakeArray = new MakeArrayNode();
+	const outputMakeArray = new MakeArrayNode({factory});
 	await editor.addNode(outputMakeArray);
 
 	const vtkOutput = new VtkOutputNode();
@@ -44,7 +45,7 @@ export const acquisitionXmlExample: XmlExample = async (editor: NodeEditor) => {
 	});
 	await editor.addNode(fieldSpecification3);
 
-	const fieldSpecificationsArray = new MakeArrayNode();
+	const fieldSpecificationsArray = new MakeArrayNode({factory});
 	fieldSpecificationsArray.addPin();
 	fieldSpecificationsArray.addPin();
 
@@ -55,7 +56,8 @@ export const acquisitionXmlExample: XmlExample = async (editor: NodeEditor) => {
 	await editor.addNewConnection(fieldSpecificationsArray, 'array', problem, 'fieldSpecifications');
 
 	const fieldSpecification1SetNamesArray = new MakeArrayNode({
-		'data-0': 'all'
+		factory,
+		initialValues: {'data-0': 'all'}
 	});
 	await editor.addNode(fieldSpecification1SetNamesArray);
 	await editor.addNewConnection(
@@ -68,7 +70,10 @@ export const acquisitionXmlExample: XmlExample = async (editor: NodeEditor) => {
 	await editor.addNewConnection(fieldSpecificationsArray, 'array', problem, 'fieldSpecifications');
 
 	const fieldSpecification2SetNamesArray = new MakeArrayNode({
+		factory,
+		initialValues: {
 		'data-0': 'all'
+		}
 	});
 	await editor.addNode(fieldSpecification2SetNamesArray);
 	await editor.addNewConnection(
@@ -78,7 +83,7 @@ export const acquisitionXmlExample: XmlExample = async (editor: NodeEditor) => {
 		'setNames'
 	);
 
-	const fieldSpecification3SetNamesArray = new MakeArrayNode();
+	const fieldSpecification3SetNamesArray = new MakeArrayNode({factory});
 	await editor.addNode(fieldSpecification3SetNamesArray);
 	await editor.addNewConnection(
 		fieldSpecification3SetNamesArray,
@@ -88,7 +93,7 @@ export const acquisitionXmlExample: XmlExample = async (editor: NodeEditor) => {
 	);
 
 	// Geometry
-	const geometryArray = new MakeArrayNode();
+	const geometryArray = new MakeArrayNode({factory});
 	await editor.addNode(geometryArray);
 	const box = new BoxXmlNode({
 		xMin: { x: -0.01, y: -0.01, z: 499.99 },
