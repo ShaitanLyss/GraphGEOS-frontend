@@ -6,6 +6,7 @@
 	import { timeloopExample } from '$rete/example/timeloop';
 	import { forEachExample } from '$rete/example/for_each';
 	import { acquisitionModelingExample } from '$rete/example/acquisition-modeling';
+	import { acquisitionXmlExample } from '$rete/example/acquisition-xml';
 </script>
 
 <div class="h-screen">
@@ -14,10 +15,11 @@
 		<svelte:fragment slot="sidebarLeft" />
 		<EditorSwitcher
 			examples={[
-				// { key: 'math', example: sumExample, label: 'Math' },
-				// { key: 'timeloop', example: timeloopExample, label: 'Time Loop' },
-				{ key: 'for_each', example: forEachExample, label: 'For Each' }
-				// { key: 'acquisition', example: acquisitionModelingExample, label: 'Acquisition Modelling' }
+				{ key: 'math', example: sumExample, label: 'Math' },
+				{ key: 'timeloop', example: timeloopExample, label: 'Time Loop' },
+				{ key: 'for_each', example: forEachExample, label: 'For Each' },
+				{ key: 'acquisition', example: acquisitionModelingExample, label: 'Acquisition Modelling' },
+				{ key: 'xml', example: acquisitionXmlExample, label: 'XML'}
 			]}
 		/>
 	</AppShell>
