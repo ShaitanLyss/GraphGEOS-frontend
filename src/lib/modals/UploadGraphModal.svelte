@@ -55,6 +55,10 @@
 			data[key] = value;
 		}
 
+		if (!data.hasOwnProperty('is_public')) {
+			data['is_public'] = false;
+		}
+
 		// Submit the form data to the API endpoint
 
 		try {
