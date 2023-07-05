@@ -22,8 +22,8 @@ import { User } from "./User.js"
 
 // author = relationship("User", back_populates = "graphs")
 
-@Entity()
-export class Graph {
+export @Entity()
+class Graph {
     @PrimaryKey({ type: types.string})
     id: string = crypto.randomUUID()
 

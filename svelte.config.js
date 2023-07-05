@@ -25,9 +25,11 @@ const config = {
 			checkOrigin: false
 		},
 		alias: {
-			$rete: 'src/rete'
+			$rete: 'src/rete',
+			$houdini: './$houdini',
+
 		},
-		
+
 	}
 };
 

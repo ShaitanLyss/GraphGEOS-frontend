@@ -1,0 +1,27 @@
+schema {
+  query: ComboQuery
+}
+
+type ComboQuery {
+  user(id: UUID!): UserType!
+  users: [UserType!]!
+}
+
+type GraphType {
+  author: UserType!
+  authorId: UUID!
+  data: String!
+  description: String
+  id: UUID!
+  isPublic: Boolean!
+  name: String!
+}
+
+scalar UUID
+
+type UserType {
+  email: String!
+  graphs: [GraphType!]!
+  id: UUID!
+  name: String!
+}

@@ -21,8 +21,8 @@ type RemoveIndex<T> = {
   [K in keyof T as {} extends Record<K, 1> ? never : K]: T[K]
 }
 
-@Entity()
-export class User implements RemoveIndex<AdapterUser> {
+export @Entity()
+ class User implements RemoveIndex<AdapterUser> {
   @PrimaryKey({type: types.string})
   id: string = crypto.randomUUID()
 
@@ -56,8 +56,8 @@ export class User implements RemoveIndex<AdapterUser> {
   accounts = new Collection<Account, object>(this)
 }
 
-@Entity()
-export class Session implements AdapterSession {
+export @Entity()
+class Session implements AdapterSession {
   @PrimaryKey({type: types.string})
   @Property({ type: types.string })
   id: string = crypto.randomUUID()
@@ -80,9 +80,9 @@ export class Session implements AdapterSession {
   sessionToken!: string
 }
 
-@Entity()
+export @Entity()
 @Unique({ properties: ["provider", "providerAccountId"] })
-export class Account implements RemoveIndex<AdapterAccount> {
+ class Account implements RemoveIndex<AdapterAccount> {
   @PrimaryKey({type: types.string})
   @Property({ type: types.string })
   id: string = crypto.randomUUID()
@@ -128,9 +128,9 @@ export class Account implements RemoveIndex<AdapterAccount> {
   session_state?: string
 }
 
-@Entity()
+export @Entity()
 @Unique({ properties: ["token", "identifier"] })
-export class VerificationToken implements AdapterVerificationToken {
+ class VerificationToken implements AdapterVerificationToken {
   @PrimaryKey({type: types.string})
   @Property({ type: types.string })
   token!: string

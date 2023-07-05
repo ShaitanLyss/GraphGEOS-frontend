@@ -7,8 +7,8 @@ type RemoveIndex<T> = {
     [K in keyof T as {} extends Record<K, 1> ? never : K]: T[K]
 }
 
-@Entity()
-export class User implements RemoveIndex<AdapterUser> {
+export @Entity()
+class User implements RemoveIndex<AdapterUser> {
     @PrimaryKey({type: types.string})
     id: string = crypto.randomUUID()
 
