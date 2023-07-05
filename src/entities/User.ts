@@ -1,5 +1,5 @@
 import { Entity, PrimaryKey, Property, Collection, Unique, types, OneToMany } from "@mikro-orm/core"
-import type { defaultEntities } from "@auth/mikro-orm-adapter"
+import type { defaultEntities } from "../mikro-orm-adapter"
 import type { AdapterUser } from "@auth/core/adapters"
 
 type RemoveIndex<T> = {
