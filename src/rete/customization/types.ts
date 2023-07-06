@@ -1,12 +1,5 @@
-import { ReactElement } from 'react';
-import { BaseSchemes } from 'rete';
+export type Position = { x: number, y: number }
 
-import { ReactRenderPlugin } from './src';
-
-export type RenderPreset<Schemes extends BaseSchemes, T> = {
-	attach?: (plugin: ReactRenderPlugin<Schemes, T>) => void;
-	render: (
-		context: Extract<T, { type: 'render' }>,
-		plugin: ReactRenderPlugin<Schemes, T>
-	) => ReactElement | null | undefined;
-};
+export type RenderSignal<Type extends string, Data> =
+  | { type: 'render', data: { element: HTMLElement, filled?: boolean, type: Type } & Data }
+  | { type: 'rendered', data: { element: HTMLElement, type: Type } & Data }

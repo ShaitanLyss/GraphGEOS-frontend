@@ -42,7 +42,12 @@
 		debouncedTimer = setTimeout(handler, timeout);
 	}
 
+
+
+
 	onMount(async () => {
+		// const { createEditor } = await import('./editor');
+		// await createEditor(container);
 		const { setupEditor } = await import('$rete/editor');
 		const tools = await setupEditor(container, loadExample);
 		destroyEditor = tools.destroy;

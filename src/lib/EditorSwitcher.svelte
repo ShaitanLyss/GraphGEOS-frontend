@@ -7,7 +7,7 @@
 		modalStore,
 		AppShell
 	} from '@skeletonlabs/skeleton';
-	import { type DragOptions, draggable } from '@neodrag/svelte';
+	// import { type DragOptions, draggable } from '@neodrag/svelte';
 	import { localStorageStore } from '@skeletonlabs/skeleton';
 
 	import type { Writable } from 'svelte/store';
@@ -47,13 +47,13 @@
 		tabNames.push(editorTab.label);
 	}
 
-	const draggableTabOptions: DragOptions = {
-		// axis: 'x',
-		// bounds: 'parent',
-		onDragEnd({}) {
+	// const draggableTabOptions: DragOptions = {
+	// 	// axis: 'x',
+	// 	// bounds: 'parent',
+	// 	onDragEnd({}) {
 			
-		}
-	};
+	// 	}
+	// };
 
 	let editorComponents: Editor[] = [];
 
@@ -87,8 +87,9 @@
 					{#each editors as editor, index (index)}
 						<div
 							on:dblclick={() => openChangeTabNameModal(index)}
-							use:draggable={draggableTabOptions}
-						>
+							>
+							<!-- use:draggable={draggableTabOptions}
+						> -->
 							<Tab bind:group={$tabSet} name="tab{index}" value={editor.key}>{tabNames[index]}</Tab>
 						</div>
 					{/each}

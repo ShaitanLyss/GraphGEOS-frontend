@@ -27,6 +27,7 @@ const config = {
 		alias: {
 			$rete: 'src/rete',
 			$houdini: './$houdini',
+			"$custom-components": 'src/rete/customization/presets/classic/components'
 
 		},
 

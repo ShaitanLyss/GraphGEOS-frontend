@@ -5406,6 +5406,11 @@ svelte-check@^3.4.3:
     svelte-preprocess "^5.0.3"
     typescript "^5.0.3"
 
+svelte-css-vars@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/svelte-css-vars/-/svelte-css-vars-0.0.3.tgz#22f8bc53a5a38009aa8abf5acc36fe23d77b4f61"
+  integrity sha512-B7SLi7HGICpHI5oAx+NJRDsQChAIJ6wISwEUWN4CTU0h9WygKhcYwastnIoRkfdGE7tLfiKvEm+d102RRc8zwQ==
+
 svelte-eslint-parser@^0.32.0:
   version "0.32.0"
   resolved "https://registry.yarnpkg.com/svelte-eslint-parser/-/svelte-eslint-parser-0.32.0.tgz#4a9bd21fd8e9f29136c3eaf140ba1ce90e8cb353"
