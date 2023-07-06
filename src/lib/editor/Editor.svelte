@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { setupEditor } from '$rete/editor';
+	import { onDestroy, onMount } from 'svelte';
+
 	import type { EditorExample } from '../../rete/example/types';
 	import { AppShell, ModalSettings, modeCurrent } from '@skeletonlabs/skeleton';
 	import Fa from 'svelte-fa';
@@ -34,7 +34,7 @@
 	let factory: NodeFactory;
 
 	let destroyEditor: Function;
-	let onFirstShown: Function;	
+	let onFirstShown: Function;
 
 	let debouncedTimer: NodeJS.Timeout | undefined;
 	function debouncedHandler(handler: () => void, timeout = 500) {
@@ -42,19 +42,8 @@
 		debouncedTimer = setTimeout(handler, timeout);
 	}
 
-	onMount(() => {
-		setupEditorInContainer();
-		ready = true;
-
-		return () => {
-			if (destroyEditor) destroyEditor();
-			console.log('destroyed');
-		};
-	});
-	$: if (editor) editor.setName(name, false);
-	let ready = false;
-
-	async function setupEditorInContainer() {
+	onMount(async () => {
+		const { setupEditor } = await import('$rete/editor');
 		const tools = await setupEditor(container, loadExample);
 		destroyEditor = tools.destroy;
 		onFirstShown = tools.firstDisplay;
@@ -70,7 +59,16 @@
 			}
 			// debouncedHandler(() => console.log('resize'));
 		});
-	}
+		ready = true;
+	});
+
+	onDestroy(() => {
+		if (destroyEditor) destroyEditor();
+		console.log('destroyed');
+	});
+	$: if (editor) editor.setName(name, false);
+	let ready = false;
+
 
 	$: if (!hidden) {
 		if (firstShown && ready) {

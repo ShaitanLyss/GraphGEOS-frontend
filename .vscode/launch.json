@@ -12,6 +12,17 @@
 			"file": "${workspaceFolder}/index.html"
 		},
 		{
+            "name": "Launch SvelteKit",
+            "type": "firefox",
+            "request": "launch",
+            "reAttach": true,
+            "url": "http://localhost:5173/",
+            "pathMappings": [{
+                "url": "http://localhost:5173/",
+                "path": "${workspaceFolder}/src"
+            }]
+        },
+				{
 			"name": "Launch localhost",
 			"type": "firefox",
 			"request": "launch",
