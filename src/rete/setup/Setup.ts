@@ -1,8 +1,8 @@
-import { AreaPlugin } from 'rete-area-plugin';
-import { NodeEditor } from '../NodeEditor';
-import { Schemes } from '../node/Schemes';
-import { AreaExtra } from '../node/AreaExtra';
-import { NodeFactory } from '../node/NodeFactory';
+import type { AreaPlugin } from 'rete-area-plugin';
+import type { NodeEditor } from '../NodeEditor';
+import type { Schemes } from '../node/Schemes';
+import type { AreaExtra } from '../node/AreaExtra';
+import type { NodeFactory } from '../node/NodeFactory';
 
 export abstract class Setup {
 	abstract setup(

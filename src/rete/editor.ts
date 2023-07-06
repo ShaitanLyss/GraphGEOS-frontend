@@ -5,14 +5,14 @@ import {
 	Presets as ConnectionPresets
 } from 'rete-connection-plugin';
 import { AutoArrangePlugin, Presets as ArrangePresets } from 'rete-auto-arrange-plugin';
-import { Node } from './node/Node';
+import type { Node } from './node/Node';
 import type { AreaExtra } from './node/AreaExtra';
 import type { Schemes } from './node/Schemes';
 import { TypedSocketsPlugin, isConnectionInvalid } from './plugin/typed-sockets';
 import type { Socket } from './socket/Socket';
 import { notifications } from '@mantine/notifications';
 import { NodeEditor } from './NodeEditor';
-import { EditorExample } from './example/types';
+import type { EditorExample } from './example/types';
 import { MegaSetup } from './setup/MegaSetup';
 import { NodeFactory } from './node/NodeFactory';
 

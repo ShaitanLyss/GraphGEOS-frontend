@@ -1,11 +1,11 @@
-import { AreaPlugin } from 'rete-area-plugin';
-import { NodeEditor } from '../NodeEditor';
+import  type { AreaPlugin } from 'rete-area-plugin';
+import type { NodeEditor } from '../NodeEditor';
 import { RenderSetup } from '../customization/render';
-import { AreaExtra } from '../node/AreaExtra';
-import { Schemes } from '../node/Schemes';
+import type  { AreaExtra } from '../node/AreaExtra';
+import type { Schemes } from '../node/Schemes';
 import { Setup } from './Setup';
 import { MinimapSetup } from './MinimapSetup';
-import { NodeFactory } from '../node/NodeFactory';
+import type { NodeFactory } from '../node/NodeFactory';
 import { ContextMenuSetup } from '../plugin/context-menu/context-menu';
 
 export class MegaSetup extends Setup {
