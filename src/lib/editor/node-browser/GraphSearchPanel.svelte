@@ -3,8 +3,22 @@
 	import { _ } from 'svelte-i18n';
 	import Fa from 'svelte-fa';
 	import GraphItem from './GraphItem.svelte';
-</script>
+	import { graphql, query } from '$houdini';
 
+	const graphsAndAuthorName = graphql(`
+        query GraphsAndAuthorName @load {
+            graphs {
+				name,
+				author {
+					name
+				}
+			}
+        }
+    `);
+	
+
+	
+</script>
 <div class="px-4 pb-32">
 	<!-- Searchbar -->
 	<div class="flex flex-row items-center justify-between p-2 mb-2">
@@ -21,8 +35,12 @@
 			</div>
 		</div>
 	</div>
-
-	<div class="mb-4">
+	{#if $graphsAndAuthorName.data}
+	{#each $graphsAndAuthorName.data.graphs as graph}
+		<GraphItem graphName={graph.name} authorName={graph.author.name} />
+	{/each}
+	{/if}
+	<!-- <div class="mb-4">
 		<h2 class="h2 mb-4">{$_('title.favorite')}</h2>
 		<div class="grid grid-cols-1 sm:grid-cols-2 md-grid-cols-3 gap-4 flex-wrap">
 			<GraphItem />
@@ -40,5 +58,5 @@
 			<GraphItem />
 			<GraphItem />
 		</div>
-	</div>
+	</div> -->
 </div>

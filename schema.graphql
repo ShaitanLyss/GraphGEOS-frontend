@@ -3,6 +3,8 @@ schema {
 }
 
 type ComboQuery {
+  graph(id: Int!): GraphType!
+  graphs: [GraphType!]!
   user(id: UUID!): UserType!
   users: [UserType!]!
 }

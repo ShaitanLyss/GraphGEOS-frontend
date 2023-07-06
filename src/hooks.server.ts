@@ -14,6 +14,7 @@ import { User } from './entities/User';
 // import serviceAccount from "../makutu-ui-firebase-adminsdk-xj056-228c3ee633.json"
 
 const svelteKitAuth: Handle = SvelteKitAuth({
+	trustHost: true,
 	adapter: MikroOrmAdapter({
 		dbName: "makutu-ui-" + APP_ENV,
 		driver: PostgreSqlDriver,
@@ -21,8 +22,7 @@ const svelteKitAuth: Handle = SvelteKitAuth({
 		debug: APP_DEBUG === "true" || APP_DEBUG?.includes("db"),
 		namingStrategy: MongoNamingStrategy,
 		entities: [
-			Graph,
-			User,
+			defaultEntities.User,
 			defaultEntities.Account,
 			defaultEntities.Session,
 			defaultEntities.VerificationToken

@@ -6,9 +6,10 @@ export default defineConfig({
 	build: {
 		target: 'esnext'
 	},
+	
 	plugins: [
-		sveltekit(),
 		houdini(),
+		sveltekit(),
 		{
 			name: 'replaceCompileTimeVariable',
 			generateBundle() {

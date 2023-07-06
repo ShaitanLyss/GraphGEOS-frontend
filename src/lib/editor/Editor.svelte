@@ -18,6 +18,7 @@
 	import type { Node } from '$rete/node/Node';
 
 	import { notifications } from '@mantine/notifications';
+	import { graphql } from '$houdini';
 
 	// import {} from '@fortawesome/free-regular-svg-icons';
 
@@ -33,7 +34,7 @@
 	let factory: NodeFactory;
 
 	let destroyEditor: Function;
-	let onFirstShown: Function;
+	let onFirstShown: Function;	
 
 	let debouncedTimer: NodeJS.Timeout | undefined;
 	function debouncedHandler(handler: () => void, timeout = 500) {
@@ -41,7 +42,7 @@
 		debouncedTimer = setTimeout(handler, timeout);
 	}
 
-	onMount(async () => {
+	onMount(() => {
 		setupEditorInContainer();
 		ready = true;
 

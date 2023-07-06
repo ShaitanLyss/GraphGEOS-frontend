@@ -7,7 +7,15 @@ const config = {
     },
     "plugins": {
         "houdini-svelte": {}
+    },
+
+    scalars: {
+        /* in your case, something like */
+        UUID: {                  // <- The GraphQL Scalar
+            type: 'string'  // <-  The TypeScript type
+        }
     }
+
 }
 
 export default config
