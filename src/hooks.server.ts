@@ -4,51 +4,60 @@ import { SvelteKitAuth } from "@auth/sveltekit";
 import GitHub from "@auth/core/providers/github";
 import Google from "@auth/core/providers/google";
 import { sequence } from '@sveltejs/kit/hooks';
-import { GITHUB_ID, GITHUB_SECRET, FIREBASE_PROJECT_ID, DB_PASSWD, FIREBASE_PRIVATE_KEY, APP_ENV, APP_DEBUG, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from "$env/static/private";
+import { GITHUB_ID, GITHUB_SECRET, FIREBASE_PROJECT_ID, DB_PASSWD, FIREBASE_PRIVATE_KEY, APP_ENV, APP_DEBUG, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, AUTH_SECRET } from "$env/static/private";
 import { defaultEntities, MikroOrmAdapter } from "./mikro-orm-adapter";
 import { PostgreSqlDriver } from "@mikro-orm/postgresql";
 import { EntityCaseNamingStrategy, MikroORM, MongoNamingStrategy } from '@mikro-orm/core';
 import { Graph } from './entities/Graph';
 import { User } from './entities/User';
+import { GraphQlAdapter } from './backend-interaction/graphql-adapter';
+import type { AuthConfig } from '@auth/core';
 
 // import serviceAccount from "../makutu-ui-firebase-adminsdk-xj056-228c3ee633.json"
 
-const svelteKitAuth: Handle = SvelteKitAuth({
-	trustHost: true,
-	adapter: MikroOrmAdapter({
-		dbName: "makutu-ui-" + APP_ENV,
-		driver: PostgreSqlDriver,
-		password: DB_PASSWD,
-		debug: APP_DEBUG === "true" || APP_DEBUG?.includes("db"),
-		namingStrategy: MongoNamingStrategy,
-		entities: [
-			defaultEntities.User,
-			defaultEntities.Account,
-			defaultEntities.Session,
-			defaultEntities.VerificationToken
-		]
+const svelteKitAuth: Handle = SvelteKitAuth(async (event) => {
+	const authOptions: AuthConfig = {
+		trustHost: true,
+		// adapter: MikroOrmAdapter({
+		// 	dbName: "makutu-ui-" + APP_ENV,
+		// 	driver: PostgreSqlDriver,
+		// 	password: DB_PASSWD,
+		// 	debug: APP_DEBUG === "true" || APP_DEBUG?.includes("db"),
+		// 	namingStrategy: MongoNamingStrategy,
+		// 	entities: [
+		// 		defaultEntities.User,
+		// 		defaultEntities.Account,
+		// 		defaultEntities.Session,
+		// 		defaultEntities.VerificationToken
+		// 	]
 
-	}),
-	callbacks: {
-		session: async ({session, user}) => {
-			session.user.id = user.id;
-			
-			return session;
+		// }),
+		secret: AUTH_SECRET,
+		adapter: GraphQlAdapter(event),
+		
+		callbacks: {
+			session: async ({ session, user }) => {
+				session.user.id = user.id;
+
+				return session;
+			},
+
 		},
 
-	},
-
-	providers: [
-		Google({
-			clientId: GOOGLE_CLIENT_ID,
-			clientSecret: GOOGLE_CLIENT_SECRET,
-		}),
-		GitHub({
-			clientId: GITHUB_ID,
-			clientSecret: GITHUB_SECRET,
-		}),
-	],
-});
+		providers: [
+			Google({
+				clientId: GOOGLE_CLIENT_ID,
+				clientSecret: GOOGLE_CLIENT_SECRET,
+			}),
+			GitHub({
+				clientId: GITHUB_ID,
+				clientSecret: GITHUB_SECRET,
+			}),
+		],
+	}
+	return authOptions;
+}
+) satisfies Handle;
 
 const public_routes = [
 	"/auth/**",

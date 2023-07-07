@@ -13,6 +13,16 @@ const config = {
         /* in your case, something like */
         UUID: {                  // <- The GraphQL Scalar
             type: 'string'  // <-  The TypeScript type
+        },
+        DateTime: {
+            type: 'Date',
+            unmarshal(val) {
+                return val ? new Date(val) : null
+            },
+            
+            marshal(date /** @type {Date} */) {
+                return date && date.toISOString()
+            }
         }
     }
 
