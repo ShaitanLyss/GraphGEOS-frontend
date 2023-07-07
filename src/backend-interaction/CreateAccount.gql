@@ -1,5 +1,5 @@
 mutation CreateAccount($account: AccountCreateInput!) {
-    createAccount(account: $account) {
-        id
-    }
+	createAccount(account: $account) {
+		id
+	}
 }

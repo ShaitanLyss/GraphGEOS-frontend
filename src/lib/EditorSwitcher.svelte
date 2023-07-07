@@ -51,7 +51,7 @@
 	// 	// axis: 'x',
 	// 	// bounds: 'parent',
 	// 	onDragEnd({}) {
-			
+
 	// 	}
 	// };
 
@@ -85,9 +85,7 @@
 			<div class="flex">
 				<TabGroup>
 					{#each editors as editor, index (index)}
-						<div
-							on:dblclick={() => openChangeTabNameModal(index)}
-							>
+						<div on:dblclick={() => openChangeTabNameModal(index)}>
 							<!-- use:draggable={draggableTabOptions}
 						> -->
 							<Tab bind:group={$tabSet} name="tab{index}" value={editor.key}>{tabNames[index]}</Tab>

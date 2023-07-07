@@ -1,11 +1,13 @@
-import { RenderSignal } from '../../types'
+import { RenderSignal } from '../../types';
 
 export type Item = {
-  label: string
-  key: string
-  handler(): void
-  subitems?: Item[]
-}
+	label: string;
+	key: string;
+	handler(): void;
+	subitems?: Item[];
+};
 
-export type ContextMenuRender =
-  | RenderSignal<'contextmenu', { items: Item[], onHide(): void, searchBar?: boolean }>
+export type ContextMenuRender = RenderSignal<
+	'contextmenu',
+	{ items: Item[]; onHide(): void; searchBar?: boolean }
+>;

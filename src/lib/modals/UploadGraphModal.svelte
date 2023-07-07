@@ -62,28 +62,31 @@
 		// Submit the form data to the API endpoint
 
 		try {
-			const response = await fetch(`http://localhost:8000/api/v1/users/${$page.data.session?.user.id}/graphs/`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(data)
-			});
+			const response = await fetch(
+				`http://localhost:8000/api/v1/users/${$page.data.session?.user.id}/graphs/`,
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(data)
+				}
+			);
 
 			if (!response.ok) {
-				const {detail} = await response.json()
-				console.log(detail)
-				
+				const { detail } = await response.json();
+				console.log(detail);
+
 				notifications.show({
-				title: 'Error',
-				message: 'There was an error uploading the graph.',
-				color: 'red',
-				variant: 'filled'
-			});
-			
+					title: 'Error',
+					message: 'There was an error uploading the graph.',
+					color: 'red',
+					variant: 'filled'
+				});
+
 				return;
 			}
-			
+
 			notifications.show({
 				title: 'Success',
 				message: 'Graph uploaded successfully.',
@@ -109,7 +112,7 @@
 {#if $modalStore}
 	<div class="card">
 		<header class="card-header text-2xl font-bold text-center">
-			<h2>{$_("modal.title.graph.upload")}</h2>
+			<h2>{$_('modal.title.graph.upload')}</h2>
 			<!-- <button class="close" on:click={() => modalStore.set(null)}>×</button> -->
 		</header>
 		<section class="p-4 space-y-4">
@@ -130,23 +133,28 @@
 				</label>
 				<!-- Description -->
 				<label class="label">
-					<span>{$_("title.description")}</span>
+					<span>{$_('title.description')}</span>
 					<input
 						type="text"
 						class="input"
 						name="description"
-						placeholder={$_("form.input.graph.description_placeholder")}
+						placeholder={$_('form.input.graph.description_placeholder')}
 						bind:value={$formStore.description}
 					/>
 				</label>
 				<label class="label align-middle">
-					<span>{$_("form.input.make_public")}</span>
-				<input type="checkbox" class="input w-6 h-6 ms-2 my-auto" name="is_public" bind:checked={$formStore.is_public} />
+					<span>{$_('form.input.make_public')}</span>
+					<input
+						type="checkbox"
+						class="input w-6 h-6 ms-2 my-auto"
+						name="is_public"
+						bind:checked={$formStore.is_public}
+					/>
 				</label>
 
 				<!-- Author -->
 				<label class="label">
-					<span>{$_("title.author")}</span><span class="text-red-500 ms-1"> *</span>
+					<span>{$_('title.author')}</span><span class="text-red-500 ms-1"> *</span>
 					<input
 						type="text"
 						class="input"
@@ -158,16 +166,16 @@
 					/>
 				</label>
 				<input type="hidden" name="data" bind:this={graphInput} />
-				
 			</form>
 			<footer class="modal-footer flex justify-end space-x-2">
-				<button class="btn variant-ghost-surface" on:click={() => modalStore.close()}>{$_("button.cancel")}</button
+				<button class="btn variant-ghost-surface" on:click={() => modalStore.close()}
+					>{$_('button.cancel')}</button
 				>
 				<button
 					class="btn variant-filled"
 					on:click={() => {
 						handleSubmit(new Event('submit'));
-					}}>{$_("button.upload")}</button
+					}}>{$_('button.upload')}</button
 				>
 			</footer>
 		</section>

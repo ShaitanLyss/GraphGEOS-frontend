@@ -13,7 +13,7 @@
 		"strict": true,
 		"preserveValueImports": false,
 		"experimentalDecorators": true,
-		"emitDecoratorMetadata": true,
+		"emitDecoratorMetadata": true
 		// "importsNotUsedAsValues":
 	},
 	"ts-node": {

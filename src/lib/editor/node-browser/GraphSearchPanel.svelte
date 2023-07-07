@@ -6,19 +6,17 @@
 	import { graphql, query } from '$houdini';
 
 	const graphsAndAuthorName = graphql(`
-        query GraphsAndAuthorName @load {
-            graphs {
-				name,
+		query GraphsAndAuthorName @load {
+			graphs {
+				name
 				author {
 					name
 				}
 			}
-        }
-    `);
-	
-
-	
+		}
+	`);
 </script>
+
 <div class="px-4 pb-32">
 	<!-- Searchbar -->
 	<div class="flex flex-row items-center justify-between p-2 mb-2">
@@ -36,9 +34,9 @@
 		</div>
 	</div>
 	{#if $graphsAndAuthorName.data}
-	{#each $graphsAndAuthorName.data.graphs as graph}
-		<GraphItem graphName={graph.name} authorName={graph.author.name} />
-	{/each}
+		{#each $graphsAndAuthorName.data.graphs as graph}
+			<GraphItem graphName={graph.name} authorName={graph.author.name} />
+		{/each}
 	{/if}
 	<!-- <div class="mb-4">
 		<h2 class="h2 mb-4">{$_('title.favorite')}</h2>

@@ -1,8 +1,8 @@
 mutation CreateSession($session: SessionCreateInput!) {
-    createSession(session: $session) {
-        id
-        sessionToken
-        userId
-        expires
-    }
+	createSession(session: $session) {
+		id
+		sessionToken
+		userId
+		expires
+	}
 }

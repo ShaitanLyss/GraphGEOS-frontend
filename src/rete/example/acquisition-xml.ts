@@ -16,7 +16,7 @@ export const acquisitionXmlExample: EditorExample = async (factory: NodeFactory)
 	const problem = new ProblemNode();
 	await editor.addNode(problem);
 
-	const outputMakeArray = new MakeArrayNode({factory});
+	const outputMakeArray = new MakeArrayNode({ factory });
 	await editor.addNode(outputMakeArray);
 
 	const vtkOutput = new VtkOutputNode();
@@ -45,7 +45,7 @@ export const acquisitionXmlExample: EditorExample = async (factory: NodeFactory)
 	});
 	await editor.addNode(fieldSpecification3);
 
-	const fieldSpecificationsArray = new MakeArrayNode({factory});
+	const fieldSpecificationsArray = new MakeArrayNode({ factory });
 	fieldSpecificationsArray.addPin();
 	fieldSpecificationsArray.addPin();
 
@@ -57,7 +57,7 @@ export const acquisitionXmlExample: EditorExample = async (factory: NodeFactory)
 
 	const fieldSpecification1SetNamesArray = new MakeArrayNode({
 		factory,
-		initialValues: {'data-0': 'all'}
+		initialValues: { 'data-0': 'all' }
 	});
 	await editor.addNode(fieldSpecification1SetNamesArray);
 	await editor.addNewConnection(
@@ -72,7 +72,7 @@ export const acquisitionXmlExample: EditorExample = async (factory: NodeFactory)
 	const fieldSpecification2SetNamesArray = new MakeArrayNode({
 		factory,
 		initialValues: {
-		'data-0': 'all'
+			'data-0': 'all'
 		}
 	});
 	await editor.addNode(fieldSpecification2SetNamesArray);
@@ -83,7 +83,7 @@ export const acquisitionXmlExample: EditorExample = async (factory: NodeFactory)
 		'setNames'
 	);
 
-	const fieldSpecification3SetNamesArray = new MakeArrayNode({factory});
+	const fieldSpecification3SetNamesArray = new MakeArrayNode({ factory });
 	await editor.addNode(fieldSpecification3SetNamesArray);
 	await editor.addNewConnection(
 		fieldSpecification3SetNamesArray,
@@ -93,7 +93,7 @@ export const acquisitionXmlExample: EditorExample = async (factory: NodeFactory)
 	);
 
 	// Geometry
-	const geometryArray = new MakeArrayNode({factory});
+	const geometryArray = new MakeArrayNode({ factory });
 	await editor.addNode(geometryArray);
 	const box = new BoxXmlNode({
 		xMin: { x: -0.01, y: -0.01, z: 499.99 },

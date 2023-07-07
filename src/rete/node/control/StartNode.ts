@@ -8,7 +8,9 @@ export class StartNode extends Node {
 		this.addOutExec();
 		this.addControl(
 			'playBtn',
-			new ButtonControl('Play', () => {this.factory.getControlFlowEngine().execute(this.id); console.log("play");
+			new ButtonControl('Play', () => {
+				this.factory.getControlFlowEngine().execute(this.id);
+				console.log('play');
 			})
 		);
 	}

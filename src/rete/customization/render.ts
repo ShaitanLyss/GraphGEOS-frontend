@@ -9,8 +9,8 @@ import type { NodeEditor } from 'rete';
 import { ButtonControl } from '../control/button/button';
 import type { NodeFactory } from '../node/NodeFactory';
 import CustomButton from '../control/button/CustomButton.svelte';
-import type{ Setup } from '../setup/Setup';
-import { SveltePlugin, Presets } from "rete-svelte-plugin";
+import type { Setup } from '../setup/Setup';
+import { SveltePlugin, Presets } from 'rete-svelte-plugin';
 
 export class RenderSetup implements Setup {
 	private render = new SveltePlugin<Schemes, AreaExtra>();
@@ -36,7 +36,7 @@ export class RenderSetup implements Setup {
 						}
 
 						return Presets.classic.Control;
-					},
+					}
 					// connection(data) {
 					// 	return CustomConnection;
 					// },

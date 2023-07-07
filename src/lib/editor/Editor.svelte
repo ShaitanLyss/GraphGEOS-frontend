@@ -42,9 +42,6 @@
 		debouncedTimer = setTimeout(handler, timeout);
 	}
 
-
-
-
 	onMount(async () => {
 		// const { createEditor } = await import('./editor');
 		// await createEditor(container);
@@ -73,7 +70,6 @@
 	});
 	$: if (editor) editor.setName(name, false);
 	let ready = false;
-
 
 	$: if (!hidden) {
 		if (firstShown && ready) {

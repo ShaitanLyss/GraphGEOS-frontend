@@ -7,8 +7,8 @@ import { SocketType } from '../../plugin/typed-sockets';
 // Class defining a For Each Node
 export class ForEachNode extends Node {
 	currentItemIndex?: number = undefined;
-	state = { ...this.state, type: 'any',  }
-	numConnections = 0
+	state = { ...this.state, type: 'any' };
+	numConnections = 0;
 
 	constructor({ factory }: { factory: NodeFactory }) {
 		super({ label: 'For Each', factory, height: 275 });
@@ -29,18 +29,18 @@ export class ForEachNode extends Node {
 			const conn = context.data;
 
 			if (
-				(conn.target !== this.id || conn.targetInput !== 'array') && (conn.source !== this.id || conn.sourceOutput !== 'item')	
-			) return context;
-
-			
+				(conn.target !== this.id || conn.targetInput !== 'array') &&
+				(conn.source !== this.id || conn.sourceOutput !== 'item')
+			)
+				return context;
 
 			if (context.type === 'connectionremoved') {
 				this.numConnections--;
 				console.log('numConnections', this.numConnections);
-				
+
 				if (this.numConnections === 0) this.changeType('any');
 			} else if (context.type === 'connectioncreated') {
-			// }
+				// }
 				this.numConnections++;
 
 				if (this.state.type !== 'any') return context;
@@ -62,17 +62,15 @@ export class ForEachNode extends Node {
 	changeType(type: SocketType) {
 		console.log('changeType', type);
 		console.log('this.state.type', this.state.type);
-		
-		
+
 		if (type === this.state.type) return;
 		console.log('changeType', type);
-		
+
 		this.state.type = type;
 		const input = this.inputs.array;
-		
-		if (input)  {
+
+		if (input) {
 			input.socket.type = type;
-			
 		}
 		const output = this.outputs.item;
 		if (output) {

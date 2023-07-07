@@ -1,14 +1,14 @@
 query SessionAndUser($sessionToken: String!) {
-    session(sessionToken: $sessionToken) {
-        id
-        expires
-        sessionToken
-        userId
-        user {
-        id
-        name
-        email
-        emailVerified
-        }
-    }
+	session(sessionToken: $sessionToken) {
+		id
+		expires
+		sessionToken
+		userId
+		user {
+			id
+			name
+			email
+			emailVerified
+		}
+	}
 }

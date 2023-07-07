@@ -1,7 +1,7 @@
-import  type { AreaPlugin } from 'rete-area-plugin';
+import type { AreaPlugin } from 'rete-area-plugin';
 import type { NodeEditor } from '../NodeEditor';
 import { RenderSetup } from '../customization/render';
-import type  { AreaExtra } from '../node/AreaExtra';
+import type { AreaExtra } from '../node/AreaExtra';
 import type { Schemes } from '../node/Schemes';
 import { Setup } from './Setup';
 import { MinimapSetup } from './MinimapSetup';

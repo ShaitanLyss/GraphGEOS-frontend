@@ -26,6 +26,6 @@
 
 <slot />
 
-<react:Notifications position="top-right" zIndex="1000"/>
+<react:Notifications position="top-right" zIndex="1000" />
 <Modal components={modalComponentRegistry} />
 <svelte:head>{@html `<\u{73}cript>(${setInitialClassState.toString()})();</script>`}</svelte:head>

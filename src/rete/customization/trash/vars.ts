@@ -11,4 +11,3 @@ export const socketsize = 24;
 export const socketmargin = 6;
 export const socketcolor = '#96b38a';
 export const nodewidth = 180;
-
