@@ -1,6 +1,6 @@
 <script lang="ts">
 	import '../localization/i18n';
-	import '$rete/setup/appLaunch';
+	// import '$rete/setup/appLaunch';
 	import '../app.postcss';
 	import { Notifications } from '@mantine/notifications';
 	import UploadGraphModal from '$lib/modals/UploadGraphModal.svelte';

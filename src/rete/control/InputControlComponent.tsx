@@ -1,6 +1,6 @@
-import { InputControl, InputControlTypes, InputControlValueType } from './Control';
+import type { InputControl, InputControlTypes, InputControlValueType } from './Control';
 import * as React from 'react';
-import { Drag } from 'rete-react-render-plugin';
+// import { Drag } from 'rete-react-render-plugin';
 import { Checkbox, NumberInput, TextInput, Textarea, Text, Group } from '@mantine/core';
 import { useDebouncedState, useDebouncedValue, useFocusTrap, useMergedRef } from '@mantine/hooks';
 

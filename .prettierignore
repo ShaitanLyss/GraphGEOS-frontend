@@ -10,6 +10,7 @@ dist
 .env
 .env.*
 !.env.example
+schema.graphql
 
 # Ignore files for PNPM, NPM and YARN
 pnpm-lock.yaml

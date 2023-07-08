@@ -79,10 +79,6 @@
 	"dependencies": {
 		"@auth/core": "^0.8.4",
 		"@auth/sveltekit": "^0.3.3",
-		"@mikro-orm/cli": "^5.7.12",
-		"@mikro-orm/core": "^5.7.12",
-		"@mikro-orm/migrations": "^5.7.12",
-		"@mikro-orm/postgresql": "^5.7.12",
 		"@types/node": "*",
 		"@types/react": "18",
 		"react": "18",
@@ -92,10 +88,7 @@
 		"rete-area-plugin": "^2.0.0-beta.10",
 		"rete-connection-plugin": "^2.0.0-beta.13",
 		"rete-engine": "^2.0.0-beta.7",
-		"rete-react-render-plugin": "^2.0.0-beta.19",
 		"rete-render-utils": "^2.0.0-beta.15",
-		"styled-components": "5.3.6",
-		"svelte-i18n": "^3.6.0",
-		"ts-node": "^10.9.1"
+		"svelte-i18n": "^3.6.0"
 	}
 }

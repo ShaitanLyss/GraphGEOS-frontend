@@ -151,6 +151,7 @@ export function GraphQlAdapter(event: RequestEvent): Adapter {
 			if (session == null || user == null) {
 				return null;
 			}
+            console.log('GraphQlAdapter : getSessionAndUser : session : ', session);
 			return { session: session, user: user };
 		},
 		updateSession(
