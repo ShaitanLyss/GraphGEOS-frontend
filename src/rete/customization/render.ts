@@ -5,12 +5,19 @@ import type { AreaExtra } from '../node/AreaExtra';
 import type { AreaPlugin } from 'rete-area-plugin';
 // import { createRoot } from 'react-dom/client';
 import type { NodeEditor } from 'rete';
+import CustomNode from '$custom-components/Node.svelte';
 // import { CustomArraySocket } from './presets/classic/components/CustomArraySocket';
 import { ButtonControl } from '../control/button/button';
 import type { NodeFactory } from '../node/NodeFactory';
 import CustomButton from '../control/button/CustomButton.svelte';
+import CustomConnection from '$custom-components/Connection.svelte';
+import CustomExecSocket from '$custom-components/ExecSocket.svelte';
+import CustomSocket from '$custom-components/Socket.svelte';
 import type { Setup } from '../setup/Setup';
 import { SveltePlugin, Presets } from 'rete-svelte-plugin';
+import { InputControl } from "$rete/control/Control";
+import InputControlComponent from "$rete/customization/presets/classic/components/InputControl.svelte";
+import { Socket } from '$rete/socket/Socket';
 
 export class RenderSetup implements Setup {
 	private render = new SveltePlugin<Schemes, AreaExtra>();
@@ -19,31 +26,31 @@ export class RenderSetup implements Setup {
 		this.render.addPreset(
 			Presets.classic.setup({
 				customize: {
-					// socket(context) {
-					// 	if (context.payload instanceof Socket) {
-					// 		if (context.payload.type === 'exec') return CustomExecSocket;
-					// 		return context.payload.isArray ? CustomSocket : CustomSocket;
-					// 	}
+					socket(context) {
+						if (context.payload instanceof Socket) {
+							if (context.payload.type === 'exec') return CustomExecSocket;
+							return context.payload.isArray ? CustomSocket : CustomSocket;
+						}
 
-					// 	return Presets.classic.Socket;
-					// },
+						return Presets.classic.Socket;
+					},
 					control(data) {
-						// if (data.payload instanceof InputControl) {
-						// 	return InputControlComponent;
-						// }
+						if (data.payload instanceof InputControl) {
+							return InputControlComponent;
+						}
 						if (data.payload instanceof ButtonControl) {
 							return CustomButton;
 						}
 
 						return Presets.classic.Control;
-					}
-					// connection(data) {
-					// 	return CustomConnection;
-					// },
+					},
+					connection(data) {
+						return CustomConnection;
+					},
 
-					// node(data) {
-					// 	return Node;
-					// }
+					node(data) {
+						return CustomNode;
+					}
 				}
 			})
 		);

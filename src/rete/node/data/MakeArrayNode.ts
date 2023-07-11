@@ -1,11 +1,11 @@
 import { Connection } from '../Node';
-import { Input } from '../../Input';
-import { Socket } from '../../socket/Socket';
-import { type SocketType } from '../../plugin/typed-sockets';
-import { ClassicPreset } from 'rete';
+import type { Input } from '../../Input';
+import type { Socket } from '../../socket/Socket';
+import type { SocketType } from '../../plugin/typed-sockets';
+import type { ClassicPreset } from 'rete';
 import { InputControl } from '../../control/Control';
 import { assignControl } from '../../customization/utils';
-import { NodeFactory } from '../NodeFactory';
+import type { NodeFactory } from '../NodeFactory';
 import { AddPinNode, type AddPinNodeState } from '../AddPinNode';
 
 export type MakeArrayNodeState = {

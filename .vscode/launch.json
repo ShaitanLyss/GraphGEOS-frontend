@@ -19,6 +19,10 @@
 			"url": "http://localhost:5173/",
 			"pathMappings": [
 				{
+					"url": "http://localhost:5173/src/lib",
+					"path": "${workspaceFolder}/src/lib"
+				},
+				{
 					"url": "http://localhost:5173/",
 					"path": "${workspaceFolder}/src"
 				}

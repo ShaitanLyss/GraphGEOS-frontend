@@ -76,7 +76,7 @@
 
 	<!-- Inputs -->
 	{#each inputs as [key, input]}
-		<div class="input" data-testid={'input-' + key}>
+		<div class="rete-input" data-testid={'input-' + key}>
 			<Ref
 				class="input-socket"
 				data-testid="input-socket"

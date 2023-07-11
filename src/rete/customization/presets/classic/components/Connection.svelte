@@ -3,7 +3,7 @@
 	import type { ClassicScheme } from '../types';
 
 	// svelte-ignore unused-export-let
-	export let data: ClassicScheme['Connection'] & { isLoop?: boolean };
+	// export let data: ClassicScheme['Connection'] & { isLoop?: boolean };
 	// svelte-ignore unused-export-let
 	export let start: Position;
 	// svelte-ignore unused-export-let
@@ -16,6 +16,7 @@
 	export let source: string;
 	// svelte-ignore unused-export-let
 	export let sourceOutput: string;
+	export let isPseudo = undefined;
 	// svelte-ignore unused-export-let
 	export let id: string;
 	// svelte-ignore unused-export-let
