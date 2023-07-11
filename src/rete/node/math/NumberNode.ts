@@ -1,10 +1,9 @@
-import { ClassicPreset } from 'rete';
 import { Node } from '../Node';
-import { Socket } from '../../socket/Socket';
-import { NodeFactory } from '../NodeFactory';
+import type { NodeFactory } from '../NodeFactory';
+import { InputControl } from '$rete/control/Control';
 
 export class NumberNode extends Node {
-	height = 120;
+	height = 130;
 	width = 180;
 
 	constructor({
@@ -20,15 +19,15 @@ export class NumberNode extends Node {
 		super({ label: 'Number', factory, params: { initial, change } });
 		this.addControl(
 			'value',
-			new ClassicPreset.InputControl('number', { initial, change: this.processDataflow })
+			new InputControl('number', { initial, debouncedOnChange: this.processDataflow })
 		);
-		this.addOutput('value', new ClassicPreset.Output(new Socket({ type: 'number' }), 'Number'));
+		this.addOutData({ name: 'value', type: 'number' });
 	}
 
 	data(): Record<string, unknown> | Promise<Record<string, unknown>> {
 		return {
 			value:
-				this.controls.value instanceof ClassicPreset.InputControl ? this.controls.value.value : 0
+				this.controls.value instanceof InputControl ? this.controls.value.value : 0
 		};
 	}
 }

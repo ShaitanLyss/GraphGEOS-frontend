@@ -67,6 +67,6 @@ export class InputControl<
 	setValue(value?: N) {
 		this.value = value;
 
-		if (this.options?.change && value) this.options.change(value);
+		// if (this.options?.change && value) this.options.change(value);
 	}
 }

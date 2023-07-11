@@ -9,9 +9,9 @@
 	// 	socketVars = { background: assignColor(data)  };
 	// 	console.log("move to ", data.type)
 	// }
-	setInterval(() => {
-		socketVars = { background: assignColor(data)  };
-	}, 200);
+	// setInterval(() => {
+	// 	socketVars = { background: assignColor(data)  };
+	// }, 200);
 
 </script>
 

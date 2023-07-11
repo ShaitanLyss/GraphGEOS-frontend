@@ -97,6 +97,7 @@ export class MakeArrayNode extends AddPinNode {
 		this.loadInitialValues();
 		const outArray = this.outputs['array'];
 		if (outArray) outArray.socket.type = to;
+		console.log('Changing type to ' + to);
 		this.updateElement('node', this.id);
 	}
 

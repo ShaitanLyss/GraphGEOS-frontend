@@ -1,22 +1,38 @@
 <script lang="ts">
 	import type { InputControl } from '$rete/control/Control';
+	import { onMount } from 'svelte';
 	export let data: InputControl<unknown>;
+	let isReady = false;
 	let type = data.type;
 	let readonly = data.readonly;
 	let value = data.value;
 	let debouncedValue = value;
 	let debouncedTimer: NodeJS.Timeout | undefined;
 	let options = data.options;
+	let isFirstSet = true;
 
-	$: data.setValue(debouncedValue)
+	onMount(() => {
+	});
+
+	// Debounce value
+	$:if (!isFirstSet) {
+		data.setValue(debouncedValue)
+		if (data?.options?.debouncedOnChange)
+			data.options.debouncedOnChange(debouncedValue);
+	}
 
 	function change(event: Event) {
+		if (isFirstSet) {
+			isFirstSet = false;
+			return;
+		}
+		
 		const target = event.target as HTMLInputElement;
 		const val = data.type === 'number' ? +target.value : target.value;
 		clearTimeout(debouncedTimer);
 		debouncedTimer = setTimeout(() => {
 			debouncedValue = val;
-		}, 200);
+		}, 200); 
 	}
 </script>
 {#if type == 'checkbox'}
@@ -42,12 +58,12 @@
 {/if}
 {#if type == "number"}
 	<label class="label">
-		{options?.label}
+		{options?.label ? options?.label : ""}
 		<input
 			type="number"
 			class="input"
 			{value}
-			readOnly={readonly}
+			{readonly}
 			on:input={change}
 			on:pointerdown|stopPropagation={() => false}
 		/>
