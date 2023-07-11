@@ -5,13 +5,13 @@
 	import cssVars from 'svelte-css-vars';
 
 	let socketVars = { background: assignColor(data)  };
-	// $: {
-	// 	socketVars = { background: assignColor(data)  };
-	// 	console.log("move to ", data.type)
-	// }
-	// setInterval(() => {
-	// 	socketVars = { background: assignColor(data)  };
-	// }, 200);
+	$: {
+		socketVars = { background: assignColor(data)  };
+		console.log("move to ", data.type)
+	}
+	setInterval(() => {
+		socketVars = { background: assignColor(data)  };
+	}, 200);
 
 </script>
 
@@ -38,16 +38,16 @@
 			border-width: 4px;
 		}
 
-		&.multiple {
+		/* &.multiple {
 			border-color: yellow;
-		}
+		} */
 
-		&.output {
+		/* &.rete-output {
 			margin-right: -1 * math.div($socket-size, 2);
 		}
 
-		&.input {
+		&.rete-input {
 			margin-left: -1 * math.div($socket-size, 2);
-		}
+		} */
 	}
 </style>

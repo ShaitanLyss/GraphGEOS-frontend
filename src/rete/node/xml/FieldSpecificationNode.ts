@@ -1,16 +1,20 @@
+import type { NodeFactory } from '../NodeFactory';
 import { XmlNode } from './XmlNode';
 
 export class FieldSpecificationNode extends XmlNode {
-	constructor(initialValues: Record<string, unknown> = {}) {
-		super('Field Specification', {
+	constructor({factory, initialValues = {}}: {factory: NodeFactory, initialValues: Record<string, unknown>}) {
+		super({
+			label: 'Field Specification',
+			factory,
+			params: { initialValues },
 			// height: 340,
+			xmlConfig: {
 			xmlTag: 'FieldSpecification',
 			outData: {
 				name: 'fieldSpecification',
 				displayName: 'Field Specification',
 				type: 'fieldSpecification'
 			},
-			initialValues: initialValues,
 			xmlProperties: [
 				{
 					name: 'objectPath',
@@ -38,6 +42,6 @@ export class FieldSpecificationNode extends XmlNode {
 					controlType: 'checkbox'
 				}
 			]
-		});
+		}});
 	}
 }

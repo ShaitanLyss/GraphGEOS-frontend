@@ -4,10 +4,14 @@ import { camlelcaseize, titlelize } from '../../../utils/string';
 import type { Socket } from '../../socket/Socket';
 
 export type XmlNodeParams = NodeParams & {
+	xmlConfig: {
 	xmlTag: string;
 	outData?: OutDataParams;
-	initialValues?: Record<string, unknown>;
 	xmlProperties?: XmlProperty[];
+	};
+	params?: {
+		initialValues?: Record<string, unknown>;
+	}
 };
 
 export abstract class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
@@ -16,16 +20,19 @@ export abstract class XmlNode extends Node<Record<string, Socket>, { value: Sock
 	name = '';
 	xmlTag: string;
 
-	constructor(name: string, config: XmlNodeParams) {
-		super({ label: name, config });
+	constructor(xmlNodeParams: XmlNodeParams) {
+		let initialValues = xmlNodeParams.params?.initialValues;
+		const config = xmlNodeParams.xmlConfig;
+		let name = xmlNodeParams.label;
+		const { outData, xmlProperties } = config;
+		super(xmlNodeParams);
+		name = name !== undefined ? name : '';
 		XmlNode.counts[name] = XmlNode.counts[name] ? XmlNode.counts[name] + BigInt(1) : BigInt(1);
 		this.name = camlelcaseize(name) + XmlNode.counts[name];
 		this.xmlTag = config.xmlTag;
 		console.log(this.name);
 
 		// this.name = name + XmlNode.count;
-		const { outData, xmlProperties } = config;
-		let { initialValues } = config;
 		initialValues = initialValues !== undefined ? initialValues : {};
 
 		if (xmlProperties)

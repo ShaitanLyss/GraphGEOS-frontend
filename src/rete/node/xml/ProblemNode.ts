@@ -1,6 +1,5 @@
 import { XmlNode } from './XmlNode';
-import { Socket } from '../../socket/Socket';
-import { Input } from '../../Input';
+import type { NodeFactory } from '../NodeFactory';
 
 /**
  * This node displays the value of the input.
@@ -8,8 +7,8 @@ import { Input } from '../../Input';
 export class ProblemNode extends XmlNode {
 	width = 180;
 
-	constructor() {
-		super('Problem', { height: 340, xmlTag: 'Problem' });
+	constructor({factory}: {factory: NodeFactory}) {
+		super({label: 'Problem', factory, height:340,  xmlConfig: { xmlTag: 'Problem'} });
 
 		this.addInData({
 			name: 'mesh',

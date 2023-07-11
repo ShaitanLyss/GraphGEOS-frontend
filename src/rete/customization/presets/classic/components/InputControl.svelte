@@ -105,7 +105,6 @@
 			on:input={(e) => {
 				const val = { ...value, x: e.currentTarget.value };
 				data.setValue(val);
-				setValue(val);
 			}}
 			on:pointerdown|stopPropagation={() => false}
 		/>
@@ -118,7 +117,6 @@
 			on:input={(e) => {
 				const val = { ...value, y: e.currentTarget.value };
 				data.setValue(val);
-				setValue(val);
 			}}
 			on:pointerdown|stopPropagation={() => false}
 		/>
@@ -130,7 +128,6 @@
 			on:input={(e) => {
 				const val = { ...value, z: e.currentTarget.value };
 				data.setValue(val);
-				setValue(val);
 			}}
 			on:pointerdown|stopPropagation={() => false}
 		/>
