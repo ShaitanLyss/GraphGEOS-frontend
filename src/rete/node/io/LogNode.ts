@@ -2,8 +2,8 @@ import { Input } from '../../Input';
 import { Socket } from '../../socket/Socket';
 import { Node } from '../Node';
 import { notifications } from '@mantine/notifications';
-import { ClassicPreset } from 'rete';
-import { NodeFactory } from '../NodeFactory';
+import type { NodeFactory } from '../NodeFactory';
+import { InputControl } from '$rete/control/Control';
 
 export class LogNode extends Node {
 	constructor({ message = 'Hello', factory }: { message?: string; factory: NodeFactory }) {
@@ -14,7 +14,7 @@ export class LogNode extends Node {
 		this.addOutExec();
 
 		const messageInput = new Input(new Socket(), 'Message');
-		messageInput.addControl(new ClassicPreset.InputControl('text', { initial: message }));
+		messageInput.addControl(new InputControl('text', { initial: message }));
 		this.addInput('message', messageInput);
 	}
 

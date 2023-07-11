@@ -2,167 +2,23 @@
 	import type { InputControl } from '$rete/control/Control';
 	export let data: InputControl<unknown>;
 	let type = data.type;
-	let readOnly = data.readonly;
+	let readonly = data.readonly;
 	let value = data.value;
+	let debouncedValue = value;
+	let debouncedTimer: NodeJS.Timeout | undefined;
 	let options = data.options;
+
+	$: data.setValue(debouncedValue)
 
 	function change(event: Event) {
 		const target = event.target as HTMLInputElement;
 		const val = data.type === 'number' ? +target.value : target.value;
-		data.setValue(val);
+		clearTimeout(debouncedTimer);
+		debouncedTimer = setTimeout(() => {
+			debouncedValue = val;
+		}, 200);
 	}
-
-	// switch (props.data.type) {
-	// 	case 'checkbox':
-	// 		return (
-	// 			<Checkbox
-	// 				value={value?.toString()}
-	// 				checked={value as boolean}
-	// 				ref={ref}
-	// 				readOnly={props.data.readonly}
-	// 				// color='red'
-	// 				onChange={(e) => {
-	// 					const val = e.currentTarget.checked as InputControlValueType<T>;
-	// 					props.data.setValue(val);
-	// 					setValue(val);
-
-	// 					// options.change(e.currentTarget.checked);
-	// 				}}
-	// 				label={options?.label}
-	// 				sx={{ ['& .mantine-Checkbox-label']: { color: 'white' } }}
-	// 			/>
-	// 		);
-	// 	case 'number':
-	// 		// print yes if you know mantine
-
-	// 		return (
-	// 			<NumberInput
-	// 				value={value as number}
-	// 				label={options?.label}
-	// 				ref={ref}
-	// 				readOnly={props.data.readonly}
-	// 				step={0.01}
-	// 				precision={3}
-	// 				removeTrailingZeros={true}
-	// 				onChange={(number) => {
-	// 					const val = number as InputControlValueType<T>;
-	// 					props.data.setValue(val);
-	// 					setValue(val);
-	// 				}}
-	// 				sx={{ ['& .mantine-NumberInput-label']: { color: 'white' } }}
-	// 			/>
-	// 		);
-	// 	case 'text':
-	// 		return (
-	// 			<TextInput
-	// 				value={value as string}
-	// 				label={options?.label}
-	// 				ref={ref}
-	// 				readOnly={props.data.readonly}
-	// 				onChange={(e) => {
-	// 					if (props.data.options?.change)
-	// 						props.data.options?.change(e.currentTarget.value as InputControlValueType<T>);
-	// 					const val = e.currentTarget.value as InputControlValueType<T>;
-	// 					props.data.setValue(val);
-	// 					setValue(val);
-	// 				}}
-	// 				sx={{ ['& .mantine-TextInput-label']: { color: 'white' } }}
-	// 			/>
-	// 		);
-	// 	case 'textarea':
-	// 		return (
-	// 			<>
-	// 				<div ref={mergedRef}>
-	// 					<Textarea
-	// 						value={value as string}
-	// 						label={options?.label}
-	// 						autosize
-	// 						readOnly={props.data.readonly}
-	// 						onChange={(e) => {
-	// 							// if (props.data.options?.change)
-	// 							// 	props.data.options?.change(e.currentTarget.value as InputControlValueType<T>);
-
-	// 							const val = e.currentTarget.value as InputControlValueType<T>;
-	// 							props.data.setValue(val);
-
-	// 							setValue(val);
-	// 						}}
-	// 						sx={{ ['& .mantine-Textarea-label']: { color: 'white' } }}
-	// 						onHeightChange={(height, info) => {
-	// 							options?.onHeightChange && options?.onHeightChange(height, info);
-	// 						}}
-	// 					/>
-	// 				</div>
-	// 			</>
-	// 		);
-	// 	case 'vector':
-	// 		return (
-	// 			<>
-	// 				<div ref={mergedRef}>
-	// 					<Text style={{ color: 'white' }}>{options?.label}</Text>
-	// 					<Group>
-	// 						<NumberInput
-	// 							value={value?.x as number}
-	// 							// label='X'
-	// 							ref={ref}
-	// 							readOnly={props.data.readonly}
-	// 							step={0.01}
-	// 							precision={3}
-	// 							rightSectionWidth={'0.001'}
-	// 							removeTrailingZeros={true}
-	// 							style={{ width: '7ch' }}
-	// 							hideControls={true}
-	// 							// styles={{rightSection: {width: "1.65em"}}}
-	// 							onChange={(number) => {
-	// 								const val = { ...value, x: number } as InputControlValueType<T>;
-	// 								props.data.setValue(val);
-	// 								setValue(val);
-	// 							}}
-	// 							sx={{ ['& .mantine-NumberInput-label']: { color: 'white' } }}
-	// 						/>
-	// 						<NumberInput
-	// 							value={value?.y as number}
-	// 							// label='Y'
-	// 							ref={ref}
-	// 							readOnly={props.data.readonly}
-	// 							step={0.01}
-	// 							precision={3}
-	// 							style={{ width: '7ch' }}
-	// 							hideControls={true}
-	// 							// styles={{rightSection: {width: "1.65em"}}}
-	// 							removeTrailingZeros={true}
-	// 							onChange={(number) => {
-	// 								const val = { ...value, y: number } as InputControlValueType<T>;
-	// 								props.data.setValue(val);
-	// 								setValue(val);
-	// 							}}
-	// 							sx={{ ['& .mantine-NumberInput-label']: { color: 'white' } }}
-	// 						/>
-	// 						<NumberInput
-	// 							value={value?.z as number}
-	// 							// label='Z'
-	// 							ref={ref}
-	// 							readOnly={props.data.readonly}
-	// 							step={0.01}
-	// 							precision={3}
-	// 							style={{ width: '7ch' }}
-	// 							hideControls={true}
-	// 							// styles={{rightSection: {width: "1.65em"}}}
-	// 							removeTrailingZeros={true}
-	// 							onChange={(number) => {
-	// 								const val = { ...value, z: number } as InputControlValueType<T>;
-	// 								props.data.setValue(val);
-	// 								setValue(val);
-	// 							}}
-	// 							sx={{ ['& .mantine-NumberInput-label']: { color: 'white' } }}
-	// 						/>
-	// 					</Group>
-	// 				</div>
-	// 			</>
-	// 		);
-	// }
 </script>
-
 {#if type == 'checkbox'}
 	<label class="label">
 		<input
@@ -171,15 +27,97 @@
 			class="checkbox"
 			{value}
 			checked={value}
-			{readOnly}
-			onChange={(e) => {
+			readOnly={readonly}
+			on:change={(e) => {
 				const val = e.currentTarget.checked;
+				console.log(val);
+				
 				data.setValue(val);
 				// options.change(e.currentTarget.checked);
 			}}
 			label={options?.label}
 		/>
 		<span class="">{options?.label}</span>
+	</label>
+{/if}
+{#if type == "number"}
+	<label class="label">
+		{options?.label}
+		<input
+			type="number"
+			class="input"
+			{value}
+			readOnly={readonly}
+			on:input={change}
+			on:pointerdown|stopPropagation={() => false}
+		/>
+	</label>
+{/if}
+{#if type == "text"}
+	<label class="label">
+		{options?.label ? options?.label : ""}
+		<input
+			type="text"
+			class="input"
+			{value}
+			on:input={change}
+			readonly={readonly}
+			on:pointerdown|stopPropagation={() => false}
+		/>
+	</label>
+{/if}
+{#if type == "textarea"}
+	<label class="label">
+		{options?.label}
+		<textarea
+			class="input"
+			{value}
+			readonly={readonly}
+			on:input={change}
+			on:pointerdown|stopPropagation={() => false}
+		/>
+	</label>
+{/if}
+{#if type == "vector"}
+	<label class="label">
+		{options?.label}
+		<input
+			type="number"
+			class="input"
+			value={value.x}
+			readOnly={readonly}
+			on:input={(e) => {
+				const val = { ...value, x: e.currentTarget.value };
+				data.setValue(val);
+				setValue(val);
+			}}
+			on:pointerdown|stopPropagation={() => false}
+		/>
+		<input
+			type="number"
+			class="input"
+			value={value.y}
+			
+			{readonly}
+			on:input={(e) => {
+				const val = { ...value, y: e.currentTarget.value };
+				data.setValue(val);
+				setValue(val);
+			}}
+			on:pointerdown|stopPropagation={() => false}
+		/>
+		<input
+			type="number"
+			class="input"
+			value={value.z}
+			{readonly}
+			on:input={(e) => {
+				const val = { ...value, z: e.currentTarget.value };
+				data.setValue(val);
+				setValue(val);
+			}}
+			on:pointerdown|stopPropagation={() => false}
+		/>
 	</label>
 {/if}
 
