@@ -37,6 +37,8 @@ export class MakeArrayNode extends AddPinNode {
 		});
 
 		this.initialValues = initialValues;
+		
+		
 
 		this.addOutData({ name: 'array', isArray: true, type: this.state.type });
 		this.loadInitialValues();
@@ -88,6 +90,7 @@ export class MakeArrayNode extends AddPinNode {
 		if (this.state.type === to) return;
 
 		this.state.type = to;
+		this.width = this.state.type === 'vector' ? 320 : 150;
 
 		for (const input of Object.values(this.inputs)) {
 			if (input) {
@@ -135,6 +138,7 @@ export class MakeArrayNode extends AddPinNode {
 		this.height += 36;
 		this.changeInputType(this.inputs[`data-${index}`] as Input<Socket>, this.state.type);
 		this.loadInitialValues();
+		
 		// this.getDataflowEngine().reset(this.id);
 		// this.factory.dataflowEngine?.reset(this.id);
 		this.updateElement('node', this.id);
@@ -146,6 +150,7 @@ export class MakeArrayNode extends AddPinNode {
 	}
 	override applyState(): void {
 		super.applyState();
+		this.width = this.state.type === 'vector' ? 250: 150;
 		this.changeInputType(this.inputs['data-0'] as Input<Socket>, this.state.type);
 	}
 }

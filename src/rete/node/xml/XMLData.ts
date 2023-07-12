@@ -1,4 +1,14 @@
-import type { XmlProperty, XmlPropertyDefinition } from './types';
+
+function arrayToXml(obj: object): string {
+	if (obj instanceof Array) {
+		return '{ ' + obj.map((value) => arrayToXml(value)).join(', ') + ' }';
+	}
+	if (typeof obj === "boolean") {
+		return obj ? '1' : '0';
+	}
+	return obj.toString();
+
+}
 
 export class XMLData {
 	tag: string;
@@ -28,7 +38,8 @@ export class XMLData {
 		if (this.name) xml += ` name="${this.name}"`;
 
 		Object.entries(this.properties).forEach(([name, value]) => {
-			const val = value instanceof Array ? `{ ${value.join(', ')} }` : value;
+			const val = arrayToXml(value);
+
 			xml += ` ${name}="${val}"`;
 		});
 		if (this.children.length === 0) xml += '/>';

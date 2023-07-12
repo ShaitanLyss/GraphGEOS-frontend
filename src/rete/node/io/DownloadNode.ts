@@ -14,6 +14,22 @@ export class DownloadNode extends Node {
 				const inputs = await this.fetchInputs();
 				const data = this.getData('data', inputs) as XMLData;
 				console.log(xmlFormat(data.toXml()));
+
+				// download to computer
+				const element = document.createElement('a');
+
+				element.setAttribute(
+					'href',
+					'data:text/plain;charset=utf-8,' + encodeURIComponent(xmlFormat(data.toXml()))
+				);
+				element.setAttribute('download', 'geosx.xml');
+
+				element.style.display = 'none';
+				document.body.appendChild(element);
+
+				element.click();
+
+				document.body.removeChild(element);	
 			})
 		);
 	}

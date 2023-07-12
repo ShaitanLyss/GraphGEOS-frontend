@@ -4,11 +4,11 @@ import { ButtonControl } from '$rete/control/button/button';
 
 /**
  * This node displays the value of the input.
- */
+*/
 export class ProblemNode extends XmlNode {
 	width = 180;
 
-	constructor({ factory }: { factory: NodeFactory }) {
+	constructor({ factory }: { factory: NodeFactory}) {
 		super({
 			label: 'Problem',
 			factory,
@@ -20,9 +20,17 @@ export class ProblemNode extends XmlNode {
 					displayName: 'Problem',
 					type: 'xmlProblem'
 				}
-			}
+			},
 		});
-
+		
+		this.addXmlInData({
+			name: 'solvers',
+			tag: 'Solvers',
+			// displayName: 'Solver',
+			// socketLabel: 'Solver',
+			isArray: true,
+			type: 'solver'
+		});
 		this.addXmlInData({
 			name: 'mesh',
 			tag: 'Mesh',
@@ -68,14 +76,6 @@ export class ProblemNode extends XmlNode {
 		});
 
 		// Setup input
-		this.addXmlInData({
-			name: 'solver',
-			tag: 'Solver',
-			// displayName: 'Solver',
-			// socketLabel: 'Solver',
-			isArray: true,
-			type: 'string'
-		});
 
 		// this.addInData({
 

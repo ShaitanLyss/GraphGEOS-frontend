@@ -2,12 +2,23 @@ export function capitalize(str: string): string {
 	return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+// split on capital letters that are followed by non capital letters or
+// preceded by non capital letters
+// and join with spaces
 export function titlelize(str: string): string {
 	return str
-		.split(/(?=[A-Z])/)
+		.split(/(?=(?<=[^A-Z])[A-Z])/)
+		
 		.map(capitalize)
 		.join(' ');
 }
+
+// export function titlelize(str: string): string {
+// 	return str
+// 		.split(/(?=[A-Z])/)
+// 		.map(capitalize)
+// 		.join(' ');
+// }
 
 // remove spaces and capitalize all but first letter
 export function camlelcaseize(str: string): string {
