@@ -7,6 +7,8 @@
 	import { forEachExample } from '$rete/example/for_each';
 	import { acquisitionModelingExample } from '$rete/example/acquisition-modeling';
 	import { acquisitionXmlExample } from '$rete/example/acquisition-xml';
+	
+
 </script>
 
 <div class="h-screen">

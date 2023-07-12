@@ -14,6 +14,7 @@
 	// Finally, your application's global stylesheet (sometimes labeled 'app.css')
 	// import 'app.css'
 	import '../app.postcss';
+	import '$rete/setup/appLaunch';
 
 	import { AppShell, LightSwitch, Modal, type ModalComponent } from '@skeletonlabs/skeleton';
 	const modalComponentRegistry: Record<string, ModalComponent> = {

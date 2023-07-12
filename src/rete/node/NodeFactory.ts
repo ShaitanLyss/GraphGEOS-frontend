@@ -49,7 +49,6 @@ export class NodeFactory {
 		await this.editor.clear();
 		this.editor.setName(editorSaveData.editorName);
 		const nodes = new Map<string, Node>();
-
 		for (const nodeSaveData of editorSaveData.nodes) {
 			const nodeClass = NodeFactory.classRegistry[nodeSaveData.type];
 			if (nodeClass) {
@@ -69,12 +68,16 @@ export class NodeFactory {
 					}
 				}
 				nodes.set(nodeSaveData.id, node);
+
 				await this.editor.addNode(node);
 				if (nodeSaveData.position)
 					this.area.translate(nodeSaveData.id, {
 						x: nodeSaveData.position.x,
 						y: nodeSaveData.position.y
 					});
+			} else {
+				console.log('Node class not found', nodeSaveData.type);
+				throw new Error(`Node class ${nodeSaveData.type} not found`);
 			}
 		}
 

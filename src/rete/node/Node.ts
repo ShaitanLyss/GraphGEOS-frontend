@@ -125,7 +125,6 @@ export class Node<
 				inputControlValues[key] = value;
 			}
 		}
-
 		// TODO: for all nodes, move state to params
 		// TODO: add control values to JSON return
 		// TODO: adapt node factory to adapt to new JSON format
