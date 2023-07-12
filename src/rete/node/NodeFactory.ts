@@ -140,6 +140,15 @@ export class NodeFactory {
 		this.editor
 			.getNodes()
 			// .filter((n) => n instanceof AddNode || n instanceof DisplayNode)
-			.forEach((n) => this.dataflowEngine.fetch(n.id));
+			.forEach((n) => {
+				try {
+					this.dataflowEngine.fetch(n.id)
+				} catch (e) {
+					if (e && e.message === "cancelled") {
+						console.warn("cancelled process", n.id)
+					} else {
+						throw e
+					}
+				}});
 	}
 }

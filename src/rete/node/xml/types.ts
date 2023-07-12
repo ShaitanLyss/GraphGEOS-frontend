@@ -10,9 +10,14 @@ type PropertyNames<T> = {
 	[K in keyof T]: K;
 }[keyof T];
 
-export type XmlProperty = {
+export type XmlPropertyDefinition = {
 	name: string;
 	type: SocketType;
 	controlType?: InputControlTypes;
 	isArray?: boolean;
 };
+
+export type XmlProperty = {
+	name: string;
+	value: unknown;
+}

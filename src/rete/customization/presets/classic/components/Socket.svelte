@@ -7,7 +7,7 @@
 	let socketVars = { background: assignColor(data)  };
 	$: {
 		socketVars = { background: assignColor(data)  };
-		console.log("move to ", data.type)
+		// console.log("move to ", data.type)
 	}
 	setInterval(() => {
 		socketVars = { background: assignColor(data)  };
@@ -15,11 +15,13 @@
 
 </script>
 
-<div class="socket" title={data.name} use:cssVars={socketVars} />
+<div class="socket {data.isArray ? 'array' : ''}" title={data.name} use:cssVars={socketVars} />
 
 <style lang="scss" scoped>
 	@use 'sass:math';
 	@import '../vars';
+
+	
 
 	.socket {
 		display: inline-block;
@@ -49,5 +51,10 @@
 		&.rete-input {
 			margin-left: -1 * math.div($socket-size, 2);
 		} */
+	}
+	.array {
+		border: 4px dashed var(--background);
+		background: none;
+		border-radius: 0%;
 	}
 </style>

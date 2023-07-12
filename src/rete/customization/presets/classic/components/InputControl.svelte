@@ -97,6 +97,7 @@
 {#if type == "vector"}
 	<label class="label">
 		{options?.label}
+		<div class="flex">
 		<input
 			type="number"
 			class="input"
@@ -131,6 +132,7 @@
 			}}
 			on:pointerdown|stopPropagation={() => false}
 		/>
+		</div>
 	</label>
 {/if}
 

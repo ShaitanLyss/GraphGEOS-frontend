@@ -21,7 +21,8 @@ export type SocketType =
 	| 'output'
 	| 'pythonObject'
 	| 'pythonProperty'
-	| 'solver';
+	| 'solver'
+	| 'xmlProblem';
 
 export function isConnectionInvalid(outputSocket: Socket, inputSocket: Socket) {
 	return (

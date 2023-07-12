@@ -1,5 +1,6 @@
 import { XmlNode } from './XmlNode';
 import type { NodeFactory } from '../NodeFactory';
+import { ButtonControl } from '$rete/control/button/button';
 
 /**
  * This node displays the value of the input.
@@ -7,71 +8,90 @@ import type { NodeFactory } from '../NodeFactory';
 export class ProblemNode extends XmlNode {
 	width = 180;
 
-	constructor({factory}: {factory: NodeFactory}) {
-		super({label: 'Problem', factory, height:340,  xmlConfig: { xmlTag: 'Problem'} });
+	constructor({ factory }: { factory: NodeFactory }) {
+		super({
+			label: 'Problem', factory,
+			xmlConfig: {
+				noName: true,
+				xmlTag: 'Problem',
+				outData: {
+					name: 'problem',
+					displayName: 'Problem',
+					type: 'xmlProblem'
+				},
+			}
+		});
 
-		this.addInData({
+		this.addXmlInData({
 			name: 'mesh',
-			displayName: 'Mesh',
-			socketLabel: 'Mesh',
+			tag: 'Mesh',
+			// displayName: 'Mesh',
+			// socketLabel: 'Mesh',
 			type: 'mesh'
 		});
 
-		this.addInData({
+		this.addXmlInData({
 			name: 'geometry',
-			displayName: 'Geometry',
-			socketLabel: 'Geometry',
+			tag: 'Geometry',
+			// displayName: 'Geometry',
+			// socketLabel: 'Geometry',
 			isArray: true,
 			type: 'geometry'
 		});
 
-		this.addInData({
+		this.addXmlInData({
 			name: 'numericalMethods',
-			displayName: 'Numerical Methods',
-			socketLabel: 'Numerical Methods',
+			tag: 'NumericalMethods',
+			// displayName: 'Numerical Methods',
+			// socketLabel: 'Numerical Methods',
 			isArray: true,
 			type: 'numericalMethod'
 		});
 
-		this.addInData({
+		this.addXmlInData({
 			name: 'elementRegions',
-			displayName: 'Element Regions',
-			socketLabel: 'Element Regions',
+			tag: 'ElementRegions',
+			// displayName: 'Element Regions',
+			// socketLabel: 'Element Regions',
 			isArray: true,
 			type: 'elementRegion'
 		});
 
-		this.addInData({
+		this.addXmlInData({
 			name: 'constitutive',
-			displayName: 'Constitutive',
-			socketLabel: 'Constitutive',
+			tag: 'Constitutive',
+			// displayName: 'Constitutive',
+			// socketLabel: 'Constitutive',
 			isArray: true,
 			type: 'constitutive'
 		});
 
 		// Setup input
-		this.addInData({
+		this.addXmlInData({
 			name: 'solver',
-			displayName: 'Solver',
-			socketLabel: 'Solver',
+			tag: 'Solver',
+			// displayName: 'Solver',
+			// socketLabel: 'Solver',
 			isArray: true,
 			type: 'string'
 		});
 
 		// this.addInData({
 
-		this.addInData({
+		this.addXmlInData({
 			name: 'fieldSpecifications',
-			displayName: 'Field Specifications',
-			socketLabel: 'Field Specifications',
+			tag: 'FieldSpecifications',
+			// displayName: 'Field Specifications',
+			// socketLabel: 'Field Specifications',
 			isArray: true,
 			type: 'fieldSpecification'
 		});
 
-		this.addInData({
+		this.addXmlInData({
 			name: 'outputs',
-			displayName: 'Outputs',
-			socketLabel: 'Outputs',
+			tag: 'Outputs',
+			// displayName: 'Outputs',
+			// socketLabel: 'Outputs',
 			isArray: true,
 			type: 'output'
 		});

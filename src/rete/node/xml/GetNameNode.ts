@@ -1,10 +1,11 @@
-import { Socket } from '../../socket/Socket';
+import type { Socket } from '../../socket/Socket';
 import { Node } from '../Node';
-import { type XmlData } from './types';
+import type { NodeFactory } from '../NodeFactory';
+import type { XmlData } from './types';
 
 export class GetNameNode extends Node<{ xml: Socket }, { name: Socket }> {
-	constructor() {
-		super('GetName');
+	constructor({factory}: { factory: NodeFactory}) {
+		super({label: 'GetName', factory});
 		this.addInData({
 			name: 'xml',
 			displayName: 'XML',

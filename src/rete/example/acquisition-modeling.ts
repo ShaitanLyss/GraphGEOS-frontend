@@ -1,7 +1,5 @@
 import { SEGYAcquisitionNode } from '../node/makutu/acquisition/SEGYAcquisitionNode';
 import { StartNode } from '../node/control/StartNode';
-import { Connection } from '../node/Node';
-import { NodeEditor } from '../NodeEditor';
 import { ForEachNode } from '../node/control/ForEachNode';
 import { BreakNode } from '../node/makutu/acquisition/BreakNode';
 import { AcousticSEMNode } from '../node/makutu/solver/AcousticSEMNode';
@@ -13,15 +11,13 @@ import { AppendNode } from '../node/io/AppendNode';
 import { TimeLoopNode } from '../node/control/TimeLoopNode';
 import { OutputVtkNode } from '../node/makutu/solver/OutputVtk';
 import { EveryNode } from '../node/control/EveryNode';
-import { MakeArrayNode } from '../node/data/MakeArrayNode';
-import { NumberNode } from '../node/math/NumberNode';
 import { SequenceNode } from '../node/control/SequenceNode';
 import { LogNode } from '../node/io/LogNode';
 import { ExecuteNode } from '../node/makutu/solver/ExecuteNode';
 import { FormatNode } from '../node/io/FormatNode';
 import { GetPressuresAtReceiversNode } from '../node/makutu/solver/GetPressureAtReceiversNode';
-import { EditorExample } from './types';
-import { NodeFactory } from '../node/NodeFactory';
+import type { EditorExample } from './types';
+import type { NodeFactory } from '../node/NodeFactory';
 
 export const acquisitionModelingExample: EditorExample = async (factory: NodeFactory) => {
 	const editor = factory.getEditor();

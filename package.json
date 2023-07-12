@@ -89,6 +89,7 @@
 		"rete-connection-plugin": "^2.0.0-beta.13",
 		"rete-engine": "^2.0.0-beta.7",
 		"rete-render-utils": "^2.0.0-beta.15",
-		"svelte-i18n": "^3.6.0"
+		"svelte-i18n": "^3.6.0",
+		"xml-formatter": "^3.4.1"
 	}
 }
