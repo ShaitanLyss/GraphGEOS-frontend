@@ -58,7 +58,7 @@
 {/if}
 {#if type == 'number'}
 	<label class="label">
-	<span class="text-white">	{options?.label ? options?.label : ''}</span>
+		<span class="text-white"> {options?.label ? options?.label : ''}</span>
 		<input
 			type="number"
 			class="input"
@@ -72,7 +72,7 @@
 {#if type == 'text'}
 	<label class="label">
 		<!-- {options?.label ? options?.label : ''} -->
-		<span class="text-white">	{options?.label ? options?.label : ''}</span>
+		<span class="text-white"> {options?.label ? options?.label : ''}</span>
 		<input
 			type="text"
 			class="input"
@@ -86,7 +86,7 @@
 {#if type == 'textarea'}
 	<label class="label">
 		<!-- {options?.label} -->
-		<span class="text-white">	{options?.label ? options?.label : ''}</span>
+		<span class="text-white"> {options?.label ? options?.label : ''}</span>
 		<textarea
 			class="input"
 			{value}
@@ -98,7 +98,6 @@
 {/if}
 {#if type == 'vector'}
 	<label class="label">
-
 		{options?.label ? options?.label : ''}
 		<div class="flex">
 			<input

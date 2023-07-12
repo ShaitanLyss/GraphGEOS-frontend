@@ -8,7 +8,7 @@ export function capitalize(str: string): string {
 export function titlelize(str: string): string {
 	return str
 		.split(/(?=(?<=[^A-Z])[A-Z])/)
-		
+
 		.map(capitalize)
 		.join(' ');
 }

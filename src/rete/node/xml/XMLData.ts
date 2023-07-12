@@ -1,13 +1,11 @@
-
 function arrayToXml(obj: object): string {
 	if (obj instanceof Array) {
 		return '{ ' + obj.map((value) => arrayToXml(value)).join(', ') + ' }';
 	}
-	if (typeof obj === "boolean") {
+	if (typeof obj === 'boolean') {
 		return obj ? '1' : '0';
 	}
 	return obj.toString();
-
 }
 
 export class XMLData {

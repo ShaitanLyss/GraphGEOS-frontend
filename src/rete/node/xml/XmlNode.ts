@@ -48,8 +48,7 @@ export abstract class XmlNode extends Node<Record<string, Socket>, { value: Sock
 		if (xmlProperties)
 			xmlProperties.forEach(({ name, type, isArray, controlType }) => {
 				this.xmlProperties.add(name);
-				if (type === 'vector')
-					this.xmlVectorProperties.add(name);
+				if (type === 'vector') this.xmlVectorProperties.add(name);
 
 				this.addInData({
 					name: name,
@@ -83,18 +82,17 @@ export abstract class XmlNode extends Node<Record<string, Socket>, { value: Sock
 			const data = this.getData(key, inputs);
 			if (data) {
 				if (tag) {
-				const childChildren: Array<XMLData> = data instanceof Array ? data : [data];
+					const childChildren: Array<XMLData> = data instanceof Array ? data : [data];
 
-				children.push(
-					new XMLData({
-						tag: tag,
-						children: childChildren,
-						properties: {}
-					})
-				);
-				}
-				else {
-					children.push(data)
+					children.push(
+						new XMLData({
+							tag: tag,
+							children: childChildren,
+							properties: {}
+						})
+					);
+				} else {
+					children.push(data);
 				}
 			}
 		}
@@ -112,21 +110,20 @@ export abstract class XmlNode extends Node<Record<string, Socket>, { value: Sock
 
 	getProperties(inputs?: Record<string, unknown>): Record<string, unknown> {
 		const properties: Record<string, unknown> = {};
-		const isArray =  (key: string) => (this.inputs[key]?.socket as Socket).isArray;
+		const isArray = (key: string) => (this.inputs[key]?.socket as Socket).isArray;
 		for (const key of this.xmlProperties) {
 			let data = this.getData(key, inputs);
 			if (data) {
 				if (isArray(key) && !(data instanceof Array)) {
 					data = [data];
-				} 
-				if (this.xmlVectorProperties.has(key) ) {
+				}
+				if (this.xmlVectorProperties.has(key)) {
 					if (isArray(key)) {
-						properties[key] = (data as Array<Record<string, number>>)
-						.map((value) => Object.values(value));
-						
-					}else
-					properties[key] = Object.values(data);
-				}else {
+						properties[key] = (data as Array<Record<string, number>>).map((value) =>
+							Object.values(value)
+						);
+					} else properties[key] = Object.values(data);
+				} else {
 					properties[key] = data;
 				}
 			}
@@ -145,7 +142,6 @@ export abstract class XmlNode extends Node<Record<string, Socket>, { value: Sock
 		type?: SocketType;
 		isArray?: boolean;
 	}) {
-		
 		this.xmlInputs[name] = { tag: tag };
 		this.addInData({
 			name: name,

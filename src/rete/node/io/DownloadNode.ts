@@ -29,7 +29,7 @@ export class DownloadNode extends Node {
 
 				element.click();
 
-				document.body.removeChild(element);	
+				document.body.removeChild(element);
 			})
 		);
 	}
