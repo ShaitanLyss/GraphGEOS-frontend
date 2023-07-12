@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import Ref from '../../../Ref.svelte';
+	// import Ref from '../../../Ref.svelte';
 	import type { ClassicScheme, SvelteArea2D } from '../types';
+	import { Ref } from 'rete-svelte-plugin';
 	type NodeExtraData = { width?: number; height?: number };
 
 	function sortByIndex<K, I extends undefined | { index?: number }>(entries: [K, I][]) {

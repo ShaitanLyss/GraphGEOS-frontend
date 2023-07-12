@@ -5324,7 +5324,7 @@ vite-plugin-watch-and-run@^1.1.0:
   optionalDependencies:
     fsevents "~2.3.2"
 
-vite@^4.1.1:
+vite@^4.1.1, vite@^4.3.0:
   version "4.4.3"
   resolved "https://registry.yarnpkg.com/vite/-/vite-4.4.3.tgz#dfaf86f4cba3058bf2724e2e2c88254fb0f21a5a"
   integrity sha512-IMnXQXXWgLi5brBQx/4WzDxdzW0X3pjO4nqFJAuNvwKtxzAmPzFE1wszW3VDpAGQJm3RZkm/brzRdyGsnwgJIA==
@@ -5332,17 +5332,6 @@ vite@^4.1.1:
     esbuild "^0.18.10"
     postcss "^8.4.25"
     rollup "^3.25.2"
-  optionalDependencies:
-    fsevents "~2.3.2"
-
-vite@^4.3.0:
-  version "4.3.9"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-4.3.9.tgz#db896200c0b1aa13b37cdc35c9e99ee2fdd5f96d"
-  integrity sha512-qsTNZjO9NoJNW7KnOrgYwczm0WctJ8m/yqYAMAK9Lxt4SoySUfS5S8ia9K7JHpa3KEeMfyF8LoJ3c5NeBJy6pg==
-  dependencies:
-    esbuild "^0.17.5"
-    postcss "^8.4.23"
-    rollup "^3.21.0"
   optionalDependencies:
     fsevents "~2.3.2"
 

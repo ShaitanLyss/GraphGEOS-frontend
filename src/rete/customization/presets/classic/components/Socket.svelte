@@ -5,13 +5,14 @@
 	import cssVars from 'svelte-css-vars';
 
 	let socketVars = { background: assignColor(data) };
+	console.log("yooo");
 	$: {
 		socketVars = { background: assignColor(data) };
 		// console.log("move to ", data.type)
 	}
-	setInterval(() => {
-		socketVars = { background: assignColor(data) };
-	}, 200);
+	// setInterval(() => {
+	// 	socketVars = { background: assignColor(data) };
+	// }, 200);
 </script>
 
 <div class="socket {data.isArray ? 'array' : ''}" title={data.name} use:cssVars={socketVars} />
