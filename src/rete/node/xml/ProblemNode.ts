@@ -10,7 +10,8 @@ export class ProblemNode extends XmlNode {
 
 	constructor({ factory }: { factory: NodeFactory }) {
 		super({
-			label: 'Problem', factory,
+			label: 'Problem',
+			factory,
 			xmlConfig: {
 				noName: true,
 				xmlTag: 'Problem',
@@ -18,7 +19,7 @@ export class ProblemNode extends XmlNode {
 					name: 'problem',
 					displayName: 'Problem',
 					type: 'xmlProblem'
-				},
+				}
 			}
 		});
 

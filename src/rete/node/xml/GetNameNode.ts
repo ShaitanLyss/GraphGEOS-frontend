@@ -4,8 +4,8 @@ import type { NodeFactory } from '../NodeFactory';
 import type { XmlData } from './types';
 
 export class GetNameNode extends Node<{ xml: Socket }, { name: Socket }> {
-	constructor({factory}: { factory: NodeFactory}) {
-		super({label: 'GetName', factory});
+	constructor({ factory }: { factory: NodeFactory }) {
+		super({ label: 'GetName', factory });
 		this.addInData({
 			name: 'xml',
 			displayName: 'XML',

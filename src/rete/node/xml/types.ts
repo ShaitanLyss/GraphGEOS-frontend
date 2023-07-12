@@ -20,4 +20,4 @@ export type XmlPropertyDefinition = {
 export type XmlProperty = {
 	name: string;
 	value: unknown;
-}
+};

@@ -4,15 +4,14 @@
 	import { assignColor } from '$rete/customization/utils';
 	import cssVars from 'svelte-css-vars';
 
-	let socketVars = { background: assignColor(data)  };
+	let socketVars = { background: assignColor(data) };
 	$: {
-		socketVars = { background: assignColor(data)  };
+		socketVars = { background: assignColor(data) };
 		// console.log("move to ", data.type)
 	}
 	setInterval(() => {
-		socketVars = { background: assignColor(data)  };
+		socketVars = { background: assignColor(data) };
 	}, 200);
-
 </script>
 
 <div class="socket {data.isArray ? 'array' : ''}" title={data.name} use:cssVars={socketVars} />
@@ -20,8 +19,6 @@
 <style lang="scss" scoped>
 	@use 'sass:math';
 	@import '../vars';
-
-	
 
 	.socket {
 		display: inline-block;

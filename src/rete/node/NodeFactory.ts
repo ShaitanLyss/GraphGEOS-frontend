@@ -142,13 +142,14 @@ export class NodeFactory {
 			// .filter((n) => n instanceof AddNode || n instanceof DisplayNode)
 			.forEach((n) => {
 				try {
-					this.dataflowEngine.fetch(n.id)
+					this.dataflowEngine.fetch(n.id);
 				} catch (e) {
-					if (e && e.message === "cancelled") {
-						console.warn("cancelled process", n.id)
+					if (e && e.message === 'cancelled') {
+						console.warn('cancelled process', n.id);
 					} else {
-						throw e
+						throw e;
 					}
-				}});
+				}
+			});
 	}
 }

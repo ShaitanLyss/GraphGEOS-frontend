@@ -85,7 +85,7 @@
 			<div class="flex">
 				<TabGroup>
 					{#each editors as editor, index (index)}
-						<div role="button" tabindex="{index}" on:dblclick={() => openChangeTabNameModal(index)}>
+						<div role="button" tabindex={index} on:dblclick={() => openChangeTabNameModal(index)}>
 							<!-- use:draggable={draggableTabOptions}
 						> -->
 							<Tab bind:group={$tabSet} name="tab{index}" value={editor.key}>{tabNames[index]}</Tab>

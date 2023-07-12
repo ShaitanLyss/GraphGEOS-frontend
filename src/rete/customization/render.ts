@@ -15,8 +15,8 @@ import CustomExecSocket from '$custom-components/ExecSocket.svelte';
 import CustomSocket from '$custom-components/Socket.svelte';
 import type { Setup } from '../setup/Setup';
 import { SveltePlugin, Presets } from 'rete-svelte-plugin';
-import { InputControl } from "$rete/control/Control";
-import InputControlComponent from "$rete/customization/presets/classic/components/InputControl.svelte";
+import { InputControl } from '$rete/control/Control';
+import InputControlComponent from '$rete/customization/presets/classic/components/InputControl.svelte';
 import { Socket } from '$rete/socket/Socket';
 
 export class RenderSetup implements Setup {

@@ -26,8 +26,7 @@ export class NumberNode extends Node {
 
 	data(): Record<string, unknown> | Promise<Record<string, unknown>> {
 		return {
-			value:
-				this.controls.value instanceof InputControl ? this.controls.value.value : 0
+			value: this.controls.value instanceof InputControl ? this.controls.value.value : 0
 		};
 	}
 }

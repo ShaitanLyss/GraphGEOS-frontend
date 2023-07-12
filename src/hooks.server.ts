@@ -14,7 +14,7 @@ import {
 
 import { GraphQlAdapter } from './backend-interaction/graphql-adapter';
 import type { AuthConfig } from '@auth/core';
-import '$rete/setup/appLaunch'
+import '$rete/setup/appLaunch';
 
 // import serviceAccount from "../makutu-ui-firebase-adminsdk-xj056-228c3ee633.json"
 

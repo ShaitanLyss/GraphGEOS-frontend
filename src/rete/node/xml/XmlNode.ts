@@ -14,7 +14,7 @@ export type XmlNodeParams = NodeParams & {
 	};
 	params?: {
 		initialValues?: Record<string, unknown>;
-	}
+	};
 };
 
 export abstract class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
@@ -79,14 +79,15 @@ export abstract class XmlNode extends Node<Record<string, Socket>, { value: Sock
 			const data = this.getData(key, inputs);
 			if (data) {
 				const childChildren: Array<XMLData> = data instanceof Array ? data : [data];
-				children.push(new XMLData({
-					tag: tag,
-					children: childChildren,
-					properties: {}
-				}));
+				children.push(
+					new XMLData({
+						tag: tag,
+						children: childChildren,
+						properties: {}
+					})
+				);
 			}
 		}
-
 
 		const xmlData = new XMLData({
 			tag: this.xmlTag,
@@ -110,14 +111,24 @@ export abstract class XmlNode extends Node<Record<string, Socket>, { value: Sock
 		return properties;
 	}
 
-	addXmlInData({ name, tag, type = 'any', isArray = false }: { name: string; tag: string, type?: SocketType; isArray?: boolean }) {
+	addXmlInData({
+		name,
+		tag,
+		type = 'any',
+		isArray = false
+	}: {
+		name: string;
+		tag: string;
+		type?: SocketType;
+		isArray?: boolean;
+	}) {
 		this.xmlInputs[name] = { tag: tag };
 		this.addInData({
 			name: name,
 			displayName: titlelize(name),
 			socketLabel: titlelize(name),
 			type: type,
-			isArray: isArray,
+			isArray: isArray
 		});
 		this.height += 45;
 	}

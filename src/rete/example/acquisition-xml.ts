@@ -14,48 +14,46 @@ import { DownloadNode } from '$rete/node/io/DownloadNode';
 
 export const acquisitionXmlExample: EditorExample = async (factory: NodeFactory) => {
 	const editor = factory.getEditor();
-	const problem = new ProblemNode({factory});
+	const problem = new ProblemNode({ factory });
 	await editor.addNode(problem);
 
 	const outputMakeArray = new MakeArrayNode({ factory });
 	await editor.addNode(outputMakeArray);
 
-	const vtkOutput = new VtkOutputNode({factory});
+	const vtkOutput = new VtkOutputNode({ factory });
 	await editor.addNode(vtkOutput);
 	await editor.addNewConnection(vtkOutput, 'value', outputMakeArray, 'data-0');
 	await editor.addNewConnection(outputMakeArray, 'array', problem, 'outputs');
 
 	const fieldSpecification1 = new FieldSpecificationNode({
 		factory,
-		
+
 		initialValues: {
-				scale: 0.0,
-				objectPath: 'nodeManager',
-				fieldName: 'pressure_n',
-				initialCondition: true
-			}
-		
+			scale: 0.0,
+			objectPath: 'nodeManager',
+			fieldName: 'pressure_n',
+			initialCondition: true
+		}
 	});
 	await editor.addNode(fieldSpecification1);
 	const fieldSpecification2 = new FieldSpecificationNode({
 		factory,
 		initialValues: {
-
-				scale: 0.0,
-				objectPath: 'nodeManager',
-				fieldName: 'pressure_nm1',
-				initialCondition: true
-			}	
+			scale: 0.0,
+			objectPath: 'nodeManager',
+			fieldName: 'pressure_nm1',
+			initialCondition: true
+		}
 	});
 
 	await editor.addNode(fieldSpecification2);
 	const fieldSpecification3 = new FieldSpecificationNode({
 		factory,
 		initialValues: {
-				scale: 0.0,
-				objectPath: 'faceManager',
-				fieldName: 'FreeSurface'
-			}
+			scale: 0.0,
+			objectPath: 'faceManager',
+			fieldName: 'FreeSurface'
+		}
 	});
 	await editor.addNode(fieldSpecification3);
 
@@ -111,22 +109,22 @@ export const acquisitionXmlExample: EditorExample = async (factory: NodeFactory)
 	await editor.addNode(geometryArray);
 	const box = new BoxXmlNode({
 		factory,
-		initialValues: {		
+		initialValues: {
 			xMin: { x: -0.01, y: -0.01, z: 499.99 },
-		xMax: { x: 500.01, y: 500.01, z: 500.01 }
-	}
+			xMax: { x: 500.01, y: 500.01, z: 500.01 }
+		}
 	});
 	await editor.addNode(box);
 	await editor.addNewConnection(box, 'value', geometryArray, 'data-0');
 	await editor.addNewConnection(geometryArray, 'array', problem, 'geometry');
 
-	const getBoxName = new GetNameNode({factory});
+	const getBoxName = new GetNameNode({ factory });
 	await editor.addNode(getBoxName);
 	await editor.addNewConnection(box, 'value', getBoxName, 'xml');
 
 	await editor.addNewConnection(getBoxName, 'name', fieldSpecification3SetNamesArray, 'data-0');
 
-	const download = new DownloadNode({factory});
+	const download = new DownloadNode({ factory });
 	await editor.addNode(download);
 	await editor.addNewConnection(problem, 'value', download, 'data');
 
