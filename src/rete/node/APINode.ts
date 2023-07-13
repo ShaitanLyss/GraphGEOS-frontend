@@ -1,3 +1,4 @@
+import { PythonNodeComponent } from '$rete/components/PythonComponent';
 import { Node, type NodeParams } from './Node';
 
 export interface APINodeParams extends NodeParams {
@@ -5,6 +6,7 @@ export interface APINodeParams extends NodeParams {
 }
 
 export abstract class APINode extends Node {
+	pythonComponent: PythonNodeComponent = new PythonNodeComponent(this);
 	url: string;
 
 	constructor(params: APINodeParams) {

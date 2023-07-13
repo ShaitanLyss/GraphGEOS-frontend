@@ -1997,9 +1997,9 @@
     "@types/braces" "*"
 
 "@types/node@*":
-  version "20.4.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.4.1.tgz#a6033a8718653c50ac4962977e14d0f984d9527d"
-  integrity sha512-JIzsAvJeA/5iY6Y/OxZbv1lUcc8dNSE77lb2gnBH+/PJ3lFR1Ccvgwl5JWnHAkNHcRsT0TbpVOsiMKZ1F/yyJg==
+  version "20.4.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.4.2.tgz#129cc9ae69f93824f92fac653eebfb4812ab4af9"
+  integrity sha512-Dd0BYtWgnWJKwO1jkmTrzofjK2QXXcai0dmtzvIBhcA+RsG5h8R3xlyta0kGOZRNfL9GuRtb1knmPEhQrePCEw==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -2025,9 +2025,9 @@
   integrity sha512-SnHmG9wN1UVmagJOnyo/qkk0Z7gejYxOYYmaAwr5u2yFYfsupN3sg10kyzN8Hep/2zbHxCnsumxOoRIRMBwKCg==
 
 "@types/react-dom@^18.2.4":
-  version "18.2.6"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.2.6.tgz#ad621fa71a8db29af7c31b41b2ea3d8a6f4144d1"
-  integrity sha512-2et4PDvg6PVCyS7fuTc4gPoksV58bW0RwSxWKcPRcHZf0PRUGq03TKcD/rUHe3azfV6/5/biUBJw+HhCQjaP0A==
+  version "18.2.7"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.2.7.tgz#67222a08c0a6ae0a0da33c3532348277c70abb63"
+  integrity sha512-GRaAEriuT4zp9N4p1i8BDBYmEyfo+xQ3yHjJU4eiK5NDa1RmUZG+unZABUTK4/Ox/M+GaHwb6Ow8rUITrtjszA==
   dependencies:
     "@types/react" "*"
 
@@ -4611,63 +4611,63 @@ resolve@^1.1.7, resolve@^1.14.2, resolve@^1.19.0, resolve@^1.22.2:
     supports-preserve-symlinks-flag "^1.0.0"
 
 rete-area-plugin@^2.0.0-beta.10:
-  version "2.0.0-beta.13"
-  resolved "https://registry.yarnpkg.com/rete-area-plugin/-/rete-area-plugin-2.0.0-beta.13.tgz#c6213d8ddef83316e599045a6d9406cf5ec3a206"
-  integrity sha512-pwPEOxKCvEkeIeNgSZmit+KLxV/0zngeFk1RehEeBUvh4cN6f3PuZsk2QLLu9JRVMOzSg42XNO8L+fJYhY3vYA==
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/rete-area-plugin/-/rete-area-plugin-2.0.0.tgz#bb314572225f9970a8bf90c1155771b3a56d702e"
+  integrity sha512-afui5oS0CP4xa+krSMketSO68EjGybIP2D5IpINbnW6vOIwexcLKI08EcmQUtFk62Z2D8X1BLRIM4PMtt4wPYw==
   dependencies:
     "@babel/runtime" "^7.21.0"
 
 rete-auto-arrange-plugin@^2.0.0-beta.6:
-  version "2.0.0-beta.8"
-  resolved "https://registry.yarnpkg.com/rete-auto-arrange-plugin/-/rete-auto-arrange-plugin-2.0.0-beta.8.tgz#95ae42ba590bb012ec5502d4595fcc096b318379"
-  integrity sha512-oHHV9A0XGWwkxoAWG0/zw4pluS/pL/cU+FmY2D1n3QXwvQOWHhZZ4ws5NjU8ql5AsSHYbcpLuG4me/aJe+cOyQ==
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/rete-auto-arrange-plugin/-/rete-auto-arrange-plugin-2.0.0.tgz#10243d8e7d90c29846ad7658a09f235e692f7263"
+  integrity sha512-wyrJ+DW94J1E4ceTX6XVHt7lnp0eNXdwHKnuREY8ePl3BO8buLutvVpuMFwJEVW6AbnUVcKY38/huAwp4wDGoQ==
   dependencies:
     "@babel/runtime" "^7.21.0"
 
 rete-connection-plugin@^2.0.0-beta.13:
-  version "2.0.0-beta.18"
-  resolved "https://registry.yarnpkg.com/rete-connection-plugin/-/rete-connection-plugin-2.0.0-beta.18.tgz#72115c5b13ee6b017940c4f0369b136103e1c59b"
-  integrity sha512-3KLHxcDLbufP444Kw8Tq8veB5HOHXiz+lI+tMY4etwt7FTVLmN2k1nwT9PAE6fZ8Xf0de8L6P6nZ4+M1d1iidg==
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/rete-connection-plugin/-/rete-connection-plugin-2.0.0.tgz#d50c5d42935a97148efc8795d815ef090000f2d5"
+  integrity sha512-8M+UC6gcWwTi0PEICprmCaoGxwEA4x42z0ywx3O5NQSILvkhWcvQXzHcyvwGx/LTsJT/UPzNjCfixu/TbRyTEw==
   dependencies:
     "@babel/runtime" "^7.21.0"
 
 rete-context-menu-plugin@^2.0.0-beta.7:
-  version "2.0.0-beta.9"
-  resolved "https://registry.yarnpkg.com/rete-context-menu-plugin/-/rete-context-menu-plugin-2.0.0-beta.9.tgz#7431e27f5cf9f576189f17d80155e614138ea99e"
-  integrity sha512-a1vdeOv9oF5cNrAqBpGFHLZOM8VWOQUkP6vp9x2uRuFdMVZz5YzNpuQFoFog+9A30zvv0F9FdbesuHM2O87iYg==
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/rete-context-menu-plugin/-/rete-context-menu-plugin-2.0.0.tgz#3d043df916e4131fcdb9161477f8e4aec63d5e34"
+  integrity sha512-cFqXUCgbuzdD994+cUgLNCiN/BeQzBb8PS1oZfJijL1RsHpRIlMM/pvVgGp1DJcveeIeKccndXb6UuzR9qfU4A==
   dependencies:
     "@babel/runtime" "^7.21.0"
 
 rete-engine@^2.0.0-beta.7:
-  version "2.0.0-beta.8"
-  resolved "https://registry.yarnpkg.com/rete-engine/-/rete-engine-2.0.0-beta.8.tgz#bdd8b806ae996f31a5c7adf5d72818d98badaaf7"
-  integrity sha512-+7sIckMrj6QX2vzJKbMx8JoaKSsbHO4j8rs1JBjpyte3kOHVnDnXqR5tpEvNlJ9plWe2Y8+aj2CXahZIrpCo8w==
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/rete-engine/-/rete-engine-2.0.0.tgz#d0b6b71cfdd2fb64a1ead075973cb7cc8857ead7"
+  integrity sha512-Xo/UggbWDgZf2TnFY5ftylkGH42CX3Ws5dH9fBx7r3PNXfAYJLIT3Calaoe+JogJPTeMZHMoeR61/aJTZABGzQ==
   dependencies:
     "@babel/runtime" "^7.21.0"
 
 rete-minimap-plugin@^2.0.0-beta.6:
-  version "2.0.0-beta.6"
-  resolved "https://registry.yarnpkg.com/rete-minimap-plugin/-/rete-minimap-plugin-2.0.0-beta.6.tgz#38e804b071ba003bf27b5653bad6c61e6f931370"
-  integrity sha512-T4oUbiV4/X0YxcfVRmcebfbGrh7NoNsxkkbNl/fcSAfTizd8l3LeBPCzjpk7Im4bGsFAwilpeCp8KERoinWX4A==
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/rete-minimap-plugin/-/rete-minimap-plugin-2.0.0.tgz#3c6a88e32dac6730d12f542c0f87f76fe45bb277"
+  integrity sha512-5adT/3KSU2wt5hT5jyfpZbuMKj7/uprJDLQOeWnSygWw/9mef6l1IP+uvfopjj87hELbrhFHjIzduC923C6gow==
   dependencies:
     "@babel/runtime" "^7.21.0"
 
 rete-render-utils@^2.0.0-beta.15:
-  version "2.0.0-beta.15"
-  resolved "https://registry.yarnpkg.com/rete-render-utils/-/rete-render-utils-2.0.0-beta.15.tgz#025d46eaa646f5eb7913d770382fcd379153ed6b"
-  integrity sha512-/23Tp4fVkXkGpDHsUKt1r4KDDf01lHEAO6AU6zfPiNWDiZqKakx3d4YoSXxQmBH8Y6Pnb2scYcwubhmE+LNrMQ==
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/rete-render-utils/-/rete-render-utils-2.0.1.tgz#9a166d76c3e5273dcf33f10ef103202e36fd7e1a"
+  integrity sha512-mzNVADCE1iV0AlkVyz1Pai34GG55VYBIWWOv9MqHUl7jlnpNIIkx+hARIc3wgabcye46IdswQPUApuARhvjbmA==
   dependencies:
     "@babel/runtime" "^7.21.0"
 
 rete-structures@^2.0.0-beta.4:
-  version "2.0.0-beta.4"
-  resolved "https://registry.yarnpkg.com/rete-structures/-/rete-structures-2.0.0-beta.4.tgz#eb1791673dca9d02c794bc77c20df390f49ee27f"
-  integrity sha512-AyUQPetRcZ3nsKLQ0FU4+eZv7Bxqkp8bX3D2rj9ajZu72We6blAzYPkAbFV/9qYuEoSIt4Mn8Sb5ZAZP4f4Pdg==
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/rete-structures/-/rete-structures-2.0.0.tgz#ea33cc9e0e6dcba7f63a9e7427136b111c4ecd6d"
+  integrity sha512-rbjo/6tx+xcFJeQGaL5xf0svD2mjUWfhB50ZBP5Q1suaaIXJ6a7LVoWh/RT8ECNltK50CU7/UJDY37fopETI5w==
 
 rete-svelte-plugin@^2.0.0-beta.4:
-  version "2.0.0-beta.6"
-  resolved "https://registry.yarnpkg.com/rete-svelte-plugin/-/rete-svelte-plugin-2.0.0-beta.6.tgz#06ce9e63c9cc1860c6b1d7c4724c50f49a0b3d69"
-  integrity sha512-BRBxqQUzbf1zls4KrQXMBuXRJsg0+o+G6NYP9kDmnc7+BYoX6W1xZ/q6qq4W0zodgohni4m3IA7qVRGP69mKPQ==
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/rete-svelte-plugin/-/rete-svelte-plugin-2.0.0.tgz#3691e1b8fe81be7c8be365a625216efca0b365f4"
+  integrity sha512-r6xLm9XHov57U++R20Nyzw/WF4zpIBOtNrqZrJit2pOz9DVj99ztAaGpCL+EqYq4Socu4BurJoLZ+B5UacRedw==
   dependencies:
     "@babel/runtime" "^7.21.0"
 
@@ -4679,9 +4679,9 @@ rete-svelte-render-plugin@^1.4.5:
     svelte "^3.19.1"
 
 rete@^2.0.0-beta.8:
-  version "2.0.0-beta.10"
-  resolved "https://registry.yarnpkg.com/rete/-/rete-2.0.0-beta.10.tgz#71fe7ca128c9b697ae9e5a9b450f943f332cec34"
-  integrity sha512-FWTskRv9M4SKWlU0L0PXJN1QMdA15Bq+gduxTIYhyMY2FufukzRE6OUQwA8e6hZx26uTdxeRdoWltypElyjMXQ==
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/rete/-/rete-2.0.1.tgz#c55b6721fd08328d5d8560e4875b3ffcf72c3757"
+  integrity sha512-iVeHgQzsOHYsdAzmKlAYZ2ZGTp5+LjfIPCsdMp6pKxb3+CajgTlNzsclF8ZvFHPGJMrWJ6P+xbLbk5OyaYwx0g==
   dependencies:
     "@babel/runtime" "^7.21.0"
 

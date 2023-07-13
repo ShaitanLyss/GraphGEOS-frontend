@@ -54,13 +54,13 @@
 		editor.addOnChangeNameListener(onNameChange);
 		factory = tools.factory;
 		AreaExtensions.zoomAt(factory.getArea(), factory.getEditor().getNodes());
-		const { watchResize } = await import('svelte-watch-resize');
-		watchResize(container, () => {
-			if (nodesToFocus === undefined) {
-				nodesToFocus = getVisibleNodes();
-			}
-			// debouncedHandler(() => console.log('resize'));
-		});
+		// const { watchResize } = await import('svelte-watch-resize');
+		// watchResize(container, () => {
+		// 	if (nodesToFocus === undefined) {
+		// 		nodesToFocus = getVisibleNodes();
+		// 	}
+		// 	// debouncedHandler(() => console.log('resize'));
+		// });
 		ready = true;
 	});
 

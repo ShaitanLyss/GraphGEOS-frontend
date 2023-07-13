@@ -2,6 +2,8 @@ import { Node } from '../node/Node';
 import { NodeFactory } from '../node/NodeFactory';
 
 export {};
+
+let areclassesSetup = false;
 async function setupClasses() {
 	console.log('Setting up classes');
 
@@ -35,3 +37,4 @@ async function setupClasses() {
 }
 
 await setupClasses();
+

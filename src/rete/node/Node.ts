@@ -92,12 +92,14 @@ export class Node<
 	protected factory: NodeFactory;
 	protected params: Record<string, unknown>;
 	static id: string;
+	static nodeCounts: bigint = BigInt(0);
 	protected state: Record<string, unknown> = {};
 
 	constructor(params: NodeParams) {
 		const { label = '', width = 190, height = 120, factory } = params;
 		super(label);
 		this.state = {};
+		Node.nodeCounts++;
 		this.params = params.params || {};
 		this.factory = factory;
 		if (factory === undefined) {
