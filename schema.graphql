@@ -58,6 +58,7 @@ type Mutation {
   createSession(session: SessionCreateInput!): SessionType!
   createUser(user: UserCreateInput!): UserType!
   deleteSession(sessionToken: String!): Boolean!
+  updateSession(session: SessionCreateInput!): SessionType!
 }
 
 input ProviderInput {
@@ -66,17 +67,17 @@ input ProviderInput {
 }
 
 input SessionCreateInput {
-  expires: DateTime!
-  sessionToken: UUID!
-  userId: UUID!
+  expires: DateTime = null
+  sessionToken: UUID = null
+  userId: UUID = null
 }
 
 type SessionType {
-  expires: DateTime!
+  expires: DateTime
   id: UUID!
-  sessionToken: UUID!
+  sessionToken: UUID
   user: UserType!
-  userId: UUID!
+  userId: UUID
 }
 
 scalar UUID

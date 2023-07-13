@@ -4,6 +4,7 @@ import {
 	CreateUserStore,
 	DeleteSessionStore,
 	SessionAndUserStore,
+	UpdateSessionStore,
 	UserAuthInfoStore,
 	UserCreateInput
 } from '$houdini';
@@ -153,11 +154,17 @@ export function GraphQlAdapter(event: RequestEvent): Adapter {
 			console.log('GraphQlAdapter : getSessionAndUser : session : ', session);
 			return { session: session, user: user };
 		},
-		updateSession(
+		async updateSession(
 			session: Partial<AdapterSession> & Pick<AdapterSession, 'sessionToken'>
-		): Awaitable<AdapterSession | null | undefined> {
-			throw new Error('Method not implemented.');
-		},
+		): Promise<AdapterSession | null | undefined> {
+			console.log('GraphQlAdapter : updateSession : session : ', session)
+			const updateSession = new UpdateSessionStore();
+			const data = (await updateSession.mutate({ session: session }, { event })).data;
+			if (data == null) {
+				return null;
+			}
+			return data.updateSession;
+			},
 		/**
 		 * Deletes a session from the database. It is preferred that this method also
 		 * returns the session that is being deleted for logging purposes.
