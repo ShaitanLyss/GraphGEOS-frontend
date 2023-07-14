@@ -61,7 +61,7 @@ export class ForEachNode extends Node {
 	}
 	changeType(type: SocketType) {
 		// console.log('changeType', type);
-		console.log('this.state.type', this.state.type);
+		// console.log('this.state.type', this.state.type);
 
 		if (type === this.state.type) return;
 		// console.log('changeType', type);

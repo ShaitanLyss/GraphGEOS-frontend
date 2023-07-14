@@ -1,15 +1,17 @@
-import { Node, type OutDataParams } from '$rete/node/Node';
+import type { Node, OutDataParams } from '$rete/node/Node';
+import { NodeComponent } from './NodeComponent';
 
-export class PythonNodeComponent {
-    private static importsStatements: Set<string> = new Set();
+export class PythonNodeComponent extends NodeComponent {
+    private importsStatements: Set<string> = new Set();
     private code: string[] = [];
     private variables: Record<string, string> = {};
 
-    constructor(private node: Node) {
+    constructor({owner} : {owner: Node}) {
+        super({id:"python_NC", owner: owner});
     }
 
     addImportStatement(statement: string) {
-        PythonNodeComponent.importsStatements.add(statement);
+        this.importsStatements.add(statement);
     }
 
     addCode(code: string) {
@@ -18,16 +20,28 @@ export class PythonNodeComponent {
 
     addOutData(params: OutDataParams) {
         const {name} = params;
-        this.variables[name] = name + Node.nodeCounts.toString;
+        // TODO: avoid duplicates
+        this.variables[name] = name;
         this.node.addOutData(params)
     }
 
-    collectPythonData() {
-        
+    static collectPythonData(node: Node): {importsStatements: Set<string>, code: string[]} {
+        console.log("outgoing", node.outgoingConnections);
+
+        return {
+            importsStatements: node.pythonComponent.importsStatements,
+            code: node.pythonComponent.code,
+        }
     }
 
     toPython(): string {
-        const imports = [...PythonNodeComponent.importsStatements].join("\n");
+        // const PythonWorker = await import('$rete/components/Python_NC.worker?worker');
+        // const worker = new PythonWorker.default();
+        // worker.postMessage("Hello world from window!")
+        // TODO: implement web worker
+        const {importsStatements, code} = PythonNodeComponent.collectPythonData(this.node);
+        const imports = [...this.importsStatements].join("\n");
+
 
         return(
     `

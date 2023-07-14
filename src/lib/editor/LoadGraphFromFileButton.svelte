@@ -47,4 +47,4 @@
 </script>
 
 <input type="file" bind:this={fileInput} accept=".txt" on:change={loadGraph} hidden />
-<EditorButton onClick={() => fileInput.click()} icon={faUpload} />
+<EditorButton on:click={() => fileInput.click()} icon={faUpload} />

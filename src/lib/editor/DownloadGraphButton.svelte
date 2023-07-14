@@ -24,4 +24,4 @@
 	}
 </script>
 
-<EditorButton onClick={downloadGraph} icon={faDownload} />
+<EditorButton on:click={downloadGraph} icon={faDownload} />

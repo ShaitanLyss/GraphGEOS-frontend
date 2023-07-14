@@ -18,8 +18,10 @@ import {
 	type InputControlTypes,
 	type InputControlValueType
 } from '../control/Control';
-
 import type { NodeFactory } from './NodeFactory';
+import type { ComponentSupportInterface } from '$rete/components/ComponentSupportInterface';
+import type { BaseComponent } from '$rete/components/BaseComponent';
+import { PythonNodeComponent } from '$rete/components/Python_NC';
 
 interface ControlParams<N> {
 	type: InputControlTypes;
@@ -81,9 +83,11 @@ export class Node<
 	}
 >
 	extends ClassicPreset.Node<Inputs, Outputs, Controls>
-	implements DataflowNode {
+	implements DataflowNode, ComponentSupportInterface {
 	width = 190;
 	height = 120;
+
+	private components: BaseComponent[] = [];
 	static activeFactory: NodeFactory | undefined;
 	private outData: Record<string, unknown> = {};
 	private resolveEndExecutes = new Stack<() => void>();
@@ -93,10 +97,13 @@ export class Node<
 	static id: string;
 	static nodeCounts: bigint = BigInt(0);
 	protected state: Record<string, unknown> = {};
+	readonly pythonComponent: PythonNodeComponent;
+	outgoingConnections: Record<string, Connection<Node, Node>> = {};
 
 	constructor(params: NodeParams) {
 		const { label = '', width = 190, height = 120, factory } = params;
 		super(label);
+		this.pythonComponent = this.addComponentByClass(PythonNodeComponent);
 		this.state = {};
 		Node.nodeCounts++;
 		this.params = params.params || {};
@@ -111,6 +118,16 @@ export class Node<
 	setState(state: Record<string, unknown>) {
 		this.state = state;
 	}
+
+
+
+	addComponentByClass<T extends BaseComponent>(componentClass: new (options: {owner: Node}) => T): T {
+		const component = new componentClass({ owner: this });
+		this.components.push(component);
+		return component;
+	}
+
+
 
 	getPosition(): { x: number; y: number } | undefined {
 		return this.getArea().nodeViews.get(this.id)?.position;
@@ -295,7 +312,6 @@ export class Node<
 	updateElement(type: GetRenderTypes<AreaExtra>, id: string): void {
 
 		if (this.getArea()) {
-			console.log("yarreeeeeeenderrr")
 			this.getArea().update(type, id);
 		}
 

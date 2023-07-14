@@ -12,4 +12,4 @@
 	}
 </script>
 
-<EditorButton onClick={saveGraph} icon={faFloppyDisk} />
+<EditorButton on:click={saveGraph} icon={faFloppyDisk} />

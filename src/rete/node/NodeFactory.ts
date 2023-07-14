@@ -8,6 +8,7 @@ import { structures } from 'rete-structures';
 import { Connection, Node } from './Node';
 import { ClassicPreset } from 'rete';
 import { InputControl } from '$rete/control/Control';
+import { Writable, writable } from 'svelte/store';
 
 function createDataflowEngine() {
 	return new DataflowEngine<Schemes>(({ inputs, outputs }) => {
@@ -44,6 +45,19 @@ export class NodeFactory {
 	static registerClass(id: string, nodeClass: typeof Node) {
 		this.classRegistry[id] = nodeClass;
 	}
+	private state: Map<string, unknown> = new Map();
+
+	getState<T>(key: string, value?: T): T {
+		if (!this.state.has(key))
+			this.state.set(key, value);
+		return this.state.get(key) as T;
+	}
+
+	setState(key: string, value: unknown) {
+		this.state.set(key, value);
+	}
+
+
 
 	async loadGraph(editorSaveData: NodeEditorSaveData) {
 		await this.editor.clear();
@@ -101,6 +115,23 @@ export class NodeFactory {
 		this.editor = editor;
 		editor.use(this.dataflowEngine);
 		editor.use(this.controlflowEngine);
+
+		editor.addPipe((context) => {
+			if (context.type === 'connectioncreated') {
+				const conn = context.data;
+				const node = editor.getNode(conn.source);
+				node.outgoingConnections[conn.sourceOutput] = conn;
+			} 
+			else if (context.type === 'connectionremoved') {
+				const conn = context.data;
+				const node = editor.getNode(conn.source);
+				delete node.outgoingConnections[conn.sourceOutput];
+			}
+
+			
+
+			return context;
+		})
 	}
 
 	enable() {

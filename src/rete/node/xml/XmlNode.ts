@@ -103,7 +103,7 @@ export abstract class XmlNode extends Node<Record<string, Socket>, { value: Sock
 			name: this.name,
 			properties: this.getProperties(inputs)
 		});
-		console.log(xmlData);
+		// console.log(xmlData);
 
 		return { value: xmlData };
 	}

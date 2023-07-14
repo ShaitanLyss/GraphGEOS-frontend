@@ -5,7 +5,6 @@
 	import cssVars from 'svelte-css-vars';
 
 	let socketVars = { background: assignColor(data) };
-	console.log("yooo");
 	$: {
 		socketVars = { background: assignColor(data) };
 		// console.log("move to ", data.type)

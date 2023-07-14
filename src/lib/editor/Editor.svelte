@@ -3,8 +3,8 @@
 
 	import type { EditorExample } from '../../rete/example/types';
 	import { AppShell, ModalSettings, modeCurrent } from '@skeletonlabs/skeleton';
-	import Fa from 'svelte-fa';
-	import { faCloud, faCubes, faCubesStacked } from '@fortawesome/free-solid-svg-icons';
+	import { faCloud, faCubes, faCubesStacked, faEarth } from '@fortawesome/free-solid-svg-icons';
+	import  { faPython } from '@fortawesome/free-brands-svg-icons';
 	import { modalStore } from '@skeletonlabs/skeleton';
 	import DownloadGraphButton from '$lib/editor/DownloadGraphButton.svelte';
 	import SaveGraphButton from './SaveGraphButton.svelte';
@@ -18,7 +18,7 @@
 	import type { Node } from '$rete/node/Node';
 
 	import { notifications } from '@mantine/notifications';
-	import { graphql } from '$houdini';
+	import ToPythonButton from './ToPythonButton.svelte';
 
 	// import {} from '@fortawesome/free-regular-svg-icons';
 
@@ -157,13 +157,15 @@
 					<svelte:fragment slot="pageHeader">
 						<div class="flex justify-between w-full p-2">
 							<div class="space-x-4">
-								<EditorButton onClick={toggleNodeBrowser} icon={faCubes} />
+								<!-- <EditorButton onClick={toggleNodeBrowser} icon={faCubes} /> -->
 								<SaveGraphButton {editor} />
 								<LoadGraphFromFileButton {factory} />
+								<ToPythonButton {factory} {container}/>
 							</div>
 							<div class="space-x-4">
 								<DownloadGraphButton {editor} />
-								<EditorButton icon={faCloud} onClick={openUploadGraphModal} />
+								<EditorButton icon={faCloud} on:click={openUploadGraphModal} />
+								<EditorButton icon={faEarth} on:click={() => console.log("Toggle geos sidebar")} />
 							</div>
 						</div>
 					</svelte:fragment>

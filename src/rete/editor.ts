@@ -17,6 +17,7 @@ import { MegaSetup } from './setup/MegaSetup';
 import { NodeFactory } from './node/NodeFactory';
 
 export async function setupEditor(container: HTMLElement, loadExample?: EditorExample) {
+	if (container === null) throw new Error('Container is null');
 	const editor = new NodeEditor();
 	const arrange = new AutoArrangePlugin<Schemes>();
 	const typedSocketsPlugin = new TypedSocketsPlugin<Schemes>();

@@ -3,9 +3,9 @@
 	import Fa from 'svelte-fa';
 
 	export let icon: IconDefinition;
-	export let onClick: (event: Event) => void;
+	export let active = false;
 </script>
 
-<button class="btn-icon variant-ghost-secondary pointer-events-auto" on:click={onClick}
+<button class="btn-icon {active ? "variant-ghost-success": "variant-ghost-secondary"} pointer-events-auto" on:*
 	><Fa {icon} /></button
 >

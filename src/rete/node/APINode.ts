@@ -1,4 +1,3 @@
-import { PythonNodeComponent } from '$rete/components/PythonComponent';
 import { Node, type NodeParams } from './Node';
 
 export interface APINodeParams extends NodeParams {
@@ -6,12 +5,12 @@ export interface APINodeParams extends NodeParams {
 }
 
 export abstract class APINode extends Node {
-	pythonComponent: PythonNodeComponent = new PythonNodeComponent(this);
 	url: string;
 
 	constructor(params: APINodeParams) {
 		const { url, label = 'API', height = 225, width = 150, factory } = params;
 		super({ label, height: height, width: width, factory });
+		
 		this.url = 'http://localhost:8000/api/v1' + url;
 
 		this.addInExec();
