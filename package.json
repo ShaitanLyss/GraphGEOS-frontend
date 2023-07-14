@@ -22,6 +22,7 @@
 	},
 	"devDependencies": {
 		"@emotion/react": "^11.11.0",
+		"@fortawesome/free-brands-svg-icons": "^6.4.0",
 		"@fortawesome/free-regular-svg-icons": "^6.4.0",
 		"@fortawesome/free-solid-svg-icons": "^6.4.0",
 		"@mantine/core": "^6.0.13",
@@ -66,6 +67,7 @@
 		"svelte-css-vars": "^0.0.3",
 		"svelte-fa": "^3.0.4",
 		"svelte-preprocess": "^5.0.3",
+		"svelte-preprocess-delegate-events": "^0.4.1",
 		"svelte-preprocess-react": "^0.15.0",
 		"svelte-watch-resize": "^1.0.3",
 		"tailwindcss": "^3.3.1",
