@@ -148,7 +148,7 @@ export class NodeFactory {
 					this.dataflowEngine.fetch(n.id);
 				} catch (e) {
 					if (e && e.message === 'cancelled') {
-						console.warn('cancelled process', n.id);
+						console.log('cancelled process', n.id);
 					} else {
 						throw e;
 					}

@@ -64,25 +64,24 @@ export type NodeSaveData = {
 };
 
 export class Node<
-		Inputs extends {
-			[key in string]?: Socket;
-		} = {
-			[key in string]?: Socket;
-		},
-		Outputs extends {
-			[key in string]?: Socket;
-		} = {
-			[key in string]?: Socket;
-		},
-		Controls extends {
-			[key in string]?: Control;
-		} = {
-			[key in string]?: Control;
-		}
-	>
+	Inputs extends {
+		[key in string]?: Socket;
+	} = {
+		[key in string]?: Socket;
+	},
+	Outputs extends {
+		[key in string]?: Socket;
+	} = {
+		[key in string]?: Socket;
+	},
+	Controls extends {
+		[key in string]?: Control;
+	} = {
+		[key in string]?: Control;
+	}
+>
 	extends ClassicPreset.Node<Inputs, Outputs, Controls>
-	implements DataflowNode
-{
+	implements DataflowNode {
 	width = 190;
 	height = 120;
 	static activeFactory: NodeFactory | undefined;
@@ -117,7 +116,7 @@ export class Node<
 		return this.getArea().nodeViews.get(this.id)?.position;
 	}
 
-	applyState() {}
+	applyState() { }
 
 	toJSON(): NodeSaveData {
 		const inputControlValues: Record<string, unknown> = {};
@@ -153,7 +152,7 @@ export class Node<
 			return await this.factory.dataflowEngine.fetchInputs(this.id);
 		} catch (e) {
 			if (e && e.message === 'cancelled') {
-				console.warn('gracefully cancelled Node.fetchInputs');
+				console.log('gracefully cancelled Node.fetchInputs');
 				return {};
 			} else throw e;
 		}
@@ -294,11 +293,17 @@ export class Node<
 	}
 
 	updateElement(type: GetRenderTypes<AreaExtra>, id: string): void {
-		if (this.getArea()) this.getArea().update(type, id);
+
+		if (this.getArea()) {
+			console.log("yarreeeeeeenderrr")
+			this.getArea().update(type, id);
+		}
+
+
 		else console.error('Node', 'area is not set');
 	}
 }
 
-export class Connection<A extends Node, B extends Node> extends ClassicPreset.Connection<A, B> {}
+export class Connection<A extends Node, B extends Node> extends ClassicPreset.Connection<A, B> { }
 
 export const socket = new Socket({ isArray: false, type: 'any' });

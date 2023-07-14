@@ -18,9 +18,11 @@ import { SveltePlugin, Presets } from 'rete-svelte-plugin';
 import { InputControl } from '$rete/control/Control';
 import InputControlComponent from '$rete/customization/presets/classic/components/InputControl.svelte';
 import { Socket } from '$rete/socket/Socket';
+// import { ReactPlugin, Presets } from 'rete-react-plugin';
 
 export class RenderSetup implements Setup {
 	private render = new SveltePlugin<Schemes, AreaExtra>();
+	// private render = new ReactPlugin<Schemes, AreaExtra>();
 
 	setup(editor: NodeEditor<Schemes>, area: AreaPlugin<Schemes, AreaExtra>, factory: NodeFactory) {
 		this.render.addPreset(
