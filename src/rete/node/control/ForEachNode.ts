@@ -1,8 +1,7 @@
 import { Connection, Node } from '../Node';
 import { getLeavesFromOutput } from '../utils';
-import { NodeFactory } from '../NodeFactory';
-import { InputControl } from '../../control/Control';
-import { SocketType } from '../../plugin/typed-sockets';
+import type { NodeFactory } from '../NodeFactory';
+import type { SocketType } from '../../plugin/typed-sockets';
 
 // Class defining a For Each Node
 export class ForEachNode extends Node {
@@ -12,6 +11,16 @@ export class ForEachNode extends Node {
 
 	constructor({ factory }: { factory: NodeFactory }) {
 		super({ label: 'For Each', factory, height: 275 });
+		this.pythonComponent.setCodeTemplateGetter(() => {
+			return(
+`
+for $(item) in $(array):
+    {loop}
+{done}
+`
+			)
+		});
+
 		this.addInExec();
 		this.addOutExec('loop', 'Loop');
 		this.addInData({ name: 'array', displayName: 'Array', isArray: true });

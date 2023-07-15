@@ -116,19 +116,20 @@ export class NodeFactory {
 		editor.use(this.dataflowEngine);
 		editor.use(this.controlflowEngine);
 
+		// Assign connections to nodes
 		editor.addPipe((context) => {
+			if (context.type !==  'connectioncreated' && context.type !== 'connectionremoved') return context;
+			const conn = context.data;
+			const node = editor.getNode(conn.source);
+			const socket = node.outputs[conn.sourceOutput]?.socket;
+			const connections = (socket instanceof ExecSocket || socket?.type == 'exec') ? node.outgoingExecConnections : node.outgoingDataConnections;
+			
 			if (context.type === 'connectioncreated') {
-				const conn = context.data;
-				const node = editor.getNode(conn.source);
-				node.outgoingConnections[conn.sourceOutput] = conn;
+				connections[conn.sourceOutput] = conn;
 			} 
 			else if (context.type === 'connectionremoved') {
-				const conn = context.data;
-				const node = editor.getNode(conn.source);
-				delete node.outgoingConnections[conn.sourceOutput];
+				delete connections[conn.sourceOutput];
 			}
-
-			
 
 			return context;
 		})

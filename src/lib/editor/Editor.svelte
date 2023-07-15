@@ -46,6 +46,7 @@
 		// const { createEditor } = await import('./editor');
 		// await createEditor(container);
 		const { setupEditor } = await import('$rete/editor');
+		if (!container) return;
 		const tools = await setupEditor(container, loadExample);
 		destroyEditor = tools.destroy;
 		onFirstShown = tools.firstDisplay;

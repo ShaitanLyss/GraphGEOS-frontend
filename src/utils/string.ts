@@ -1,3 +1,5 @@
+import { getMessageFormatter } from "svelte-i18n";
+
 export function capitalize(str: string): string {
 	return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -24,4 +26,11 @@ export function titlelize(str: string): string {
 export function camlelcaseize(str: string): string {
 	const capitalized = str.split(' ').map(capitalize).join('');
 	return capitalized.charAt(0).toLowerCase() + capitalized.slice(1);
+}
+
+export function getVarsFromFormatString(formatString: string): string[] {
+	return getMessageFormatter(formatString)
+		.getAst()
+		.filter((e) => e.type === 1)
+		.map((e) => (e as unknown as { value: string }).value);
 }

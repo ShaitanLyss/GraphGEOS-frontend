@@ -98,7 +98,8 @@ export class Node<
 	static nodeCounts: bigint = BigInt(0);
 	protected state: Record<string, unknown> = {};
 	readonly pythonComponent: PythonNodeComponent;
-	outgoingConnections: Record<string, Connection<Node, Node>> = {};
+	readonly outgoingDataConnections: Record<string, Connection<Node, Node>> = {};
+	readonly outgoingExecConnections: Record<string, Connection<Node, Node>> = {};
 
 	constructor(params: NodeParams) {
 		const { label = '', width = 190, height = 120, factory } = params;
@@ -117,6 +118,15 @@ export class Node<
 	}
 	setState(state: Record<string, unknown>) {
 		this.state = state;
+	}
+
+	getOutgoer(key: string): Node | null {
+		if (key in this.outgoingExecConnections) {
+			return this.getEditor().getNode(this.outgoingExecConnections[key].target);
+		} else if (key in this.outgoingDataConnections) {
+			return this.getEditor().getNode(this.outgoingDataConnections[key].target);
+		}
+		return null;
 	}
 
 

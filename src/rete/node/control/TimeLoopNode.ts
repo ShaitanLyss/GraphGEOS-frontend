@@ -1,7 +1,7 @@
 import { Node } from '../Node';
 import { notifications } from '@mantine/notifications';
 import { getLeavesFromOutput } from '../utils';
-import { NodeFactory } from '../NodeFactory';
+import type { NodeFactory } from '../NodeFactory';
 
 export class TimeLoopNode extends Node {
 	currentTime?: number;
@@ -9,6 +9,19 @@ export class TimeLoopNode extends Node {
 	constructor({ factory }: { factory: NodeFactory }) {
 		// super('Time Loop', { factory, height: 440, width: 200 });
 		super({ label: 'Time Loop', factory, height: 440, width: 200 });
+		// TODO: implement display progress
+		this.pythonComponent.setCodeTemplateGetter(() => {
+			return (
+`
+$(t) = $(start)
+while $(t) < $(end):
+    {loop}
+    $(t) += $(step)
+{done}
+`
+			)
+		});
+
 		this.addInExec();
 
 		this.addInData({

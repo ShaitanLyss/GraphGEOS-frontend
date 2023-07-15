@@ -1,11 +1,19 @@
 import { AddPinNode } from '../AddPinNode';
-import { NodeFactory } from '../NodeFactory';
+import type { NodeFactory } from '../NodeFactory';
 import { getLeavesFromOutput } from '../utils';
 
 export class SequenceNode extends AddPinNode {
 	constructor({ factory }: { factory: NodeFactory }) {
 		super({ label: 'Sequence', factory, height: 126, numPins: 2 });
 		this.addInExec();
+		this.pythonComponent.setCodeTemplateGetter(() => {
+			let execs: string[] = [];
+			for (let i = 0; i < this.numPinsAdded; i++) {
+				execs.push(`{exec_${i}}`);
+			}
+			console.log('execs', execs.join('\n'));
+			return execs.join('\n');
+		});
 	}
 
 	override onAddPin(index: number) {

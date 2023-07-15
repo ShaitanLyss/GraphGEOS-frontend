@@ -1,6 +1,6 @@
 import { getMessageFormatter, t } from 'svelte-i18n';
 import { Node, type NodeParams } from '../Node';
-import { capitalize } from '../../../utils/string';
+import { capitalize, getVarsFromFormatString } from '../../../utils/string';
 
 export interface FormatNodeParams extends NodeParams {
 	format?: string;
@@ -77,10 +77,7 @@ export class FormatNode extends Node {
 		let anyChange = false;
 		if (formatString) {
 			try {
-				const vars = getMessageFormatter(formatString)
-					.getAst()
-					.filter((e) => e.type === 1)
-					.map((e) => (e as unknown as { value: string }).value);
+				const vars = getVarsFromFormatString(formatString);
 
 				vars.forEach((varName) => {
 					const key = 'data-' + varName;

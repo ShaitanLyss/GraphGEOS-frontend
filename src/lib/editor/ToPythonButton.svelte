@@ -35,6 +35,16 @@
 				const node = editor.getNode(nodeId);
 				const res = node.pythonComponent.toPython();
 				console.log(res);
+				// Download res as file
+				const blob = new Blob([res], { type: 'text/plain' });
+				const url = URL.createObjectURL(blob);
+				const link = document.createElement('a');
+				link.href = url;
+				link.download = 'script.py';
+				document.body.appendChild(link);
+				link.click();
+				document.body.removeChild(link);
+
 				notifications.show({
 					title: $_('python-mode.notification.title'),
 					message: $_('python-mode.generation.success.message'),
