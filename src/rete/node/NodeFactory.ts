@@ -48,16 +48,13 @@ export class NodeFactory {
 	private state: Map<string, unknown> = new Map();
 
 	getState<T>(key: string, value?: T): T {
-		if (!this.state.has(key))
-			this.state.set(key, value);
+		if (!this.state.has(key)) this.state.set(key, value);
 		return this.state.get(key) as T;
 	}
 
 	setState(key: string, value: unknown) {
 		this.state.set(key, value);
 	}
-
-
 
 	async loadGraph(editorSaveData: NodeEditorSaveData) {
 		await this.editor.clear();
@@ -118,21 +115,24 @@ export class NodeFactory {
 
 		// Assign connections to nodes
 		editor.addPipe((context) => {
-			if (context.type !==  'connectioncreated' && context.type !== 'connectionremoved') return context;
+			if (context.type !== 'connectioncreated' && context.type !== 'connectionremoved')
+				return context;
 			const conn = context.data;
 			const node = editor.getNode(conn.source);
 			const socket = node.outputs[conn.sourceOutput]?.socket;
-			const connections = (socket instanceof ExecSocket || socket?.type == 'exec') ? node.outgoingExecConnections : node.outgoingDataConnections;
-			
+			const connections =
+				socket instanceof ExecSocket || socket?.type == 'exec'
+					? node.outgoingExecConnections
+					: node.outgoingDataConnections;
+
 			if (context.type === 'connectioncreated') {
 				connections[conn.sourceOutput] = conn;
-			} 
-			else if (context.type === 'connectionremoved') {
+			} else if (context.type === 'connectionremoved') {
 				delete connections[conn.sourceOutput];
 			}
 
 			return context;
-		})
+		});
 	}
 
 	enable() {

@@ -37,4 +37,3 @@ async function setupClasses() {
 }
 
 await setupClasses();
-

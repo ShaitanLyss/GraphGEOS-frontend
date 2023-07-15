@@ -53,8 +53,8 @@
 				togglePythonMode();
 			}
 		}
-        
-        factory.setState('toPythonBtn_pipeFunction', pipe);
+
+		factory.setState('toPythonBtn_pipeFunction', pipe);
 
 		if (!factory.getState('toPythonBtn_pipeAdded', false)) {
 			factory.setState('toPythonBtn_pipeAdded', true);
@@ -64,7 +64,9 @@
 			console.log('adding area pipe');
 
 			area.addPipe(async (context) => {
-                factory.getState<(context: AreaExtra | Area2D<Schemes> | Root<Schemes>) => void>('toPythonBtn_pipeFunction')(context);
+				factory.getState<(context: AreaExtra | Area2D<Schemes> | Root<Schemes>) => void>(
+					'toPythonBtn_pipeFunction'
+				)(context);
 				return context;
 			});
 		}

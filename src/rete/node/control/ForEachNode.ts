@@ -12,13 +12,11 @@ export class ForEachNode extends Node {
 	constructor({ factory }: { factory: NodeFactory }) {
 		super({ label: 'For Each', factory, height: 275 });
 		this.pythonComponent.setCodeTemplateGetter(() => {
-			return(
-`
+			return `
 for $(item) in $(array):
     {loop}
 {done}
-`
-			)
+`;
 		});
 
 		this.addInExec();

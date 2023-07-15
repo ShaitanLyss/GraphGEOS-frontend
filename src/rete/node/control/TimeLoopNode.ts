@@ -11,15 +11,13 @@ export class TimeLoopNode extends Node {
 		super({ label: 'Time Loop', factory, height: 440, width: 200 });
 		// TODO: implement display progress
 		this.pythonComponent.setCodeTemplateGetter(() => {
-			return (
-`
+			return `
 $(t) = $(start)
 while $(t) < $(end):
     {loop}
     $(t) += $(step)
 {done}
-`
-			)
+`;
 		});
 
 		this.addInExec();

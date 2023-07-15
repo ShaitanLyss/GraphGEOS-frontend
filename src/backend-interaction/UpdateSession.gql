@@ -3,6 +3,6 @@ mutation UpdateSession($session: SessionCreateInput!) {
 		id
 		sessionToken
 		userId
-		expires		
+		expires
 	}
 }

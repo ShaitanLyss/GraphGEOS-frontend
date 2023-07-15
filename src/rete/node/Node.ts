@@ -66,24 +66,25 @@ export type NodeSaveData = {
 };
 
 export class Node<
-	Inputs extends {
-		[key in string]?: Socket;
-	} = {
-		[key in string]?: Socket;
-	},
-	Outputs extends {
-		[key in string]?: Socket;
-	} = {
-		[key in string]?: Socket;
-	},
-	Controls extends {
-		[key in string]?: Control;
-	} = {
-		[key in string]?: Control;
-	}
->
+		Inputs extends {
+			[key in string]?: Socket;
+		} = {
+			[key in string]?: Socket;
+		},
+		Outputs extends {
+			[key in string]?: Socket;
+		} = {
+			[key in string]?: Socket;
+		},
+		Controls extends {
+			[key in string]?: Control;
+		} = {
+			[key in string]?: Control;
+		}
+	>
 	extends ClassicPreset.Node<Inputs, Outputs, Controls>
-	implements DataflowNode, ComponentSupportInterface {
+	implements DataflowNode, ComponentSupportInterface
+{
 	width = 190;
 	height = 120;
 
@@ -129,21 +130,19 @@ export class Node<
 		return null;
 	}
 
-
-
-	addComponentByClass<T extends BaseComponent>(componentClass: new (options: {owner: Node}) => T): T {
+	addComponentByClass<T extends BaseComponent>(
+		componentClass: new (options: { owner: Node }) => T
+	): T {
 		const component = new componentClass({ owner: this });
 		this.components.push(component);
 		return component;
 	}
 
-
-
 	getPosition(): { x: number; y: number } | undefined {
 		return this.getArea().nodeViews.get(this.id)?.position;
 	}
 
-	applyState() { }
+	applyState() {}
 
 	toJSON(): NodeSaveData {
 		const inputControlValues: Record<string, unknown> = {};
@@ -320,16 +319,12 @@ export class Node<
 	}
 
 	updateElement(type: GetRenderTypes<AreaExtra>, id: string): void {
-
 		if (this.getArea()) {
 			this.getArea().update(type, id);
-		}
-
-
-		else console.error('Node', 'area is not set');
+		} else console.error('Node', 'area is not set');
 	}
 }
 
-export class Connection<A extends Node, B extends Node> extends ClassicPreset.Connection<A, B> { }
+export class Connection<A extends Node, B extends Node> extends ClassicPreset.Connection<A, B> {}
 
 export const socket = new Socket({ isArray: false, type: 'any' });

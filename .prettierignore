@@ -11,6 +11,11 @@ dist
 .env.*
 !.env.example
 schema.graphql
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+.eslintrc.cjs
+.graphqlrc.yaml
+README.md
 
 # Ignore files for PNPM, NPM and YARN
 pnpm-lock.yaml

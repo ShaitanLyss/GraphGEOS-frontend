@@ -15,7 +15,7 @@
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true
 		// "importsNotUsedAsValues":
-	},
+	}
 	// 	"include": [
 	// 	"./svelte-jsx.d.ts",
 	// 	"ambient.d.ts",

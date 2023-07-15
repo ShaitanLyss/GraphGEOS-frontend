@@ -6,6 +6,9 @@
 	export let active = false;
 </script>
 
-<button class="btn-icon {active ? "variant-ghost-success": "variant-ghost-secondary"} pointer-events-auto" on:*
-	><Fa {icon} /></button
+<button
+	class="btn-icon {active
+		? 'variant-ghost-success'
+		: 'variant-ghost-secondary'} pointer-events-auto"
+	on:*><Fa {icon} /></button
 >
