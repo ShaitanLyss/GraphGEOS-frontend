@@ -10,6 +10,7 @@ export class TimeLoopNode extends Node {
 		// super('Time Loop', { factory, height: 440, width: 200 });
 		super({ label: 'Time Loop', factory, height: 440, width: 200 });
 		// TODO: implement display progress
+		this.pythonComponent.addVariables('t')
 		this.pythonComponent.setCodeTemplateGetter(() => {
 			return `
 $(t) = $(start)

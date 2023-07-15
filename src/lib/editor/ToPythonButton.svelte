@@ -27,13 +27,14 @@
 		notifications.hide('python-mode');
 	}
 
+
 	$: if (factory) {
 		const editor = factory.getEditor();
-		function pipe(context: AreaExtra | Area2D<Schemes> | Root<Schemes>) {
+		async function pipe(context: AreaExtra | Area2D<Schemes> | Root<Schemes>) {
 			if (active && context.type === 'nodepicked') {
 				const nodeId = context.data.id;
 				const node = editor.getNode(nodeId);
-				const res = node.pythonComponent.toPython();
+				const res = await node.pythonComponent.toPython();
 				console.log(res);
 				// Download res as file
 				const blob = new Blob([res], { type: 'text/plain' });
@@ -54,10 +55,11 @@
 			}
 		}
 
-		factory.setState('toPythonBtn_pipeFunction', pipe);
+		factory.setState('toPythonBtn', 'pipeFunction', pipe);
+		// console.log(import.meta)
 
-		if (!factory.getState('toPythonBtn_pipeAdded', false)) {
-			factory.setState('toPythonBtn_pipeAdded', true);
+		if (!factory.getState('toPythonBtn', 'pipeAdded', false)) {
+			factory.setState('toPythonBtn', 'pipeAdded', true);
 
 			const area = factory.getArea();
 			const editor = factory.getEditor();
@@ -65,7 +67,8 @@
 
 			area.addPipe(async (context) => {
 				factory.getState<(context: AreaExtra | Area2D<Schemes> | Root<Schemes>) => void>(
-					'toPythonBtn_pipeFunction'
+					'toPythonBtn',
+					'pipeFunction'
 				)(context);
 				return context;
 			});

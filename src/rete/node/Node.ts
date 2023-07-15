@@ -102,6 +102,10 @@ export class Node<
 	readonly outgoingDataConnections: Record<string, Connection<Node, Node>> = {};
 	readonly outgoingExecConnections: Record<string, Connection<Node, Node>> = {};
 
+	getFactory(): NodeFactory {
+		return this.factory;
+	}
+
 	constructor(params: NodeParams) {
 		const { label = '', width = 190, height = 120, factory } = params;
 		super(label);

@@ -11,7 +11,6 @@ export class SequenceNode extends AddPinNode {
 			for (let i = 0; i < this.numPinsAdded; i++) {
 				execs.push(`{exec_${i}}`);
 			}
-			console.log('execs', execs.join('\n'));
 			return execs.join('\n');
 		});
 	}
