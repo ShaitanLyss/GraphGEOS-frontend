@@ -48,13 +48,13 @@ export class NodeFactory {
 	private state: Map<string, unknown> = new Map();
 
 	getState<T>(id: string, key: string, value?: T): T {
-		const stateKey = id + "_" + key;
+		const stateKey = id + '_' + key;
 		if (!this.state.has(stateKey)) this.state.set(stateKey, value);
 		return this.state.get(stateKey) as T;
 	}
 
 	setState(id: string, key: string, value: unknown) {
-		this.state.set(id + "_" + key, value);
+		this.state.set(id + '_' + key, value);
 	}
 
 	async loadGraph(editorSaveData: NodeEditorSaveData) {

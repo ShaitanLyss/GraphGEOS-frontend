@@ -29,14 +29,14 @@ export class PythonNodeComponent extends NodeComponent {
 	}
 
 	addVariable(...names: string[]) {
-		this.addDynamicOutput(...names.filter((key) => key in this.node.outputs))
+		this.addDynamicOutput(...names.filter((key) => key in this.node.outputs));
 		for (const name of names) {
 			this.createdVariables.add(name);
 		}
 	}
 
 	addVariables(...names: string[]) {
-		this.addDynamicOutput(...names.filter((key) => key in this.node.outputs))
+		this.addDynamicOutput(...names.filter((key) => key in this.node.outputs));
 		for (const name of names) {
 			this.createdVariables.add(name);
 		}
@@ -48,14 +48,12 @@ export class PythonNodeComponent extends NodeComponent {
 		}
 	}
 
-
 	setCodeTemplateGetter(getter: () => string) {
 		this.codeTemplateGetter = getter;
 	}
 
 	setEmptyNewlinesBefore(numNewlines: number) {
-		if (numNewlines < 0)
-			throw new Error("Number of newlines must be positive");
+		if (numNewlines < 0) throw new Error('Number of newlines must be positive');
 		this.newlinesBefore = numNewlines;
 	}
 
@@ -66,9 +64,7 @@ export class PythonNodeComponent extends NodeComponent {
 `;
 	}
 
-	private  assignActualVars(
-		usedVars: Set<string>
-	): Set<string> {
+	private assignActualVars(usedVars: Set<string>): Set<string> {
 		for (const varName of this.createdVariables) {
 			let numAttempts = 0;
 			let attemptedVarName = varName;
@@ -83,34 +79,31 @@ export class PythonNodeComponent extends NodeComponent {
 	}
 
 	static toPythonData(data: unknown): string {
-		if (data === undefined)
-			return "None";
-		if (data === null)
-			return "None";
-		if (typeof data === "string")
-			return `"${data}"`;
-		if (typeof data === "number")
-			return data.toString();
-		if (typeof data === "boolean")
-			return data ? "True" : "False";
-		if (typeof data === "object") {
+		if (data === undefined) return 'None';
+		if (data === null) return 'None';
+		if (typeof data === 'string') return `"${data}"`;
+		if (typeof data === 'number') return data.toString();
+		if (typeof data === 'boolean') return data ? 'True' : 'False';
+		if (typeof data === 'object') {
 			if (Array.isArray(data)) {
-				return `[${data.map((item) => PythonNodeComponent.toPythonData(item)).join(", ")}]`;
+				return `[${data.map((item) => PythonNodeComponent.toPythonData(item)).join(', ')}]`;
 			} else {
-				return `{${Object.entries(data).map(([key, value]) => `${key}: ${PythonNodeComponent.toPythonData(value)}`).join(", ")}}`;
+				return `{${Object.entries(data)
+					.map(([key, value]) => `${key}: ${PythonNodeComponent.toPythonData(value)}`)
+					.join(', ')}}`;
 			}
 		}
 		throw new Error(`Cannot convert data to python: ${data}`);
 	}
 
-// TODO : python dataflow engine
+	// TODO : python dataflow engine
 
 	private async formatPythonVars(template: string) {
 		const varPattern = /([^$]*)\$(\(([^)]+)\)|\[([^]+)\])([^$]*)|([^]+)/g;
 		let matchVar;
-		let resCode = "";
+		let resCode = '';
 
-		const inputs = await this.node.fetchInputs()
+		const inputs = await this.node.fetchInputs();
 
 		while ((matchVar = varPattern.exec(template)) !== null) {
 			const codeBefore = matchVar[1];
@@ -118,8 +111,7 @@ export class PythonNodeComponent extends NodeComponent {
 			const dataKey = matchVar[4];
 			const codeAfter = matchVar[5];
 			const codeWhenNoVar = matchVar[6];
-			if (codeBefore)
-				resCode += codeBefore;
+			if (codeBefore) resCode += codeBefore;
 
 			if (dataKey) {
 				const data = this.node.getData(dataKey, inputs);
@@ -132,13 +124,11 @@ export class PythonNodeComponent extends NodeComponent {
 				if (varName in this.actualCreatedVars) {
 					resCode += this.actualCreatedVars[varName];
 				} else {
-					resCode += "fake_" + varName;
+					resCode += 'fake_' + varName;
 				}
 			}
-			if (codeAfter)
-				resCode += codeAfter;
-			if (codeWhenNoVar)
-				resCode += codeWhenNoVar;
+			if (codeAfter) resCode += codeAfter;
+			if (codeWhenNoVar) resCode += codeWhenNoVar;
 		}
 		return resCode;
 	}
@@ -147,7 +137,7 @@ export class PythonNodeComponent extends NodeComponent {
 		node: Node | null,
 		indentation: string,
 		allVars: Set<string>
-	): Promise<{ importsStatements: Set<string>; code: string, allVars: Set<string> }> {
+	): Promise<{ importsStatements: Set<string>; code: string; allVars: Set<string> }> {
 		// Stop case
 		if (node === null) {
 			return {
@@ -158,7 +148,7 @@ export class PythonNodeComponent extends NodeComponent {
 		}
 
 		allVars = node.pythonComponent.assignActualVars(allVars);
-		console.log(node.pythonComponent.actualCreatedVars)
+		console.log(node.pythonComponent.actualCreatedVars);
 
 		// Get code template
 		let codeTemplate = node.pythonComponent.codeTemplateGetter().trim();
@@ -177,16 +167,18 @@ export class PythonNodeComponent extends NodeComponent {
 		// Iterate on code template variables
 		let match;
 		while ((match = pattern.exec(codeTemplate)) !== null) {
-
 			// Compute child indentation and ensure it is made of spaces
-			const childIndentation = match[1].replaceAll("\t", "    ") + indentation;
+			const childIndentation = match[1].replaceAll('\t', '    ') + indentation;
 
 			const key = match[2];
 			if (key === 'this') {
-				templateVars[key] = (await Promise.all(node.pythonComponent.code
-					.map(async (code) => childIndentation + await node.pythonComponent.formatPythonVars(code)))
-				)
-					.join('\n');
+				templateVars[key] = (
+					await Promise.all(
+						node.pythonComponent.code.map(
+							async (code) => childIndentation + (await node.pythonComponent.formatPythonVars(code))
+						)
+					)
+				).join('\n');
 			} else {
 				const outgoer = node.getOutgoer(key.replace('_', '-'));
 				const childRes = await PythonNodeComponent.collectPythonData(
@@ -207,7 +199,7 @@ export class PythonNodeComponent extends NodeComponent {
 				templateVars[key] = code;
 			}
 		}
-		codeTemplate = "\n".repeat(node.pythonComponent.newlinesBefore) + codeTemplate;
+		codeTemplate = '\n'.repeat(node.pythonComponent.newlinesBefore) + codeTemplate;
 		const resCodeTemplate = getMessageFormatter(codeTemplate).format(templateVars);
 		if (resCodeTemplate instanceof Array) {
 			throw new Error('Code resulting from format must be a string, not an array');

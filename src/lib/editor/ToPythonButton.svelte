@@ -27,7 +27,6 @@
 		notifications.hide('python-mode');
 	}
 
-
 	$: if (factory) {
 		const editor = factory.getEditor();
 		async function pipe(context: AreaExtra | Area2D<Schemes> | Root<Schemes>) {

@@ -7,8 +7,9 @@ export class SEGYAcquisitionNode extends APINode {
 
 		this.pythonComponent.addImportStatement('from utilities.acquisition import SEGYAcquisition');
 		this.pythonComponent.setEmptyNewlinesBefore(1);
-		this.pythonComponent.setCodeTemplateGetter(() => 
-			`
+		this.pythonComponent.setCodeTemplateGetter(
+			() =>
+				`
 # Read acquisition from SEGY files
 if rank == 0:
     $(acquisition) = SEGYAcquisition(xml=xml, segdir=$[segdir])
@@ -17,7 +18,8 @@ else:
 acquisition = comm.bcast($(acquisition), root=0)
 
 {exec}
-`);
+`
+		);
 
 		this.pythonComponent.addVariable('acquisition');
 		this.addInData({
