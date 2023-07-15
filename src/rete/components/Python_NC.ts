@@ -66,7 +66,7 @@ export class PythonNodeComponent extends NodeComponent {
 `;
 	}
 
-	assignAcualVars(
+	assignActualVars(
 		usedVars: Set<string>
 	): Set<string> {
 		for (const varName of this.createdVariables) {
@@ -157,7 +157,7 @@ export class PythonNodeComponent extends NodeComponent {
 			};
 		}
 
-		allVars = node.pythonComponent.assignAcualVars(allVars);
+		allVars = node.pythonComponent.assignActualVars(allVars);
 		console.log(node.pythonComponent.actualCreatedVars)
 
 		// Get code template
