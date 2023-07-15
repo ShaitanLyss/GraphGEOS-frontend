@@ -66,7 +66,7 @@ export class PythonNodeComponent extends NodeComponent {
 `;
 	}
 
-	assignActualVars(
+	private  assignActualVars(
 		usedVars: Set<string>
 	): Set<string> {
 		for (const varName of this.createdVariables) {
@@ -105,7 +105,7 @@ export class PythonNodeComponent extends NodeComponent {
 
 // TODO : python dataflow engine
 
-	async formatPythonVars(template: string) {
+	private async formatPythonVars(template: string) {
 		const varPattern = /([^$]*)\$(\(([^)]+)\)|\[([^]+)\])([^$]*)|([^]+)/g;
 		let matchVar;
 		let resCode = "";
