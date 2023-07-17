@@ -120,6 +120,7 @@ export const acquisitionModelingExample: EditorExample = async (factory: NodeFac
 	const executeSolver = new ExecuteNode({ factory });
 	await editor.addNode(executeSolver);
 	await editor.addNewConnection(sequence, 'exec-1', executeSolver, 'exec');
+	await editor.addNewConnection(timeLoop, 'time', executeSolver, 'time');
 
 	const format = new FormatNode({ factory, format: 'Shot {index} done' });
 	await editor.addNode(format);

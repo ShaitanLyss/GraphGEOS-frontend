@@ -305,10 +305,7 @@ export class PythonNodeComponent extends NodeComponent {
 
 		// Add intentation in front of everyline of codeTemplate
 		codeTemplate = codeTemplate.replaceAll(/^(?!.*{.*}.*)/gm, indentation);
-		if (node.label == "Initialize Solver") {
-			console.log(codeTemplate);
-
-		}
+		
 
 		const templateVars: Record<string, string> = {};
 		let resImportsStatements: Set<string> = node.pythonComponent.importsStatements;
@@ -327,7 +324,9 @@ export class PythonNodeComponent extends NodeComponent {
 				templateVars[key] = (
 					await Promise.all(
 						node.pythonComponent.code.map(
-							async (code) => childIndentation + (await node.pythonComponent.formatPythonVars(code))
+							async (code) => 
+								childIndentation + (await node.pythonComponent.formatPythonVars(code))
+							
 						)
 					)
 				).join('\n');
@@ -347,11 +346,16 @@ export class PythonNodeComponent extends NodeComponent {
 						yield* importsStatements;
 					})()
 				);
-
+				
 				templateVars[key] = code;
 			}
 		}
 		codeTemplate = '\n'.repeat(node.pythonComponent.newlinesBefore) + codeTemplate;
+
+		// Remove redundant indendation since indendation is 
+		// already included in child code
+		codeTemplate = codeTemplate.replaceAll(/^[\t ]*({.*?}.*)$/gm, "$1");
+		
 		const resCodeTemplate = getMessageFormatter(codeTemplate).format(templateVars);
 		if (resCodeTemplate instanceof Array) {
 			throw new Error('Code resulting from format must be a string, not an array');

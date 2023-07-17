@@ -10,16 +10,7 @@ export class TimeLoopNode extends Node {
 		// super('Time Loop', { factory, height: 440, width: 200 });
 		super({ label: 'Time Loop', factory, height: 440, width: 200 });
 		// TODO: implement display progress
-		this.pythonComponent.addVariables('t');
-		this.pythonComponent.setCodeTemplateGetter(() => {
-			return `
-$(t) = $(start)
-while $(t) < $(end):
-    {loop}
-    $(t) += $(step)
-{done}
-`;
-		});
+
 
 		this.addInExec();
 
@@ -83,6 +74,19 @@ while $(t) < $(end):
 			type: 'number'
 		});
 		this.addOutExec('done', 'Done', true);
+
+		this.pythonComponent.addVariables('t');
+		this.pythonComponent.addDynamicOutput('time')
+		this.pythonComponent.setDataCodeGetter('time', () => "$(t)");
+		this.pythonComponent.setCodeTemplateGetter(() => {
+			return `
+$(t) = $(start)
+while $(t) < $(end):
+    {loop}
+    $(t) += $(step)
+{done}
+`;
+		});
 	}
 
 	override async execute(
