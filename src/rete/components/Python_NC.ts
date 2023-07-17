@@ -26,18 +26,17 @@ export class PythonNodeComponent extends NodeComponent {
 	}
     async data(inputs: { [x: string]: PythonComponentData[]; }): Promise<Record<string, PythonComponentData>> {
 		const isDynamicInput = PythonNodeComponent.isDynamicInput(inputs);
-		// console.log(`${this.node.label}: inputs = `, inputs);
-		const staticInputs: Record<string, unknown[]> = {};
-		for (const [key, value] of Object.entries(inputs)) {
-			staticInputs[key] = value.map((data) => data.data);
-		}
-		
+
 		if (!isDynamicInput) {
 			// convert inputs to regular inputs extracting data from PythonComponentData
-			console.log("static")
-			const staticData = this.node.data(staticInputs);
+			const staticInputs: Record<string, unknown[]> = {};
+			for (const [key, value] of Object.entries(inputs)) {
+				staticInputs[key] = value.map((data) => data.data);
+			}
+			let staticData = this.node.data(staticInputs);
+
 			if (staticData instanceof Promise) {
-				throw new Error('Static data cannot be a promise');
+				staticData = await staticData;
 			}
 			const staticPyData: Record<string, PythonComponentData> = {};
 			// convert static data to PythonComponentData
@@ -45,7 +44,6 @@ export class PythonNodeComponent extends NodeComponent {
 				if (this.dynamicOutputs.has(key)) {
 					if (!(key in this.dataCodeGetters)) throw new Error(`Missing data code getter for ${key}`);
 					staticPyData[key] = new PythonComponentData('dynamic', await this.formatPythonVars(this.dataCodeGetters[key]()))
-					// console.log(`staticPyData[${key}] = ${staticPyData[key]}`)
 				} else 
 				staticPyData[key] = new PythonComponentData("static", staticData[key]);
 			}
@@ -57,7 +55,6 @@ export class PythonNodeComponent extends NodeComponent {
 		const res: Record<string, PythonComponentData> = {};		
 		for (const [key, dataGetter] of Object.entries(this.dataCodeGetters)) {
 			if (!dataGetter) throw new Error(`Missing data code getter for ${key}`);
-			console.log("dynamic")
 			res[key] = new PythonComponentData("dynamic", await this.formatPythonVars(dataGetter(), inputs));
 		}
 
