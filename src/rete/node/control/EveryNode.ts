@@ -1,6 +1,6 @@
 import { _ } from 'svelte-i18n';
 import { Node } from '../Node';
-import { NodeFactory } from '../NodeFactory';
+import type { NodeFactory } from '../NodeFactory';
 
 export class EveryNode extends Node {
 	current = 0;
@@ -20,10 +20,43 @@ export class EveryNode extends Node {
 				type: 'number',
 				options: {
 					initial: count,
-					label: 'Count'
+					label: 'Count',
+					change: (value: number) => {
+						console.log("yo")
+						this.factory.pythonDataflowEngine.reset(this.id);
+					}
+			
 				}
 			}
 		});
+		// TODO: change init into getter
+		this.pythonComponent.addInitCode(
+			`$(every${this.getData<'number'>('count') }) = Every(${this.getData<'number'>('count')})`
+		)
+		// TODO : dynamic variable
+		this.pythonComponent.addVariable(`every${this.getData<'number'>('count') }`)
+
+		this.pythonComponent.setCodeTemplateGetter(() =>  {
+			return (
+`
+if $(every${this.getData<'number'>('count') })():
+    {exec}
+`
+		)})
+
+		this.pythonComponent.addClass('every', 
+`
+class Every:
+	def __init__(self, count):
+		self.count = count
+		self.current = 0
+
+	def __call__(self):
+		self.current += 1
+		return self.current % self.count == 0
+
+`
+		)
 
 		// this.addInExec('reset', 'Reset');
 	}

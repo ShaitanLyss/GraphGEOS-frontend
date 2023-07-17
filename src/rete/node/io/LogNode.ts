@@ -9,9 +9,13 @@ export class LogNode extends Node {
 	constructor({ message = 'Hello', factory }: { message?: string; factory: NodeFactory }) {
 		// super('Log', { factory });
 		super({ label: 'Log', factory, params: { message } });
-		this.pythonComponent.addCode(
-			'print($(message))',
-		);
+		this.pythonComponent.addCode('print($(message))');
+		this.pythonComponent.setCodeTemplateGetter(() => 
+`
+if (rank == 0):
+    {this}
+{exec}
+`);
 		this.height = 200;
 		this.addInExec();
 		this.addOutExec();

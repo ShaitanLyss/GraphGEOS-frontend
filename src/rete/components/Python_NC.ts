@@ -114,7 +114,8 @@ export class PythonNodeComponent extends NodeComponent {
 	private createdVariables: Set<string> = new Set();
 	private actualCreatedVars: Record<string, string> = {};
 	private dynamicOutputs: Set<string> = new Set();
-
+	private classes: Record<string, string> = {};
+	private initCode: string[] = [];
 
 
 	private codeTemplateGetter: () => string = this.getCodeTemplate;
@@ -134,6 +135,14 @@ export class PythonNodeComponent extends NodeComponent {
 		}
 	}
 
+	addClass(name: string, code: string) {
+		if (name in this.classes) throw new Error(`Class ${name} already exists`);
+		this.classes[name] = code.trim().replaceAll("\t", "    ");
+	}
+	// TODO; change init into getter
+	addInitCode(code: string) {
+		this.initCode.push(code.trim());
+	}
 	addCode(...code: string[]) {
 		this.code.push(...code);
 	}
@@ -216,11 +225,12 @@ export class PythonNodeComponent extends NodeComponent {
 		try {
 		return await this.node.getFactory().pythonDataflowEngine.fetchInputs(this.node.id);
 		} catch (e) {
-			const firstMatch = /"(.*?)"/.exec(e.message as string);
+			const firstMatch = /"(.*?)"/.exec((e as {message: string}).message as string);
 			if (firstMatch) {
 			const nodeId = firstMatch[1];
 			console.error("Problematic node", this.node.getFactory().getEditor().getNode(nodeId))
 			}
+		
 			throw e;
 		}
 	}
@@ -282,13 +292,15 @@ export class PythonNodeComponent extends NodeComponent {
 		node: Node | null,
 		indentation: string,
 		allVars: Set<string>
-	): Promise<{ importsStatements: Set<string>; code: string; allVars: Set<string> }> {
+	): Promise<{ importsStatements: Set<string>; code: string; allVars: Set<string>, classes: Record<string, string>, initCode: string[] }> {
 		// Stop case
 		if (node === null) {
 			return {
 				importsStatements: new Set(),
 				code: '',
-				allVars: allVars
+				allVars: allVars,
+				classes: {},
+				initCode: []
 			};
 		}
 
@@ -306,6 +318,8 @@ export class PythonNodeComponent extends NodeComponent {
 
 		const templateVars: Record<string, string> = {};
 		let resImportsStatements: Set<string> = node.pythonComponent.importsStatements;
+		let resClasses: Record<string, string> = node.pythonComponent.classes;
+		let resInitCode: string[] = await Promise.all(node.pythonComponent.initCode.map((code) => node.pythonComponent.formatPythonVars(code)));
 
 		// Pattern to match indendation and variables in code template
 		const pattern = /( *){(.+)}/g;
@@ -334,7 +348,7 @@ export class PythonNodeComponent extends NodeComponent {
 					childIndentation,
 					allVars
 				);
-				const { importsStatements, code } = childRes;
+				const { importsStatements, code, classes, initCode } = childRes;
 				allVars = childRes.allVars;
 				// Merge imports statements
 				resImportsStatements = new Set(
@@ -343,6 +357,18 @@ export class PythonNodeComponent extends NodeComponent {
 						yield* importsStatements;
 					})()
 				);
+
+				// Merge classes
+				resClasses = {
+					...resClasses,
+					...classes,
+				};
+
+				// Merge init code
+				resInitCode = [
+					...resInitCode,
+					...initCode
+				];
 				
 				templateVars[key] = code;
 			}
@@ -361,7 +387,9 @@ export class PythonNodeComponent extends NodeComponent {
 		return {
 			importsStatements: resImportsStatements,
 			code: resCodeTemplate,
-			allVars: allVars
+			allVars: allVars,
+			classes: resClasses,
+			initCode: resInitCode
 		};
 	}
 
@@ -370,12 +398,14 @@ export class PythonNodeComponent extends NodeComponent {
 		// const worker = new PythonWorker.default();
 		// worker.postMessage("Hello world from window!")
 		// TODO: implement web worker
-		const { importsStatements, code } = await PythonNodeComponent.collectPythonData(
+		const { importsStatements, code, classes, initCode } = await PythonNodeComponent.collectPythonData(
 			this.node,
 			'    ',
 			new Set(['comm', 'rank', 'xml', 'args', 'xmlfile'])
 		);
 		const imports = [...importsStatements].join('\n');
+		const fClasses = Object.values(classes).join('\n\n');
+		const fInitCode = initCode.join('\n    ');
 
 		return `
 import argparse
@@ -385,7 +415,7 @@ from mpi4py import MPI
 #GEOSX
 from utilities.input import XML
 ${imports}
-    
+${fClasses ? "\n\n" : ""}${fClasses}${fClasses ? "\n\n" : ""} 
 def parse_args():
     """Get arguments
 
@@ -413,6 +443,8 @@ def main():
     xmlfile = args.xml
 
     xml = XML(xmlfile)
+
+    ${fInitCode}
 
 ${code}
 `.trim();

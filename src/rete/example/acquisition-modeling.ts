@@ -116,6 +116,7 @@ export const acquisitionModelingExample: EditorExample = async (factory: NodeFac
 	await editor.addExecConnection(every, outputVtk);
 
 	await editor.addNewConnection(timeLoop, 'loop', sequence, 'exec');
+	await editor.addNewConnection(timeLoop, 'time', outputVtk, 'time');
 
 	const executeSolver = new ExecuteNode({ factory });
 	await editor.addNode(executeSolver);

@@ -24,7 +24,7 @@
 			isFirstSet = false;
 			return;
 		}
-
+		data.options?.change();
 		const target = event.target as HTMLInputElement;
 		const val = data.type === 'number' ? +target.value : target.value;
 		clearTimeout(debouncedTimer);
