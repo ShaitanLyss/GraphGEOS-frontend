@@ -447,6 +447,9 @@ def main():
     ${fInitCode}
 
 ${code}
+
+if __name__ == "__main__":
+    main()
 `.trim();
 	}
 }
