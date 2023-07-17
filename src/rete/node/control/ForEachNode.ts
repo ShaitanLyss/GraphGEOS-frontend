@@ -19,7 +19,7 @@ export class ForEachNode extends Node {
 		this.pythonComponent.setCodeTemplateGetter(() => {
 			return `
 for $(index), $(item) in enumerate($(array)):
-    {loop}
+    {loop}?
 {exec}
 `;
 		});

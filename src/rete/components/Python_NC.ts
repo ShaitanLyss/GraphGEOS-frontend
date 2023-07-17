@@ -87,8 +87,10 @@ export class PythonNodeComponent extends NodeComponent {
 		}
 	}
 
-	addClass(name: string, code: string) {
-		if (name in this.classes) throw new Error(`Class ${name} already exists`);
+	addClass(code: string) {
+		const pattern = /.*?class\s+(\w+)\s*.*?:/s;
+		const name = pattern.exec(code)?.[1];
+		if (!name || name in this.classes) throw new Error(`Class ${name} already exists`);
 		this.classes[name] = code.trim().replaceAll("\t", "    ");
 	}
 	// TODO; change init into getter
@@ -274,7 +276,7 @@ export class PythonNodeComponent extends NodeComponent {
 		let resInitCode: string[] = await Promise.all(node.pythonComponent.initCode.map((code) => node.pythonComponent.formatPythonVars(code)));
 
 		// Pattern to match indendation and variables in code template
-		const pattern = /( *){(.+)}/g;
+		const pattern = /( *){(.+?)}(\??)/g;
 
 		// Iterate on code template variables
 		let match;
@@ -283,6 +285,7 @@ export class PythonNodeComponent extends NodeComponent {
 			const childIndentation = match[1].replaceAll('\t', '    ') + indentation;
 
 			const key = match[2];
+			const pass = match[3];
 			if (key === 'this') {
 				templateVars[key] = (
 					await Promise.all(
@@ -300,7 +303,10 @@ export class PythonNodeComponent extends NodeComponent {
 					childIndentation,
 					allVars
 				);
-				const { importsStatements, code, classes, initCode } = childRes;
+				const { importsStatements, classes, initCode } = childRes;
+				let code = childRes.code;
+				if (pass && /^\s*$/.test(code))
+					code = childIndentation + 'pass';
 				allVars = childRes.allVars;
 				// Merge imports statements
 				resImportsStatements = new Set(
@@ -329,7 +335,8 @@ export class PythonNodeComponent extends NodeComponent {
 
 		// Remove redundant indendation since indendation is 
 		// already included in child code
-		codeTemplate = codeTemplate.replaceAll(/^[\t ]*({.*?}.*)$/gm, "$1");
+		// Remove trailing ? (pass symbol) in code template
+		codeTemplate = codeTemplate.replaceAll(/^[\t ]*({.*?})\??(.*)$/gm, "$1$2");
 
 		const resCodeTemplate = getMessageFormatter(codeTemplate).format(templateVars);
 		if (resCodeTemplate instanceof Array) {

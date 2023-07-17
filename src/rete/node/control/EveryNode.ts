@@ -40,11 +40,11 @@ export class EveryNode extends Node {
 			return (
 `
 if $(every${this.getData<'number'>('count') })():
-    {exec}
+    {exec}?
 `
 		)})
 
-		this.pythonComponent.addClass('every', 
+		this.pythonComponent.addClass(
 `
 class Every:
 	def __init__(self, count):
