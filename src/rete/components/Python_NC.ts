@@ -34,7 +34,7 @@ export class PythonNodeComponent extends NodeComponent {
 		
 		if (!isDynamicInput) {
 			// convert inputs to regular inputs extracting data from PythonComponentData
-			
+			console.log("static")
 			const staticData = this.node.data(staticInputs);
 			if (staticData instanceof Promise) {
 				throw new Error('Static data cannot be a promise');
@@ -53,57 +53,12 @@ export class PythonNodeComponent extends NodeComponent {
 			return staticPyData;
 		}
 		
-
+		// Dynamic inputs case
 		const res: Record<string, PythonComponentData> = {};		
-		// TODO: check missing data code getter
 		for (const [key, dataGetter] of Object.entries(this.dataCodeGetters)) {
 			if (!dataGetter) throw new Error(`Missing data code getter for ${key}`);
-			const template = dataGetter();
-			const varPattern = /([^$]*)\$(\(([^)]+)\)|\[([^]+)\])([^$]*)|([^]+)/g;
-			let matchVar;
-			let resCode = '';
-
-			while ((matchVar = varPattern.exec(template)) !== null) {
-				const codeBefore = matchVar[1];
-				const varName = matchVar[3];
-				const dataKey = matchVar[4];
-				const codeAfter = matchVar[5];
-				const codeWhenNoVar = matchVar[6];
-				if (codeBefore) resCode += codeBefore;
-
-				if (dataKey) {
-					const data = this.node.getData(dataKey, staticInputs);
-					if (data !== undefined) {
-						resCode += PythonNodeComponent.toPythonData(data);
-					}
-				}
-
-				if (varName) {
-					// data is created by this node as a variable
-					if (varName in this.actualCreatedVars) {
-						resCode += this.actualCreatedVars[varName];
-					} else {
-						if (varName in this.node.ingoingDataConnections) {
-						
-							const pyData = inputs[varName][0];
-							if (pyData.type === "static") {
-								resCode += PythonNodeComponent.toPythonData(pyData.data);
-							} else if (pyData.type === "dynamic") {
-								resCode += pyData.data;
-							}
-
-						}
-						// data comes from control
-						else {
-							const data = this.node.getData<"text">(varName, staticInputs);
-							resCode += PythonNodeComponent.toPythonData(data);
-						}
-					}
-				}
-				if (codeAfter) resCode += codeAfter;
-				if (codeWhenNoVar) resCode += codeWhenNoVar;
-			}
-			res[key] = new PythonComponentData("dynamic", resCode);
+			console.log("dynamic")
+			res[key] = new PythonComponentData("dynamic", await this.formatPythonVars(dataGetter(), inputs));
 		}
 
 		return res;
@@ -237,12 +192,13 @@ export class PythonNodeComponent extends NodeComponent {
 
 	// TODO : python dataflow engine
 
-	private async formatPythonVars(template: string) {
+	private async formatPythonVars(template: string, inputs?: Record<string, PythonComponentData[]>) {
 		const varPattern = /([^$]*)\$(\(([^)]+)\)|\[([^]+)\])([^$]*)|([^]+)/g;
 		let matchVar;
 		let resCode = '';
 
-		const inputs = await this.node.fetchInputs();
+		if (inputs === undefined)
+			inputs = await this.fetchInputs();
 
 		while ((matchVar = varPattern.exec(template)) !== null) {
 			const codeBefore = matchVar[1];
@@ -265,7 +221,6 @@ export class PythonNodeComponent extends NodeComponent {
 					resCode += this.actualCreatedVars[varName];					
 				} else {
 					if (varName in this.node.ingoingDataConnections) {
-						const inputs = await this.fetchInputs();
 						const input = inputs[varName][0];
 						
 						if (input.type === "dynamic") {
