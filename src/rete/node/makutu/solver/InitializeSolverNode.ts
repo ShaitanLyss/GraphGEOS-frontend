@@ -1,10 +1,11 @@
-import { PythonObject } from '../../../../backend-interaction/python';
-import { NodeFactory } from '../../NodeFactory';
+import type { NodeFactory } from '../../NodeFactory';
 import { SolverAPINode } from './SolverAPINode';
 
 export class InitializeSolverNode extends SolverAPINode {
 	constructor({ factory }: { factory: NodeFactory }) {
 		super({ label: 'Initialize Solver', url: '/initialize', factory, height: 250 });
+
+		this.pythonComponent.addCode('$(solver).initialize(rank, $(xml))');
 
 		this.addInData({
 			name: 'xml',
@@ -12,5 +13,6 @@ export class InitializeSolverNode extends SolverAPINode {
 			socketLabel: 'XML',
 			type: 'pythonObject'
 		});
+
 	}
 }

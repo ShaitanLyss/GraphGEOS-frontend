@@ -1,4 +1,4 @@
-import { NodeFactory } from '../../NodeFactory';
+import type { NodeFactory } from '../../NodeFactory';
 import { SolverAPINode } from './SolverAPINode';
 
 export class UpdateSourcesAndReceiversNode extends SolverAPINode {
@@ -23,5 +23,7 @@ export class UpdateSourcesAndReceiversNode extends SolverAPINode {
 			socketLabel: 'Receivers Coords',
 			type: 'pythonObject'
 		});
+
+		this.pythonComponent.addCode('$(solver).updateSourceAndReceivers($(sourceCoords), $(receiverCoords))');
 	}
 }

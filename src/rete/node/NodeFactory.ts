@@ -9,9 +9,25 @@ import { Connection, Node } from './Node';
 import { ClassicPreset } from 'rete';
 import { InputControl } from '$rete/control/Control';
 import { Writable, writable } from 'svelte/store';
+import { PythonDataflowEngine } from '$rete/engine/PythonDataflowEngine';
 
 function createDataflowEngine() {
 	return new DataflowEngine<Schemes>(({ inputs, outputs }) => {
+		return {
+			inputs: () =>
+				Object.entries(inputs)
+					.filter(([_, input]) => input && !(input.socket instanceof ExecSocket))
+					.map(([name]) => name),
+			outputs: () =>
+				Object.entries(outputs)
+					.filter(([_, output]) => output && !(output.socket instanceof ExecSocket))
+					.map(([name]) => name)
+		};
+	});
+}
+
+function createPythonDataflowEngine() {
+	return new PythonDataflowEngine<Schemes>(({ inputs, outputs }) => {
 		return {
 			inputs: () =>
 				Object.entries(inputs)
@@ -56,6 +72,8 @@ export class NodeFactory {
 	setState(id: string, key: string, value: unknown) {
 		this.state.set(id + '_' + key, value);
 	}
+
+	readonly pythonDataflowEngine: PythonDataflowEngine<Schemes> = createPythonDataflowEngine();
 
 	async loadGraph(editorSaveData: NodeEditorSaveData) {
 		await this.editor.clear();
@@ -113,23 +131,34 @@ export class NodeFactory {
 		this.editor = editor;
 		editor.use(this.dataflowEngine);
 		editor.use(this.controlflowEngine);
+		editor.use(this.pythonDataflowEngine);
 
 		// Assign connections to nodes
 		editor.addPipe((context) => {
 			if (context.type !== 'connectioncreated' && context.type !== 'connectionremoved')
 				return context;
 			const conn = context.data;
-			const node = editor.getNode(conn.source);
-			const socket = node.outputs[conn.sourceOutput]?.socket;
-			const connections =
+			const sourceNode = editor.getNode(conn.source);
+			const targetNode = editor.getNode(conn.target);
+			this.pythonDataflowEngine.reset(targetNode.id);
+			const socket = sourceNode.outputs[conn.sourceOutput]?.socket;
+			const outgoingConnections =
 				socket instanceof ExecSocket || socket?.type == 'exec'
-					? node.outgoingExecConnections
-					: node.outgoingDataConnections;
+					? sourceNode.outgoingExecConnections
+					: sourceNode.outgoingDataConnections;
+
+			const ingoingConnections =
+				socket instanceof ExecSocket || socket?.type == 'exec'
+					? targetNode.ingoingExecConnections
+					: targetNode.ingoingDataConnections;
+
 
 			if (context.type === 'connectioncreated') {
-				connections[conn.sourceOutput] = conn;
+				outgoingConnections[conn.sourceOutput] = conn;
+				ingoingConnections[conn.targetInput] = conn;
 			} else if (context.type === 'connectionremoved') {
-				delete connections[conn.sourceOutput];
+				delete outgoingConnections[conn.sourceOutput];
+				delete ingoingConnections[conn.targetInput];
 			}
 
 			return context;

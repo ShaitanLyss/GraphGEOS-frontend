@@ -1,4 +1,4 @@
-import { NodeFactory } from '../../NodeFactory';
+import type { NodeFactory } from '../../NodeFactory';
 import { SolverAPINode } from './SolverAPINode';
 
 export class UpdateVtkOutputNode extends SolverAPINode {
@@ -26,6 +26,8 @@ export class UpdateVtkOutputNode extends SolverAPINode {
 				type: 'text'
 			}
 		});
+
+		this.pythonComponent.addCode('$(solver).updateVtkOutputsName(directory=$(directory))')
 		// this.addInData({
 		// 	name: 'filenames',
 		// 	displayName: 'File Names',

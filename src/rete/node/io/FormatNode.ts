@@ -15,6 +15,16 @@ export class FormatNode extends Node {
 		// super('Format', { factory, height: 124.181818 + 43.818182 });
 		super({ label: 'Format', height: 124.181818 + 43.818182, factory, params: { format, vars } });
 		this.formatInputHeight = 43.818182;
+
+		this.pythonComponent.setDataCodeGetter("result", () => {
+			const vars =  this.getFormatVariablesKeys();
+			const var_bindings = Object.entries(vars).map(
+				([key, varname]) => 
+					`${varname}=$(${key})`
+			).join(", ");
+			return `$(format).format(${var_bindings})`;
+		});
+
 		this.addOutData({
 			name: 'result',
 			displayName: '',
@@ -54,13 +64,28 @@ export class FormatNode extends Node {
 		this.updateDataInputs(vars);
 	}
 
-	override data(inputs?: Record<string, unknown[]> | undefined): { result?: string } {
-		const res = { result: '' };
-		if (inputs === undefined) return res;
-		const values = {};
+	getFormatVariablesKeys(): Record<string, string> {
+		const res: Record<string, string> = {};
+
+		for (const key in this.inputs) {
+			if (key.startsWith("data-")) 
+				res[key] = key.slice('data-'.length)
+		}
+		return res;
+	}
+
+	getValues(inputs: Record<string, unknown[]>) {
+		const values: Record<string, unknown> = {};
 		Object.keys(this.inputs).forEach((key) => {
 			if (key.startsWith('data-')) values[key.slice('data-'.length)] = this.getData(key, inputs);
 		});
+		return values;
+	}
+
+	override data(inputs?: Record<string, unknown[]> | undefined): { result?: string } {
+		const res = { result: '' };
+		if (inputs === undefined) return res;
+		const values = this.getValues(inputs);
 		try {
 			res.result = getMessageFormatter(this.getData<'text'>('format', inputs) as string).format(
 				values

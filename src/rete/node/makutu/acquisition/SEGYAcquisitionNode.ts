@@ -4,24 +4,7 @@ import type { NodeFactory } from '../../NodeFactory';
 export class SEGYAcquisitionNode extends APINode {
 	constructor({ factory }: { factory: NodeFactory }) {
 		super({ label: 'SEGY Acquisition', factory, url: '/makutu/acquisition/segy' });
-
-		this.pythonComponent.addImportStatement('from utilities.acquisition import SEGYAcquisition');
-		this.pythonComponent.setEmptyNewlinesBefore(1);
-		this.pythonComponent.setCodeTemplateGetter(
-			() =>
-				`
-# Read acquisition from SEGY files
-if rank == 0:
-    $(acquisition) = SEGYAcquisition(xml=xml, segdir=$[segdir])
-else:
-    $(acquisition) = None
-acquisition = comm.bcast($(acquisition), root=0)
-
-{exec}
-`
-		);
-
-		this.pythonComponent.addVariable('acquisition');
+		
 		this.addInData({
 			name: 'segdir',
 			displayName: 'Seg Directory',
@@ -39,6 +22,26 @@ acquisition = comm.bcast($(acquisition), root=0)
 			type: 'pythonObject',
 			isArray: true
 		});
+		this.pythonComponent.addImportStatement('from utilities.acquisition import SEGYAcquisition');
+		this.pythonComponent.addVariable('shots');
+		this.pythonComponent.setEmptyNewlinesBefore(1);
+		this.pythonComponent.setCodeTemplateGetter(
+			() =>
+				`
+# Read acquisition from SEGY files
+if rank == 0:
+    $(acquisition) = SEGYAcquisition(xml=xml, segdir=$[segdir])
+else:
+    $(acquisition) = None
+acquisition = comm.bcast($(acquisition), root=0)
+$(shots) = acquisition.shots
+
+{exec}
+`
+		);
+
+		this.pythonComponent.addVariable('acquisition');
+
 
 		// setInterval(() => {
 		// 	console.log(this.get);

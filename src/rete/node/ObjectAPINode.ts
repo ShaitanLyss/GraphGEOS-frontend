@@ -27,6 +27,8 @@ export class ObjectAPINode extends APINode {
 			displayName: objectLabel,
 			type: 'pythonObject'
 		});
+
+		this.pythonComponent.setDataCodeGetter(objectKey, () => `$(${objectKey})`);
 	}
 
 	// override data(

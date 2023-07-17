@@ -21,9 +21,7 @@ export class AcousticSEMNode extends APINode {
 			height: 180
 		});
 
-		this.pythonComponent.addImportStatement('from utilities.solvers import AcousticSolver');
-		this.pythonComponent.addCode('$(solver) = AcousticSolver()');
-		this.pythonComponent.addVariable('solver');
+
 
 		this.addOutData({
 			name: 'solver',
@@ -31,6 +29,10 @@ export class AcousticSEMNode extends APINode {
 			socketLabel: 'Solver',
 			type: 'pythonObject'
 		});
+
+		this.pythonComponent.addImportStatement('from utilities.solvers import AcousticSolver');
+		this.pythonComponent.addCode('$(solver) = AcousticSolver()');
+		this.pythonComponent.addVariable('solver');
 
 		// Display value
 	}

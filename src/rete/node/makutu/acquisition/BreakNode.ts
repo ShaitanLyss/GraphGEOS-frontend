@@ -1,6 +1,6 @@
 import { PythonObject, PythonProperty } from '../../../../backend-interaction/python';
 import { Node } from '../../Node';
-import { NodeFactory } from '../../NodeFactory';
+import type { NodeFactory } from '../../NodeFactory';
 
 // TODO : autogenerate outputs from the python object
 export class BreakNode extends Node {
@@ -35,6 +35,12 @@ export class BreakNode extends Node {
 			displayName: 'ID',
 			type: 'pythonProperty'
 		});
+
+		this.pythonComponent.setDataCodeGetter("xml", () => "$(object).xml");
+		this.pythonComponent.setDataCodeGetter("sourceCoords", () => "$(object).sourcesCoords");
+		this.pythonComponent.setDataCodeGetter("receiverCoords", () => "$(object).receiverCoords");
+		this.pythonComponent.setDataCodeGetter("id", () => "$(object).id");
+
 	}
 
 	data(

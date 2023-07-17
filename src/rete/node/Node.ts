@@ -99,6 +99,8 @@ export class Node<
 	static nodeCounts: bigint = BigInt(0);
 	protected state: Record<string, unknown> = {};
 	readonly pythonComponent: PythonNodeComponent;
+	readonly ingoingDataConnections: Record<string, Connection<Node, Node>> = {};
+	readonly ingoingExecConnections: Record<string, Connection<Node, Node>> = {};
 	readonly outgoingDataConnections: Record<string, Connection<Node, Node>> = {};
 	readonly outgoingExecConnections: Record<string, Connection<Node, Node>> = {};
 

@@ -13,6 +13,7 @@
 	export let container: HTMLElement;
 
 	let active = false;
+	$: window.factory = factory;
 
 	$: if (active) {
 		notifications.show({

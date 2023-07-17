@@ -49,6 +49,8 @@ export class AppendNode extends Node {
 			name: 'result',
 			type: 'string'
 		});
+
+		this.pythonComponent.setDataCodeGetter('result', () => "$(a) + $(sep) + $(b)");
 	}
 	override data(
 		inputs?: Record<string, unknown[]> | undefined
