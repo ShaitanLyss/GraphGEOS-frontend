@@ -1,9 +1,6 @@
-import { dev } from '$app/environment';
-import type { Node, OutDataParams } from '$rete/node/Node';
-import { getVarsFromFormatString } from '$utils/string';
+import type { Node } from '$rete/node/Node';
 import { getMessageFormatter } from 'svelte-i18n';
 import { NodeComponent } from './NodeComponent';
-import { stat } from 'fs';
 
 export type PythonComponentDataType = "static" | "dynamic";
 export class PythonComponentData<
@@ -355,7 +352,7 @@ export class PythonNodeComponent extends NodeComponent {
 		// Remove redundant indendation since indendation is 
 		// already included in child code
 		codeTemplate = codeTemplate.replaceAll(/^[\t ]*({.*?}.*)$/gm, "$1");
-		
+
 		const resCodeTemplate = getMessageFormatter(codeTemplate).format(templateVars);
 		if (resCodeTemplate instanceof Array) {
 			throw new Error('Code resulting from format must be a string, not an array');
