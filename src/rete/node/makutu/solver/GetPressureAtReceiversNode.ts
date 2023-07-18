@@ -1,5 +1,5 @@
 import { Node } from '../../Node';
-import { NodeFactory } from '../../NodeFactory';
+import type { NodeFactory } from '../../NodeFactory';
 import { SolverAPINode } from './SolverAPINode';
 
 export class GetPressuresAtReceiversNode extends SolverAPINode {
@@ -15,5 +15,8 @@ export class GetPressuresAtReceiversNode extends SolverAPINode {
 			type: 'pythonObject',
 			displayName: 'Seismos'
 		});
+
+		this.pythonComponent.addVariable('seismos');
+		this.pythonComponent.addCode('seismos = $(solver).getPressureAtReceivers()');
 	}
 }
