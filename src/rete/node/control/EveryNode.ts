@@ -57,7 +57,7 @@ class Every:
 
 	def __call__(self):
 		self.current += 1
-		return self.current % self.count == 0
+		return (self.current - 1) % self.count == 0
 
 	def reset(self):
 		self.current = 0
