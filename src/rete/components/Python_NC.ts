@@ -274,7 +274,7 @@ export class PythonNodeComponent extends NodeComponent {
 				code: '',
 				allVars: allVars,
 				classes: {},
-				initCode: [],
+				initCode: [], 
 				parserArguments: new Map()
 			};
 		}
@@ -285,8 +285,8 @@ export class PythonNodeComponent extends NodeComponent {
 		// Get code template
 		const getter = node.pythonComponent.codeTemplateGetters.get(nodeInput);
 		if (!getter) throw new Error(`No code template getter for ${nodeInput}`);
-		// TODO : suspicious trim
-		let codeTemplate = getter().trim();
+		// Cleanup code template
+		let codeTemplate = getter().replace(/^\n*([^]*?)\s*$/, "$1");
 
 		codeTemplate = await node.pythonComponent.formatPythonVars(codeTemplate);
 
