@@ -18,6 +18,7 @@ import { FormatNode } from '../node/io/FormatNode';
 import { GetPressuresAtReceiversNode } from '../node/makutu/solver/GetPressureAtReceiversNode';
 import type { EditorExample } from './types';
 import type { NodeFactory } from '../node/NodeFactory';
+import { ReinitSolverNode } from '$rete/node/makutu/solver/ReinitSolverNode';
 
 export const acquisitionModelingExample: EditorExample = async (factory: NodeFactory) => {
 	const editor = factory.getEditor();
@@ -113,7 +114,24 @@ export const acquisitionModelingExample: EditorExample = async (factory: NodeFac
 	const every = new EveryNode({ factory, count: 100 });
 	await editor.addNode(every);
 	await editor.addNewConnection(sequence, 'exec-0', every, 'exec');
-	await editor.addExecConnection(every, outputVtk);
+
+	const logProgress = new LogNode({ factory });
+	await editor.addNode(logProgress);
+	// print(f"time = {t:.3f}s, dt = {solver.dt:.4f}, iter = {cycle+1}")
+	const formatProgress = new FormatNode({ 
+		factory, 
+		format: 'time = {t:.3f}s, iter = {iter}' 
+	});
+	await editor.addNode(formatProgress);
+	await editor.addNewConnection(timeLoop, 'time', formatProgress, 'data-t');
+	await editor.addNewConnection(every, 'current', formatProgress, 'data-iter');
+
+	await editor.addNewConnection(formatProgress, 'result', logProgress, 'message');
+
+	
+
+	await editor.addExecConnection(every, logProgress);
+	await editor.addExecConnection(logProgress, outputVtk);
 	await editor.addNewConnection(timeLoop, 'done', every, 'reset')
 
 	await editor.addNewConnection(timeLoop, 'loop', sequence, 'exec');
@@ -149,8 +167,13 @@ export const acquisitionModelingExample: EditorExample = async (factory: NodeFac
 	const pressure = new GetPressuresAtReceiversNode({ factory });
 	await editor.addNode(pressure);
 	await editor.addExecConnection(logGatheringAndExportingSeismos, pressure);
+	
+	const reninit = new ReinitSolverNode({ factory });
+	await editor.addNode(reninit);
+	await editor.addExecConnection(pressure, reninit);
 
 	await editor.addNewConnection(initializeSolver, 'solver', pressure, 'solver');
+	await editor.addNewConnection(pressure, 'solver', reninit, 'solver');
 
 	// return [foreachShot, logShotDone, logGatheringAndExportingSeismos, pressure];
 	return editor.getNodes();
