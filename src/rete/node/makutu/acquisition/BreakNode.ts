@@ -37,8 +37,8 @@ export class BreakNode extends Node {
 		});
 
 		this.pythonComponent.setDataCodeGetter("xml", () => "$(object).xml");
-		this.pythonComponent.setDataCodeGetter("sourceCoords", () => "$(object).sourcesCoords");
-		this.pythonComponent.setDataCodeGetter("receiverCoords", () => "$(object).receiverCoords");
+		this.pythonComponent.setDataCodeGetter("sourceCoords", () => "$(object).getSourceCoords()");
+		this.pythonComponent.setDataCodeGetter("receiverCoords", () => "$(object).getReceiverCoords()");
 		this.pythonComponent.setDataCodeGetter("id", () => "$(object).id");
 
 	}
