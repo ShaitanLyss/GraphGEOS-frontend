@@ -26,30 +26,31 @@ export class EveryNode extends Node {
 						console.log("yo")
 						this.factory.pythonDataflowEngine.reset(this.id);
 					}
-			
+
 				}
 			}
 		});
 		// TODO: change init into getter
 		this.pythonComponent.addInitCode(
-			`$(every${this.getData<'number'>('count') }) = Every(${this.getData<'number'>('count')})`
+			`$(every${this.getData<'number'>('count')}) = Every(${this.getData<'number'>('count')})`
 		)
 		// TODO : dynamic variable
-		this.pythonComponent.addVariable(`every${this.getData<'number'>('count') }`)
+		this.pythonComponent.addVariable(`every${this.getData<'number'>('count')}`)
 
-		this.pythonComponent.setCodeTemplateGetter(() =>  {
+		this.pythonComponent.setCodeTemplateGetter(() => {
 			return (
-`
-if $(every${this.getData<'number'>('count') })():
+				`
+if $(every${this.getData<'number'>('count')})():
     {exec}?
 `
-		)})
-		this.pythonComponent.setCodeTemplateGetter(() =>  {
-			return `$(every${this.getData<'number'>('count') }).reset()`
+			)
+		})
+		this.pythonComponent.setCodeTemplateGetter(() => {
+			return `$(every${this.getData<'number'>('count')}).reset()`
 		}, 'reset')
 
 		this.pythonComponent.addClass(
-`
+			`
 class Every:
 	def __init__(self, count):
 		self.count = count
@@ -79,11 +80,17 @@ class Every:
 		forward: (output: string) => unknown,
 		forwardExec?: boolean
 	): Promise<void> {
-		if (this.isFlowing()) {
-			forward('exec');
-		}
+		if (input === 'exec') {
+			if (this.isFlowing()) {
+				forward('exec');
+			}
 
-		this.current++;
+			this.current++;
+		};
+
+		if (input === 'reset') {
+			this.current = 0;
+		}
 		super.execute(input, forward, false);
 	}
 
