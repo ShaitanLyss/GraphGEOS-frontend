@@ -297,7 +297,7 @@ export class PythonNodeComponent extends NodeComponent {
 		const templateVars: Record<string, string> = {};
 		let resImportsStatements: Set<string> = node.pythonComponent.importsStatements;
 		let resClasses: Record<string, string> = node.pythonComponent.classes;
-		let resInitCode: string[] = await Promise.all(node.pythonComponent.initCode.map((code) => node.pythonComponent.formatPythonVars(code)));
+		let resInitCode: string[] = nodeInput !== "exec" ? [] : await Promise.all(node.pythonComponent.initCode.map((code) => node.pythonComponent.formatPythonVars(code)));
 		let resParserArguments: Map<string, ParseArgumentData> = node.pythonComponent.parseArguments;
 
 		// Pattern to match indendation and variables in code template
