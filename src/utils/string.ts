@@ -29,8 +29,6 @@ export function camlelcaseize(str: string): string {
 }
 
 export function getVarsFromFormatString(formatString: string): string[] {
-	return getMessageFormatter(formatString)
-		.getAst()
-		.filter((e) => e.type === 1)
-		.map((e) => (e as unknown as { value: string }).value);
+	// return all matches of the regex
+	return Array.from(formatString.matchAll(/{(\w+).*?}/g)).map((match) => match[1]);
 }
