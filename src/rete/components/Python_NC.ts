@@ -4,8 +4,8 @@ import { NodeComponent } from './NodeComponent';
 
 export type PythonComponentDataType = "static" | "dynamic";
 export class PythonComponentData<
-T extends PythonComponentDataType = "static" | "dynamic",
-N = T extends "static" ? unknown : T extends "dynamic" ? string : unknown
+	T extends PythonComponentDataType = "static" | "dynamic",
+	N = T extends "static" ? unknown : T extends "dynamic" ? string : unknown
 >{
 	type: T;
 	data: N;
@@ -16,15 +16,23 @@ N = T extends "static" ? unknown : T extends "dynamic" ? string : unknown
 	}
 }
 
+type ParseArgumentData = {
+	name: string;
+	type: string;
+	required: boolean;
+	help: string;
+};
+
+
 export class PythonNodeComponent extends NodeComponent {
 	static isDynamicInput(inputs: Record<string, PythonComponentData[]>): boolean {
 		return Object
-		.entries(inputs)
-		.some(([key, value]) => {
-			return value.some((data) => data.type === "dynamic");
-		});
+			.entries(inputs)
+			.some(([key, value]) => {
+				return value.some((data) => data.type === "dynamic");
+			});
 	}
-    async data(inputs: { [x: string]: PythonComponentData[]; }): Promise<Record<string, PythonComponentData>> {
+	async data(inputs: { [x: string]: PythonComponentData[]; }): Promise<Record<string, PythonComponentData>> {
 		const isDynamicInput = PythonNodeComponent.isDynamicInput(inputs);
 
 		if (!isDynamicInput) {
@@ -44,23 +52,23 @@ export class PythonNodeComponent extends NodeComponent {
 				if (this.dynamicOutputs.has(key)) {
 					if (!(key in this.dataCodeGetters)) throw new Error(`Missing data code getter for ${key}`);
 					staticPyData[key] = new PythonComponentData('dynamic', await this.formatPythonVars(this.dataCodeGetters[key]()))
-				} else 
-				staticPyData[key] = new PythonComponentData("static", staticData[key]);
+				} else
+					staticPyData[key] = new PythonComponentData("static", staticData[key]);
 			}
 
 			return staticPyData;
 		}
-		
+
 		// Dynamic inputs case
-		const res: Record<string, PythonComponentData> = {};		
+		const res: Record<string, PythonComponentData> = {};
 		for (const [key, dataGetter] of Object.entries(this.dataCodeGetters)) {
 			if (!dataGetter) throw new Error(`Missing data code getter for ${key}`);
 			res[key] = new PythonComponentData("dynamic", await this.formatPythonVars(dataGetter(), inputs));
 		}
 
 		return res;
-    }
-	public dataCodeGetters: Record<string,(() => string)> = {};
+	}
+	public dataCodeGetters: Record<string, (() => string)> = {};
 	private importsStatements: Set<string> = new Set();
 	private code: string[] = [];
 	private createdVariables: Set<string> = new Set();
@@ -68,6 +76,7 @@ export class PythonNodeComponent extends NodeComponent {
 	private dynamicOutputs: Set<string> = new Set();
 	private classes: Record<string, string> = {};
 	private initCode: string[] = [];
+	private parseArguments: Map<string, ParseArgumentData> = new Map();
 
 
 	private codeTemplateGetter: () => string = this.getCodeTemplate;
@@ -85,6 +94,11 @@ export class PythonNodeComponent extends NodeComponent {
 		for (const statement of statements) {
 			this.importsStatements.add(statement);
 		}
+	}
+
+	addParseArgument(params: ParseArgumentData) {
+		if (this.parseArguments.has(params.name)) throw new Error(`Argument ${params.name} already exists`);
+		this.parseArguments.set(params.name, params);
 	}
 
 	addClass(code: string) {
@@ -177,14 +191,14 @@ export class PythonNodeComponent extends NodeComponent {
 
 	async fetchInputs(): Promise<Record<string, PythonComponentData[]>> {
 		try {
-		return await this.node.getFactory().pythonDataflowEngine.fetchInputs(this.node.id);
+			return await this.node.getFactory().pythonDataflowEngine.fetchInputs(this.node.id);
 		} catch (e) {
-			const firstMatch = /"(.*?)"/.exec((e as {message: string}).message as string);
+			const firstMatch = /"(.*?)"/.exec((e as { message: string }).message as string);
 			if (firstMatch) {
-			const nodeId = firstMatch[1];
-			console.error("Problematic node", this.node.getFactory().getEditor().getNode(nodeId))
+				const nodeId = firstMatch[1];
+				console.error("Problematic node", this.node.getFactory().getEditor().getNode(nodeId))
 			}
-		
+
 			throw e;
 		}
 	}
@@ -217,18 +231,18 @@ export class PythonNodeComponent extends NodeComponent {
 			if (varName) {
 				// data is created by this node as a variable
 				if (varName in this.actualCreatedVars) {
-					resCode += this.actualCreatedVars[varName];					
+					resCode += this.actualCreatedVars[varName];
 				} else {
 					if (varName in this.node.ingoingDataConnections) {
 						const input = inputs[varName][0];
-						
+
 						if (input.type === "dynamic") {
 							resCode += inputs[varName][0].data;
 						} else {
 							resCode += PythonNodeComponent.toPythonData(input.data);
 						}
 
-					} 
+					}
 					// data comes from control
 					else {
 						const data = this.node.getData<"text">(varName, inputs);
@@ -246,7 +260,12 @@ export class PythonNodeComponent extends NodeComponent {
 		node: Node | null,
 		indentation: string,
 		allVars: Set<string>
-	): Promise<{ importsStatements: Set<string>; code: string; allVars: Set<string>, classes: Record<string, string>, initCode: string[] }> {
+	): Promise<{
+		importsStatements: Set<string>;
+		code: string; allVars: Set<string>,
+		classes: Record<string, string>, initCode: string[],
+		parserArguments: Map<string, ParseArgumentData>
+	}> {
 		// Stop case
 		if (node === null) {
 			return {
@@ -254,7 +273,8 @@ export class PythonNodeComponent extends NodeComponent {
 				code: '',
 				allVars: allVars,
 				classes: {},
-				initCode: []
+				initCode: [],
+				parserArguments: new Map()
 			};
 		}
 
@@ -268,12 +288,13 @@ export class PythonNodeComponent extends NodeComponent {
 
 		// Add intentation in front of everyline of codeTemplate
 		codeTemplate = codeTemplate.replaceAll(/^(?!.*{.*}.*)/gm, indentation);
-		
+
 
 		const templateVars: Record<string, string> = {};
 		let resImportsStatements: Set<string> = node.pythonComponent.importsStatements;
 		let resClasses: Record<string, string> = node.pythonComponent.classes;
 		let resInitCode: string[] = await Promise.all(node.pythonComponent.initCode.map((code) => node.pythonComponent.formatPythonVars(code)));
+		let resParserArguments: Map<string, ParseArgumentData> = node.pythonComponent.parseArguments;
 
 		// Pattern to match indendation and variables in code template
 		const pattern = /( *){(.+?)}(\??)/g;
@@ -290,9 +311,9 @@ export class PythonNodeComponent extends NodeComponent {
 				templateVars[key] = (
 					await Promise.all(
 						node.pythonComponent.code.map(
-							async (code) => 
+							async (code) =>
 								childIndentation + (await node.pythonComponent.formatPythonVars(code))
-							
+
 						)
 					)
 				).join('\n');
@@ -327,7 +348,15 @@ export class PythonNodeComponent extends NodeComponent {
 					...resInitCode,
 					...initCode
 				];
-				
+
+				// Merge parser arguments
+				resParserArguments = new Map(
+					(function* () {
+						yield* resParserArguments;
+						yield* childRes.parserArguments;
+					})()
+				);
+
 				templateVars[key] = code;
 			}
 		}
@@ -348,7 +377,9 @@ export class PythonNodeComponent extends NodeComponent {
 			code: resCodeTemplate,
 			allVars: allVars,
 			classes: resClasses,
-			initCode: resInitCode
+			initCode: resInitCode,
+			parserArguments: resParserArguments
+
 		};
 	}
 
@@ -357,7 +388,7 @@ export class PythonNodeComponent extends NodeComponent {
 		// const worker = new PythonWorker.default();
 		// worker.postMessage("Hello world from window!")
 		// TODO: implement web worker
-		const { importsStatements, code, classes, initCode } = await PythonNodeComponent.collectPythonData(
+		const { importsStatements, code, classes, initCode, parserArguments } = await PythonNodeComponent.collectPythonData(
 			this.node,
 			'    ',
 			new Set(['comm', 'rank', 'xml', 'args', 'xmlfile'])
@@ -365,6 +396,13 @@ export class PythonNodeComponent extends NodeComponent {
 		const imports = [...importsStatements].join('\n');
 		const fClasses = Object.values(classes).join('\n\n');
 		const fInitCode = initCode.join('\n    ');
+
+		const fParserArguments = [...parserArguments.values()].map((arg) => {
+			return `parser.add_argument('--${arg.name}', type=${arg.type}, required=${PythonNodeComponent.toPythonData(arg.required)}, help="${arg.help}")`;
+		}).join('\n    ');
+		const fParserArgumenntsExtracted = [...parserArguments.values()].map((arg) => {
+			return `${arg.name} = args.${arg.name}`;
+		}).join('\n    ');
 
 		return `
 import argparse
@@ -380,16 +418,11 @@ def parse_args():
 
     Returns:
         argument '--xml': Input xml file for GEOSX
-        argument '--decision': Decision file
-        argument '--database': Database file for coordinate conversion. Default is \"identity\" (i.e., no conversion)
-        argument '--scalco': scalco (coordinate scaling). Default is 1
-        argument '--scalel': scalel (elevation scaling). Default is 1
     """
     parser = argparse.ArgumentParser(description="Modeling acquisition example")
     parser.add_argument('--xml', type=str, required=True,
                         help="Input xml file for GEOSX")
-    parser.add_argument('--segdir', type=str, required=True,
-                        help="Directory containing the .segy files for the acquisition")           
+    ${fParserArguments}
 
     args ,_ = parser.parse_known_args()
     return args
@@ -400,6 +433,7 @@ def main():
     
     args = parse_args()
     xmlfile = args.xml
+    ${fParserArgumenntsExtracted}
 
     xml = XML(xmlfile)
 
