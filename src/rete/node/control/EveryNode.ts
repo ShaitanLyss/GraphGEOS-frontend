@@ -10,6 +10,7 @@ export class EveryNode extends Node {
 		super({ label: 'Every', factory, height: 200, width: 200, params: { count } });
 
 		this.addInExec();
+		this.addInExec('reset', 'Reset');
 		this.addOutExec();
 		this.addInData({
 			name: 'count',
@@ -43,6 +44,9 @@ if $(every${this.getData<'number'>('count') })():
     {exec}?
 `
 		)})
+		this.pythonComponent.setCodeTemplateGetter(() =>  {
+			return `$(every${this.getData<'number'>('count') }).reset()`
+		}, 'reset')
 
 		this.pythonComponent.addClass(
 `
@@ -54,6 +58,9 @@ class Every:
 	def __call__(self):
 		self.current += 1
 		return self.current % self.count == 0
+
+	def reset(self):
+		self.current = 0
 
 `
 		)

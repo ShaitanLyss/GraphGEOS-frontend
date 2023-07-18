@@ -110,10 +110,11 @@ export const acquisitionModelingExample: EditorExample = async (factory: NodeFac
 	const outputVtk = new OutputVtkNode({ factory });
 	await editor.addNode(outputVtk);
 
-	const every = new EveryNode({ factory, count: 50 });
+	const every = new EveryNode({ factory, count: 100 });
 	await editor.addNode(every);
 	await editor.addNewConnection(sequence, 'exec-0', every, 'exec');
 	await editor.addExecConnection(every, outputVtk);
+	await editor.addNewConnection(timeLoop, 'done', every, 'reset')
 
 	await editor.addNewConnection(timeLoop, 'loop', sequence, 'exec');
 	await editor.addNewConnection(timeLoop, 'time', outputVtk, 'time');

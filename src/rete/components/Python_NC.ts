@@ -79,7 +79,7 @@ export class PythonNodeComponent extends NodeComponent {
 	private parseArguments: Map<string, ParseArgumentData> = new Map();
 
 
-	private codeTemplateGetter: () => string = this.getCodeTemplate;
+	private codeTemplateGetters: Map<string, () => string> = new Map([["exec", this.getCodeTemplate]]);
 	private newlinesBefore: number = 0;
 
 	constructor({ owner }: { owner: Node }) {
@@ -137,8 +137,8 @@ export class PythonNodeComponent extends NodeComponent {
 		}
 	}
 
-	setCodeTemplateGetter(getter: () => string) {
-		this.codeTemplateGetter = getter;
+	setCodeTemplateGetter(getter: () => string, key = "exec") {
+		this.codeTemplateGetters.set(key, getter);
 	}
 
 	setEmptyNewlinesBefore(numNewlines: number) {
@@ -258,6 +258,7 @@ export class PythonNodeComponent extends NodeComponent {
 
 	static async collectPythonData(
 		node: Node | null,
+		nodeInput: string | null,
 		indentation: string,
 		allVars: Set<string>
 	): Promise<{
@@ -267,7 +268,7 @@ export class PythonNodeComponent extends NodeComponent {
 		parserArguments: Map<string, ParseArgumentData>
 	}> {
 		// Stop case
-		if (node === null) {
+		if (node === null || nodeInput === null) {
 			return {
 				importsStatements: new Set(),
 				code: '',
@@ -277,12 +278,15 @@ export class PythonNodeComponent extends NodeComponent {
 				parserArguments: new Map()
 			};
 		}
-
-		allVars = node.pythonComponent.assignActualVars(allVars);
+		if (nodeInput === 'exec') 
+			allVars = node.pythonComponent.assignActualVars(allVars);
 		// console.log(node.pythonComponent.actualCreatedVars);
 
 		// Get code template
-		let codeTemplate = node.pythonComponent.codeTemplateGetter().trim();
+		const getter = node.pythonComponent.codeTemplateGetters.get(nodeInput);
+		if (!getter) throw new Error(`No code template getter for ${nodeInput}`);
+		// TODO : suspicious trim
+		let codeTemplate = getter().trim();
 
 		codeTemplate = await node.pythonComponent.formatPythonVars(codeTemplate);
 
@@ -319,8 +323,11 @@ export class PythonNodeComponent extends NodeComponent {
 				).join('\n');
 			} else {
 				const outgoer = node.getOutgoer(key.replace('_', '-'));
+				const conn = node.outgoingExecConnections[key.replace('_', '-')];
+				const targetInput = conn?.targetInput;
 				const childRes = await PythonNodeComponent.collectPythonData(
 					outgoer,
+					targetInput,
 					childIndentation,
 					allVars
 				);
@@ -390,6 +397,7 @@ export class PythonNodeComponent extends NodeComponent {
 		// TODO: implement web worker
 		const { importsStatements, code, classes, initCode, parserArguments } = await PythonNodeComponent.collectPythonData(
 			this.node,
+			'exec',
 			'    ',
 			new Set(['comm', 'rank', 'xml', 'args', 'xmlfile'])
 		);
