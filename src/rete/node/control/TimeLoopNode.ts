@@ -11,7 +11,6 @@ export class TimeLoopNode extends Node {
 		super({ label: 'Time Loop', factory, height: 440, width: 200 });
 		// TODO: implement display progress
 
-
 		this.addInExec();
 
 		this.addInData({
@@ -76,8 +75,8 @@ export class TimeLoopNode extends Node {
 		this.addOutExec('done', 'Done', true);
 
 		this.pythonComponent.addVariables('t');
-		this.pythonComponent.addDynamicOutput('time')
-		this.pythonComponent.setDataCodeGetter('time', () => "$(t)");
+		this.pythonComponent.addDynamicOutput('time');
+		this.pythonComponent.setDataCodeGetter('time', () => '$(t)');
 		this.pythonComponent.setCodeTemplateGetter(() => {
 			return `
 $(t) = $(start)

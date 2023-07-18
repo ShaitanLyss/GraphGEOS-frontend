@@ -10,12 +10,14 @@ export class LogNode extends Node {
 		// super('Log', { factory });
 		super({ label: 'Log', factory, params: { message } });
 		this.pythonComponent.addCode('print($(message))');
-		this.pythonComponent.setCodeTemplateGetter(() => 
-`
+		this.pythonComponent.setCodeTemplateGetter(
+			() =>
+				`
 if (rank == 0):
     {this}
 {exec}
-`);
+`
+		);
 		this.height = 200;
 		this.addInExec();
 		this.addOutExec();

@@ -16,8 +16,7 @@ export class ExecuteNode extends SolverAPINode {
 					label: 'Time'
 				}
 			}
-		})
+		});
 		this.pythonComponent.addCode('$(solver).execute($(time))');
-	
 	}
 }

@@ -118,9 +118,9 @@ export const acquisitionModelingExample: EditorExample = async (factory: NodeFac
 	const logProgress = new LogNode({ factory });
 	await editor.addNode(logProgress);
 	// print(f"time = {t:.3f}s, dt = {solver.dt:.4f}, iter = {cycle+1}")
-	const formatProgress = new FormatNode({ 
-		factory, 
-		format: 'time = {t:.3f}s, iter = {iter}' 
+	const formatProgress = new FormatNode({
+		factory,
+		format: 'time = {t:.3f}s, iter = {iter}'
 	});
 	await editor.addNode(formatProgress);
 	await editor.addNewConnection(timeLoop, 'time', formatProgress, 'data-t');
@@ -128,11 +128,9 @@ export const acquisitionModelingExample: EditorExample = async (factory: NodeFac
 
 	await editor.addNewConnection(formatProgress, 'result', logProgress, 'message');
 
-	
-
 	await editor.addExecConnection(every, logProgress);
 	await editor.addExecConnection(logProgress, outputVtk);
-	await editor.addNewConnection(timeLoop, 'done', every, 'reset')
+	await editor.addNewConnection(timeLoop, 'done', every, 'reset');
 
 	await editor.addNewConnection(timeLoop, 'loop', sequence, 'exec');
 	await editor.addNewConnection(timeLoop, 'time', outputVtk, 'time');
@@ -167,7 +165,7 @@ export const acquisitionModelingExample: EditorExample = async (factory: NodeFac
 	const pressure = new GetPressuresAtReceiversNode({ factory });
 	await editor.addNode(pressure);
 	await editor.addExecConnection(logGatheringAndExportingSeismos, pressure);
-	
+
 	const reninit = new ReinitSolverNode({ factory });
 	await editor.addNode(reninit);
 	await editor.addExecConnection(pressure, reninit);

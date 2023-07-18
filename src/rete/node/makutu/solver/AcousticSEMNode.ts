@@ -21,8 +21,6 @@ export class AcousticSEMNode extends APINode {
 			height: 180
 		});
 
-
-
 		this.addOutData({
 			name: 'solver',
 			displayName: 'Solver',

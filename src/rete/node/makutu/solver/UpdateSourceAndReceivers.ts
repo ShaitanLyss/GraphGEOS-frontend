@@ -24,6 +24,8 @@ export class UpdateSourcesAndReceiversNode extends SolverAPINode {
 			type: 'pythonObject'
 		});
 
-		this.pythonComponent.addCode('$(solver).updateSourceAndReceivers($(sourceCoords), $(receiverCoords))');
+		this.pythonComponent.addCode(
+			'$(solver).updateSourceAndReceivers($(sourceCoords), $(receiverCoords))'
+		);
 	}
 }

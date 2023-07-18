@@ -2,11 +2,11 @@ import type { Node } from '$rete/node/Node';
 import { getMessageFormatter } from 'svelte-i18n';
 import { NodeComponent } from './NodeComponent';
 
-export type PythonComponentDataType = "static" | "dynamic";
+export type PythonComponentDataType = 'static' | 'dynamic';
 export class PythonComponentData<
-	T extends PythonComponentDataType = "static" | "dynamic",
-	N = T extends "static" ? unknown : T extends "dynamic" ? string : unknown
->{
+	T extends PythonComponentDataType = 'static' | 'dynamic',
+	N = T extends 'static' ? unknown : T extends 'dynamic' ? string : unknown
+> {
 	type: T;
 	data: N;
 
@@ -23,16 +23,15 @@ type ParseArgumentData = {
 	help: string;
 };
 
-
 export class PythonNodeComponent extends NodeComponent {
 	static isDynamicInput(inputs: Record<string, PythonComponentData[]>): boolean {
-		return Object
-			.entries(inputs)
-			.some(([key, value]) => {
-				return value.some((data) => data.type === "dynamic");
-			});
+		return Object.entries(inputs).some(([key, value]) => {
+			return value.some((data) => data.type === 'dynamic');
+		});
 	}
-	async data(inputs: { [x: string]: PythonComponentData[]; }): Promise<Record<string, PythonComponentData>> {
+	async data(inputs: {
+		[x: string]: PythonComponentData[];
+	}): Promise<Record<string, PythonComponentData>> {
 		const isDynamicInput = PythonNodeComponent.isDynamicInput(inputs);
 
 		if (!isDynamicInput) {
@@ -50,10 +49,13 @@ export class PythonNodeComponent extends NodeComponent {
 			// convert static data to PythonComponentData
 			for (const key in staticData) {
 				if (this.dynamicOutputs.has(key)) {
-					if (!(key in this.dataCodeGetters)) throw new Error(`Missing data code getter for ${key}`);
-					staticPyData[key] = new PythonComponentData('dynamic', await this.formatPythonVars(this.dataCodeGetters[key]()))
-				} else
-					staticPyData[key] = new PythonComponentData("static", staticData[key]);
+					if (!(key in this.dataCodeGetters))
+						throw new Error(`Missing data code getter for ${key}`);
+					staticPyData[key] = new PythonComponentData(
+						'dynamic',
+						await this.formatPythonVars(this.dataCodeGetters[key]())
+					);
+				} else staticPyData[key] = new PythonComponentData('static', staticData[key]);
 			}
 
 			return staticPyData;
@@ -63,12 +65,15 @@ export class PythonNodeComponent extends NodeComponent {
 		const res: Record<string, PythonComponentData> = {};
 		for (const [key, dataGetter] of Object.entries(this.dataCodeGetters)) {
 			if (!dataGetter) throw new Error(`Missing data code getter for ${key}`);
-			res[key] = new PythonComponentData("dynamic", await this.formatPythonVars(dataGetter(), inputs));
+			res[key] = new PythonComponentData(
+				'dynamic',
+				await this.formatPythonVars(dataGetter(), inputs)
+			);
 		}
 
 		return res;
 	}
-	public dataCodeGetters: Record<string, (() => string)> = {};
+	public dataCodeGetters: Record<string, () => string> = {};
 	private importsStatements: Set<string> = new Set();
 	private code: string[] = [];
 	private createdVariables: Set<string> = new Set();
@@ -78,8 +83,9 @@ export class PythonNodeComponent extends NodeComponent {
 	private initCode: string[] = [];
 	private parseArguments: Map<string, ParseArgumentData> = new Map();
 
-
-	private codeTemplateGetters: Map<string, () => string> = new Map([["exec", this.getCodeTemplate]]);
+	private codeTemplateGetters: Map<string, () => string> = new Map([
+		['exec', this.getCodeTemplate]
+	]);
 	private newlinesBefore: number = 0;
 
 	constructor({ owner }: { owner: Node }) {
@@ -97,7 +103,8 @@ export class PythonNodeComponent extends NodeComponent {
 	}
 
 	addParseArgument(params: ParseArgumentData) {
-		if (this.parseArguments.has(params.name)) throw new Error(`Argument ${params.name} already exists`);
+		if (this.parseArguments.has(params.name))
+			throw new Error(`Argument ${params.name} already exists`);
 		this.parseArguments.set(params.name, params);
 	}
 
@@ -105,7 +112,7 @@ export class PythonNodeComponent extends NodeComponent {
 		const pattern = /.*?class\s+(\w+)\s*.*?:/s;
 		const name = pattern.exec(code)?.[1];
 		if (!name || name in this.classes) throw new Error(`Class ${name} already exists`);
-		this.classes[name] = code.trim().replaceAll("\t", "    ");
+		this.classes[name] = code.trim().replaceAll('\t', '    ');
 	}
 	// TODO; change init into getter
 	addInitCode(code: string) {
@@ -137,7 +144,7 @@ export class PythonNodeComponent extends NodeComponent {
 		}
 	}
 
-	setCodeTemplateGetter(getter: () => string, key = "exec") {
+	setCodeTemplateGetter(getter: () => string, key = 'exec') {
 		this.codeTemplateGetters.set(key, getter);
 	}
 
@@ -196,7 +203,7 @@ export class PythonNodeComponent extends NodeComponent {
 			const firstMatch = /"(.*?)"/.exec((e as { message: string }).message as string);
 			if (firstMatch) {
 				const nodeId = firstMatch[1];
-				console.error("Problematic node", this.node.getFactory().getEditor().getNode(nodeId))
+				console.error('Problematic node', this.node.getFactory().getEditor().getNode(nodeId));
 			}
 
 			throw e;
@@ -210,8 +217,7 @@ export class PythonNodeComponent extends NodeComponent {
 		let matchVar;
 		let resCode = '';
 
-		if (inputs === undefined)
-			inputs = await this.fetchInputs();
+		if (inputs === undefined) inputs = await this.fetchInputs();
 
 		while ((matchVar = varPattern.exec(template)) !== null) {
 			const codeBefore = matchVar[1];
@@ -236,16 +242,15 @@ export class PythonNodeComponent extends NodeComponent {
 					if (varName in this.node.ingoingDataConnections) {
 						const input = inputs[varName][0];
 
-						if (input.type === "dynamic") {
+						if (input.type === 'dynamic') {
 							resCode += inputs[varName][0].data;
 						} else {
 							resCode += PythonNodeComponent.toPythonData(input.data);
 						}
-
 					}
 					// data comes from control
 					else {
-						const data = this.node.getData<"text">(varName, inputs);
+						const data = this.node.getData<'text'>(varName, inputs);
 						resCode += PythonNodeComponent.toPythonData(data);
 					}
 				}
@@ -263,9 +268,11 @@ export class PythonNodeComponent extends NodeComponent {
 		allVars: Set<string>
 	): Promise<{
 		importsStatements: Set<string>;
-		code: string; allVars: Set<string>,
-		classes: Record<string, string>, initCode: string[],
-		parserArguments: Map<string, ParseArgumentData>
+		code: string;
+		allVars: Set<string>;
+		classes: Record<string, string>;
+		initCode: string[];
+		parserArguments: Map<string, ParseArgumentData>;
 	}> {
 		// Stop case
 		if (node === null || nodeInput === null) {
@@ -274,30 +281,33 @@ export class PythonNodeComponent extends NodeComponent {
 				code: '',
 				allVars: allVars,
 				classes: {},
-				initCode: [], 
+				initCode: [],
 				parserArguments: new Map()
 			};
 		}
-		if (nodeInput === 'exec') 
-			allVars = node.pythonComponent.assignActualVars(allVars);
+		if (nodeInput === 'exec') allVars = node.pythonComponent.assignActualVars(allVars);
 		// console.log(node.pythonComponent.actualCreatedVars);
 
 		// Get code template
 		const getter = node.pythonComponent.codeTemplateGetters.get(nodeInput);
 		if (!getter) throw new Error(`No code template getter for ${nodeInput}`);
 		// Cleanup code template
-		let codeTemplate = getter().replace(/^\n*([^]*?)\s*$/, "$1");
+		let codeTemplate = getter().replace(/^\n*([^]*?)\s*$/, '$1');
 
 		codeTemplate = await node.pythonComponent.formatPythonVars(codeTemplate);
 
 		// Add intentation in front of everyline of codeTemplate
 		codeTemplate = codeTemplate.replaceAll(/^(?!.*{.*}.*)/gm, indentation);
 
-
 		const templateVars: Record<string, string> = {};
 		let resImportsStatements: Set<string> = node.pythonComponent.importsStatements;
 		let resClasses: Record<string, string> = node.pythonComponent.classes;
-		let resInitCode: string[] = nodeInput !== "exec" ? [] : await Promise.all(node.pythonComponent.initCode.map((code) => node.pythonComponent.formatPythonVars(code)));
+		let resInitCode: string[] =
+			nodeInput !== 'exec'
+				? []
+				: await Promise.all(
+						node.pythonComponent.initCode.map((code) => node.pythonComponent.formatPythonVars(code))
+				  );
 		let resParserArguments: Map<string, ParseArgumentData> = node.pythonComponent.parseArguments;
 
 		// Pattern to match indendation and variables in code template
@@ -315,9 +325,7 @@ export class PythonNodeComponent extends NodeComponent {
 				templateVars[key] = (
 					await Promise.all(
 						node.pythonComponent.code.map(
-							async (code) =>
-								childIndentation + (await node.pythonComponent.formatPythonVars(code))
-
+							async (code) => childIndentation + (await node.pythonComponent.formatPythonVars(code))
 						)
 					)
 				).join('\n');
@@ -333,8 +341,7 @@ export class PythonNodeComponent extends NodeComponent {
 				);
 				const { importsStatements, classes, initCode } = childRes;
 				let code = childRes.code;
-				if (pass && /^\s*$/.test(code))
-					code = childIndentation + 'pass';
+				if (pass && /^\s*$/.test(code)) code = childIndentation + 'pass';
 				allVars = childRes.allVars;
 				// Merge imports statements
 				resImportsStatements = new Set(
@@ -347,14 +354,11 @@ export class PythonNodeComponent extends NodeComponent {
 				// Merge classes
 				resClasses = {
 					...resClasses,
-					...classes,
+					...classes
 				};
 
 				// Merge init code
-				resInitCode = [
-					...resInitCode,
-					...initCode
-				];
+				resInitCode = [...resInitCode, ...initCode];
 
 				// Merge parser arguments
 				resParserArguments = new Map(
@@ -369,10 +373,10 @@ export class PythonNodeComponent extends NodeComponent {
 		}
 		codeTemplate = '\n'.repeat(node.pythonComponent.newlinesBefore) + codeTemplate;
 
-		// Remove redundant indendation since indendation is 
+		// Remove redundant indendation since indendation is
 		// already included in child code
 		// Remove trailing ? (pass symbol) in code template
-		codeTemplate = codeTemplate.replaceAll(/^[\t ]*({.*?})\??(.*)$/gm, "$1$2");
+		codeTemplate = codeTemplate.replaceAll(/^[\t ]*({.*?})\??(.*)$/gm, '$1$2');
 
 		const resCodeTemplate = getMessageFormatter(codeTemplate).format(templateVars);
 		if (resCodeTemplate instanceof Array) {
@@ -386,7 +390,6 @@ export class PythonNodeComponent extends NodeComponent {
 			classes: resClasses,
 			initCode: resInitCode,
 			parserArguments: resParserArguments
-
 		};
 	}
 
@@ -395,22 +398,29 @@ export class PythonNodeComponent extends NodeComponent {
 		// const worker = new PythonWorker.default();
 		// worker.postMessage("Hello world from window!")
 		// TODO: implement web worker
-		const { importsStatements, code, classes, initCode, parserArguments } = await PythonNodeComponent.collectPythonData(
-			this.node,
-			'exec',
-			'    ',
-			new Set(['comm', 'rank', 'xml', 'args', 'xmlfile'])
-		);
+		const { importsStatements, code, classes, initCode, parserArguments } =
+			await PythonNodeComponent.collectPythonData(
+				this.node,
+				'exec',
+				'    ',
+				new Set(['comm', 'rank', 'xml', 'args', 'xmlfile'])
+			);
 		const imports = [...importsStatements].join('\n');
 		const fClasses = Object.values(classes).join('\n\n');
 		const fInitCode = initCode.join('\n    ');
 
-		const fParserArguments = [...parserArguments.values()].map((arg) => {
-			return `parser.add_argument('--${arg.name}', type=${arg.type}, required=${PythonNodeComponent.toPythonData(arg.required)}, help="${arg.help}")`;
-		}).join('\n    ');
-		const fParserArgumenntsExtracted = [...parserArguments.values()].map((arg) => {
-			return `${arg.name} = args.${arg.name}`;
-		}).join('\n    ');
+		const fParserArguments = [...parserArguments.values()]
+			.map((arg) => {
+				return `parser.add_argument('--${arg.name}', type=${
+					arg.type
+				}, required=${PythonNodeComponent.toPythonData(arg.required)}, help="${arg.help}")`;
+			})
+			.join('\n    ');
+		const fParserArgumenntsExtracted = [...parserArguments.values()]
+			.map((arg) => {
+				return `${arg.name} = args.${arg.name}`;
+			})
+			.join('\n    ');
 
 		return `
 import argparse
@@ -420,7 +430,7 @@ from mpi4py import MPI
 #GEOSX
 from utilities.input import XML
 ${imports}
-${fClasses ? "\n\n" : ""}${fClasses}${fClasses ? "\n\n" : ""} 
+${fClasses ? '\n\n' : ''}${fClasses}${fClasses ? '\n\n' : ''} 
 def parse_args():
     """Get arguments
 

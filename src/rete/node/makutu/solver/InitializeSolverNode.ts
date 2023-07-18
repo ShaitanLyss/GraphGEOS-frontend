@@ -13,6 +13,5 @@ export class InitializeSolverNode extends SolverAPINode {
 			socketLabel: 'XML',
 			type: 'pythonObject'
 		});
-
 	}
 }

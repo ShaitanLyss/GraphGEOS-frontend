@@ -12,9 +12,6 @@ export class ForEachNode extends Node {
 	constructor({ factory }: { factory: NodeFactory }) {
 		super({ label: 'For Each', factory, height: 275 });
 
-
-
-
 		this.pythonComponent.addVariables('item', 'index');
 		this.pythonComponent.setCodeTemplateGetter(() => {
 			return `

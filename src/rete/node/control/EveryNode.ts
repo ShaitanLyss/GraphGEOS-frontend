@@ -23,10 +23,9 @@ export class EveryNode extends Node {
 					initial: count,
 					label: 'Count',
 					change: (value: number) => {
-						console.log("yo")
+						console.log('yo');
 						this.factory.pythonDataflowEngine.reset(this.id);
 					}
-
 				}
 			}
 		});
@@ -35,30 +34,29 @@ export class EveryNode extends Node {
 			displayName: 'Current',
 			socketLabel: 'Current',
 			type: 'number'
-		})
+		});
 
 		// TODO: change init into getter
 		this.pythonComponent.addInitCode(
 			`$(every${this.getData<'number'>('count')}) = Every(${this.getData<'number'>('count')})`
-		)
-		this.pythonComponent.addDynamicOutput('current')
-		this.pythonComponent.setDataCodeGetter('current', 
+		);
+		this.pythonComponent.addDynamicOutput('current');
+		this.pythonComponent.setDataCodeGetter(
+			'current',
 			() => `$(every${this.getData<'number'>('count')}).current`
-		)
+		);
 		// TODO : dynamic variable
-		this.pythonComponent.addVariable(`every${this.getData<'number'>('count')}`)
+		this.pythonComponent.addVariable(`every${this.getData<'number'>('count')}`);
 
 		this.pythonComponent.setCodeTemplateGetter(() => {
-			return (
-				`
+			return `
 if $(every${this.getData<'number'>('count')})():
     {exec}?
-`
-			)
-		})
+`;
+		});
 		this.pythonComponent.setCodeTemplateGetter(() => {
-			return `$(every${this.getData<'number'>('count')}).reset()`
-		}, 'reset')
+			return `$(every${this.getData<'number'>('count')}).reset()`;
+		}, 'reset');
 
 		this.pythonComponent.addClass(
 			`
@@ -75,7 +73,7 @@ class Every:
 		self.current = 0
 
 `
-		)
+		);
 
 		// this.addInExec('reset', 'Reset');
 	}
@@ -86,7 +84,9 @@ class Every:
 		return this.current % count === 0;
 	}
 
-	override data(inputs?: Record<string, unknown> | undefined): Record<string, unknown> | Promise<Record<string, unknown>> {
+	override data(
+		inputs?: Record<string, unknown> | undefined
+	): Record<string, unknown> | Promise<Record<string, unknown>> {
 		return { current: this.current };
 	}
 
@@ -101,7 +101,7 @@ class Every:
 			}
 
 			this.current++;
-		};
+		}
 
 		if (input === 'reset') {
 			this.current = 0;

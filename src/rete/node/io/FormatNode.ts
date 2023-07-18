@@ -16,12 +16,11 @@ export class FormatNode extends Node {
 		super({ label: 'Format', height: 124.181818 + 43.818182, factory, params: { format, vars } });
 		this.formatInputHeight = 43.818182;
 
-		this.pythonComponent.setDataCodeGetter("result", () => {
-			const vars =  this.getFormatVariablesKeys();
-			const var_bindings = Object.entries(vars).map(
-				([key, varname]) => 
-					`${varname}=$(${key})`
-			).join(", ");
+		this.pythonComponent.setDataCodeGetter('result', () => {
+			const vars = this.getFormatVariablesKeys();
+			const var_bindings = Object.entries(vars)
+				.map(([key, varname]) => `${varname}=$(${key})`)
+				.join(', ');
 			return `$(format).format(${var_bindings})`;
 		});
 
@@ -68,8 +67,7 @@ export class FormatNode extends Node {
 		const res: Record<string, string> = {};
 
 		for (const key in this.inputs) {
-			if (key.startsWith("data-")) 
-				res[key] = key.slice('data-'.length)
+			if (key.startsWith('data-')) res[key] = key.slice('data-'.length);
 		}
 		return res;
 	}

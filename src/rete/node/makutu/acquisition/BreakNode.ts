@@ -36,11 +36,10 @@ export class BreakNode extends Node {
 			type: 'pythonProperty'
 		});
 
-		this.pythonComponent.setDataCodeGetter("xml", () => "$(object).xml");
-		this.pythonComponent.setDataCodeGetter("sourceCoords", () => "$(object).getSourceCoords()");
-		this.pythonComponent.setDataCodeGetter("receiverCoords", () => "$(object).getReceiverCoords()");
-		this.pythonComponent.setDataCodeGetter("id", () => "$(object).id");
-
+		this.pythonComponent.setDataCodeGetter('xml', () => '$(object).xml');
+		this.pythonComponent.setDataCodeGetter('sourceCoords', () => '$(object).getSourceCoords()');
+		this.pythonComponent.setDataCodeGetter('receiverCoords', () => '$(object).getReceiverCoords()');
+		this.pythonComponent.setDataCodeGetter('id', () => '$(object).id');
 	}
 
 	data(

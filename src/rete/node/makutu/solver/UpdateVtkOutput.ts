@@ -27,7 +27,7 @@ export class UpdateVtkOutputNode extends SolverAPINode {
 			}
 		});
 
-		this.pythonComponent.addCode('$(solver).updateVtkOutputsName(directory=$(directory))')
+		this.pythonComponent.addCode('$(solver).updateVtkOutputsName(directory=$(directory))');
 		// this.addInData({
 		// 	name: 'filenames',
 		// 	displayName: 'File Names',

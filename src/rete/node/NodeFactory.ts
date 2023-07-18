@@ -152,7 +152,6 @@ export class NodeFactory {
 					? targetNode.ingoingExecConnections
 					: targetNode.ingoingDataConnections;
 
-
 			if (context.type === 'connectioncreated') {
 				outgoingConnections[conn.sourceOutput] = conn;
 				ingoingConnections[conn.targetInput] = conn;
