@@ -30,9 +30,20 @@ export class EveryNode extends Node {
 				}
 			}
 		});
+		this.addOutData({
+			name: 'current',
+			displayName: 'Current',
+			socketLabel: 'Current',
+			type: 'number'
+		})
+
 		// TODO: change init into getter
 		this.pythonComponent.addInitCode(
 			`$(every${this.getData<'number'>('count')}) = Every(${this.getData<'number'>('count')})`
+		)
+		this.pythonComponent.addDynamicOutput('current')
+		this.pythonComponent.setDataCodeGetter('current', 
+			() => `$(every${this.getData<'number'>('count')}).current`
 		)
 		// TODO : dynamic variable
 		this.pythonComponent.addVariable(`every${this.getData<'number'>('count')}`)
@@ -75,6 +86,10 @@ class Every:
 		return this.current % count === 0;
 	}
 
+	override data(inputs?: Record<string, unknown> | undefined): Record<string, unknown> | Promise<Record<string, unknown>> {
+		return { current: this.current };
+	}
+
 	override async execute(
 		input: string,
 		forward: (output: string) => unknown,
@@ -90,6 +105,7 @@ class Every:
 
 		if (input === 'reset') {
 			this.current = 0;
+			this.getDataflowEngine().reset(this.id);
 		}
 		super.execute(input, forward, false);
 	}
