@@ -25,6 +25,7 @@
 	export let loadExample: EditorExample | undefined = undefined;
 	export let hidden = false;
 	export let name: string;
+	let ready = false;
 	export let onNameChange: (name: string) => void = () => {};
 
 	let firstShown = true;
@@ -70,7 +71,7 @@
 		console.log('destroyed');
 	});
 	$: if (editor) editor.setName(name, false);
-	let ready = false;
+	
 
 	$: if (!hidden) {
 		if (firstShown && ready) {
@@ -142,9 +143,8 @@
 </script>
 
 <div
-	{hidden}
-	class="relative border-surface-500 h-full"
-	style="/*border:4px solid violet;*/ /*height:75vh;*/"
+	hidden={hidden && ready}
+	class="absolute inset-0 border-surface-500 h-full" style="z-index: {hidden ? -10 : 0};"
 >
 	<AppShell regionPage="h-full" slotSidebarLeft="h-full" slotPageContent="h-full">
 		<div class="h-full">
@@ -173,7 +173,7 @@
 				</AppShell>
 			{/if}
 			<!-- Editor -->
-			<div bind:this={container} class="h-full" class:bg-white={$modeCurrent} />
+			<div bind:this={container} class="h-full" class:bg-white={$modeCurrent} style="z-index: {hidden ? -10 : 10};"/>
 		</div>
 
 		<!-- <svelte:fragment slot="sidebarLeft">

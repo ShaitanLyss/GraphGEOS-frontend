@@ -80,7 +80,7 @@
 </script>
 
 {#if ready}
-	<AppShell>
+	<AppShell slotPageContent="relative">
 		<svelte:fragment slot="header">
 			<div class="flex">
 				<TabGroup>
