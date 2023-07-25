@@ -24,6 +24,9 @@ const config = {
 			marshal(date /** @type {Date} */) {
 				return date && date.toISOString();
 			}
+		},
+		PythonTypingInfo: {
+			type:"unknown"
 		}
 	}
 };

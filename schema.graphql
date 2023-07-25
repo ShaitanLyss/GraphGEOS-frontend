@@ -32,9 +32,17 @@ type AccountType {
   userId: UUID!
 }
 
+type BuiltinClassType {
+  name: String!
+}
+
+union BuiltinClassTypeMakutuClassType = BuiltinClassType | MakutuClassType
+
 type ComboQuery {
   graph(id: Int!): GraphType!
   graphs: [GraphType!]!
+  makutuClass(name: String!): MakutuClassType!
+  makutuClasses: [MakutuClassType!]!
   session(sessionToken: String!): SessionType!
   user(email: String = null, id: UUID = null, provider: ProviderInput = null): UserType!
   users: [UserType!]!
@@ -53,12 +61,32 @@ type GraphType {
   name: String!
 }
 
+type MakutuClassType {
+  extends: [String!]!
+  getters: [MethodType!]!
+  members: [ParameterType!]!
+  methods: [MethodType!]!
+  name: String!
+  parentClass: BuiltinClassTypeMakutuClassType!
+}
+
+type MethodType {
+  name: String!
+  parameters: [ParameterType!]!
+  returnType: String
+}
+
 type Mutation {
   createAccount(account: AccountCreateInput!): AccountType!
   createSession(session: SessionCreateInput!): SessionType!
   createUser(user: UserCreateInput!): UserType!
   deleteSession(sessionToken: String!): Boolean!
   updateSession(session: SessionCreateInput!): SessionType!
+}
+
+type ParameterType {
+  name: String!
+  type: String
 }
 
 input ProviderInput {

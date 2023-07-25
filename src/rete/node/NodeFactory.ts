@@ -10,6 +10,8 @@ import { ClassicPreset } from 'rete';
 import { InputControl } from '$rete/control/Control';
 import { Writable, writable } from 'svelte/store';
 import { PythonDataflowEngine } from '$rete/engine/PythonDataflowEngine';
+import type { MakutuClasses$result } from '$houdini';
+import type { MakutuClassRepository } from '../../backend-interaction/types';
 
 function createDataflowEngine() {
 	return new DataflowEngine<Schemes>(({ inputs, outputs }) => {
@@ -122,12 +124,14 @@ export class NodeFactory {
 	}
 	private area: AreaPlugin<Schemes, AreaExtra>;
 	private editor: NodeEditor;
+	public readonly makutuClasses: MakutuClassRepository;
 
 	public readonly dataflowEngine = createDataflowEngine();
 	private readonly controlflowEngine = createControlflowEngine();
 
-	constructor(editor: NodeEditor, area: AreaPlugin<Schemes, AreaExtra>) {
+	constructor(editor: NodeEditor, area: AreaPlugin<Schemes, AreaExtra>, makutuClasses: MakutuClassRepository) {
 		this.area = area;
+		this.makutuClasses = makutuClasses;
 		this.editor = editor;
 		editor.use(this.dataflowEngine);
 		editor.use(this.controlflowEngine);

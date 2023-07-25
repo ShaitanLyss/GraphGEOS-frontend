@@ -51,6 +51,7 @@ const public_routes = [
 ];
 
 async function authorization({ event, resolve }) {
+	console.log(event)
 	// Check if the requested URL matches any public routes
 	const isPublicRoute = public_routes.some((pattern) => {
 		const regexPattern = new RegExp(
@@ -58,9 +59,13 @@ async function authorization({ event, resolve }) {
 		);
 		return regexPattern.test(event.url.pathname);
 	});
-
+	// console.log(import.meta.env.MODE)
 	// If the requested URL is not a public route
-	if (!isPublicRoute) {
+	// return resolve(event);
+	// TODO : handle static site generation
+	// console.log("soup", event);
+	return resolve(event);
+	if (!isPublicRoute && event.url.host !== 'sveltekit-prerender') {
 		const session = await event.locals.getSession();
 		if (!session) {
 			throw redirect(303, '/auth?redirect=' + event.url.pathname);

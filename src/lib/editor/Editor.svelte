@@ -16,9 +16,12 @@
 	import NodeBrowser from './node-browser/NodeBrowser.svelte';
 	import { AreaExtensions } from 'rete-area-plugin';
 	import type { Node } from '$rete/node/Node';
+	import { page } from '$app/stores';
 
 	import { notifications } from '@mantine/notifications';
 	import ToPythonButton from './ToPythonButton.svelte';
+	import { MakutuClassesStore } from '$houdini';
+	import type { MakutuClassRepository } from '../../backend-interaction/types';
 
 	// import {} from '@fortawesome/free-regular-svg-icons';
 
@@ -43,12 +46,36 @@
 		debouncedTimer = setTimeout(handler, timeout);
 	}
 
+	const makutuClassesStore: MakutuClassesStore = $page.data.MakutuClasses;
+	const makutuClasses = $makutuClassesStore.data?.makutuClasses;
+	const makutuClassRepository: MakutuClassRepository = {};	
+
+	$: if (makutuClasses) {
+		makutuClasses.forEach((makutuClass) => {
+			makutuClassRepository[makutuClass.name] = makutuClass;
+		});
+	}
+
+	
+	
+
+
 	onMount(async () => {
 		// const { createEditor } = await import('./editor');
 		// await createEditor(container);
+		if (makutuClasses === undefined) {
+			notifications.show({
+				title: 'Error',
+				message: 'Makutu classes not loaded',
+				color: 'red',
+				icon: '<Fa icon={faCubesStacked} />'
+			})
+			throw new Error('Makutu classes not loaded');
+		}
+		
 		const { setupEditor } = await import('$rete/editor');
 		if (!container) return;
-		const tools = await setupEditor(container, loadExample);
+		const tools = await setupEditor(container, makutuClassRepository, loadExample, );
 		destroyEditor = tools.destroy;
 		onFirstShown = tools.firstDisplay;
 		editor = tools.editor;
@@ -144,7 +171,7 @@
 
 <div
 	hidden={hidden && ready}
-	class="absolute inset-0 border-surface-500 h-full" style="z-index: {hidden ? -10 : 0};"
+	class="absolute inset-0 border-surface-500 h-full" style="z-index: {hidden ? -10 : 0};" class:opacity-0={hidden && !ready}
 >
 	<AppShell regionPage="h-full" slotSidebarLeft="h-full" slotPageContent="h-full">
 		<div class="h-full">

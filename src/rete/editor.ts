@@ -15,8 +15,10 @@ import { NodeEditor } from './NodeEditor';
 import type { EditorExample } from './example/types';
 import { MegaSetup } from './setup/MegaSetup';
 import { NodeFactory } from './node/NodeFactory';
+import type { MakutuClasses, MakutuClasses$result } from '$houdini';
+import type { MakutuClassRepository } from '../backend-interaction/types';
 
-export async function setupEditor(container: HTMLElement, loadExample?: EditorExample) {
+export async function setupEditor(container: HTMLElement, makutuClasses: MakutuClassRepository, loadExample?: EditorExample, ) {
 	if (container === null) throw new Error('Container is null');
 	const editor = new NodeEditor();
 	const arrange = new AutoArrangePlugin<Schemes>();
@@ -28,7 +30,7 @@ export async function setupEditor(container: HTMLElement, loadExample?: EditorEx
 	editor.use(area);
 
 	// Setup node factory
-	const nodeFactory = new NodeFactory(editor, area);
+	const nodeFactory = new NodeFactory(editor, area, makutuClasses);
 
 	// Setup react renderer
 	const megaSetup = new MegaSetup();

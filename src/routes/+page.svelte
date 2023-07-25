@@ -1,4 +1,4 @@
-<script>
+<script lang=ts>
 	import EditorSwitcher from '$lib/EditorSwitcher.svelte';
 	import { AppShell, LightSwitch } from '@skeletonlabs/skeleton';
 	import '../rete/imports';
@@ -7,6 +7,7 @@
 	import { forEachExample } from '$rete/example/for_each';
 	import { acquisitionModelingExample } from '$rete/example/acquisition-modeling';
 	import { acquisitionXmlExample } from '$rete/example/acquisition-xml';
+
 </script>
 
 <div class="h-screen">

@@ -4,8 +4,11 @@ import type { NodeFactory } from '../../NodeFactory';
 
 // TODO : autogenerate outputs from the python object
 export class BreakNode extends Node {
+	state = { ...this.state, type: 'any' };
+
 	constructor({ factory }: { factory: NodeFactory }) {
 		super({ label: 'Break Shot', factory, height: 225 });
+
 		this.addInData({
 			name: 'object',
 			displayName: 'Shot',
@@ -40,6 +43,22 @@ export class BreakNode extends Node {
 		this.pythonComponent.setDataCodeGetter('sourceCoords', () => '$(object).getSourceCoords()');
 		this.pythonComponent.setDataCodeGetter('receiverCoords', () => '$(object).getReceiverCoords()');
 		this.pythonComponent.setDataCodeGetter('id', () => '$(object).id');
+		
+		this.changeType("utilities.acquisition.Shot.Shot")
+	}
+
+	override applyState(): void {
+		super.applyState();
+		this.changeType(this.state.type);
+	}
+
+	changeType(type: string): void {
+		this.state.type = type;
+		const makutuClasses = this.factory.makutuClasses;
+		if (type in makutuClasses) {
+			console.log(makutuClasses[type]);
+		}
+		// this.pythonComponent.setVariableType('object', type);
 	}
 
 	data(
