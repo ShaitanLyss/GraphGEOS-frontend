@@ -51,7 +51,6 @@ const public_routes = [
 ];
 
 async function authorization({ event, resolve }) {
-	console.log(event)
 	// Check if the requested URL matches any public routes
 	const isPublicRoute = public_routes.some((pattern) => {
 		const regexPattern = new RegExp(
