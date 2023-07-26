@@ -20,7 +20,7 @@
 
 	import { notifications } from '@mantine/notifications';
 	import ToPythonButton from './ToPythonButton.svelte';
-	import { MakutuClassesStore } from '$houdini';
+	import type { MakutuClassesStore } from '$houdini';
 	import type { MakutuClassRepository } from '../../backend-interaction/types';
 
 	// import {} from '@fortawesome/free-regular-svg-icons';
@@ -68,7 +68,6 @@
 				title: 'Error',
 				message: 'Makutu classes not loaded',
 				color: 'red',
-				icon: '<Fa icon={faCubesStacked} />'
 			})
 			throw new Error('Makutu classes not loaded');
 		}
