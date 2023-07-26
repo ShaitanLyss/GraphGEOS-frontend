@@ -15,7 +15,7 @@
 	<AppShell regionPage="h-full" slotPageContent="h-full">
 		<!-- <svelte:fragment slot="sidebarLeft">Sidebar left</svelte:fragment> -->
 		<svelte:fragment slot="sidebarLeft" />
-		<a href="/auth">Login</a>
+		<!-- <a href="/auth">Login</a> -->
 		<EditorSwitcher
 			examples={[
 				// { key: 'math', example: sumExample, label: 'Math' },

@@ -2,10 +2,10 @@ import { redirect } from '@sveltejs/kit';
 // export const prerender = false;
 
 export async function load(params) {
-	const { locals } = params;
-	const url: URL = params.url;
+	// const { locals } = params;
+	// const url: URL = params.url;
 
-	const session = await locals.getSession();
+	// const session = await locals.getSession();
 	// let userSetupSuccess = false;
 
 	// Redirect to the home page
@@ -43,7 +43,7 @@ export async function load(params) {
 	//     // throw redirect(302, '/auth?redirect=' + url.pathname);
 	// }
 
-	if (session && url.searchParams.has('redirect')) {
-		throw redirect(302, url.searchParams.get('redirect'));
-	}
+	// if (session && url.searchParams.has('redirect')) {
+	// 	throw redirect(302, url.searchParams.get('redirect'));
+	// }
 }
