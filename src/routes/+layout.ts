@@ -5,7 +5,7 @@ init({
     fallbackLocale: 'en',
     initialLocale: getLocaleFromNavigator()
 });
-import { getCookie} from 'svelte-cookie'
+import { getCookie} from 'typescript-cookie'
 import { setSession } from '$houdini';
 
 export const ssr = false;

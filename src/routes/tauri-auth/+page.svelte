@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { setCookie, getCookie } from 'svelte-cookie';
+	import { setCookie, getCookie } from 'typescript-cookie';
 	import type { LayoutData } from '../$types';
 	import { page } from '$app/stores';
 	let moving = false;
@@ -40,7 +40,7 @@
 		listen<string>('scheme-request-received', (event) => {
 			const parsedRequest = parse_scheme_request(event.payload);
 			if (parsedRequest === null || !parsedRequest.path.startsWith('auth-callback')) return;
-			setCookie('sessionToken', parsedRequest.params.sessionToken, 30, true);
+			setCookie('sessionToken', parsedRequest.params.sessionToken, {expires:30, secure: true});
 			window.location.href = '/';
 		});
 	}

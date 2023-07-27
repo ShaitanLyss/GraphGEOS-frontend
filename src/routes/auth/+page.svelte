@@ -1,5 +1,5 @@
 <script>
-	import { signIn, signOut } from '@auth/sveltekit/client';
+	// import { signIn, signOut } from '@auth/sveltekit/client';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { Notifications } from '@mantine/notifications';
@@ -41,16 +41,16 @@
 				<small>Signed in as</small><br />
 				<strong>{$page.data.session.user?.name ?? 'User'}</strong>
 			</span>
-			<button on:click={() => signOut()} class="button">Sign out</button>
+			<!-- <button on:click={() => signOut()} class="button">Sign out</button> -->
 		{:else}
 			<div class="flex flex-col space-y-5">
 				<span class="notSignedInText">You are not signed in</span>
-				<button class="btn variant-filled" on:click={() => signIn('github', {})}
+				<!-- <button class="btn variant-filled" on:click={() => signIn('github', {})}
 					>Sign In with GitHub</button
-				>
-				<button class="btn variant-filled" on:click={() => signIn('google')}
+				> -->
+				<!-- <button class="btn variant-filled" on:click={() => signIn('google')}
 					>Sign In with Google</button
-				>
+				> -->
 			</div>
 		{/if}
 	</p>
