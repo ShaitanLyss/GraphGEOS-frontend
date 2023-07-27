@@ -5,7 +5,7 @@
 	import { Notifications } from '@mantine/notifications';
 	import UploadGraphModal from '$lib/modals/UploadGraphModal.svelte';
 
-	
+    
 
 	// Your selected Skeleton theme:
 	import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
@@ -29,6 +29,7 @@
 	};
 	import { setInitialClassState } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
+	import { graphql } from '$houdini';
 </script>
 
 <slot />

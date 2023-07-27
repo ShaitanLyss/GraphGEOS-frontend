@@ -1,63 +1,7 @@
 import { redirect, type Handle } from '@sveltejs/kit';
 import { locale } from 'svelte-i18n';
-import { SvelteKitAuth } from '@auth/sveltekit';
-import GitHub from '@auth/core/providers/github';
-import Google from '@auth/core/providers/google';
 import { sequence } from '@sveltejs/kit/hooks';
 // import { SessionAndUser} from '$houdini'
-import {
-	GITHUB_ID,
-	GITHUB_SECRET,
-	GOOGLE_CLIENT_ID,
-	GOOGLE_CLIENT_SECRET,
-	AUTH_SECRET
-} from '$env/static/private';
-
-import { GraphQlAdapter } from './backend-interaction/graphql-adapter';
-import type { AuthConfig } from '@auth/core';
-
-import { setSession } from '$houdini'
-
-export const houdiniAuth: Handle = async ({ event, resolve }) => {
-	// get the user information however you want
-	// const user = 
-	let sessionToken = event.cookies.get('sessionToken');
-	sessionToken = sessionToken ? sessionToken : event.cookies.get('next-auth.session-token');
-	console.log("houdiniAuth : sessionToken", sessionToken);
-	setSession(event, { token: event.cookies.get('sessionToken') })
-
-	// pass the event onto the default handle
-	return await resolve(event)
-}
-// const svelteKitAuth: Handle = SvelteKitAuth(async (event) => {
-// 	const authOptions: AuthConfig = {
-// 		trustHost: true,
-// 		secret: AUTH_SECRET,
-// 		adapter: GraphQlAdapter(event),
-
-
-
-// 		callbacks: {
-// 			session: async ({ session, user }) => {
-// 				session.user.id = user.id;
-
-// 				return session;
-// 			}
-// 		},
-
-// 		providers: [
-// 			Google({
-// 				clientId: GOOGLE_CLIENT_ID,
-// 				clientSecret: GOOGLE_CLIENT_SECRET
-// 			}),
-// 			GitHub({
-// 				clientId: GITHUB_ID,
-// 				clientSecret: GITHUB_SECRET
-// 			})
-// 		]
-// 	};
-// 	return authOptions;
-// }) satisfies Handle;
 
 const public_routes = [
 	// '/auth/**',
@@ -143,4 +87,4 @@ const moonAuth: Handle = async ({ event, resolve }) => {
 }
 
 
-export const handle: Handle = sequence(localization, houdiniAuth, moonAuth, authorization);
+export const handle: Handle = sequence(localization, moonAuth, authorization);

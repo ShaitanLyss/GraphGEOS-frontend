@@ -7,8 +7,16 @@
 	import { forEachExample } from '$rete/example/for_each';
 	import { acquisitionModelingExample } from '$rete/example/acquisition-modeling';
 	import { acquisitionXmlExample } from '$rete/example/acquisition-xml';
+	import { graphql } from '$houdini';
 
-
+	const store = graphql(`
+        query TestQuery @load {
+            graphs {
+				name
+			}
+        }
+    `)
+	$: console.log("store", $store.data)
 </script>
 
 <div class="h-screen">
