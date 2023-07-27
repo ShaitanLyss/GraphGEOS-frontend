@@ -5009,6 +5009,11 @@ svelte-check@^3.4.3:
     svelte-preprocess "^5.0.4"
     typescript "^5.0.3"
 
+svelte-cookie@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/svelte-cookie/-/svelte-cookie-1.0.1.tgz#f5b594c5532d3f6dd76642bc99317650e712af7a"
+  integrity sha512-c4cXLMeG7vlAk3Q5axjxlppMJgeLLWd/6cCvo1wEL6ZwEueVHAP71SBRi9r5XmLYnCYr7eAqlK6NrYT/29KuKQ==
+
 svelte-css-vars@^0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/svelte-css-vars/-/svelte-css-vars-0.0.3.tgz#22f8bc53a5a38009aa8abf5acc36fe23d77b4f61"
@@ -5263,6 +5268,11 @@ type@^2.7.2:
   version "2.7.2"
   resolved "https://registry.yarnpkg.com/type/-/type-2.7.2.tgz#2376a15a3a28b1efa0f5350dcf72d24df6ef98d0"
   integrity sha512-dzlvlNlt6AXU7EBSfpAscydQ7gXB+pPGsPnfJnZpiNJBDj7IaJzQlBZYGdEi4R9HmPdBv2XmWJ6YUtoTa7lmCw==
+
+typescript-cookie@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/typescript-cookie/-/typescript-cookie-1.0.6.tgz#009b0665706b2cc856f796e76cf408a16ef011c5"
+  integrity sha512-s+BZr7/9BUG6Kg7jGGcOY/4XJcP+iZRFdF3q4FPTfRSP83ivLWF94OcH8PrzGmnS8Ab9qP7ENu/ikLwNFsIafA==
 
 typescript@^5.0.0, typescript@^5.0.3:
   version "5.1.6"

@@ -111,14 +111,14 @@ type SessionType {
 scalar UUID
 
 input UserCreateInput {
-  email: String!
+  email: String = null
   emailVerified: DateTime = null
   image: String = null
   name: String = null
 }
 
 type UserType {
-  email: String!
+  email: String
   emailVerified: DateTime
   graphs: [GraphType!]!
   id: UUID!

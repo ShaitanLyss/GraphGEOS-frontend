@@ -1,15 +1,13 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-#[macro_use]
-extern crate dotenv_codegen;
-extern crate dotenv;
+// #[macro_use]
+// extern crate dotenv_codegen;
+// extern crate dotenv;
 
-use oauth2::RedirectUrl;
 use tauri::Manager;
-use geos_gui::auth::{refresh_tokens, load_tokens, create_client, AuthState};
 
 use dotenv::dotenv;
-use std::{env, sync::Arc};
+// use std::{env, sync::Arc};
 
 // use tauri::{Position, Window, WindowBuilder};
 
@@ -39,20 +37,12 @@ fn main() {
     // for (key, value) in env::vars() {
     //     eprintln!("{}: {}", key, value);
     // }
-    const REDIRECT_URL: &str = "geos-gui://auth/callback";
-    let state = AuthState {
-        // csrf_token: CsrfToken::new_random(),
-        // pkce: Arc::new((pkce_code_challenge, PkceCodeVerifier::secret(&pkce_code_verifier).to_string())),
-        client: Arc::new(create_client(RedirectUrl::new(REDIRECT_URL.to_string()).unwrap())),
-        // socket_addr
-    };
       // prepare() checks if it's a single instance and tries to send the args otherwise.
           // It should always be the first line in your main function (with the exception of loggers or similar)
       // It's expected to use the identifier from tauri.conf.json
           // Unfortuenetly getting it is pretty ugly without access to sth that implements `Manager`.
       tauri_plugin_deep_link::prepare("eu.lyssandre.geos-gui");
       tauri::Builder::default()
-      .manage(state)
    .setup(|app| {
       // If you need macOS support this must be called in .setup() !
       // Otherwise this could be called right after prepare() but then you don't have access to tauri APIs
@@ -62,8 +52,6 @@ fn main() {
         "geos-gui",
         move |request| {
           dbg!(&request);
-          load_tokens(&request);
-          // load_tokens();
           handle.emit_all("scheme-request-received", request).unwrap();
         },
       )

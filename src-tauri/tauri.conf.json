@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "build": {
-    "beforeBuildCommand": "",
+    "beforeBuildCommand": "yarn build",
     "beforeDevCommand": "yarn dev",
     "devPath": "http://localhost:5173",
     "distDir": "../build"
@@ -69,24 +69,6 @@
         "width": 800,
         "url": "tauri-auth",
         "label": "tauri-auth"
-      },
-      {
-        "fullscreen": false,
-        "height": 600,
-        "resizable": true,
-        "title": "GEOS GUI - Auth",
-        "width": 800,
-        "url": "auth",
-        "label": "auth"
-      },
-      {
-        "fullscreen": false,
-        "height": 600,
-        "resizable": true,
-        "title": "GEOS GUI - Editor",
-        "width": 800,
-        "url": "index.html",
-        "label": "editor"
       }
     ]
   }

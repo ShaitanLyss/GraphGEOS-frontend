@@ -135,7 +135,6 @@ export function GraphQlAdapter(event: RequestEvent): Adapter {
 			if (createdSession == null) {
 				throw new Error('Session creation failed');
 			}
-
 			return createdSession;
 		},
 		async getSessionAndUser(

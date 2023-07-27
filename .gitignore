@@ -16,6 +16,7 @@ mikro-orm.config.js
 .vscode/work.code-workspace
 .vscode/makutu-gui.code-workspace
 *.code-workspace
+venv
 
 
 $houdini
