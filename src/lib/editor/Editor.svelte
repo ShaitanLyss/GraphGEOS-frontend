@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onDestroy, onMount } from 'svelte';
+	import { onDestroy, onMount, setContext } from 'svelte';
 
 	import type { EditorExample } from '../../rete/example/types';
 	import { AppShell, ModalSettings, modeCurrent } from '@skeletonlabs/skeleton';
@@ -23,6 +23,7 @@
 	import type { MakutuClassesStore } from '$houdini';
 	import type { MakutuClassRepository } from '../../backend-interaction/types';
 	import ToggleGeosButton from './ToggleGeosButton.svelte';
+	import GeosDashboard from '$lib/geos/GeosDashboard.svelte';
 
 	// import {} from '@fortawesome/free-regular-svg-icons';
 
@@ -167,6 +168,10 @@
 		});
 		return visibleNodes;
 	}
+		let showRightSidebar = true;
+	setContext('toggleGeos', () => {
+		showRightSidebar = !showRightSidebar;
+	});
 </script>
 
 <div
@@ -180,6 +185,7 @@
 				<AppShell
 					class="absolute inset-0 flex justify-center items-center pointer-events-none z-10"
 					slotHeader="w-full"
+					 slotSidebarRight={showRightSidebar ? "w-1/3 sm:w-2/7 lg:w-2/5 xl:w-1/5 bg-surface-50-90-token" : ""}
 				>
 					<!-- Toolbar -->
 					<svelte:fragment slot="pageHeader">
@@ -197,6 +203,11 @@
 							</div>
 						</div>
 					</svelte:fragment>
+							<svelte:fragment slot="sidebarRight">
+			{#if showRightSidebar}
+				<GeosDashboard padding="py-8 px-4 md:px-12" width="w-full" variant=""/>
+			{/if}
+		</svelte:fragment>
 				</AppShell>
 			{/if}
 			<!-- Editor -->

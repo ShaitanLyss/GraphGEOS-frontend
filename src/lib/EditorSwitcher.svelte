@@ -79,14 +79,11 @@
 		modalStore.trigger(changeTabName);
 	}
 
-	let showRightSidebar = true;
-	setContext('toggleGeos', () => {
-		showRightSidebar = !showRightSidebar;
-	});
+
 </script>
 
 {#if ready}
-	<AppShell slotPageContent="relative" slotSidebarRight={showRightSidebar ? "w-1/3 sm:w-2/7 lg:w-2/5 xl:w-1/5 bg-surface-50-90-token" : ""}>
+	<AppShell slotPageContent="relative">
 		<svelte:fragment slot="header">
 			<div class="flex">
 				<TabGroup>
@@ -113,11 +110,7 @@
 		<svelte:fragment slot="sidebarLeft">
 			<NodeBrowser />
 		</svelte:fragment>
-		<svelte:fragment slot="sidebarRight">
-			{#if showRightSidebar}
-				<GeosDashboard padding="py-8 px-4 md:px-12" variant=""/>
-			{/if}
-		</svelte:fragment>
+
 
 		<svelte:fragment>
 			{#each editors as editor, index (index)}
