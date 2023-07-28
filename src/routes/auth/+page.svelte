@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { setCookie, getCookie } from 'typescript-cookie';
+	import { setCookie, getCookie,removeCookie } from 'typescript-cookie';
 	import type { LayoutData } from '../$types';
+	import { Avatar } from '@skeletonlabs/skeleton';
 	import { page } from '$app/stores';
-	let moving = false;
 	let backendDed = false;
 	let checkingForDeadBackend = false;
 	export let data: LayoutData;
@@ -15,19 +15,21 @@
 	import { parse_scheme_request } from './utils';
 	import { checkBackendHealth } from '$utils/backend';
 	import { isTauri } from '$utils/tauri';
+	let reload = false;
 	let login = async () => {};
 	// TODO : handle web app context
+	const searchParams = new URLSearchParams(window.location.search);
 	async function load() {
-		const searchParams = new URLSearchParams(window.location.search);
 		const redirectUri = searchParams.get('redirect');
 		const sessionToken = searchParams.get('sessionToken');
-		let reload = false;
+		
 		if (sessionToken) {
 			setCookie('sessionToken', sessionToken, { expires: 30, secure: true });
 			reload = true;
 		}
 		if ( !reload && getCookie('sessionToken')) {
 			if (!session) {
+				
 				checkingForDeadBackend = true;
 				if (!(await checkBackendHealth())) backendDed = true;
 				checkingForDeadBackend = false;
@@ -35,14 +37,11 @@
 		}
 		if (isTauri()) {
 			if (session || reload) {
-				moving = true;
 			 	window.location.href = redirectUri ? redirectUri : "/"
 			}
 		} else {
 			if (reload || (session && redirectUri)) {
 				window.location.href = redirectUri ? redirectUri : '/auth';
-			} else {
-				moving = false;
 			}
 		}
 
@@ -75,19 +74,30 @@
 	});
 </script>
 
+<div class="h-full w-full flex justify-center items-center">
 {#if !ready || checkingForDeadBackend}
-	<div class="h-full w-full flex justify-center items-center">
 		<h1 class="h1">Loading...</h1>
-	</div>
 {:else if backendDed}
-	<div class="h-full w-full flex justify-center items-center">
 		<h1 class="h1">Backend is ded</h1>
-	</div>
-{:else if moving || !ready}
-	<div class="h-full w-full flex justify-center items-center">
+{:else if reload || !ready}
 		<h1 class="h1">Loading...</h1>
-	</div>
 {:else}
-	<h1 class="h1">Tauri Auth</h1>
-	<button class="button variant-filled-primary" on:click={login}>Login</button>
+<div class="text-center space-y-6 card py-8 px-12 variant-soft-surface">
+	<h1 class="h1 pb-2">Lunar Auth</h1>
+	{#if session}
+		<h2 class="h2">You are logged in as</h2>
+		<div class="py-4">
+		<Avatar src={session.user.image} rounded="rounded-3xl" width="w-32 mx-auto" />
+		</div>
+		<h2 class="h2">{session.user.name}</h2>
+		<button class="btn bg-gradient-to-br variant-gradient-secondary-tertiary" on:click={() => {
+			removeCookie('sessionToken');
+			location.reload();
+		}}>Logout</button>
+	{:else}
+		<h2 class="h2">You are not logged in</h2>
+		<button class="btn bg-gradient-to-br variant-gradient-secondary-tertiary" on:click={login}>Login</button>
+	{/if}
+</div>
 {/if}
+</div>

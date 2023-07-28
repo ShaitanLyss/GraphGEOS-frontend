@@ -6,7 +6,6 @@ init({
     initialLocale: getLocaleFromNavigator()
 });
 import { getCookie} from 'typescript-cookie'
-import { setSession } from '$houdini';
 
 export const ssr = false;
 export const prerender = true;
