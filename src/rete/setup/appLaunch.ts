@@ -3,7 +3,7 @@ import { NodeFactory } from '../node/NodeFactory';
 
 export {};
 
-let areclassesSetup = false;
+const areclassesSetup = false;
 async function setupClasses() {
 	console.log('Setting up classes');
 

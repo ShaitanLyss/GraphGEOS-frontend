@@ -9,9 +9,9 @@
 </div>
 
 <style>
-	.required {
+	/* .required {
 		border-color: red;
-	}
+	} */
 
 	#innerTriangle {
 		position: relative;

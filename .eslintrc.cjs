@@ -5,7 +5,6 @@ module.exports = {
 		'plugin:@typescript-eslint/recommended',
 		'plugin:svelte/recommended',
 		'prettier',
-		'plugin:react-hooks/recommended'
 	],
 	parser: '@typescript-eslint/parser',
 	plugins: ['@typescript-eslint'],
@@ -16,8 +15,11 @@ module.exports = {
 	},
 	env: {
 		browser: true,
-		es2017: true,
+		es2020: true,
 		node: true
+	},
+	"globals": {
+		"NodeJS": true
 	},
 
 	rules: {

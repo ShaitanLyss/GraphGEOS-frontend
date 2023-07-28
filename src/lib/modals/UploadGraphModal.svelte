@@ -55,7 +55,7 @@
 			data[key] = value;
 		}
 
-		if (!data.hasOwnProperty('is_public')) {
+		if (!Object.prototype.hasOwnProperty.call(data, 'is_public')) {
 			data['is_public'] = false;
 		}
 

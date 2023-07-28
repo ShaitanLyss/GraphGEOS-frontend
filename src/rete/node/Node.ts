@@ -96,7 +96,7 @@ export class Node<
 	protected factory: NodeFactory;
 	protected params: Record<string, unknown>;
 	static id: string;
-	static nodeCounts: bigint = BigInt(0);
+	static nodeCounts = BigInt(0);
 	protected state: Record<string, unknown> = {};
 	readonly pythonComponent: PythonNodeComponent;
 	readonly ingoingDataConnections: Record<string, Connection<Node, Node>> = {};
@@ -148,7 +148,9 @@ export class Node<
 		return this.getArea().nodeViews.get(this.id)?.position;
 	}
 
-	applyState() {}
+	applyState() {
+		//to be overriden
+	}
 
 	toJSON(): NodeSaveData {
 		const inputControlValues: Record<string, unknown> = {};

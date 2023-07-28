@@ -17,7 +17,7 @@
 	import { isTauri } from '$utils/tauri';
 	import { initials } from '$utils/string';
 	let reload = false;
-	let login = async () => {};
+	let login: () => Promise<void>;
 	// TODO : handle web app context
 	const searchParams = new URLSearchParams(window.location.search);
 	async function load() {

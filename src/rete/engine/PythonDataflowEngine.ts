@@ -27,7 +27,7 @@ export class PythonDataflowEngine<Schemes extends PythonDataflowEngineScheme> ex
 > {
 	editor!: NodeEditor<Schemes>;
 	dataflow?: Dataflow<Schemes>;
-	cache = new Cache<NodeId, Cancellable<Record<string, any>>>(
+	cache = new Cache<NodeId, Cancellable<Record<string, unknown>>>(
 		(data) => data?.cancel && data.cancel()
 	);
 

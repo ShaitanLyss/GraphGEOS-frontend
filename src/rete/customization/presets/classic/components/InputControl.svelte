@@ -11,8 +11,6 @@
 	let options = data.options;
 	let isFirstSet = true;
 
-	onMount(() => {});
-
 	// Debounce value
 	$: if (!isFirstSet) {
 		data.setValue(debouncedValue);

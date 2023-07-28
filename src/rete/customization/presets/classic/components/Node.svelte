@@ -23,7 +23,7 @@
 	$: inputs = sortByIndex(Object.entries(data.inputs));
 	$: controls = sortByIndex(Object.entries(data.controls));
 	$: outputs = sortByIndex(Object.entries(data.outputs));
-	function any<T>(arg: T): any {
+	function any<T>(arg: T): unknown {
 		return arg;
 	}
 </script>

@@ -5,7 +5,12 @@ node_modules
 /package
 .env
 .env.*
+$houdini
+svelte-jsx.d.ts
 !.env.example
+src-tauri/icons
+src-tauri/target
+src/rete/customization/trash
 
 # Ignore files for PNPM, NPM and YARN
 pnpm-lock.yaml

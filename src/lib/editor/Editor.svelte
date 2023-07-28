@@ -31,7 +31,7 @@
 	export let hidden = false;
 	export let name: string;
 	let ready = false;
-	export let onNameChange: (name: string) => void = () => {};
+	export let onNameChange: ((name: string) => void) | undefined = undefined;
 
 	let firstShown = true;
 
@@ -39,8 +39,8 @@
 	let editor: NodeEditor;
 	let factory: NodeFactory;
 
-	let destroyEditor: Function;
-	let onFirstShown: Function;
+	let destroyEditor: () => void;
+	let onFirstShown: () => void;
 
 	let debouncedTimer: NodeJS.Timeout | undefined;
 	function debouncedHandler(handler: () => void, timeout = 500) {
@@ -77,7 +77,7 @@
 		onFirstShown = tools.firstDisplay;
 		editor = tools.editor;
 		editor.setName(name);
-		editor.addOnChangeNameListener(onNameChange);
+		if (onNameChange) editor.addOnChangeNameListener(onNameChange);
 		factory = tools.factory;
 		AreaExtensions.zoomAt(factory.getArea(), factory.getEditor().getNodes());
 		// const { watchResize } = await import('svelte-watch-resize');

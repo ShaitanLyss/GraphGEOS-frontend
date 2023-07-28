@@ -7,7 +7,7 @@ export class SequenceNode extends AddPinNode {
 		super({ label: 'Sequence', factory, height: 126, numPins: 2 });
 		this.addInExec();
 		this.pythonComponent.setCodeTemplateGetter(() => {
-			let execs: string[] = [];
+			const execs: string[] = [];
 			for (let i = 0; i < this.numPinsAdded; i++) {
 				execs.push(`{exec_${i}}`);
 			}

@@ -11,7 +11,7 @@ export type AddPinNodeState = {
 };
 
 export abstract class AddPinNode extends Node {
-	static __isAbstract: boolean = true;
+	static __isAbstract = true;
 	state: AddPinNodeState = { ...this.state, numPins: 0 };
 	numPinsAdded = 0;
 

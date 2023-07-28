@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { faUser } from '@fortawesome/free-solid-svg-icons';
-	import type { Graph, User } from '../types';
 	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
 

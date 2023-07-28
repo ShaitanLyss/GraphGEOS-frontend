@@ -9,11 +9,11 @@ export type NodeEditorSaveData = {
 };
 
 export class NodeEditor extends BaseNodeEditor<Schemes> {
-	setName(name: string, triggerListeners: boolean = true) {
+	setName(name: string, triggerListeners = true) {
 		this.name = name;
 		if (triggerListeners) this.onChangeNameListeners.forEach((listener) => listener(name));
 	}
-	name: string = 'New Editor';
+	name = 'New Editor';
 	onChangeNameListeners: ((name: string) => void)[] = [];
 
 	async addExecConnection(source: Node, target: Node): Promise<boolean> {

@@ -86,7 +86,7 @@ export class PythonNodeComponent extends NodeComponent {
 	private codeTemplateGetters: Map<string, () => string> = new Map([
 		['exec', this.getCodeTemplate]
 	]);
-	private newlinesBefore: number = 0;
+	private newlinesBefore = 0;
 
 	constructor({ owner }: { owner: Node }) {
 		super({ id: 'python_NC', owner: owner });

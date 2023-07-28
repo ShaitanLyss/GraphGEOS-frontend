@@ -30,7 +30,7 @@
 
 	$: if (factory) {
 		const editor = factory.getEditor();
-		async function pipe(context: AreaExtra | Area2D<Schemes> | Root<Schemes>) {
+		const pipe = async (context: AreaExtra | Area2D<Schemes> | Root<Schemes>) => {
 			if (active && context.type === 'nodepicked') {
 				const nodeId = context.data.id;
 				const node = editor.getNode(nodeId);
@@ -53,7 +53,7 @@
 				});
 				togglePythonMode();
 			}
-		}
+		};
 
 		factory.setState('toPythonBtn', 'pipeFunction', pipe);
 		// console.log(import.meta)
