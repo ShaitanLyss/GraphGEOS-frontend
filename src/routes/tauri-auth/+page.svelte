@@ -16,7 +16,7 @@
 	import { parse_scheme_request } from './utils';
 	import { checkBackendHealth } from '$utils/backend';
 	let login = async () => {};
-
+	// TODO : handle web app context
 	async function load() {
 		if (browser && getCookie('sessionToken')) {
 			if (!session)  {
