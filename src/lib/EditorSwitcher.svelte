@@ -12,12 +12,13 @@
 
 	import type { Writable } from 'svelte/store';
 	import Editor from '$lib/editor/Editor.svelte';
-	import { onMount } from 'svelte';
+	import { onMount, setContext } from 'svelte';
 
 	import type { EditorView } from './editor/types';
 	import { _ } from 'svelte-i18n';
 	import LocaleSwitcher from './LocaleSwitcher.svelte';
 	import NodeBrowser from './editor/node-browser/NodeBrowser.svelte';
+	import GeosDashboard from './geos/GeosDashboard.svelte';
 
 	let addButonClicked = -1;
 
@@ -77,10 +78,15 @@
 		};
 		modalStore.trigger(changeTabName);
 	}
+
+	let showRightSidebar = true;
+	setContext('toggleGeos', () => {
+		showRightSidebar = !showRightSidebar;
+	});
 </script>
 
 {#if ready}
-	<AppShell slotPageContent="relative">
+	<AppShell slotPageContent="relative" slotSidebarRight={showRightSidebar ? "w-1/3 sm:w-2/7 lg:w-2/5 xl:w-1/5 bg-surface-50-90-token" : ""}>
 		<svelte:fragment slot="header">
 			<div class="flex">
 				<TabGroup>
@@ -106,6 +112,11 @@
 		</svelte:fragment>
 		<svelte:fragment slot="sidebarLeft">
 			<NodeBrowser />
+		</svelte:fragment>
+		<svelte:fragment slot="sidebarRight">
+			{#if showRightSidebar}
+				<GeosDashboard padding="py-8 px-4 md:px-12" variant=""/>
+			{/if}
 		</svelte:fragment>
 
 		<svelte:fragment>

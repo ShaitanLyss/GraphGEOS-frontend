@@ -7,6 +7,8 @@
 	import { isLoading, _ } from 'svelte-i18n';
 	import GraphSearchPanel from './GraphSearchPanel.svelte';
 
+	
+
 	let currentTile: string | undefined = undefined;
 	let drawerMode = false;
 

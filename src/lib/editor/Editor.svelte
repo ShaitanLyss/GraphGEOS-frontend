@@ -22,6 +22,7 @@
 	import ToPythonButton from './ToPythonButton.svelte';
 	import type { MakutuClassesStore } from '$houdini';
 	import type { MakutuClassRepository } from '../../backend-interaction/types';
+	import ToggleGeosButton from './ToggleGeosButton.svelte';
 
 	// import {} from '@fortawesome/free-regular-svg-icons';
 
@@ -192,7 +193,7 @@
 							<div class="space-x-4">
 								<DownloadGraphButton {editor} />
 								<EditorButton icon={faCloud} on:click={openUploadGraphModal} />
-								<EditorButton icon={faEarth} on:click={() => console.log('Toggle geos sidebar')} />
+								<ToggleGeosButton />
 							</div>
 						</div>
 					</svelte:fragment>

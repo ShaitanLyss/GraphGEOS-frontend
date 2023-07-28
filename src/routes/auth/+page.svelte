@@ -15,6 +15,7 @@
 	import { parse_scheme_request } from './utils';
 	import { checkBackendHealth } from '$utils/backend';
 	import { isTauri } from '$utils/tauri';
+	import { initials } from '$utils/string';
 	let reload = false;
 	let login = async () => {};
 	// TODO : handle web app context
@@ -87,7 +88,7 @@
 	{#if session}
 		<h2 class="h2">You are logged in as</h2>
 		<div class="py-4">
-		<Avatar src={session.user.image} rounded="rounded-3xl" width="w-32 mx-auto" />
+		<Avatar src={session.user.image} initials={initials(session.user.name)} rounded="rounded-3xl" width="w-32 mx-auto" />
 		</div>
 		<h2 class="h2">{session.user.name}</h2>
 		<button class="btn bg-gradient-to-br variant-gradient-secondary-tertiary" on:click={() => {
