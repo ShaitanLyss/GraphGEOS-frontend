@@ -122,5 +122,6 @@ type UserType {
   emailVerified: DateTime
   graphs: [GraphType!]!
   id: UUID!
+  image: String
   name: String
 }
