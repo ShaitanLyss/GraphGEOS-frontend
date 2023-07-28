@@ -1,4 +1,4 @@
-<script lang=ts>
+<script lang="ts">
 	import EditorSwitcher from '$lib/EditorSwitcher.svelte';
 	import { AppShell, LightSwitch } from '@skeletonlabs/skeleton';
 	import '../rete/imports';
@@ -11,17 +11,16 @@
 	import { isTauri } from '$utils/tauri';
 
 	const store = graphql(`
-        query TestQuery @load {
-            graphs {
+		query TestQuery @load {
+			graphs {
 				name
 			}
-        }
-    `)
-	$: console.log("store", $store.data)
+		}
+	`);
+	$: console.log('store', $store.data);
 </script>
 
 <div class="h-screen">
-	
 	<AppShell regionPage="h-full" slotPageContent="h-full">
 		<!-- <svelte:fragment slot="sidebarLeft">Sidebar left</svelte:fragment> -->
 		<svelte:fragment slot="sidebarLeft" />

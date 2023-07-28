@@ -129,7 +129,11 @@ export class NodeFactory {
 	public readonly dataflowEngine = createDataflowEngine();
 	private readonly controlflowEngine = createControlflowEngine();
 
-	constructor(editor: NodeEditor, area: AreaPlugin<Schemes, AreaExtra>, makutuClasses: MakutuClassRepository) {
+	constructor(
+		editor: NodeEditor,
+		area: AreaPlugin<Schemes, AreaExtra>,
+		makutuClasses: MakutuClassRepository
+	) {
 		this.area = area;
 		this.makutuClasses = makutuClasses;
 		this.editor = editor;

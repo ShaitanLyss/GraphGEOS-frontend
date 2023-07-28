@@ -1,6 +1,6 @@
 import preprocess from 'svelte-preprocess';
 // import adapter from '@sveltejs/adapter-auto';
-import adapter from '@sveltejs/adapter-static' // change l' adaptateur depuis adapter-auto vers adapter-static
+import adapter from '@sveltejs/adapter-static'; // change l' adaptateur depuis adapter-auto vers adapter-static
 import { vitePreprocess } from '@sveltejs/kit/vite';
 import preprocessReact from 'svelte-preprocess-react/preprocessReact';
 import delegateEvents from 'svelte-preprocess-delegate-events/preprocess';
@@ -31,7 +31,7 @@ const config = {
 			fallback: 'index.html',
 			precompress: false,
 			strict: true
-	}),
+		}),
 		csrf: {
 			checkOrigin: false
 		},

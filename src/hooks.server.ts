@@ -29,16 +29,14 @@ async function authorization({ event, resolve }) {
 		if (!session) {
 			let shouldRedirect = false;
 			try {
-				const response = await fetch("http://127.0.0.1:8000/health");
-				if (response.ok)
-					shouldRedirect = true;
+				const response = await fetch('http://127.0.0.1:8000/health');
+				if (response.ok) shouldRedirect = true;
 				else {
 					const body = await response.json();
-					console.log("MoonAuth : getSession : Backend is dead", body);
+					console.log('MoonAuth : getSession : Backend is dead', body);
 				}
-			}
-			catch (error) {
-				console.log("MoonAuth : Backend is dead", error);
+			} catch (error) {
+				console.log('MoonAuth : Backend is dead', error);
 			}
 			if (shouldRedirect) {
 				throw redirect(303, '/auth?redirect=' + event.url.pathname);
@@ -58,7 +56,6 @@ const localization: Handle = ({ event, resolve }) => {
 };
 
 const moonAuth: Handle = async ({ event, resolve }) => {
-
 	const sessionToken = event.cookies.get('sessionToken');
 	setSession(event, { token: sessionToken });
 	event.locals.getSession = async () => {
@@ -69,15 +66,14 @@ const moonAuth: Handle = async ({ event, resolve }) => {
 			return event.locals.session;
 		}
 
-		const { SessionAndUserStore } = await import("$houdini");
+		const { SessionAndUserStore } = await import('$houdini');
 		const sessionAndUser = new SessionAndUserStore();
 		let data;
 		try {
-			data = (
-				await sessionAndUser.fetch({ event, variables: { sessionToken: sessionToken } })
-			).data;
+			data = (await sessionAndUser.fetch({ event, variables: { sessionToken: sessionToken } }))
+				.data;
 		} catch (error) {
-			console.log("MoonAuth : getSession : error : ", error.message);
+			console.log('MoonAuth : getSession : error : ', error.message);
 			return null;
 		}
 		const session = data?.session;
@@ -90,7 +86,6 @@ const moonAuth: Handle = async ({ event, resolve }) => {
 		return { session: session, user: user };
 	};
 	return resolve(event);
-}
-
+};
 
 export const handle: Handle = sequence(localization, moonAuth, authorization);

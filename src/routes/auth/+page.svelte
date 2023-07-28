@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { setCookie, getCookie,removeCookie } from 'typescript-cookie';
+	import { setCookie, getCookie, removeCookie } from 'typescript-cookie';
 	import type { LayoutData } from '../$types';
 	import { Avatar } from '@skeletonlabs/skeleton';
 	import { page } from '$app/stores';
@@ -23,14 +23,13 @@
 	async function load() {
 		const redirectUri = searchParams.get('redirect');
 		const sessionToken = searchParams.get('sessionToken');
-		
+
 		if (sessionToken) {
 			setCookie('sessionToken', sessionToken, { expires: 30, secure: true });
 			reload = true;
 		}
-		if ( !reload && getCookie('sessionToken')) {
+		if (!reload && getCookie('sessionToken')) {
 			if (!session) {
-				
 				checkingForDeadBackend = true;
 				if (!(await checkBackendHealth())) backendDed = true;
 				checkingForDeadBackend = false;
@@ -38,7 +37,7 @@
 		}
 		if (isTauri()) {
 			if (session || reload) {
-			 	window.location.href = redirectUri ? redirectUri : "/"
+				window.location.href = redirectUri ? redirectUri : '/';
 			}
 		} else {
 			if (reload || (session && redirectUri)) {
@@ -76,29 +75,39 @@
 </script>
 
 <div class="h-full w-full flex justify-center items-center">
-{#if !ready || checkingForDeadBackend}
+	{#if !ready || checkingForDeadBackend}
 		<h1 class="h1">Loading...</h1>
-{:else if backendDed}
+	{:else if backendDed}
 		<h1 class="h1">Backend is ded</h1>
-{:else if reload || !ready}
+	{:else if reload || !ready}
 		<h1 class="h1">Loading...</h1>
-{:else}
-<div class="text-center space-y-6 card py-8 px-12 variant-soft-surface">
-	<h1 class="h1 pb-2">Lunar Auth</h1>
-	{#if session}
-		<h2 class="h2">You are logged in as</h2>
-		<div class="py-4">
-		<Avatar src={session.user.image} initials={initials(session.user.name)} rounded="rounded-3xl" width="w-32 mx-auto" />
-		</div>
-		<h2 class="h2">{session.user.name}</h2>
-		<button class="btn bg-gradient-to-br variant-gradient-secondary-tertiary" on:click={() => {
-			removeCookie('sessionToken');
-			location.reload();
-		}}>Logout</button>
 	{:else}
-		<h2 class="h2">You are not logged in</h2>
-		<button class="btn bg-gradient-to-br variant-gradient-secondary-tertiary" on:click={login}>Login</button>
+		<div class="text-center space-y-6 card py-8 px-12 variant-soft-surface">
+			<h1 class="h1 pb-2">Lunar Auth</h1>
+			{#if session}
+				<h2 class="h2">You are logged in as</h2>
+				<div class="py-4">
+					<Avatar
+						src={session.user.image}
+						initials={initials(session.user.name)}
+						rounded="rounded-3xl"
+						width="w-32 mx-auto"
+					/>
+				</div>
+				<h2 class="h2">{session.user.name}</h2>
+				<button
+					class="btn bg-gradient-to-br variant-gradient-secondary-tertiary"
+					on:click={() => {
+						removeCookie('sessionToken');
+						location.reload();
+					}}>Logout</button
+				>
+			{:else}
+				<h2 class="h2">You are not logged in</h2>
+				<button class="btn bg-gradient-to-br variant-gradient-secondary-tertiary" on:click={login}
+					>Login</button
+				>
+			{/if}
+		</div>
 	{/if}
-</div>
-{/if}
 </div>

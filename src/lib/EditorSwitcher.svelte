@@ -78,8 +78,6 @@
 		};
 		modalStore.trigger(changeTabName);
 	}
-
-
 </script>
 
 {#if ready}
@@ -110,7 +108,6 @@
 		<svelte:fragment slot="sidebarLeft">
 			<NodeBrowser />
 		</svelte:fragment>
-
 
 		<svelte:fragment>
 			{#each editors as editor, index (index)}

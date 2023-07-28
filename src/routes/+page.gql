@@ -1,15 +1,13 @@
 query MakutuClasses {
-    makutuClasses {
-        name
-        members {
-            name
-            type
-        }
+	makutuClasses {
+		name
+		members {
+			name
+			type
+		}
 
-        getters {
-            name
-
-            
-        }
-    }
+		getters {
+			name
+		}
+	}
 }

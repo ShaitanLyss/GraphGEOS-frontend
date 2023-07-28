@@ -50,17 +50,13 @@
 
 	const makutuClassesStore: MakutuClassesStore = $page.data.MakutuClasses;
 	const makutuClasses = $makutuClassesStore.data?.makutuClasses;
-	const makutuClassRepository: MakutuClassRepository = {};	
+	const makutuClassRepository: MakutuClassRepository = {};
 
 	$: if (makutuClasses) {
 		makutuClasses.forEach((makutuClass) => {
 			makutuClassRepository[makutuClass.name] = makutuClass;
 		});
 	}
-
-	
-	
-
 
 	onMount(async () => {
 		// const { createEditor } = await import('./editor');
@@ -69,14 +65,14 @@
 			notifications.show({
 				title: 'Error',
 				message: 'Makutu classes not loaded',
-				color: 'red',
-			})
+				color: 'red'
+			});
 			throw new Error('Makutu classes not loaded');
 		}
-		
+
 		const { setupEditor } = await import('$rete/editor');
 		if (!container) return;
-		const tools = await setupEditor(container, makutuClassRepository, loadExample, );
+		const tools = await setupEditor(container, makutuClassRepository, loadExample);
 		destroyEditor = tools.destroy;
 		onFirstShown = tools.firstDisplay;
 		editor = tools.editor;
@@ -99,7 +95,6 @@
 		console.log('destroyed');
 	});
 	$: if (editor) editor.setName(name, false);
-	
 
 	$: if (!hidden) {
 		if (firstShown && ready) {
@@ -168,7 +163,7 @@
 		});
 		return visibleNodes;
 	}
-		let showRightSidebar = true;
+	let showRightSidebar = true;
 	setContext('toggleGeos', () => {
 		showRightSidebar = !showRightSidebar;
 	});
@@ -176,7 +171,9 @@
 
 <div
 	hidden={hidden && ready}
-	class="absolute inset-0 border-surface-500 h-full" style="z-index: {hidden ? -10 : 0};" class:opacity-0={hidden && !ready}
+	class="absolute inset-0 border-surface-500 h-full"
+	style="z-index: {hidden ? -10 : 0};"
+	class:opacity-0={hidden && !ready}
 >
 	<AppShell regionPage="h-full" slotSidebarLeft="h-full" slotPageContent="h-full">
 		<div class="h-full">
@@ -185,7 +182,9 @@
 				<AppShell
 					class="absolute inset-0 flex justify-center items-center pointer-events-none z-10"
 					slotHeader="w-full"
-					 slotSidebarRight={showRightSidebar ? "w-1/3 sm:w-2/7 lg:w-2/5 xl:w-1/5 bg-surface-50-90-token" : ""}
+					slotSidebarRight={showRightSidebar
+						? 'w-1/3 sm:w-2/7 lg:w-2/5 xl:w-1/5 bg-surface-50-90-token'
+						: ''}
 				>
 					<!-- Toolbar -->
 					<svelte:fragment slot="pageHeader">
@@ -203,15 +202,20 @@
 							</div>
 						</div>
 					</svelte:fragment>
-							<svelte:fragment slot="sidebarRight">
-			{#if showRightSidebar}
-				<GeosDashboard padding="py-8 px-4 md:px-12" width="w-full" variant=""/>
-			{/if}
-		</svelte:fragment>
+					<svelte:fragment slot="sidebarRight">
+						{#if showRightSidebar}
+							<GeosDashboard padding="py-8 px-4 md:px-12" width="w-full" variant="" />
+						{/if}
+					</svelte:fragment>
 				</AppShell>
 			{/if}
 			<!-- Editor -->
-			<div bind:this={container} class="h-full" class:bg-white={$modeCurrent} style="z-index: {hidden ? -10 : 10};"/>
+			<div
+				bind:this={container}
+				class="h-full"
+				class:bg-white={$modeCurrent}
+				style="z-index: {hidden ? -10 : 10};"
+			/>
 		</div>
 
 		<!-- <svelte:fragment slot="sidebarLeft">

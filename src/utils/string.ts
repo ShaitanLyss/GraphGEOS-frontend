@@ -5,10 +5,7 @@ export function capitalize(str: string): string {
 }
 
 export function capitalizeWords(str: string): string {
-	return str
-		.split(' ')
-		.map(capitalize)
-		.join(' ');
+	return str.split(' ').map(capitalize).join(' ');
 }
 
 const identity = (str: string) => str;
@@ -34,7 +31,6 @@ export function initials(str: string): string {
 	}
 
 	return capitalLetters[1] + capitalLetters[2];
-
 }
 
 // export function titlelize(str: string): string {

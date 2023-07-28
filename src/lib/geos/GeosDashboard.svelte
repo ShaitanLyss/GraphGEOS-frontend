@@ -38,19 +38,23 @@
 						class="card p-4 pointer-events-auto variant-ringed select-none bg-surface-200-700-token transition duration-150 ease-in-out"
 					>
 						<div class="overflow-y-auto h-40 pe-3">
-							<ListBox multiple rounded="rounded-container-token" hover="hover:bg-gradient-to-tr hover:variant-gradient-secondary-tertiary">
+							<ListBox
+								multiple
+								rounded="rounded-container-token"
+								hover="hover:bg-gradient-to-tr hover:variant-gradient-secondary-tertiary"
+							>
 								<div class="bg-surface-50-900-token rounded-container-token">
 									<ListBoxItem bind:group={selectedJobs} name="job" value="1">Job 1</ListBoxItem>
 								</div>
 								<div class="bg-surface-50-900-token rounded-container-token">
 									<ListBoxItem bind:group={selectedJobs} name="job" value="2">Job 2</ListBoxItem>
 								</div>
-                                <div class="bg-surface-50-900-token rounded-container-token">
-                                    <ListBoxItem bind:group={selectedJobs} name="job" value="3">Job 3</ListBoxItem>
-                                </div>
-                                <div class="bg-surface-50-900-token rounded-container-token">
-                                    <ListBoxItem bind:group={selectedJobs} name="job" value="4">Job 4</ListBoxItem>
-                                </div>
+								<div class="bg-surface-50-900-token rounded-container-token">
+									<ListBoxItem bind:group={selectedJobs} name="job" value="3">Job 3</ListBoxItem>
+								</div>
+								<div class="bg-surface-50-900-token rounded-container-token">
+									<ListBoxItem bind:group={selectedJobs} name="job" value="4">Job 4</ListBoxItem>
+								</div>
 							</ListBox>
 						</div>
 					</div>

@@ -43,8 +43,8 @@ export class BreakNode extends Node {
 		this.pythonComponent.setDataCodeGetter('sourceCoords', () => '$(object).getSourceCoords()');
 		this.pythonComponent.setDataCodeGetter('receiverCoords', () => '$(object).getReceiverCoords()');
 		this.pythonComponent.setDataCodeGetter('id', () => '$(object).id');
-		
-		this.changeType("utilities.acquisition.Shot.Shot")
+
+		this.changeType('utilities.acquisition.Shot.Shot');
 	}
 
 	override applyState(): void {

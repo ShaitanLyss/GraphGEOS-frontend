@@ -16,6 +16,8 @@ vite.config.ts.timestamp-*
 .eslintrc.cjs
 .graphqlrc.yaml
 README.md
+src-tauri/icons
+src-tauri/target
 
 # Ignore files for PNPM, NPM and YARN
 pnpm-lock.yaml

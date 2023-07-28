@@ -6,13 +6,13 @@ const config = {
 		url: 'http://127.0.0.1:8000/api/v1/graphql',
 		headers: {
 			Authorization(env) {
-				return `Bearer a75ce042-2445-4708-8f1f-e9a1e9d3ca19`
+				return `Bearer a75ce042-2445-4708-8f1f-e9a1e9d3ca19`;
 			}
 		}
 	},
 	plugins: {
 		'houdini-svelte': {
-			static: true,
+			static: true
 		}
 	},
 
@@ -33,7 +33,7 @@ const config = {
 			}
 		},
 		PythonTypingInfo: {
-			type:"unknown"
+			type: 'unknown'
 		}
 	}
 };

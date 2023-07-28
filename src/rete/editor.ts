@@ -18,7 +18,11 @@ import { NodeFactory } from './node/NodeFactory';
 import type { MakutuClasses, MakutuClasses$result } from '$houdini';
 import type { MakutuClassRepository } from '../backend-interaction/types';
 
-export async function setupEditor(container: HTMLElement, makutuClasses: MakutuClassRepository, loadExample?: EditorExample, ) {
+export async function setupEditor(
+	container: HTMLElement,
+	makutuClasses: MakutuClassRepository,
+	loadExample?: EditorExample
+) {
 	if (container === null) throw new Error('Container is null');
 	const editor = new NodeEditor();
 	const arrange = new AutoArrangePlugin<Schemes>();

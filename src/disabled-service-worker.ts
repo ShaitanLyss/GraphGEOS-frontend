@@ -66,8 +66,6 @@
 // 	event.respondWith(respond());
 // });
 
-
-
 import { build, files } from '$service-worker';
 const timestamp = Date.now();
 
