@@ -1,59 +1,93 @@
-<script>
-	// import { signIn, signOut } from '@auth/sveltekit/client';
+<script lang="ts">
+	import { setCookie, getCookie } from 'typescript-cookie';
+	import type { LayoutData } from '../$types';
 	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
-	import { Notifications } from '@mantine/notifications';
+	let moving = false;
+	let backendDed = false;
+	let checkingForDeadBackend = false;
+	export let data: LayoutData;
+	const session = data.session;
 
-	// const searchParams = $page.url.searchParams;
+	import { onMount, setContext } from 'svelte';
+	import { notifications } from '@mantine/notifications';
 	let ready = false;
+	import { browser } from '$app/environment';
+	import { parse_scheme_request } from './utils';
+	import { checkBackendHealth } from '$utils/backend';
+	import { isTauri } from '$utils/tauri';
+	let login = async () => {};
+	// TODO : handle web app context
+	async function load() {
+		const searchParams = new URLSearchParams(window.location.search);
+		const redirectUri = searchParams.get('redirect');
+		const sessionToken = searchParams.get('sessionToken');
+		let reload = false;
+		if (sessionToken) {
+			setCookie('sessionToken', sessionToken, { expires: 30, secure: true });
+			reload = true;
+		}
+		if ( !reload && getCookie('sessionToken')) {
+			if (!session) {
+				checkingForDeadBackend = true;
+				if (!(await checkBackendHealth())) backendDed = true;
+				checkingForDeadBackend = false;
+			}
+		}
+		if (isTauri()) {
+			if (session || reload) {
+				moving = true;
+			 	window.location.href = redirectUri ? redirectUri : "/"
+			}
+		} else {
+			if (reload || (session && redirectUri)) {
+				window.location.href = redirectUri ? redirectUri : '/auth';
+			} else {
+				moving = false;
+			}
+		}
 
-	onMount(() => {
-		// const userSetupSuccess = searchParams.get('userSetupSuccess') !== 'false';
-		// if (!userSetupSuccess && !$page.data.session) {
-		// 	setTimeout(() => {
-		// 		notifications.show({
-		// 			title: 'Error',
-		// 			message: 'There was an error setting up your account. Please try again.',
-		// 			color: 'red',
-		// 			autoClose: 5000
-		// 		});
-		// 	}, 0);
-		// }
+		let shell: { open: (arg0: string) => void };
+		if (isTauri()) {
+			// login = () => shell.open(getAuthenticationURL());
+			({ shell } = await import('@tauri-apps/api'));
+			const { listen } = await import('@tauri-apps/api/event');
 
-		// if (searchParams.has('userSetupSuccess') && $page.data.session) {
-		// 	const userSetupSuccess = searchParams.get('userSetupSuccess') === 'true';
-		// 	if (!userSetupSuccess) {
-		// 		signOut();
-		// 	}
-		// }
+			listen<string>('scheme-request-received', (event) => {
+				const parsedRequest = parse_scheme_request(event.payload);
+				if (parsedRequest === null || !parsedRequest.path.startsWith('auth-callback')) return;
+				setCookie('sessionToken', parsedRequest.params.sessionToken, { expires: 30, secure: true });
+				window.location.href = '/';
+			});
+		}
+		login = async () => {
+			if (isTauri())
+				shell.open('http://localhost:8000/auth/login?callbackUri=geos-gui://auth-callback');
+			else {
+				const backendHost = 'localhost:8000';
+				window.location.href = `http://${backendHost}/auth/login?callbackUri=${window.location.href}`;
+			}
+		};
+	}
+
+	onMount(async () => {
+		await load();
 		ready = true;
 	});
 </script>
 
-<h1>SvelteKit Auth Example</h1>
-{#if ready}
-	<p>
-		{#if $page.data.session}
-			{#if $page.data.session.user?.image}
-				<span style="background-image: url('{$page.data.session.user.image}')" class="avatar" />
-			{/if}
-			<span class="signedInText">
-				<small>Signed in as</small><br />
-				<strong>{$page.data.session.user?.name ?? 'User'}</strong>
-			</span>
-			<!-- <button on:click={() => signOut()} class="button">Sign out</button> -->
-		{:else}
-			<div class="flex flex-col space-y-5">
-				<span class="notSignedInText">You are not signed in</span>
-				<!-- <button class="btn variant-filled" on:click={() => signIn('github', {})}
-					>Sign In with GitHub</button
-				> -->
-				<!-- <button class="btn variant-filled" on:click={() => signIn('google')}
-					>Sign In with Google</button
-				> -->
-			</div>
-		{/if}
-	</p>
+{#if !ready || checkingForDeadBackend}
+	<div class="h-full w-full flex justify-center items-center">
+		<h1 class="h1">Loading...</h1>
+	</div>
+{:else if backendDed}
+	<div class="h-full w-full flex justify-center items-center">
+		<h1 class="h1">Backend is ded</h1>
+	</div>
+{:else if moving || !ready}
+	<div class="h-full w-full flex justify-center items-center">
+		<h1 class="h1">Loading...</h1>
+	</div>
 {:else}
-	<p>Checking session...</p>
+	<h1 class="h1">Tauri Auth</h1>
+	<button class="button variant-filled-primary" on:click={login}>Login</button>
 {/if}

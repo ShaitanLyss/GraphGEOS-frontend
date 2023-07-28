@@ -1,11 +1,12 @@
 import { redirect, type Handle } from '@sveltejs/kit';
 import { locale } from 'svelte-i18n';
 import { sequence } from '@sveltejs/kit/hooks';
+import { setSession } from '$houdini';
 // import { SessionAndUser} from '$houdini'
 
 const public_routes = [
 	// '/auth/**',
-	'/tauri-auth/**'
+	'/auth/**'
 	// "/"
 ];
 
@@ -40,7 +41,7 @@ async function authorization({ event, resolve }) {
 				console.log("MoonAuth : Backend is dead", error);
 			}
 			if (shouldRedirect) {
-				throw redirect(303, '/tauri-auth?redirect=' + event.url.pathname);
+				throw redirect(303, '/auth?redirect=' + event.url.pathname);
 			}
 		}
 	}
@@ -57,8 +58,9 @@ const localization: Handle = ({ event, resolve }) => {
 };
 
 const moonAuth: Handle = async ({ event, resolve }) => {
-	const sessionToken = event.cookies.get('sessionToken');
 
+	const sessionToken = event.cookies.get('sessionToken');
+	setSession(event, { token: sessionToken });
 	event.locals.getSession = async () => {
 		if (!sessionToken) {
 			return null;

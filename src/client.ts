@@ -7,14 +7,13 @@ export default new HoudiniClient({
 	// uncomment this to configure the network call (for things like authentication)
 	// for more information, please visit here: https://www.houdinigraphql.com/guides/authentication
 
-	fetchParams({ session, document }) {
-		// console.log("houdiniClient : fetchParams : session", session)
+	fetchParams({ session }) {
+		console.log("houdiniClient : fetchParams : session", session)
 		let sessionToken;
-		console.log(document)
 		if (typeof document !== 'undefined')
-			sessionToken = getCookie("sessionToken");
+		sessionToken = getCookie("sessionToken");
 		else 
-			sessionToken = session?.token;
+		sessionToken = session?.token;
 		console.log("sessionToken", sessionToken)
 	    return {
 	        headers: {

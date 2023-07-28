@@ -8,6 +8,7 @@
 	import { acquisitionModelingExample } from '$rete/example/acquisition-modeling';
 	import { acquisitionXmlExample } from '$rete/example/acquisition-xml';
 	import { graphql } from '$houdini';
+	import { isTauri } from '$utils/tauri';
 
 	const store = graphql(`
         query TestQuery @load {

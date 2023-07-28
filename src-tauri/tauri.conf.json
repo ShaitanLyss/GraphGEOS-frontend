@@ -65,10 +65,9 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "GEOS GUI - Tauri Auth",
+        "title": "GEOS GUI",
         "width": 800,
-        "url": "tauri-auth",
-        "label": "tauri-auth"
+        "url": "auth"
       }
     ]
   }
