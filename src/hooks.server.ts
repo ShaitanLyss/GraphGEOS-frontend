@@ -26,17 +26,21 @@ async function authorization({ event, resolve }) {
 	if (!isPublicRoute && event.url.host !== 'sveltekit-prerender') {
 		const session = await event.locals.getSession();
 		if (!session) {
+			let shouldRedirect = false;
 			try {
-				const response = await fetch("localhost:8000/health");
+				const response = await fetch("http://127.0.0.1:8000/health");
 				if (response.ok)
-					throw redirect(303, '/tauri-auth?redirect=' + event.url.pathname);
+					shouldRedirect = true;
 				else {
 					const body = await response.json();
 					console.log("MoonAuth : getSession : Backend is dead", body);
 				}
 			}
 			catch (error) {
-				console.log("MoonAuth : Backend is dead");
+				console.log("MoonAuth : Backend is dead", error);
+			}
+			if (shouldRedirect) {
+				throw redirect(303, '/tauri-auth?redirect=' + event.url.pathname);
 			}
 		}
 	}
