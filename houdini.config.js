@@ -6,7 +6,7 @@ const config = {
 		url: 'http://127.0.0.1:8000/api/v1/graphql',
 		headers: {
 			Authorization(env) {
-				return `Bearer a75ce042-2445-4708-8f1f-e9a1e9d3ca19`;
+				return `Bearer 05785ac6-25eb-4c1f-80a1-c6f6a96c8e45`;
 			}
 		}
 	},
