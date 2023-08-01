@@ -62,4 +62,14 @@
 			<GraphSearchPanel />
 		</div>
 	{/if}
+	{#if currentTile === 'user'}
+		<div class="max-h-full overflow-y-auto">
+			<GraphSearchPanel />
+		</div>
+	{/if}
+	{#if currentTile === 'shared'}
+		<div class="max-h-full overflow-y-auto">
+			<GraphSearchPanel />
+		</div>
+	{/if}
 </div>

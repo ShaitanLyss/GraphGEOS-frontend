@@ -83,7 +83,7 @@ export class PythonNodeComponent extends NodeComponent {
 	private initCode: string[] = [];
 	private parseArguments: Map<string, ParseArgumentData> = new Map();
 
-	private codeTemplateGetters: Map<string, () => string> = new Map([
+	private codeTemplateGetters: Map<string, ({inputs}: {inputs: Record<string, unknown>}) => string> = new Map([
 		['exec', this.getCodeTemplate]
 	]);
 	private newlinesBefore = 0;
@@ -144,7 +144,7 @@ export class PythonNodeComponent extends NodeComponent {
 		}
 	}
 
-	setCodeTemplateGetter(getter: () => string, key = 'exec') {
+	setCodeTemplateGetter(getter: ({inputs}: {inputs: Record<string, unknown>}) => string, key = 'exec') {
 		this.codeTemplateGetters.set(key, getter);
 	}
 
@@ -155,8 +155,8 @@ export class PythonNodeComponent extends NodeComponent {
 
 	private getCodeTemplate() {
 		return `
-{this}
-{exec}
+{{this}}
+{{exec}}
 `;
 	}
 
@@ -291,13 +291,14 @@ export class PythonNodeComponent extends NodeComponent {
 		// Get code template
 		const getter = node.pythonComponent.codeTemplateGetters.get(nodeInput);
 		if (!getter) throw new Error(`No code template getter for ${nodeInput}`);
+		const inputs = await node.fetchInputs();
 		// Cleanup code template
-		let codeTemplate = getter().replace(/^\n*([^]*?)\s*$/, '$1');
+		let codeTemplate = getter({inputs}).replace(/^\n*([^]*?)\s*$/, '$1');
 
 		codeTemplate = await node.pythonComponent.formatPythonVars(codeTemplate);
 
 		// Add intentation in front of everyline of codeTemplate
-		codeTemplate = codeTemplate.replaceAll(/^(?!.*{.*}.*)/gm, indentation);
+		codeTemplate = codeTemplate.replaceAll(/^(?!.*{{.*}}.*)/gm, indentation);
 
 		const templateVars: Record<string, string> = {};
 		let resImportsStatements: Set<string> = node.pythonComponent.importsStatements;
@@ -311,7 +312,7 @@ export class PythonNodeComponent extends NodeComponent {
 		let resParserArguments: Map<string, ParseArgumentData> = node.pythonComponent.parseArguments;
 
 		// Pattern to match indendation and variables in code template
-		const pattern = /( *){(.+?)}(\??)/g;
+		const pattern = /( *){{(.+?)}}(\??)/g;
 
 		// Iterate on code template variables
 		let match;
@@ -376,12 +377,13 @@ export class PythonNodeComponent extends NodeComponent {
 		// Remove redundant indendation since indendation is
 		// already included in child code
 		// Remove trailing ? (pass symbol) in code template
-		codeTemplate = codeTemplate.replaceAll(/^[\t ]*({.*?})\??(.*)$/gm, '$1$2');
-
-		const resCodeTemplate = getMessageFormatter(codeTemplate).format(templateVars);
-		if (resCodeTemplate instanceof Array) {
-			throw new Error('Code resulting from format must be a string, not an array');
-		}
+		codeTemplate = codeTemplate.replaceAll(/^[\t ]*({{.*?}})\??(.*)$/gm, '$1$2');
+// 
+		// const resCodeTemplate = getMessageFormatter(codeTemplate).format(templateVars);
+		const resCodeTemplate = codeTemplate.replace(/{{(.*?)}}/g, (match, key) => {
+			const value = templateVars[key.trim()];
+			return value !== undefined ? value : match;
+		});
 
 		return {
 			importsStatements: resImportsStatements,

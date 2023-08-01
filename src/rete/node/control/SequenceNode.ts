@@ -9,7 +9,7 @@ export class SequenceNode extends AddPinNode {
 		this.pythonComponent.setCodeTemplateGetter(() => {
 			const execs: string[] = [];
 			for (let i = 0; i < this.numPinsAdded; i++) {
-				execs.push(`{exec_${i}}`);
+				execs.push(`{{exec_${i}}}`);
 			}
 			return execs.join('\n');
 		});
