@@ -30,7 +30,6 @@
 
 <div class="node {data.selected ? 'selected' : ''}" style:width style:height data-testid="node">
 	<div class="title" data-testid="title">{data.label}</div>
-
 	<!-- Outputs -->
 	{#each outputs as [key, output]}
 		<div class="output" data-testid={'output-' + key}>

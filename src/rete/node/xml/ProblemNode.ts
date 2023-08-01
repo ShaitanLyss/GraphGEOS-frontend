@@ -1,6 +1,5 @@
 import { XmlNode } from './XmlNode';
 import type { NodeFactory } from '../NodeFactory';
-import { ButtonControl } from '$rete/control/button/button';
 
 /**
  * This node displays the value of the input.

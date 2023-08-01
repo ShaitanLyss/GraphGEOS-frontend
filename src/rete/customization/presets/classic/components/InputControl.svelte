@@ -86,7 +86,10 @@
 		<!-- {options?.label} -->
 		<span class="text-white"> {options?.label ? options?.label : ''}</span>
 		<textarea
-			class="input"
+			class="w-full rounded-md bg-surface-100-800-token
+			 text-surface-900-50-token border-token 
+			 focus:border-primary-500 focus:ring-primary-500
+			 "
 			{value}
 			{readonly}
 			on:input={change}

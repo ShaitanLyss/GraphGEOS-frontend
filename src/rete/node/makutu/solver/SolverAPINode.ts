@@ -4,8 +4,10 @@ import { ObjectAPINode } from '../../ObjectAPINode';
 
 export class SolverAPINode extends ObjectAPINode {
 	// constructor(name: string, url: string, { factory, height = 218, width = undefined }: NodeParams) {
-	constructor({ label = '', url = '', factory, height = 218, width = undefined }: APINodeParams) {
+	constructor(params: APINodeParams) {
+		const { label = '', url = '', factory, height = 218, width = undefined } = params;
 		super({
+			...params,
 			label: label,
 			url: '/makutu/solver' + url,
 			height: height,

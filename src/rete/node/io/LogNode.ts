@@ -8,23 +8,35 @@ import { InputControl } from '$rete/control/Control';
 export class LogNode extends Node {
 	constructor({ message = 'Hello', factory }: { message?: string; factory: NodeFactory }) {
 		// super('Log', { factory });
-		super({ label: 'Log', factory, params: { message } });
+		super({ label: 'Log', factory, params: { message }, height: 250});
 		this.pythonComponent.addCode('print($(message))');
 		this.pythonComponent.setCodeTemplateGetter(
 			() =>
 				`
 if (rank == 0):
-    {this}
-{exec}
+    {{this}}
+{{exec}}
 `
 		);
-		this.height = 200;
 		this.addInExec();
 		this.addOutExec();
+		this.addInData({
+			name: 'message',
+			displayName: 'Message',
+			socketLabel: 'Message',
+			type: 'string',
+			control: {
+				type: 'textarea',
+				options: {
+					initial: message,
+					label: 'Message'
+				}
+			}
+		});
 
-		const messageInput = new Input(new Socket(), 'Message');
-		messageInput.addControl(new InputControl('text', { initial: message }));
-		this.addInput('message', messageInput);
+		// const messageInput = new Input(new Socket(), 'Message');
+		// messageInput.addControl(new InputControl('text', { initial: message }));
+		// this.addInput('message', messageInput);
 	}
 
 	async execute(input: string, forward: (output: string) => unknown) {

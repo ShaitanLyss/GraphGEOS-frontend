@@ -45,7 +45,7 @@ else:
     $(acquisition) = None
 $(acquisition) = comm.bcast($(acquisition), root=0)
 
-{exec}
+{{exec}}
 `
 		);
 

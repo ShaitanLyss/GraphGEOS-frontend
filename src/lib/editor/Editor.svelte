@@ -163,7 +163,7 @@
 		});
 		return visibleNodes;
 	}
-	let showRightSidebar = true;
+	let showRightSidebar = false;
 	setContext('toggleGeos', () => {
 		showRightSidebar = !showRightSidebar;
 	});

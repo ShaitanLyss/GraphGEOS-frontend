@@ -81,9 +81,9 @@ export class TimeLoopNode extends Node {
 			return `
 $(t) = $(start)
 while $(t) < $(end):
-    {loop}
+    {{loop}}
     $(t) += $(step)
-{done}
+{{done}}
 `;
 		});
 	}

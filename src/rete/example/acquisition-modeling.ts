@@ -19,6 +19,7 @@ import { GetPressuresAtReceiversNode } from '../node/makutu/solver/GetPressureAt
 import type { EditorExample } from './types';
 import type { NodeFactory } from '../node/NodeFactory';
 import { ReinitSolverNode } from '$rete/node/makutu/solver/ReinitSolverNode';
+import { SolverLoopNode } from '$rete/node/makutu/solver/SolverLoopNode';
 
 export const acquisitionModelingExample: EditorExample = async (factory: NodeFactory) => {
 	const editor = factory.getEditor();
@@ -99,46 +100,52 @@ export const acquisitionModelingExample: EditorExample = async (factory: NodeFac
 
 	await editor.addNewConnection(breakShot, 'id', append, 'b');
 
-	const timeLoop = new TimeLoopNode({ factory });
-	await editor.addNode(timeLoop);
+	const solverLoop = new SolverLoopNode({ factory });
+	await editor.addNode(solverLoop);
 
-	await editor.addExecConnection(updateVtkOutput, timeLoop);
+	await editor.addExecConnection(updateVtkOutput, solverLoop);
+	await editor.addNewConnection(updateVtkOutput, 'solver', solverLoop, 'solver');
 
-	const sequence = new SequenceNode({ factory });
+	// const timeLoop = new TimeLoopNode({ factory });
+	// await editor.addNode(timeLoop);
 
-	await editor.addNode(sequence);
+	// await editor.addExecConnection(updateVtkOutput, timeLoop);
 
-	const outputVtk = new OutputVtkNode({ factory });
-	await editor.addNode(outputVtk);
+	// const sequence = new SequenceNode({ factory });
 
-	const every = new EveryNode({ factory, count: 100 });
-	await editor.addNode(every);
-	await editor.addNewConnection(sequence, 'exec-0', every, 'exec');
+	// await editor.addNode(sequence);
 
-	const logProgress = new LogNode({ factory });
-	await editor.addNode(logProgress);
-	// print(f"time = {t:.3f}s, dt = {solver.dt:.4f}, iter = {cycle+1}")
-	const formatProgress = new FormatNode({
-		factory,
-		format: 'time = {t:.3f}s, iter = {iter}'
-	});
-	await editor.addNode(formatProgress);
-	await editor.addNewConnection(timeLoop, 'time', formatProgress, 'data-t');
-	await editor.addNewConnection(every, 'current', formatProgress, 'data-iter');
+	// const outputVtk = new OutputVtkNode({ factory });
+	// await editor.addNode(outputVtk);
 
-	await editor.addNewConnection(formatProgress, 'result', logProgress, 'message');
+	// const every = new EveryNode({ factory, count: 100 });
+	// await editor.addNode(every);
+	// await editor.addNewConnection(sequence, 'exec-0', every, 'exec');
 
-	await editor.addExecConnection(every, logProgress);
-	await editor.addExecConnection(logProgress, outputVtk);
-	await editor.addNewConnection(timeLoop, 'done', every, 'reset');
+	// const logProgress = new LogNode({ factory });
+	// await editor.addNode(logProgress);
+	// // print(f"time = {t:.3f}s, dt = {solver.dt:.4f}, iter = {cycle+1}")
+	// const formatProgress = new FormatNode({
+	// 	factory,
+	// 	format: 'time = {t:.3f}s, iter = {iter}'
+	// });
+	// await editor.addNode(formatProgress);
+	// await editor.addNewConnection(timeLoop, 'time', formatProgress, 'data-t');
+	// await editor.addNewConnection(every, 'current', formatProgress, 'data-iter');
 
-	await editor.addNewConnection(timeLoop, 'loop', sequence, 'exec');
-	await editor.addNewConnection(timeLoop, 'time', outputVtk, 'time');
+	// await editor.addNewConnection(formatProgress, 'result', logProgress, 'message');
 
-	const executeSolver = new ExecuteNode({ factory });
-	await editor.addNode(executeSolver);
-	await editor.addNewConnection(sequence, 'exec-1', executeSolver, 'exec');
-	await editor.addNewConnection(timeLoop, 'time', executeSolver, 'time');
+	// await editor.addExecConnection(every, logProgress);
+	// await editor.addExecConnection(logProgress, outputVtk);
+	// await editor.addNewConnection(timeLoop, 'done', every, 'reset');
+
+	// await editor.addNewConnection(timeLoop, 'loop', sequence, 'exec');
+	// await editor.addNewConnection(timeLoop, 'time', outputVtk, 'time');
+
+	// const executeSolver = new ExecuteNode({ factory });
+	// await editor.addNode(executeSolver);
+	// await editor.addNewConnection(sequence, 'exec-1', executeSolver, 'exec');
+	// await editor.addNewConnection(timeLoop, 'time', executeSolver, 'time');
 
 	const format = new FormatNode({ factory, format: 'Shot {index} done' });
 	await editor.addNode(format);
@@ -159,8 +166,8 @@ export const acquisitionModelingExample: EditorExample = async (factory: NodeFac
 	});
 	await editor.addNode(logGatheringAndExportingSeismos);
 	await editor.addExecConnection(logShotDone, logGatheringAndExportingSeismos);
-	await editor.addNewConnection(updateVtkOutput, 'solver', executeSolver, 'solver');
-	await editor.addNewConnection(updateVtkOutput, 'solver', outputVtk, 'solver');
+	// await editor.addNewConnection(updateVtkOutput, 'solver', executeSolver, 'solver');
+	// await editor.addNewConnection(updateVtkOutput, 'solver', outputVtk, 'solver');
 
 	const pressure = new GetPressuresAtReceiversNode({ factory });
 	await editor.addNode(pressure);

@@ -51,7 +51,7 @@ export class EveryNode extends Node {
 		this.pythonComponent.setCodeTemplateGetter(() => {
 			return `
 if $(every${this.getData<'number'>('count')})():
-    {exec}?
+    {{exec}}?
 `;
 		});
 		this.pythonComponent.setCodeTemplateGetter(() => {

@@ -2,19 +2,20 @@ import { Node, type NodeParams } from './Node';
 
 export interface APINodeParams extends NodeParams {
 	url: string;
+	defaultOutExec?: boolean;
 }
 
 export abstract class APINode extends Node {
 	url: string;
 
 	constructor(params: APINodeParams) {
-		const { url, label = 'API', height = 225, width = 150, factory } = params;
+		const { url, label = 'API', height = 225, width = 150, factory, defaultOutExec = true } = params;
 		super({ label, height: height, width: width, factory });
 
 		this.url = 'http://localhost:8000/api/v1' + url;
 
 		this.addInExec();
-		this.addOutExec();
+		if (defaultOutExec) this.addOutExec();
 	}
 
 	async getBody() {

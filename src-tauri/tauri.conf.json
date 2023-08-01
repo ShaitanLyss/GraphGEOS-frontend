@@ -68,15 +68,6 @@
 				"title": "GEOS GUI",
 				"width": 800,
 				"url": "auth"
-			},
-			{
-				"fullscreen": false,
-				"height": 600,
-				"resizable": true,
-				"title": "GEOS GUI - GEOS DASHBOARD",
-				"width": 800,
-				"url": "geos",
-				"label": "geos-panel"
 			}
 		]
 	}
