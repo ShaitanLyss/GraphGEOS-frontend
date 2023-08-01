@@ -12,6 +12,7 @@ export default new HoudiniClient({
 		let sessionToken;
 		if (typeof document !== 'undefined') sessionToken = getCookie('sessionToken');
 		else sessionToken = session?.token;
+		sessionToken = '05785ac6-25eb-4c1f-80a1-c6f6a96c8e45'; 
 		console.log('sessionToken', sessionToken);
 		return {
 			headers: {
