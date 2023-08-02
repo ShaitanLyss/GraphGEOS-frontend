@@ -71,10 +71,10 @@ export class ConnectionSetup extends Setup {
             if (ignored.includes(ctx.type)) {
                 return ctx;
             }
-            if (ctx.type === 'connectionpick') {
-                console.log(ctx.data.socket)
-                return;
-            }
+            // if (ctx.type === 'connectionpick') {
+            //     console.log(ctx.data.socket)
+            //     return;
+            // }
             return ctx;
         });
         area.use(connection);
