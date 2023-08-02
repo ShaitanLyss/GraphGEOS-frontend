@@ -1,7 +1,5 @@
 import { browser } from '$app/environment';
 import { HoudiniClient } from '$houdini';
-import { getCookie } from 'typescript-cookie';
-import { sessionTokenStore } from './routes/sessionTokenStore';
 
 export default new HoudiniClient({
 	url: 'http://127.0.0.1:8000/api/v1/graphql',
@@ -11,8 +9,7 @@ export default new HoudiniClient({
 	fetchParams({ session }) {
 		console.log('houdiniClient : fetchParams : session', session);
 		let sessionToken;
-		console.log("houdiniClient", localStorage.getItem('sessionToken'))
-		if (browser) sessionToken = localStorage.getItem('sessionToken')?.replaceAll('"', '');
+		if (browser && typeof localStorage !== undefined) sessionToken = localStorage.getItem('sessionToken')?.replaceAll('"', '');
 		else sessionToken = session?.token;
 		// sessionToken = '05785ac6-25eb-4c1f-80a1-c6f6a96c8e45'; 
 		console.log('sessionToken', sessionToken);

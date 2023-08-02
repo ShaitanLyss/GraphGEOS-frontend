@@ -57,6 +57,7 @@ const localization: Handle = ({ event, resolve }) => {
 
 const moonAuth: Handle = async ({ event, resolve }) => {
 	const sessionToken = event.cookies.get('sessionToken');
+	console.log("moonAuth", sessionToken)
 	setSession(event, { token: sessionToken });
 	event.locals.getSession = async () => {
 		if (!sessionToken) {

@@ -16,6 +16,7 @@
 	import { isTauri } from '$utils/tauri';
 	import { initials } from '$utils/string';
 	import { sessionTokenStore } from '../sessionTokenStore';
+	import { removeCookie, setCookie } from 'typescript-cookie';
 	let reload = false;
 	let login: () => Promise<void>;
 	// TODO : handle web app context
@@ -26,6 +27,7 @@
 
 		if (sessionToken) {
 			sessionTokenStore.set(sessionToken)
+			setCookie('sessionToken', sessionToken, { expires: 30 })
 			reload = true;
 		}     
 		if (!reload && $sessionTokenStore) {
@@ -37,6 +39,7 @@
 		}
 		if (isTauri()) {
 			if (session || reload) {
+				console.log("tauri : redirecting")
 				window.location.href = redirectUri ? redirectUri : '/';
 			}
 		} else {
@@ -55,6 +58,7 @@
 				const parsedRequest = parse_scheme_request(event.payload);
 				if (parsedRequest === null || !parsedRequest.path.startsWith('auth-callback')) return;
 				console.log('Received auth callback', parsedRequest)
+				setCookie('sessionToken', parsedRequest.params.sessionToken, { expires: 30 })
 				sessionTokenStore.set(parsedRequest.params.sessionToken)
 				// window.location.href = '/';
 			});
@@ -100,6 +104,7 @@
 					class="btn bg-gradient-to-br variant-gradient-secondary-tertiary"
 					on:click={() => {
 						sessionTokenStore.set("");
+						removeCookie('sessionToken')
 						location.reload();
 					}}>Logout</button
 				>

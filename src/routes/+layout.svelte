@@ -2,12 +2,15 @@
 	console.log("check document ", typeof document !== undefined && document)
 	console.log("check window ", typeof window !== undefined && window)
 	
+	import '../localization/i18n';
 	// import '$rete/setup/appLaunch';
 	import { Notifications } from '@mantine/notifications';
 	import UploadGraphModal from '$lib/modals/UploadGraphModal.svelte';
 	import { onMount } from 'svelte';
 	import { setInitialClassState } from '@skeletonlabs/skeleton';
 	import { AppShell, LightSwitch, Modal, type ModalComponent } from '@skeletonlabs/skeleton';
+
+	console.log("layout .svelte")
 
 	// Your selected Skeleton theme:
 	import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
@@ -25,8 +28,8 @@
 	// import '@skeletonlabs/skeleton/styles/partials/typography-prose.css';
 	let isi18setup = false;
 	onMount(async () => {
-		await import('../localization/i18n')
-		isi18setup = true;
+		console.log("layout on mount")
+		
 		await import('$rete/setup/appLaunch');
 		window._init = init;
 	});
@@ -42,7 +45,5 @@
 <slot />
 
 <react:Notifications position="top-right" zIndex="1000" />
-{#if isi18setup}
 <Modal components={modalComponentRegistry} />
-{/if}
 <svelte:head>{@html `<\u{73}cript>(${setInitialClassState.toString()})();</script>`}</svelte:head>

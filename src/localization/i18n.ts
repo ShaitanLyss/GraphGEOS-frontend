@@ -1,11 +1,12 @@
-import { getLocaleFromNavigator, init, register } from 'svelte-i18n';
+import { browser } from '$app/environment'
+import { init, register } from 'svelte-i18n'
 
-register('en', () => import('./locales/en.json'));
-register('fr', () => import('./locales/fr.json'));
+const defaultLocale = 'en'
 
-await init({
-	fallbackLocale: 'en',
-	initialLocale: 'en'
-});
+register('en', () => import('./locales/en.json'))
+register('fr', () => import('./locales/fr.json'))
 
-export {};
+init({
+	fallbackLocale: defaultLocale,
+	initialLocale: browser ? window.navigator.language : defaultLocale,
+})
