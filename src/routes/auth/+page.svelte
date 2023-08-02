@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { setCookie, getCookie, removeCookie } from 'typescript-cookie';
 	import type { LayoutData } from '../$types';
 	import { Avatar } from '@skeletonlabs/skeleton';
 	import { page } from '$app/stores';
@@ -16,6 +15,7 @@
 	import { checkBackendHealth } from '$utils/backend';
 	import { isTauri } from '$utils/tauri';
 	import { initials } from '$utils/string';
+	import { sessionTokenStore } from '../sessionTokenStore';
 	let reload = false;
 	let login: () => Promise<void>;
 	// TODO : handle web app context
@@ -25,10 +25,10 @@
 		const sessionToken = searchParams.get('sessionToken');
 
 		if (sessionToken) {
-			setCookie('sessionToken', sessionToken, { expires: 30 });
+			sessionTokenStore.set(sessionToken)
 			reload = true;
 		}     
-		if (!reload && getCookie('sessionToken')) {
+		if (!reload && $sessionTokenStore) {
 			if (!session) {
 				checkingForDeadBackend = true;
 				if (!(await checkBackendHealth())) backendDed = true;
@@ -55,7 +55,7 @@
 				const parsedRequest = parse_scheme_request(event.payload);
 				if (parsedRequest === null || !parsedRequest.path.startsWith('auth-callback')) return;
 				console.log('Received auth callback', parsedRequest)
-				setCookie('sessionToken', parsedRequest.params.sessionToken, { expires: 30});
+				sessionTokenStore.set(parsedRequest.params.sessionToken)
 				// window.location.href = '/';
 			});
 		}
@@ -99,7 +99,7 @@
 				<button
 					class="btn bg-gradient-to-br variant-gradient-secondary-tertiary"
 					on:click={() => {
-						removeCookie('sessionToken');
+						sessionTokenStore.set("");
 						location.reload();
 					}}>Logout</button
 				>

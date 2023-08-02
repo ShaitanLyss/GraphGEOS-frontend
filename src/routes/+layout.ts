@@ -1,12 +1,12 @@
 import { browser } from '$app/environment';
 import { setSession } from '$houdini';
+import { sessionTokenStore } from './sessionTokenStore.js';
 
 // import { getLocaleFromNavigator, init } from 'svelte-i18n';
 // init({
 // 	fallbackLocale: 'en',
 // 	initialLocale: getLocaleFromNavigator()
 // });
-import { getCookie } from 'typescript-cookie';
 
 export const ssr = false;
 export const prerender = false;
@@ -16,7 +16,8 @@ export const load = async (event) => {
 	if (!browser) {
 		return {};
 	}
-	const sessionToken = getCookie('sessionToken');
+	const sessionToken = localStorage.getItem('sessionToken') ?.replaceAll('"', '');
+	console.log("load session token", sessionToken)
 	const { SessionAndUserStore } = await import('$houdini');
 	const sessionAndUser = new SessionAndUserStore();
 	let data;

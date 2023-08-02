@@ -1,7 +1,7 @@
 {
 	"$schema": "../node_modules/@tauri-apps/cli/schema.json",
 	"build": {
-		"beforeBuildCommand": "",
+		"beforeBuildCommand": "yarn build -m development --minify false",
 		"beforeDevCommand": "yarn dev",
 		"devPath": "http://localhost:5173",
 		"distDir": "../build"

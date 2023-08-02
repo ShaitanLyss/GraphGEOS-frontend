@@ -1,5 +1,6 @@
 <script lang="ts">
-	import '../localization/i18n';
+	console.log("check document ", typeof document !== undefined && document)
+	console.log("check window ", typeof window !== undefined && window)
 	
 	// import '$rete/setup/appLaunch';
 	import { Notifications } from '@mantine/notifications';
@@ -18,9 +19,14 @@
 	// import 'app.css'
 	import '../app.postcss';
 	import { init } from 'svelte-i18n';
+	
+	let i = 0;
+		
 	// import '@skeletonlabs/skeleton/styles/partials/typography-prose.css';
-
+	let isi18setup = false;
 	onMount(async () => {
+		await import('../localization/i18n')
+		isi18setup = true;
 		await import('$rete/setup/appLaunch');
 		window._init = init;
 	});
@@ -36,5 +42,7 @@
 <slot />
 
 <react:Notifications position="top-right" zIndex="1000" />
+{#if isi18setup}
 <Modal components={modalComponentRegistry} />
+{/if}
 <svelte:head>{@html `<\u{73}cript>(${setInitialClassState.toString()})();</script>`}</svelte:head>
