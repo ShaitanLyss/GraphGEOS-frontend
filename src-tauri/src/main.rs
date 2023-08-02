@@ -6,34 +6,34 @@
 
 use tauri::Manager;
 
-use dotenv::dotenv;
-// use std::{env, sync::Arc};
+// use dotenv::dotenv;
+// // use std::{env, sync::Arc};
 
-use tauri::{Position, Window, WindowBuilder};
+// use tauri::{Position, Window, WindowBuilder};
 
-fn move_window_to_other_monitor(window: &Window, i: usize) -> tauri::Result<()> {
-    let monitors = window.available_monitors()?;
-    let monitor = monitors.get(i).ok_or(tauri::Error::CreateWindow)?;
+// fn move_window_to_other_monitor(window: &Window, i: usize) -> tauri::Result<()> {
+//     let monitors = window.available_monitors()?;
+//     let monitor = monitors.get(i).ok_or(tauri::Error::CreateWindow)?;
 
-    let pos = monitor.position();
+//     let pos = monitor.position();
 
-    window.set_position(Position::Physical(
-        tauri::PhysicalPosition{
-            x: pos.x,
-            y: 0
-        })
-    )?;
+//     window.set_position(Position::Physical(
+//         tauri::PhysicalPosition{
+//             x: pos.x,
+//             y: 0
+//         })
+//     )?;
 
-    window.center()?;
-    Ok(())
-}
+//     window.center()?;
+//     Ok(())
+// }
 
 
 
 
 
 fn main() {
-    dotenv().ok();
+    // dotenv().ok();
     // for (key, value) in env::vars() {
     //     eprintln!("{}: {}", key, value);
     // }

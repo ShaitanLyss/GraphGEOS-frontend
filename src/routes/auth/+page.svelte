@@ -25,9 +25,9 @@
 		const sessionToken = searchParams.get('sessionToken');
 
 		if (sessionToken) {
-			setCookie('sessionToken', sessionToken, { expires: 30, secure: true });
+			setCookie('sessionToken', sessionToken, { expires: 30 });
 			reload = true;
-		}
+		}     
 		if (!reload && getCookie('sessionToken')) {
 			if (!session) {
 				checkingForDeadBackend = true;
@@ -54,8 +54,9 @@
 			listen<string>('scheme-request-received', (event) => {
 				const parsedRequest = parse_scheme_request(event.payload);
 				if (parsedRequest === null || !parsedRequest.path.startsWith('auth-callback')) return;
-				setCookie('sessionToken', parsedRequest.params.sessionToken, { expires: 30, secure: true });
-				window.location.href = '/';
+				console.log('Received auth callback', parsedRequest)
+				setCookie('sessionToken', parsedRequest.params.sessionToken, { expires: 30});
+				// window.location.href = '/';
 			});
 		}
 		login = async () => {

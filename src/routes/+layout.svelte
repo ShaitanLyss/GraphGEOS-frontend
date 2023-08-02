@@ -1,9 +1,12 @@
 <script lang="ts">
 	import '../localization/i18n';
+	
 	// import '$rete/setup/appLaunch';
-	import '../app.postcss';
 	import { Notifications } from '@mantine/notifications';
 	import UploadGraphModal from '$lib/modals/UploadGraphModal.svelte';
+	import { onMount } from 'svelte';
+	import { setInitialClassState } from '@skeletonlabs/skeleton';
+	import { AppShell, LightSwitch, Modal, type ModalComponent } from '@skeletonlabs/skeleton';
 
 	// Your selected Skeleton theme:
 	import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
@@ -14,21 +17,20 @@
 	// Finally, your application's global stylesheet (sometimes labeled 'app.css')
 	// import 'app.css'
 	import '../app.postcss';
+	import { init } from 'svelte-i18n';
 	// import '@skeletonlabs/skeleton/styles/partials/typography-prose.css';
 
 	onMount(async () => {
 		await import('$rete/setup/appLaunch');
+		window._init = init;
 	});
 
-	import { AppShell, LightSwitch, Modal, type ModalComponent } from '@skeletonlabs/skeleton';
 	const modalComponentRegistry: Record<string, ModalComponent> = {
 		uploadGraphModal: {
 			ref: UploadGraphModal
 		}
 	};
-	import { setInitialClassState } from '@skeletonlabs/skeleton';
-	import { onMount } from 'svelte';
-	import { graphql } from '$houdini';
+	// import { graphql } from '$houdini';
 </script>
 
 <slot />

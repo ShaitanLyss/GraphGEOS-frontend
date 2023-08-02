@@ -75,7 +75,6 @@ export class ConnectionSetup extends Setup {
                 console.log(ctx.data.socket)
                 return;
             }
-            console.log(ctx);
             return ctx;
         });
         area.use(connection);

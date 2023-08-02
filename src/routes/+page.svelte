@@ -9,7 +9,7 @@
 	import { acquisitionXmlExample } from '$rete/example/acquisition-xml';
 	import { graphql } from '$houdini';
 	import { isTauri } from '$utils/tauri';
-
+	import { isLoading } from 'svelte-i18n';
 	const store = graphql(`
 		query TestQuery @load {
 			graphs {
@@ -19,7 +19,7 @@
 	`);
 	$: console.log('store', $store.data);
 </script>
-
+ 
 <div class="h-screen">
 	<AppShell regionPage="h-full" slotPageContent="h-full">
 		<!-- <svelte:fragment slot="sidebarLeft">Sidebar left</svelte:fragment> -->

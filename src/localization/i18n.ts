@@ -5,5 +5,7 @@ register('fr', () => import('./locales/fr.json'));
 
 await init({
 	fallbackLocale: 'en',
-	initialLocale: getLocaleFromNavigator()
+	initialLocale: 'en'
 });
+
+export {};
