@@ -17,9 +17,9 @@ export const load = async (event) => {
 	if (!browser) {
 		return {};
 	}
-	if (browser) {
-		locale.set(window.navigator.language)
-	}
+	// if (browser) {
+	// 	locale.set(window.navigator.language)
+	// }
 	await waitLocale()
 	const sessionToken = localStorage.getItem('sessionToken') ?.replaceAll('"', '');
 	console.log("load session token", sessionToken)

@@ -6,6 +6,7 @@
 	import type { NodeEditor } from '$rete/NodeEditor';
 	import type { Writable } from 'svelte/store';
 	import { _ } from 'svelte-i18n';
+	import { capitalize, words } from '$utils/string';
 
 	let graphInput: HTMLInputElement;
 	let formElement: HTMLFormElement;
@@ -112,7 +113,7 @@
 {#if $modalStore}
 	<div class="card">
 		<header class="card-header text-2xl font-bold text-center">
-			<h2>{$_('modal.title.graph.upload')}</h2>
+			<h2>{words($_('modal.title.graph.upload'))}</h2>
 			<!-- <button class="close" on:click={() => modalStore.set(null)}>×</button> -->
 		</header>
 		<section class="p-4 space-y-4">
@@ -121,12 +122,12 @@
 				bind:this={formElement}
 			>
 				<label class="label">
-					<span>Name</span><span class="text-red-500 ms-1">*</span>
+					<span>{capitalize($_('form.input.graph.name.title'))}</span><span class="text-red-500 ms-1">*</span>
 					<input
 						type="text"
 						class="input"
 						name="name"
-						placeholder="Name"
+						placeholder={words($_('form.input.graph.name_placeholder'))}
 						required
 						bind:value={$formStore.name}
 					/>
