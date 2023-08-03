@@ -228,13 +228,13 @@ export class Node<
 	}
 
 	addInExec(name = 'exec', displayName = '') {
-		this.addInput(name, new Input(new ExecSocket({ name: displayName }), undefined, true));
+		this.addInput(name, new Input(new ExecSocket({ name: displayName, node:this }), undefined, true));
 	}
 
 	addOutData({ name = 'data', displayName = '', isArray = false, type = 'any' }: OutDataParams) {
 		this.addOutput(
 			name,
-			new Output(new Socket({ name: displayName, isArray: isArray, type: type }), displayName)
+			new Output(new Socket({ name: displayName, isArray: isArray, type: type, node:this }), displayName)
 		);
 	}
 
@@ -248,7 +248,7 @@ export class Node<
 		type = 'any'
 	}: InDataParams<N>) {
 		const input = new Input(
-			new Socket({ name: socketLabel, isArray: isArray, type: type, isRequired: isRequired }),
+			new Socket({ name: socketLabel, isArray: isArray, type: type, isRequired: isRequired, node: this }),
 			displayName,
 			false,
 			{ isRequired: isRequired }
@@ -261,7 +261,7 @@ export class Node<
 
 	addOutExec(name = 'exec', displayName = '', isNaturalFlow = false) {
 		if (isNaturalFlow) this.naturalFlowExec = name;
-		this.addOutput(name, new Output(new ExecSocket({ name: displayName }), displayName));
+		this.addOutput(name, new Output(new ExecSocket({ name: displayName, node:this }), displayName));
 	}
 
 	processDataflow = () => {
@@ -326,7 +326,8 @@ export class Node<
 		return this.outData;
 	}
 
-	updateElement(type: GetRenderTypes<AreaExtra>, id: string): void {
+	updateElement(type: GetRenderTypes<AreaExtra> = 'node', id?: string): void {
+		if (id === undefined) id = this.id;
 		if (this.getArea()) {
 			this.getArea().update(type, id);
 		} else console.error('Node', 'area is not set');

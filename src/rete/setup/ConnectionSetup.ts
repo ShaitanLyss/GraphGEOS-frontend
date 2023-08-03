@@ -4,13 +4,44 @@ import type { NodeFactory } from "$rete/node/NodeFactory";
 import type { Schemes } from "$rete/node/Schemes";
 import type { Area2D, AreaPlugin } from "rete-area-plugin";
 import { Setup } from "./Setup";
-import { ClassicFlow, ConnectionPlugin, Presets } from "rete-connection-plugin";
+import { ClassicFlow, ConnectionPlugin, EventType, Presets } from "rete-connection-plugin";
 import { isConnectionInvalid } from "$rete/plugin/typed-sockets";
 import type { Socket } from "$rete/socket/Socket";
 import { notifications } from "@mantine/notifications";
 import type { Root } from "rete";
+import { findSocket } from "$rete/socket/utils";
+import type { Node } from "$rete/node/Node";
+
+let lastClickedSocket = false;
+
+class MyConnectionPlugin extends ConnectionPlugin<Schemes, AreaExtra> {
+
+     override async pick(event: PointerEvent, type: EventType): Promise<void> {
+        if (event.button == 2) {
+            if (type === "up") return;
+            const pointedElements = document.elementsFromPoint(event.clientX, event.clientY)
+            
+            const pickedSocketData = findSocket(this.socketsCache, pointedElements)
+            if (pickedSocketData === undefined)
+                return;
+                
+            // pickedSocket.selected = !pickedSocket.selected;
+            const node: Node = this.editor.getNode(pickedSocketData.nodeId)
+            const socket = (pickedSocketData.side === 'input' ? node.inputs[pickedSocketData.key] : node.outputs[pickedSocketData.key])?.socket
+            if (socket === undefined)
+                throw new Error(`Socket not found for node ${node.id} and key ${pickedSocketData.key}`)
+            
+            lastClickedSocket = true;
+            socket.selected = !socket?.selected
+            node.updateElement()
+            return;
+        }
+         super.pick(event, type);
+     }
+}
 
 export class ConnectionSetup extends Setup {
+    
     setup(editor: NodeEditor, area: AreaPlugin<Schemes, AreaExtra>, factory: NodeFactory): void {
         // let lastButtonClicked : number;
         // area.container.addEventListener('pointerdown', (e) => {
@@ -20,7 +51,7 @@ export class ConnectionSetup extends Setup {
         //     console.log("pointerdown", lastButtonClicked)
         //     return false;
         // }, false);
-        const connection = new ConnectionPlugin<Schemes, AreaExtra>();
+        const connection = new MyConnectionPlugin();
         Presets.classic.setup();
         connection.addPreset(
             () =>
@@ -63,18 +94,30 @@ export class ConnectionSetup extends Setup {
         );
 
         connection.addPreset(Presets.classic.setup());
-        connection.addPipe((ctx) => {
+        connection.addPipe((ctx ) => {
             const ignored: (AreaExtra | Area2D<Schemes> | Root<Schemes>)["type"][] = [
                 "unmount", "pointermove", "render", "rendered", "zoom", "zoomed",
                 "translate", "translated"
             ];
-            if (ignored.includes(ctx.type)) {
+
+
+            if (ctx.type === "contextmenu") {
+                if (lastClickedSocket) {
+                    lastClickedSocket = false;
+                    ctx.data.event.preventDefault();
+                    ctx.data.event.stopPropagation();
+                    return;
+                }
+
                 return ctx;
+
             }
-            // if (ctx.type === 'connectionpick') {
-            //     console.log(ctx.data.socket)
-            //     return;
-            // }
+
+            // if (ctx.type === "contextmenu")
+            // // if (ctx.type === 'connectionpick') {
+            // //     console.log(ctx.data)
+            // //     // return;
+            // // }
             return ctx;
         });
         area.use(connection);
