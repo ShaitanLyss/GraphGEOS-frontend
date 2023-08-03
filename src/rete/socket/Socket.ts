@@ -24,4 +24,16 @@ export class Socket extends ClassicPreset.Socket {
 		this.selected = false;
 		this.node = node;
 	}
+
+	select() {
+		this.selected = true;
+	}
+
+	deselect() {
+		this.selected = false;
+	}
+
+	toggleSelection() {
+		this.selected = !this.selected;
+	}
 }

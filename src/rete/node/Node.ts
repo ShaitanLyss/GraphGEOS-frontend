@@ -63,6 +63,8 @@ export type NodeSaveData = {
 	position?: { x: number; y: number };
 	state: Record<string, unknown>;
 	inputControlValues: Record<string, unknown>;
+	selectedInputs: string[];
+	selectedOutputs: string[];
 };
 
 export class Node<
@@ -154,12 +156,21 @@ export class Node<
 
 	toJSON(): NodeSaveData {
 		const inputControlValues: Record<string, unknown> = {};
+		const selectedInputs: string[] = [];
+		const selectedOutputs: string[] = [];
 		for (const key in this.inputs) {
 			const value = this.getData(key);
 			if (value !== undefined) {
 				inputControlValues[key] = value;
 			}
+			if (this.inputs[key]?.socket.selected)
+				selectedInputs.push(key);
 		}
+		for (const key in this.outputs) {
+			if (this.outputs[key]?.socket.selected)
+				selectedOutputs.push(key);
+		}
+
 		// TODO: for all nodes, move state to params
 		// TODO: add control values to JSON return
 		// TODO: adapt node factory to adapt to new JSON format
@@ -169,8 +180,26 @@ export class Node<
 			type: (this.constructor as typeof Node).id,
 			state: this.state,
 			position: this.getArea().nodeViews.get(this.id)?.position,
-			inputControlValues: inputControlValues
+			inputControlValues: inputControlValues,
+			selectedInputs,
+			selectedOutputs,
 		};
+	}
+
+	selectInput(key: string) {
+		this.inputs[key]?.socket.select();
+	}
+
+	deselectInput(key: string) {
+		this.inputs[key]?.socket.deselect();
+	}
+
+	selectOutput(key: string) {
+		this.outputs[key]?.socket.select();
+	}
+
+	deselectOutput(key: string) {
+		this.outputs[key]?.socket.deselect();
 	}
 
 	setNaturalFlow(outExec: string | undefined) {

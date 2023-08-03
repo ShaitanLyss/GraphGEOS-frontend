@@ -16,32 +16,33 @@ let lastClickedSocket = false;
 
 class MyConnectionPlugin extends ConnectionPlugin<Schemes, AreaExtra> {
 
-     override async pick(event: PointerEvent, type: EventType): Promise<void> {
+    override async pick(event: PointerEvent, type: EventType): Promise<void> {
+        // select socket on right click
         if (event.button == 2) {
             if (type === "up") return;
             const pointedElements = document.elementsFromPoint(event.clientX, event.clientY)
-            
+
             const pickedSocketData = findSocket(this.socketsCache, pointedElements)
             if (pickedSocketData === undefined)
                 return;
-                
+
             // pickedSocket.selected = !pickedSocket.selected;
             const node: Node = this.editor.getNode(pickedSocketData.nodeId)
             const socket = (pickedSocketData.side === 'input' ? node.inputs[pickedSocketData.key] : node.outputs[pickedSocketData.key])?.socket
             if (socket === undefined)
                 throw new Error(`Socket not found for node ${node.id} and key ${pickedSocketData.key}`)
-            
+
             lastClickedSocket = true;
             socket.selected = !socket?.selected
             node.updateElement()
             return;
         }
-         super.pick(event, type);
-     }
+        super.pick(event, type);
+    }
 }
 
 export class ConnectionSetup extends Setup {
-    
+
     setup(editor: NodeEditor, area: AreaPlugin<Schemes, AreaExtra>, factory: NodeFactory): void {
         // let lastButtonClicked : number;
         // area.container.addEventListener('pointerdown', (e) => {
@@ -94,30 +95,14 @@ export class ConnectionSetup extends Setup {
         );
 
         connection.addPreset(Presets.classic.setup());
-        connection.addPipe((ctx ) => {
-            const ignored: (AreaExtra | Area2D<Schemes> | Root<Schemes>)["type"][] = [
-                "unmount", "pointermove", "render", "rendered", "zoom", "zoomed",
-                "translate", "translated"
-            ];
-
-
-            if (ctx.type === "contextmenu") {
-                if (lastClickedSocket) {
-                    lastClickedSocket = false;
-                    ctx.data.event.preventDefault();
-                    ctx.data.event.stopPropagation();
-                    return;
-                }
-
-                return ctx;
-
+        connection.addPipe((ctx) => {
+            // prevent context menu from appearing when right clicking on a socket
+            if (ctx.type === "contextmenu" && lastClickedSocket) {
+                lastClickedSocket = false;
+                ctx.data.event.preventDefault();
+                ctx.data.event.stopPropagation();
+                return;
             }
-
-            // if (ctx.type === "contextmenu")
-            // // if (ctx.type === 'connectionpick') {
-            // //     console.log(ctx.data)
-            // //     // return;
-            // // }
             return ctx;
         });
         area.use(connection);

@@ -101,6 +101,14 @@ export class NodeFactory {
 				}
 				nodes.set(nodeSaveData.id, node);
 
+				for (const key of nodeSaveData.selectedInputs) {
+					node.selectInput(key);
+				}
+
+				for (const key of nodeSaveData.selectedOutputs) {
+					node.selectOutput(key);
+				}
+
 				await this.editor.addNode(node);
 				if (nodeSaveData.position)
 					this.area.translate(nodeSaveData.id, {
