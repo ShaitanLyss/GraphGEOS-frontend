@@ -63,9 +63,9 @@ const moonAuth: Handle = async ({ event, resolve }) => {
 		if (!sessionToken) {
 			return null;
 		}
-		// if (event.locals.session) {
-		// 	return event.locals.session;
-		// }
+		if (event.locals.session) {
+			return event.locals.session;
+		}
 
 		const { SessionAndUserStore } = await import('$houdini');
 		const sessionAndUser = new SessionAndUserStore();

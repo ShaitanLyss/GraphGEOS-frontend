@@ -23,6 +23,7 @@
 	import type { NodeEditor, NodeEditorSaveData } from '$rete/NodeEditor';
 	import Fa from 'svelte-fa';
 	import { faTimes } from '@fortawesome/free-solid-svg-icons';
+	import {faUser} from '@fortawesome/free-regular-svg-icons';
 
 	let addButonClicked = -1;
 
@@ -158,7 +159,10 @@
 						value={undefined}>+</Tab
 					>
 				</TabGroup>
-				<div class="ml-auto pe-4 pe- my-auto flex h-full space-x-3 items-center justify-end">
+				<div class="ml-auto pe-4 pe- my-auto flex h-full space-x-3 items-center justify-end text-surface-900-50-token">
+					<a href="/auth" class="p-1">
+						<Fa icon={faUser} size="sm" class="opacity-80" />
+					</a>
 					<LocaleSwitcher />
 					<LightSwitch />
 				</div>

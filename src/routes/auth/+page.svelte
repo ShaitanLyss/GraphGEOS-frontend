@@ -17,6 +17,8 @@
 	import { initials } from '$utils/string';
 	import { sessionTokenStore } from '../sessionTokenStore';
 	import { removeCookie, setCookie } from 'typescript-cookie';
+	import Fa from 'svelte-fa';
+	import { faHome } from '@fortawesome/free-solid-svg-icons';
 	let reload = false;
 	let login: () => Promise<void>;
 	// TODO : handle web app context
@@ -26,10 +28,10 @@
 		const sessionToken = searchParams.get('sessionToken');
 
 		if (sessionToken) {
-			sessionTokenStore.set(sessionToken)
-			setCookie('sessionToken', sessionToken, { expires: 30 })
+			sessionTokenStore.set(sessionToken);
+			setCookie('sessionToken', sessionToken, { expires: 30 });
 			reload = true;
-		}     
+		}
 		if (!reload && $sessionTokenStore) {
 			if (!session) {
 				checkingForDeadBackend = true;
@@ -39,7 +41,7 @@
 		}
 		if (isTauri()) {
 			if (session || reload) {
-				console.log("tauri : redirecting")
+				console.log('tauri : redirecting');
 				window.location.href = redirectUri ? redirectUri : '/';
 			}
 		} else {
@@ -57,9 +59,9 @@
 			listen<string>('scheme-request-received', (event) => {
 				const parsedRequest = parse_scheme_request(event.payload);
 				if (parsedRequest === null || !parsedRequest.path.startsWith('auth-callback')) return;
-				console.log('Received auth callback', parsedRequest)
-				setCookie('sessionToken', parsedRequest.params.sessionToken, { expires: 30 })
-				sessionTokenStore.set(parsedRequest.params.sessionToken)
+				console.log('Received auth callback', parsedRequest);
+				setCookie('sessionToken', parsedRequest.params.sessionToken, { expires: 30 });
+				sessionTokenStore.set(parsedRequest.params.sessionToken);
 				// window.location.href = '/';
 			});
 		}
@@ -100,11 +102,19 @@
 					/>
 				</div>
 				<h2 class="h2">{session.user.name}</h2>
+				<div class="flex justify-center">
+					<a
+						href="/"
+						class="text-surface-500-400-token text-center hover:text-surface-400-500-token"
+					>
+						<Fa icon={faHome} size="3x" />
+					</a>
+				</div>
 				<button
 					class="btn bg-gradient-to-br variant-gradient-secondary-tertiary"
 					on:click={() => {
-						sessionTokenStore.set("");
-						removeCookie('sessionToken')
+						sessionTokenStore.set('');
+						removeCookie('sessionToken');
 						location.reload();
 					}}>Logout</button
 				>
