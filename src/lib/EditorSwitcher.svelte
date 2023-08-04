@@ -166,7 +166,7 @@
 					<div
 						class="opacity-0 transition-all group-hover:opacity-100 flex h-full space-x-3 items-center justify-end text-surface-900-50-token"
 					>
-						<a href="/auth" class="p-1">
+						<a href="/auth" class="p-1" on:click={saveEditors}>
 							<Fa icon={faUser} size="sm" class="opacity-80" />
 						</a>
 						<LocaleSwitcher />
