@@ -162,7 +162,7 @@
 						value={undefined}>+</Tab
 					>
 				</TabGroup>
-				<div class="group my-auto ml-auto pe-4 relative">
+				<div class="group ml-auto pe-4 relative h-auto">
 					<div
 						class="opacity-0 transition-all group-hover:opacity-100 flex h-full space-x-3 items-center justify-end text-surface-900-50-token"
 					>
