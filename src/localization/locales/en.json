@@ -76,5 +76,15 @@
         "btn": "New Job"
       }
     }
+  },
+  "notification": {
+    "save": {
+      "title": "Save",
+      "message": {
+        "ongoing": "Saving...",
+        "success": "Saved!",
+        "failure": "Failed to save. An error occured : {error}"
+      }
+    }
   }
 }

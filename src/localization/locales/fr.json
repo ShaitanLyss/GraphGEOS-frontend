@@ -73,5 +73,15 @@
         "btn": "nouveau job"
       }
     }
+  },
+  "notification": {
+    "save": {
+      "title": "Sauvegarde",
+      "message": {
+        "ongoing": "Sauvegarde en cours...",
+        "success": "Sauvegardé !",
+        "failure": "Échec de la sauvegarde. {error}."
+      }
+    }
   }
 }

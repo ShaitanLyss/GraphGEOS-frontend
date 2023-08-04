@@ -12,6 +12,7 @@
 	let formElement: HTMLFormElement;
 
 	const formStore: Writable<Record<string, string>> = localStorageStore('uploadGraphForm', {});
+	const editor: NodeEditor = $modalStore[0].meta.editor;
 
 	const handleSubmit = async (event: Event) => {
 		event.preventDefault();
@@ -33,7 +34,7 @@
 			return;
 		}
 
-		const editor = $modalStore[0].meta.editor;
+		
 
 		if (!editor) {
 			notifications.show({
@@ -129,7 +130,7 @@
 						name="name"
 						placeholder={words($_('form.input.graph.name_placeholder'))}
 						required
-						bind:value={$formStore.name}
+						value={editor.name}
 					/>
 				</label>
 				<!-- Description -->

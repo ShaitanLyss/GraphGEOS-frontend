@@ -19,34 +19,59 @@
 	import LocaleSwitcher from './LocaleSwitcher.svelte';
 	import NodeBrowser from './editor/node-browser/NodeBrowser.svelte';
 	import GeosDashboard from './geos/GeosDashboard.svelte';
+	import { addContextFunction } from './utils';
+	import type { NodeEditor, NodeEditorSaveData } from '$rete/NodeEditor';
 
 	let addButonClicked = -1;
 
 	export let examples: EditorView[] = [];
 
-	let editors: EditorView[] = examples;
+	let editorsViews: EditorView[] = [];
 
-	const tabSet: Writable<string> = localStorageStore('exampleTabSet', 'math');
+	const tabSet: Writable<string> = localStorageStore('tabSet', 'XML');
+	const savedEditors: Writable<Record<string, NodeEditorSaveData>> = localStorageStore(
+		'saveData',
+		{}
+	);
+
 	let ready = false;
+		// Copy names of editors in tabs
+	const tabNames: string[] = [];
 
-	onMount(() => {
+	onMount(async () => {
+		await import('$rete/setup/appLaunch');
+		for (const [key, editorSaveData] of Object.entries($savedEditors)) {
+			editorsViews = [
+				...editorsViews,
+				{
+					key: key,
+					label: editorSaveData.editorName,
+					saveData: editorSaveData
+				}
+			];
+		}
+		if (editorsViews.length === 0) editorsViews = examples;
+		
+		for (const editorTab of editorsViews) {
+			tabNames.push(editorTab.label);
 		ready = true;
+	}
 	});
 
+	// Adds a new editor
 	function addEditor() {
 		console.log('addEditor');
-		const key = `newEditor${editors.length}`;
-		editors = [...editors, { key: key, label: $_('new.editor') }];
-		tabNames[editors.length - 1] = $_('new.editor');
+		const key = `newEditor${editorsViews.length}`;
+		editorsViews = [...editorsViews, { key: key, label: $_('new.editor') }];
+		tabNames[editorsViews.length - 1] = $_('new.editor');
 		$tabSet = key;
 		setTimeout(() => {
 			addButonClicked = -1;
 		}, 0);
 	}
-	const tabNames: string[] = [];
-	for (const editorTab of editors) {
-		tabNames.push(editorTab.label);
-	}
+
+
+
 
 	// const draggableTabOptions: DragOptions = {
 	// 	// axis: 'x',
@@ -57,6 +82,7 @@
 	// };
 
 	let editorComponents: Editor[] = [];
+	let editors: NodeEditor[] = [];
 
 	function openChangeTabNameModal(tabIndex: number) {
 		const changeTabName: ModalSettings = {
@@ -78,6 +104,16 @@
 		};
 		modalStore.trigger(changeTabName);
 	}
+
+	function saveEditors() {
+		for (let i = 0; i < editors.length; i++) {
+			const editor = editors[i];
+			console.log(editor.name);
+			$savedEditors[editorsViews[i].key] = editor.toJSON();
+			console.log($savedEditors);
+		}
+	}
+	addContextFunction('onSave', saveEditors);
 </script>
 
 {#if ready}
@@ -85,7 +121,7 @@
 		<svelte:fragment slot="header">
 			<div class="flex">
 				<TabGroup>
-					{#each editors as editor, index (index)}
+					{#each editorsViews as editor, index (index)}
 						<div role="button" tabindex={index} on:dblclick={() => openChangeTabNameModal(index)}>
 							<!-- use:draggable={draggableTabOptions}
 						> -->
@@ -110,11 +146,13 @@
 		</svelte:fragment>
 
 		<svelte:fragment>
-			{#each editors as editor, index (index)}
+			{#each editorsViews as editorView, index (index)}
 				<Editor
+					bind:editor={editors[index]}
 					bind:this={editorComponents[index]}
-					hidden={$tabSet !== editor.key}
-					loadExample={editor.example}
+					saveData={editorView.saveData}
+					hidden={$tabSet !== editorView.key}
+					loadExample={editorView.example}
 					name={tabNames[index]}
 					onNameChange={(name) => (tabNames[index] = name)}
 				/>
