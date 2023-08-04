@@ -80,7 +80,10 @@
 		ready = true;
 	});
 </script>
-
+ <svelte:head>
+    <title>Geos UI - Auth</title>
+	
+</svelte:head>
 <div class="h-full w-full flex justify-center items-center">
 	{#if !ready || checkingForDeadBackend}
 		<h1 class="h1">Loading...</h1>
