@@ -21,6 +21,8 @@
 	import GeosDashboard from './geos/GeosDashboard.svelte';
 	import { addContextFunction } from './utils';
 	import type { NodeEditor, NodeEditorSaveData } from '$rete/NodeEditor';
+	import Fa from 'svelte-fa';
+	import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 	let addButonClicked = -1;
 
@@ -35,7 +37,7 @@
 	);
 
 	let ready = false;
-		// Copy names of editors in tabs
+	// Copy names of editors in tabs
 	const tabNames: string[] = [];
 
 	onMount(async () => {
@@ -51,11 +53,11 @@
 			];
 		}
 		if (editorsViews.length === 0) editorsViews = examples;
-		
+
 		for (const editorTab of editorsViews) {
 			tabNames.push(editorTab.label);
-		ready = true;
-	}
+			ready = true;
+		}
 	});
 
 	// Adds a new editor
@@ -69,9 +71,6 @@
 			addButonClicked = -1;
 		}, 0);
 	}
-
-
-
 
 	// const draggableTabOptions: DragOptions = {
 	// 	// axis: 'x',
@@ -122,9 +121,33 @@
 			<div class="flex">
 				<TabGroup>
 					{#each editorsViews as editor, index (index)}
-						<div role="button" tabindex={index} on:dblclick={() => openChangeTabNameModal(index)}>
+						<div
+							role="button"
+							class="relative group"
+							tabindex={index}
+							on:dblclick={() => openChangeTabNameModal(index)}
+						>
 							<!-- use:draggable={draggableTabOptions}
 						> -->
+							<button
+								type="button"
+								class="absolute top-0.5 right-0.5 p-1 hidden group-hover:block rounded-token variant-soft-surface"
+								on:click={() => {
+									let iEditorToDelete;
+									editorsViews = editorsViews.filter((e, i) => {iEditorToDelete = i; return e.key !== editor.key});
+									if (iEditorToDelete === undefined) throw new Error('iEditorToDelete is undefined');
+									delete $savedEditors[editor.key];
+									editors.splice(iEditorToDelete, 1);
+									tabNames.splice(index, 1);
+									if (index === 0) {
+										$tabSet = editorsViews[0].key;
+									} else {
+										$tabSet = editorsViews[index - 1].key;
+									}
+								}}
+							>
+								<Fa icon={faTimes} size="xs"/>
+							</button>
 							<Tab bind:group={$tabSet} name="tab{index}" value={editor.key}>{tabNames[index]}</Tab>
 						</div>
 					{/each}
