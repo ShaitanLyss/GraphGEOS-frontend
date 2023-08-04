@@ -29,8 +29,6 @@
 	let isi18setup = false;
 	onMount(async () => {
 		console.log("layout on mount")
-		
-		await import('$rete/setup/appLaunch');
 		window._init = init;
 	});
 
