@@ -14,7 +14,7 @@
 		try {
 		onSave();
 		notifications.hide('save');
-		notifications.show({ title: $_('notification.save.title'), message: $_('notification.save.message.success', { values: {storageUse: getLocalStorageUsage()}}), color: 'green' });
+		notifications.show({  title: $_('notification.save.title'), message: $_('notification.save.message.success', { values: {storageUse: getLocalStorageUsage()}}), color: 'green' });
 		} catch (e) {
 			notifications.hide('save');
 			notifications.show({ title: $_('notification.save.title'), message: $_('notification.save.message.failure', {values:{error: (e as Error).toString()}}), color: 'red' });
