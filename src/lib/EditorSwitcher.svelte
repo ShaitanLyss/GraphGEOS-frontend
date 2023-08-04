@@ -22,8 +22,8 @@
 	import { addContextFunction } from './utils';
 	import type { NodeEditor, NodeEditorSaveData } from '$rete/NodeEditor';
 	import Fa from 'svelte-fa';
-	import { faTimes } from '@fortawesome/free-solid-svg-icons';
-	import {faUser} from '@fortawesome/free-regular-svg-icons';
+	import { faEllipsisH, faEllipsisV, faTimes } from '@fortawesome/free-solid-svg-icons';
+	import { faUser } from '@fortawesome/free-regular-svg-icons';
 
 	let addButonClicked = -1;
 
@@ -80,7 +80,6 @@
 
 	// 	}
 	// };
-
 	let editorComponents: Editor[] = [];
 	let editors: NodeEditor[] = [];
 
@@ -135,8 +134,12 @@
 								class="absolute top-0.5 right-0.5 p-1 hidden group-hover:block rounded-token variant-soft-surface"
 								on:click={() => {
 									let iEditorToDelete;
-									editorsViews = editorsViews.filter((e, i) => {iEditorToDelete = i; return e.key !== editor.key});
-									if (iEditorToDelete === undefined) throw new Error('iEditorToDelete is undefined');
+									editorsViews = editorsViews.filter((e, i) => {
+										iEditorToDelete = i;
+										return e.key !== editor.key;
+									});
+									if (iEditorToDelete === undefined)
+										throw new Error('iEditorToDelete is undefined');
 									delete $savedEditors[editor.key];
 									editors.splice(iEditorToDelete, 1);
 									tabNames.splice(index, 1);
@@ -147,7 +150,7 @@
 									}
 								}}
 							>
-								<Fa icon={faTimes} size="xs"/>
+								<Fa icon={faTimes} size="xs" />
 							</button>
 							<Tab bind:group={$tabSet} name="tab{index}" value={editor.key}>{tabNames[index]}</Tab>
 						</div>
@@ -159,12 +162,19 @@
 						value={undefined}>+</Tab
 					>
 				</TabGroup>
-				<div class="ml-auto pe-4 pe- my-auto flex h-full space-x-3 items-center justify-end text-surface-900-50-token">
-					<a href="/auth" class="p-1">
-						<Fa icon={faUser} size="sm" class="opacity-80" />
-					</a>
-					<LocaleSwitcher />
-					<LightSwitch />
+				<div class="group my-auto ml-auto pe-4 relative">
+					<div
+						class="opacity-0 transition-all group-hover:opacity-100 flex h-full space-x-3 items-center justify-end text-surface-900-50-token"
+					>
+						<a href="/auth" class="p-1">
+							<Fa icon={faUser} size="sm" class="opacity-80" />
+						</a>
+						<LocaleSwitcher />
+						<LightSwitch />
+					</div>
+					<div class="absolute inset-0 transition-opacity group-hover:opacity-0 opacity-50 pe-4 flex justify-end items-center pointer-events-none">
+						<Fa icon={faEllipsisH} size="2x"  />
+					</div>
 				</div>
 			</div>
 		</svelte:fragment>
