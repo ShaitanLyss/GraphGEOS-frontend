@@ -82,7 +82,7 @@
       "title": "Save",
       "message": {
         "ongoing": "Saving...",
-        "success": "Saved!",
+        "success": "Saved! Used storage : {storageUse, number, ::percent}",
         "failure": "Failed to save. An error occured : {error}"
       }
     }

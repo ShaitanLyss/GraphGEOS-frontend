@@ -79,7 +79,7 @@
       "title": "Sauvegarde",
       "message": {
         "ongoing": "Sauvegarde en cours...",
-        "success": "Sauvegardé !",
+        "success": "Sauvegardé ! Utilisation stockage : {storageUse, number, ::percent}",
         "failure": "Échec de la sauvegarde. {error}."
       }
     }

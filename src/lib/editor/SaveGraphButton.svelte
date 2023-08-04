@@ -4,6 +4,7 @@
 	import { _ } from 'svelte-i18n';
 	import EditorButton from './EditorButton.svelte';
 	import { getContext } from 'svelte';
+	import { getLocalStorageUsagePercent as getLocalStorageUsage } from '$utils/localStorage';
 
 	const onSave = getContext<() => unknown>('onSave');
 
@@ -13,7 +14,7 @@
 		try {
 		onSave();
 		notifications.hide('save');
-		notifications.show({ title: $_('notification.save.title'), message: $_('notification.save.message.success'), color: 'green' });
+		notifications.show({ title: $_('notification.save.title'), message: $_('notification.save.message.success', { values: {storageUse: getLocalStorageUsage()}}), color: 'green' });
 		} catch (e) {
 			notifications.hide('save');
 			notifications.show({ title: $_('notification.save.title'), message: $_('notification.save.message.failure', {values:{error: (e as Error).toString()}}), color: 'red' });
