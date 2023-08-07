@@ -179,7 +179,7 @@
 						</div>
 					{/each}
 					<Tab
-						on:click={addEditor}
+						on:click={() => addEditor()}
 						bind:group={addButonClicked}
 						name="addEditorBtn"
 						value={undefined}>+</Tab
