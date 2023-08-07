@@ -24,8 +24,10 @@
 	import { faEllipsisH, faEllipsisV, faTimes } from '@fortawesome/free-solid-svg-icons';
 	import { faUser } from '@fortawesome/free-regular-svg-icons';
 	import {v1 as uuidv1} from 'uuid';
+	import { EditMacroNodeChannel } from './broadcast-channels';
 	let addButonClicked = -1;
 
+	const editMacroNodeChannel = new EditMacroNodeChannel();
 
 
 	export let examples: EditorView[] = [];
@@ -63,10 +65,10 @@
 	});
 
 	// Adds a new editor
-	function addEditor() {
+	function addEditor(saveData?: NodeEditorSaveData) {
 		const key = uuidv1();
 		console.log('addEditor', key);
-		editorsViews = [...editorsViews, { key: key, label: $_('new.editor') }];
+		editorsViews = [...editorsViews, { key: key, label: $_('new.editor'), saveData }];
 		tabNames[editorsViews.length - 1] = $_('new.editor');
 		$tabSet = key;
 		setTimeout(() => {
@@ -114,6 +116,26 @@
 		}
 	}
 	addContextFunction('onSave', saveEditors);
+
+	editMacroNodeChannel.onmessage = async (data) => {
+		console.log('editMacroNodeChannel.onmessage', data);
+		addEditor(data.graph);
+		// const { graph } = event.data;
+		// const key = uuidv1();
+		// editorsViews = [
+		// 	...editorsViews,
+		// 	{
+		// 		key: key,
+		// 		label: graph.editorName,
+		// 		saveData: graph
+		// 	}
+		// ];
+		// tabNames.push(graph.editorName);
+		// $tabSet = key;
+		// setTimeout(() => {
+		// 	addButonClicked = -1;
+		// }, 0);
+	};
 </script>
 
 {#if ready}

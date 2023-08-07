@@ -1,13 +1,38 @@
 <script lang="ts">
+	import { EditMacroNodeChannel } from '$lib/broadcast-channels';
+	import type { NodeEditorSaveData } from '$rete/NodeEditor';
 	import { faUser } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import { _ } from 'svelte-i18n';
 
 	export let graphName: string | undefined = undefined;
-	export let authorName: string | undefined = undefined;
+	export let authorName: string | null | undefined = undefined;
+	export let graphId: string;
+	const editMacroNodeChannel = new EditMacroNodeChannel();
+
+	async function ondblclick(event: MouseEvent) {
+		event.stopPropagation();
+		console.log('dblclick', graphName)
+		const {GetGraphStore} =	await import('$houdini');
+		const graphStore = new GetGraphStore();
+		const responseData = (await graphStore.fetch({variables: {id: graphId}})).data?.graph.data;
+		if (responseData === undefined) {
+			throw new Error('Graph not found');
+		}
+		const graphData = JSON.parse(responseData) as NodeEditorSaveData;
+		console.log('fetched: graph: ', graphData)
+		
+		console.log('broadcast: edit:', graphData.editorName)
+		await editMacroNodeChannel.postMessage({graph: graphData});	
+	}
 </script>
 
-<div class="card card-hover overflow-hidden variant-filled w-52">
+<div
+	role="button"
+	tabindex="0"
+	on:dblclick={ondblclick}
+	class="card card-hover overflow-hidden variant-filled w-52"
+>
 	<header>
 		<img
 			src="https://source.unsplash.com/vjUokUWbFOs/400x175"

@@ -90,7 +90,7 @@ input ProviderInput {
 
 type Query {
   geos: GeosQuery!
-  graph(id: Int!): GraphType!
+  graph(id: UUID!): GraphType!
   graphs: [GraphType!]!
   makutuClass(name: String!): MakutuClassType!
   makutuClasses: [MakutuClassType!]!

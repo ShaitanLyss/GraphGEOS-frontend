@@ -1,0 +1,5 @@
+query GetGraph($id: UUID!) {
+    graph(id: $id) {
+        data
+    }
+}
