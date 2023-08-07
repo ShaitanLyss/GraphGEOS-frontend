@@ -167,7 +167,7 @@
 						<div
 							class="opacity-0 transition-all group-hover:opacity-100 flex h-full
 						space-x-3 items-center justify-end text-surface-900-50-token
-						overflow-hidden translate-x-20 group-hover:translate-x-0
+						overflow-hidden translate-x-20 group-hover:translate-x-0 ps-6
 						"
 						>
 							<a href="/auth" class="p-1" on:click={saveEditors}>
