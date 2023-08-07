@@ -21,7 +21,7 @@
 	import { addContextFunction } from './utils';
 	import type { NodeEditor, NodeEditorSaveData } from '$rete/NodeEditor';
 	import Fa from 'svelte-fa';
-	import { faEllipsisH, faEllipsisV, faTimes } from '@fortawesome/free-solid-svg-icons';
+	import { faEllipsisH, faTimes } from '@fortawesome/free-solid-svg-icons';
 	import { faUser } from '@fortawesome/free-regular-svg-icons';
 	import {v1 as uuidv1} from 'uuid';
 	import { EditMacroNodeChannel } from './broadcast-channels';
