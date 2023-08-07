@@ -18,7 +18,6 @@
 	import { _ } from 'svelte-i18n';
 	import LocaleSwitcher from './LocaleSwitcher.svelte';
 	import NodeBrowser from './editor/node-browser/NodeBrowser.svelte';
-	import GeosDashboard from './geos/GeosDashboard.svelte';
 	import { addContextFunction } from './utils';
 	import type { NodeEditor, NodeEditorSaveData } from '$rete/NodeEditor';
 	import Fa from 'svelte-fa';
