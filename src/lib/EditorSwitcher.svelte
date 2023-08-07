@@ -24,8 +24,10 @@
 	import Fa from 'svelte-fa';
 	import { faEllipsisH, faEllipsisV, faTimes } from '@fortawesome/free-solid-svg-icons';
 	import { faUser } from '@fortawesome/free-regular-svg-icons';
-
+	import {v1 as uuidv1} from 'uuid';
 	let addButonClicked = -1;
+
+
 
 	export let examples: EditorView[] = [];
 
@@ -63,8 +65,8 @@
 
 	// Adds a new editor
 	function addEditor() {
-		console.log('addEditor');
-		const key = `newEditor${editorsViews.length}`;
+		const key = uuidv1();
+		console.log('addEditor', key);
 		editorsViews = [...editorsViews, { key: key, label: $_('new.editor') }];
 		tabNames[editorsViews.length - 1] = $_('new.editor');
 		$tabSet = key;
@@ -167,7 +169,7 @@
 						<div
 							class="opacity-0 transition-all group-hover:opacity-100 flex h-full
 						space-x-3 items-center justify-end text-surface-900-50-token
-						overflow-hidden translate-x-20 group-hover:translate-x-0
+						overflow-hidden translate-x-20 group-hover:translate-x-0 ps-6
 						"
 						>
 							<a href="/auth" class="p-1" on:click={saveEditors}>
