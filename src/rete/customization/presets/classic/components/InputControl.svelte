@@ -22,9 +22,10 @@
 			isFirstSet = false;
 			return;
 		}
-		data.options?.change();
 		const target = event.target as HTMLInputElement;
 		const val = data.type === 'number' ? +target.value : target.value;
+		if (data.options?.change !== undefined)
+			data.options.change(val);
 		clearTimeout(debouncedTimer);
 		debouncedTimer = setTimeout(() => {
 			debouncedValue = val;

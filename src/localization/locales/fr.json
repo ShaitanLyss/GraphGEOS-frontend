@@ -41,6 +41,11 @@
           "title": "Nom"
         }
       }
+    },
+    "graph": {
+      "button": {
+        "update": "mettre à jour"
+      }
     }
   },
   "modal": {

@@ -42,6 +42,11 @@
           "title": "Name"
         }
       }
+    },
+    "graph": {
+      "button": {
+        "update": "update"
+      }
     }
   },
   "modal": {
