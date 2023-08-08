@@ -1,8 +1,3 @@
-schema {
-  query: ComboQuery
-  mutation: Mutation
-}
-
 input AccountCreateInput {
   access_token: String = null
   expires_at: Int = null
@@ -38,18 +33,21 @@ type BuiltinClassType {
 
 union BuiltinClassTypeMakutuClassType = BuiltinClassType | MakutuClassType
 
-type ComboQuery {
-  graph(id: Int!): GraphType!
-  graphs: [GraphType!]!
-  makutuClass(name: String!): MakutuClassType!
-  makutuClasses: [MakutuClassType!]!
-  session(sessionToken: String!): SessionType!
-  user(email: String = null, id: UUID = null, provider: ProviderInput = null): UserType!
-  users: [UserType!]!
-}
-
 """Date with time (isoformat)"""
 scalar DateTime
+
+type GeosQuery {
+  geosXsd: String!
+  numXmlComplexTypes: Int!
+  numXmlSimpleTypes: Int!
+  xmlComplexTypes(names: [String!] = null): [XMLComplexType!]!
+  xmlSchema: XMLSchema!
+  xmlSimpleTypes(names: [String!] = null): [XMLSimpleType!]!
+}
+
+type GraphMutation {
+  updateGraph(graphUpdateInput: GraphUpdateInput!): GraphType!
+}
 
 type GraphType {
   author: UserType!
@@ -59,6 +57,14 @@ type GraphType {
   id: UUID!
   isPublic: Boolean!
   name: String!
+}
+
+input GraphUpdateInput {
+  data: String = null
+  description: String = null
+  id: UUID!
+  isPublic: Boolean = null
+  name: String = null
 }
 
 type MakutuClassType {
@@ -81,6 +87,7 @@ type Mutation {
   createSession(session: SessionCreateInput!): SessionType!
   createUser(user: UserCreateInput!): UserType!
   deleteSession(sessionToken: String!): Boolean!
+  graph: GraphMutation!
   updateSession(session: SessionCreateInput!): SessionType!
 }
 
@@ -92,6 +99,17 @@ type ParameterType {
 input ProviderInput {
   provider: String!
   providerAccountId: String!
+}
+
+type Query {
+  geos: GeosQuery!
+  graph(authorId: UUID = null, id: UUID = null, name: String = null): GraphType!
+  graphs: [GraphType!]!
+  makutuClass(name: String!): MakutuClassType!
+  makutuClasses: [MakutuClassType!]!
+  session(sessionToken: String!): SessionType!
+  user(email: String = null, id: UUID = null, provider: ProviderInput = null): UserType!
+  users: [UserType!]!
 }
 
 input SessionCreateInput {
@@ -124,4 +142,31 @@ type UserType {
   id: UUID!
   image: String
   name: String
+}
+
+type XMLAttribute {
+  default: String
+  name: String!
+  pattern: String
+  required: Boolean!
+  type: String!
+}
+
+union XMLAttributeXMLComplexType = XMLAttribute | XMLComplexType
+
+type XMLComplexType {
+  attributes: [XMLAttribute!]!
+  childTypes: [String!]!
+  name: String!
+  properties: [XMLAttributeXMLComplexType!]!
+}
+
+type XMLSchema {
+  complexTypes: [XMLComplexType!]!
+  simpleTypes: [XMLSimpleType!]!
+}
+
+type XMLSimpleType {
+  name: String!
+  pattern: String!
 }
