@@ -30,8 +30,9 @@
 	const editMacroNodeChannel = new EditMacroNodeChannel();
 
 	export let examples: EditorView[] = [];
+	export let defaultTabSet: string = '';
 	let editorsViews: EditorView[] = [];
-	const tabSet: Writable<string> = localStorageStore('tabSet', 'XML');
+	const tabSet: Writable<string> = localStorageStore('tabSet', defaultTabSet);
 	const savedEditors: Writable<Record<string, NodeEditorSaveData>> = localStorageStore(
 		'saveData',
 		{}
