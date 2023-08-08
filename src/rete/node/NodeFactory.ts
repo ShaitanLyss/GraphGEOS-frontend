@@ -57,7 +57,9 @@ function createControlflowEngine() {
 		};
 	});
 }
-
+// type ParamsConstraint = [Record<string, unknown> & { factory: NodeFactory }, ...unknown[]];
+type WithFactory<T extends Record<string, unknown>> = T & { factory: NodeFactory };
+type WithoutFactory<T> = Omit<T, 'factory'>;
 export class NodeFactory {
 	private static classRegistry: Record<string, typeof Node> = {};
 	static registerClass(id: string, nodeClass: typeof Node) {
@@ -75,9 +77,22 @@ export class NodeFactory {
 		this.state.set(id + '_' + key, value);
 	}
 
+	async addNode<
+	T extends Node,
+	Params = Record<string,unknown>, 
+>(nodeClass: new (params: Params) => T, params: WithoutFactory<Params>): Promise<boolean> {
+		const paramsWithFactory: Params = {...params, factory: this} as Params;
+		return await this.editor.addNode(new nodeClass(paramsWithFactory));
+	}
+
+	getNodes(): Node[] {
+		return this.editor.getNodes();
+	}
+
 	readonly pythonDataflowEngine: PythonDataflowEngine<Schemes> = createPythonDataflowEngine();
 
 	async loadGraph(editorSaveData: NodeEditorSaveData) {
+		console.log("loadGraph", editorSaveData.editorName)
 		await this.editor.clear();
 		this.editor.setName(editorSaveData.editorName);
 		const nodes = new Map<string, Node>();
@@ -86,6 +101,13 @@ export class NodeFactory {
 			if (nodeClass) {
 				const node = new nodeClass({ ...nodeSaveData.params, factory: this });
 				node.id = nodeSaveData.id;
+				if (node.initializePromise) {
+					await node.initializePromise;
+					if (node.afterInitialize)
+						node.afterInitialize();
+				}
+
+				
 				node.setState(nodeSaveData.state);
 				node.applyState();
 				for (const key in nodeSaveData.inputControlValues) {
@@ -122,7 +144,7 @@ export class NodeFactory {
 		}
 
 		editorSaveData.connections.forEach(async (connectionSaveData) => {
-			await this.editor.addConnection(JSON.parse(connectionSaveData));
+			await this.editor.addConnection(connectionSaveData);
 
 			// await this.editor.addConnection(JSON.parse(connectionSaveData));
 

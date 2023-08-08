@@ -22,6 +22,7 @@ import type { NodeFactory } from './NodeFactory';
 import type { ComponentSupportInterface } from '$rete/components/ComponentSupportInterface';
 import type { BaseComponent } from '$rete/components/BaseComponent';
 import { PythonNodeComponent } from '$rete/components/Python_NC';
+import { R_SocketSelection_NC } from '$rete/components/R_SocketSelection_NC';
 
 interface ControlParams<N> {
 	type: InputControlTypes;
@@ -100,11 +101,17 @@ export class Node<
 	static id: string;
 	static nodeCounts = BigInt(0);
 	protected state: Record<string, unknown> = {};
+	inputs: { [key in keyof Inputs]?: Input<Exclude<Inputs[key], undefined>> | undefined; } = {};
+	outputs: { [key in keyof Outputs]?: Output<Exclude<Outputs[key], undefined>> | undefined; } = {};
 	readonly pythonComponent: PythonNodeComponent;
+	readonly socketSelectionComponent: R_SocketSelection_NC;
 	readonly ingoingDataConnections: Record<string, Connection<Node, Node>> = {};
 	readonly ingoingExecConnections: Record<string, Connection<Node, Node>> = {};
 	readonly outgoingDataConnections: Record<string, Connection<Node, Node>> = {};
 	readonly outgoingExecConnections: Record<string, Connection<Node, Node>> = {};
+
+	initializePromise?: Promise<void>;
+	afterInitialize?: () => void;
 
 	getFactory(): NodeFactory {
 		return this.factory;
@@ -114,6 +121,7 @@ export class Node<
 		const { label = '', width = 190, height = 120, factory } = params;
 		super(label);
 		this.pythonComponent = this.addComponentByClass(PythonNodeComponent);
+		this.socketSelectionComponent = this.addComponentByClass(R_SocketSelection_NC);
 		this.state = {};
 		Node.nodeCounts++;
 		this.params = params.params || {};
@@ -277,7 +285,7 @@ export class Node<
 		isArray = false,
 		isRequired = false,
 		type = 'any'
-	}: InDataParams<N>) {
+	}: InDataParams<N>): Input {
 		const input = new Input(
 			new Socket({ name: socketLabel, isArray: isArray, type: type, isRequired: isRequired, node: this }),
 			displayName,
@@ -288,6 +296,7 @@ export class Node<
 			input.addControl(new InputControl(control.type, control.options));
 		}
 		this.addInput(name, input as unknown as Input<Exclude<Inputs[keyof Inputs], undefined>>);
+		return input;
 	}
 
 	addOutExec(name = 'exec', displayName = '', isNaturalFlow = false) {
@@ -360,10 +369,13 @@ export class Node<
 
 	updateElement(type: GetRenderTypes<AreaExtra> = 'node', id?: string): void {
 		if (id === undefined) id = this.id;
-		if (this.getArea()) {
-			this.getArea()?.update(type, id);
-		} else console.error('Node', 'area is not set');
+		const area = this.getArea();
+		if (area) {
+			area.update(type, id);
+		}
 	}
 }
 
-export class Connection<A extends Node, B extends Node> extends ClassicPreset.Connection<A, B> {}
+export class Connection<A extends Node = Node, B extends Node = Node> extends ClassicPreset.Connection<A, B> {
+
+}

@@ -3,6 +3,12 @@
 	// import Ref from '../../../Ref.svelte';
 	// import type { ClassicScheme, SvelteArea2D } from '../types';
 	import { ClassicScheme, Ref, SvelteArea2D } from 'rete-svelte-plugin';
+	import { MacroNode } from '$rete/node/MacroNode';
+	import { faCubes } from '@fortawesome/free-solid-svg-icons';
+	import type { Node, NodeEditorSaveData} from "$rete";
+	import Fa from 'svelte-fa';
+	import { EditMacroNodeChannel } from '$lib/broadcast-channels';
+	import { GetGraphStore } from '$houdini';
 	type NodeExtraData = { width?: number; height?: number };
 
 	function sortByIndex<K, I extends undefined | { index?: number }>(entries: [K, I][]) {
@@ -14,7 +20,12 @@
 		return entries as [K, Exclude<I, undefined>][];
 	}
 
-	export let data: ClassicScheme['Node'] & NodeExtraData;
+	export let data: Node & NodeExtraData;
+	$: node = data;
+	$: macroNode = data instanceof MacroNode ? data : undefined;
+
+	const isMacroNode = data instanceof MacroNode;
+	console.log('isMacroNode', isMacroNode);
 	export let emit: (props: SvelteArea2D<ClassicScheme>) => void;
 
 	$: width = Number.isFinite(data.width) ? `${data.width}px` : '';
@@ -26,10 +37,32 @@
 	function any<T>(arg: T): unknown {
 		return arg;
 	}
+
+	async function onDblClickNode() {
+		console.log("Double click on node")
+		if (macroNode === undefined) return;
+		console.log("Double click on macro node")
+		const graph = (await new GetGraphStore().fetch({variables: {id: macroNode.graphId }})).data?.graph;
+		if (graph === undefined) throw new Error("Graph not found");
+		const saveData: NodeEditorSaveData = JSON.parse(graph.data);
+		new EditMacroNodeChannel().postMessage({
+			graph: saveData
+		})
+
+	}
 </script>
 
-<div class="node {data.selected ? 'selected' : ''}" style:width style:height data-testid="node">
-	<div class="title" data-testid="title">{data.label}</div>
+<div class="node {data.selected ? 'selected' : ''}" style:width style:height data-testid="node" tabindex="0" role="button"
+	on:dblclick|stopPropagation={onDblClickNode}
+>
+	<div class="flex justify-between items-center">
+		<div class="title" data-testid="title">{data.label}</div>
+		{#if isMacroNode}
+		<div class="p-2 text-surface-50-900-token">
+		<Fa icon={faCubes}/>
+		</div>
+		{/if}
+	</div>
 	<!-- Outputs -->
 	{#each outputs as [key, output]}
 		<div class="output" data-testid={'output-' + key}>
