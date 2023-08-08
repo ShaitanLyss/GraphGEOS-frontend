@@ -23,26 +23,23 @@
 	import Fa from 'svelte-fa';
 	import { faEllipsisH, faTimes } from '@fortawesome/free-solid-svg-icons';
 	import { faUser } from '@fortawesome/free-regular-svg-icons';
-	import {v1 as uuidv1} from 'uuid';
+	import { v1 as uuidv1 } from 'uuid';
 	import { EditMacroNodeChannel } from './broadcast-channels';
 	let addButonClicked = -1;
 
 	const editMacroNodeChannel = new EditMacroNodeChannel();
 
-
 	export let examples: EditorView[] = [];
-
 	let editorsViews: EditorView[] = [];
-
 	const tabSet: Writable<string> = localStorageStore('tabSet', 'XML');
 	const savedEditors: Writable<Record<string, NodeEditorSaveData>> = localStorageStore(
 		'saveData',
 		{}
 	);
-
 	let ready = false;
+
 	// Copy names of editors in tabs
-	const tabNames: string[] = [];
+	let tabNames: string[] = [];
 
 	onMount(async () => {
 		await import('$rete/setup/appLaunch');
@@ -68,12 +65,40 @@
 	function addEditor(saveData?: NodeEditorSaveData) {
 		const key = uuidv1();
 		console.log('addEditor', key);
-		editorsViews = [...editorsViews, { key: key, label: $_('new.editor'), saveData }];
-		tabNames[editorsViews.length - 1] = $_('new.editor');
+		console.log(saveData ? saveData.editorName : $_('new.editor'));
+		editorsViews = [
+			...editorsViews,
+			{ key: key, label: saveData ? saveData.editorName : $_('new.editor'), saveData }
+		];
+		tabNames[editorsViews.length - 1] = saveData ? saveData.editorName : $_('new.editor');
 		$tabSet = key;
 		setTimeout(() => {
 			addButonClicked = -1;
 		}, 0);
+	}
+
+	function deleteEditor({ key }: { key: string }) {
+		const index = editorsViews.findIndex((editor) => editor.key === key);
+		console.log('deleteEditor', key, index);
+		
+		tabNames.splice(index, 1);
+		tabNames = tabNames;
+		delete editors[key];
+		editors =editors;
+		editorComponents.splice(index, 1);
+		editorsViews.splice(index, 1);
+		editorsViews = editorsViews;
+		delete $savedEditors[key];
+		$savedEditors = $savedEditors;
+
+		if (editorsViews.length > 0 && editorsViews.length === index) {
+			$tabSet = editorsViews[index - 1].key;
+		} else if (editorsViews.length > 0) {
+			$tabSet = editorsViews[index].key;
+		} else {
+			console.log("No more editors left")
+		}
+
 	}
 
 	// const draggableTabOptions: DragOptions = {
@@ -84,7 +109,7 @@
 	// 	}
 	// };
 	let editorComponents: Editor[] = [];
-	let editors: NodeEditor[] = [];
+	let editors: Record<string, NodeEditor> = {};
 
 	function openChangeTabNameModal(tabIndex: number) {
 		const changeTabName: ModalSettings = {
@@ -108,8 +133,8 @@
 	}
 
 	function saveEditors() {
-		for (let i = 0; i < editors.length; i++) {
-			const editor = editors[i];
+		for (let i = 0; i < editorsViews.length; i++) {
+			const editor = editors[editorsViews[i].key];
 			console.log(editor.name);
 			$savedEditors[editorsViews[i].key] = editor.toJSON();
 			console.log($savedEditors);
@@ -120,21 +145,6 @@
 	editMacroNodeChannel.onmessage = async (data) => {
 		console.log('editMacroNodeChannel.onmessage', data);
 		addEditor(data.graph);
-		// const { graph } = event.data;
-		// const key = uuidv1();
-		// editorsViews = [
-		// 	...editorsViews,
-		// 	{
-		// 		key: key,
-		// 		label: graph.editorName,
-		// 		saveData: graph
-		// 	}
-		// ];
-		// tabNames.push(graph.editorName);
-		// $tabSet = key;
-		// setTimeout(() => {
-		// 	addButonClicked = -1;
-		// }, 0);
 	};
 </script>
 
@@ -156,21 +166,7 @@
 								type="button"
 								class="absolute top-0.5 right-0.5 p-1 hidden group-hover:block rounded-token variant-soft-surface"
 								on:click={() => {
-									let iEditorToDelete;
-									editorsViews = editorsViews.filter((e, i) => {
-										iEditorToDelete = i;
-										return e.key !== editor.key;
-									});
-									if (iEditorToDelete === undefined)
-										throw new Error('iEditorToDelete is undefined');
-									delete $savedEditors[editor.key];
-									editors.splice(iEditorToDelete, 1);
-									tabNames.splice(index, 1);
-									if (index === 0) {
-										$tabSet = editorsViews[0].key;
-									} else {
-										$tabSet = editorsViews[index - 1].key;
-									}
+									deleteEditor({ key: editor.key });
 								}}
 							>
 								<Fa icon={faTimes} size="xs" />
@@ -213,9 +209,9 @@
 		</svelte:fragment>
 
 		<svelte:fragment>
-			{#each editorsViews as editorView, index (index)}
+			{#each editorsViews as editorView, index (editorView)}				
 				<Editor
-					bind:editor={editors[index]}
+					bind:editor={editors[editorView.key]}
 					bind:this={editorComponents[index]}
 					saveData={editorView.saveData}
 					hidden={$tabSet !== editorView.key}
