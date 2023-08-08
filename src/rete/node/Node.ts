@@ -109,6 +109,7 @@ export class Node<
 	readonly ingoingExecConnections: Record<string, Connection<Node, Node>> = {};
 	readonly outgoingDataConnections: Record<string, Connection<Node, Node>> = {};
 	readonly outgoingExecConnections: Record<string, Connection<Node, Node>> = {};
+	onRemoveIngoingConnection?: (conn: Connection) => void;
 
 	initializePromise?: Promise<void>;
 	afterInitialize?: () => void;

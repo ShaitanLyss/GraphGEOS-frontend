@@ -74,7 +74,10 @@ export async function setupEditor(
 
 	editor.addPipe((context) => {
 		if (['connectioncreated', 'connectionremoved'].includes(context.type)) {
+			try {
 			nodeFactory.process((context as unknown as { data: { target: Node } }).data.target);
+			} catch (e) {
+			}
 		}
 
 		return context;

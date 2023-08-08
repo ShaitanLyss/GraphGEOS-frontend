@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import {modeCurrent} from '@skeletonlabs/skeleton';
 	// import Ref from '../../../Ref.svelte';
 	// import type { ClassicScheme, SvelteArea2D } from '../types';
 	import { ClassicScheme, Ref, SvelteArea2D } from 'rete-svelte-plugin';
@@ -25,7 +26,7 @@
 	$: macroNode = data instanceof MacroNode ? data : undefined;
 
 	const isMacroNode = data instanceof MacroNode;
-	console.log('isMacroNode', isMacroNode);
+	// console.log('isMacroNode', isMacroNode);
 	export let emit: (props: SvelteArea2D<ClassicScheme>) => void;
 
 	$: width = Number.isFinite(data.width) ? `${data.width}px` : '';
@@ -53,6 +54,8 @@
 </script>
 
 <div class="node {data.selected ? 'selected' : ''}" style:width style:height data-testid="node"
+	class:bg-surface-500={!$modeCurrent}
+ class:node-light-background={$modeCurrent}
 	
 >
 	<div class="flex justify-between items-center">
@@ -156,8 +159,12 @@
 	@use 'sass:math';
 	@import '../vars';
 
-	.node {
+	.node-light-background {
 		background: $node-color;
+	}
+
+	.node {
+		
 		border: 2px solid #4e58bf;
 		border-radius: 10px;
 		cursor: pointer;
@@ -170,6 +177,11 @@
 		line-height: initial;
 		font-family: Arial;
 		transition: transform 0.1s;
+
+		&.dark {
+			background: darken($node-color, 4%);
+		}
+		
 
 		&:hover {
 			background: lighten($node-color, 4%);

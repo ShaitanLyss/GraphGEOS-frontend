@@ -80,7 +80,7 @@ export class NodeFactory {
 	async addNode<
 	T extends Node,
 	Params = Record<string,unknown>, 
->(nodeClass: new (params: Params) => T, params: WithoutFactory<Params>): Promise<T | undefined> {
+>(nodeClass: new (params: Params) => T, params: WithoutFactory<Params>): Promise<T> {
 		const paramsWithFactory: Params = {...params, factory: this} as Params;
 		
 		await this.editor.addNode(new nodeClass(paramsWithFactory));
@@ -202,6 +202,8 @@ export class NodeFactory {
 				outgoingConnections[conn.sourceOutput] = conn;
 				ingoingConnections[conn.targetInput] = conn;
 			} else if (context.type === 'connectionremoved') {
+				if (targetNode.onRemoveIngoingConnection)
+					targetNode.onRemoveIngoingConnection(conn);
 				delete outgoingConnections[conn.sourceOutput];
 				delete ingoingConnections[conn.targetInput];
 			}
@@ -244,22 +246,18 @@ export class NodeFactory {
 	process(node?: Node) {
 		if (node) {
 			this.dataflowEngine.reset(node.id);
-			this.resetSuccessors(node);
+			// this.resetSuccessors(node);
 		}
 		// dataflowEngine.reset();
+		try {
 		this.editor
 			.getNodes()
 			// .filter((n) => n instanceof AddNode || n instanceof DisplayNode)
 			.forEach((n) => {
-				try {
+				
 					this.dataflowEngine.fetch(n.id);
-				} catch (e) {
-					if (e && (e as {message:string}).message === 'cancelled') {
-						console.log('cancelled process', n.id);
-					} else {
-						throw e;
-					}
-				}
 			});
+		} catch (e) {
+		}
 	}
 }

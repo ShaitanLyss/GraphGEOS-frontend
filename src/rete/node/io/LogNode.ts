@@ -63,7 +63,7 @@ if (rank == 0):
 		const res = inputs.message ? inputs.message[0] : messageControl.value;
 		console.log(res);
 
-		notifications.show({ title: 'Log', message: res instanceof String ? res : JSON.stringify(res) });
+		notifications.show({ title: 'Log', message: typeof res === 'string' ? res : JSON.stringify(res) });
 
 		forward('exec');
 		super.execute(input, forward, false);
