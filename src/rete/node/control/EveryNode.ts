@@ -24,6 +24,8 @@ export class EveryNode extends Node {
 					label: 'Count',
 					change: (value: number) => {
 						console.log('yo');
+						console.log(value);
+						this.getDataflowEngine().reset(this.id);
 						this.factory.pythonDataflowEngine.reset(this.id);
 					}
 				}

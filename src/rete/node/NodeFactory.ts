@@ -76,13 +76,16 @@ export class NodeFactory {
 	setState(id: string, key: string, value: unknown) {
 		this.state.set(id + '_' + key, value);
 	}
-
+	lastAddedNode?: Node;
 	async addNode<
 	T extends Node,
 	Params = Record<string,unknown>, 
->(nodeClass: new (params: Params) => T, params: WithoutFactory<Params>): Promise<boolean> {
+>(nodeClass: new (params: Params) => T, params: WithoutFactory<Params>): Promise<T | undefined> {
 		const paramsWithFactory: Params = {...params, factory: this} as Params;
-		return await this.editor.addNode(new nodeClass(paramsWithFactory));
+		
+		await this.editor.addNode(new nodeClass(paramsWithFactory));
+		if (!this.lastAddedNode) throw new Error('lastAddedNode is undefined');
+		return this.lastAddedNode as T;
 	}
 
 	getNodes(): Node[] {
@@ -174,6 +177,10 @@ export class NodeFactory {
 
 		// Assign connections to nodes
 		editor.addPipe((context) => {
+			if (context.type ==='nodecreated') {
+				this.lastAddedNode = context.data;
+			}
+
 			if (context.type !== 'connectioncreated' && context.type !== 'connectionremoved')
 				return context;
 			const conn = context.data;

@@ -23,7 +23,7 @@ export class MacroNode extends Node {
         }
         this.height += numSockets * 55;
 
-        this.initializePromise = this.initialize({ graphId })
+        this.initializePromise = this.initialize({ graphId, saveData })
         // this.afterInitialize = () => {
         //     console.log("MacroNode.afterInitialize")
         //     let numSockets = 0;
@@ -36,11 +36,11 @@ export class MacroNode extends Node {
 
     }
 
-    async initialize(params: { graphId: UUID }): Promise<void> {
-        const { graphId } = params;
-        const data = (await new GetGraphStore().fetch({ variables: { id: graphId } })).data?.graph.data;
-        if (data === undefined) throw new Error("Graph not found : " + graphId);
-        const saveData: NodeEditorSaveData = JSON.parse(data);
+    async initialize(params: { graphId: UUID, saveData: NodeEditorSaveData }): Promise<void> {
+        const { saveData } = params;
+        // const data = (await new GetGraphStore().fetch({ variables: { id: graphId } })).data?.graph.data;
+        // if (data === undefined) throw new Error("Graph not found : " + graphId);
+        // const saveData: NodeEditorSaveData = JSON.parse(data);
         this.label = saveData.editorName;
         await this.macroFactory.loadGraph(saveData);
         for (const node of this.macroEditor.getNodes()) {

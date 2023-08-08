@@ -20,11 +20,14 @@
 
 	import { notifications } from '@mantine/notifications';
 	import ToPythonButton from './ToPythonButton.svelte';
-	import type { MakutuClassesStore } from '$houdini';
+	import { GetGraphStore, type MakutuClassesStore } from '$houdini';
 	import type { MakutuClassRepository } from '../../backend-interaction/types';
 	import ToggleGeosButton from './ToggleGeosButton.svelte';
 	import GeosDashboard from '$lib/geos/GeosDashboard.svelte';
 	import type { UploadGraphModalMeta } from '$lib/modals/types';
+	import { MacroNode } from '$rete/node/MacroNode';
+	import type { UUID } from 'crypto';
+	import { getTranslateValues } from '$utils/html';
 
 	// import {} from '@fortawesome/free-regular-svg-icons';
 
@@ -84,6 +87,7 @@
 		editor.setName(name);
 		if (onNameChange) editor.addOnChangeNameListener(onNameChange);
 		factory = tools.factory;
+	
 		AreaExtensions.zoomAt(factory.getArea(), factory.getEditor().getNodes());
 		// const { watchResize } = await import('svelte-watch-resize');
 		// watchResize(container, () => {
@@ -175,6 +179,35 @@
 	setContext('toggleGeos', () => {
 		showRightSidebar = !showRightSidebar;
 	});
+
+	async function onDrop(event: DragEvent) {
+		const graphId = event.dataTransfer?.getData('rete/macronode') as UUID;
+		if (!graphId) throw new Error('No graph id');
+		const graph = (await new GetGraphStore().fetch({variables: {id: graphId}})).data?.graph;
+		if (!graph) throw new Error('Graph not found');
+		console.log("Dropped", graph.name);
+		const saveData: NodeEditorSaveData = JSON.parse(graph.data);
+		const node = await factory.addNode(MacroNode, {saveData: saveData, graphId});
+		if (!node) throw new Error('Node not created');
+		// Move node to drop position
+		const area = factory.getArea();
+		if (!area) throw new Error('No area');
+		const nodeView = area.nodeViews.get(node.id);
+		if (!nodeView) throw new Error('Node view not found');
+		const surface = container.children[0] as HTMLElement;		
+		const surfaceRect = surface.getBoundingClientRect();
+		const surfacePos = {x: surfaceRect.left, y: surfaceRect.top};
+		
+		nodeView.translate(
+			event.clientX - surfacePos.x,
+			event.clientY - surfacePos.y
+		);
+
+	
+
+		
+
+	}
 </script>
 <!-- 
 <div
@@ -225,9 +258,13 @@
 			<!-- Editor -->
 			<div
 				bind:this={container}
+				role="main"
 				class="h-full"
 				class:bg-white={$modeCurrent}
 				style="z-index: {hidden ? -10 : 10};"
+				on:dragenter={(event) => {if (event.dataTransfer?.types[0] === 'rete/macronode') event.preventDefault()}}
+				on:dragover={(event) => {if (event.dataTransfer?.types[0] === 'rete/macronode') event.preventDefault()}}
+				on:drop|preventDefault={onDrop}
 			/>
 		</div>
 

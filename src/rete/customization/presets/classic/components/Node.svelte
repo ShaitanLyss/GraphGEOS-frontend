@@ -52,14 +52,14 @@
 	}
 </script>
 
-<div class="node {data.selected ? 'selected' : ''}" style:width style:height data-testid="node" tabindex="0" role="button"
-	on:dblclick|stopPropagation={onDblClickNode}
+<div class="node {data.selected ? 'selected' : ''}" style:width style:height data-testid="node"
+	
 >
 	<div class="flex justify-between items-center">
 		<div class="title" data-testid="title">{data.label}</div>
 		{#if isMacroNode}
-		<div class="p-2 text-surface-50-900-token">
-		<Fa icon={faCubes}/>
+		<div class="p-2 text-surface-50-900-token" on:dblclick|preventDefault={onDblClickNode} on:pointerdown|stopPropagation role="button" tabindex="0">
+		<Fa icon={faCubes}/>		
 		</div>
 		{/if}
 	</div>
