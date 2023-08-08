@@ -54,6 +54,19 @@
       "graph": {
         "upload": "Upload Graph"
       }
+    },
+    "graph": {
+      "already_exist": {
+        "message": "Graph already exists"
+      }
+    },
+    "graph_upload": {
+      "failed": {
+        "message": "There was an error uploading the graph."
+      },
+      "success": {
+        "message": "Graph uploaded successfully."
+      }
     }
   },
   "card": {
@@ -90,6 +103,12 @@
         "success": "Saved! Storage use : {storageUse, number, ::percent}",
         "failure": "Failed to save. An error occured : {error}"
       }
+    },
+    "error": {
+      "title": "Error"
+    },
+    "success": {
+      "title": "Success"
     }
   }
 }

@@ -53,6 +53,19 @@
       "graph": {
         "upload": "Mettre graphe en ligne"
       }
+    },
+    "graph": {
+      "already_exist": {
+        "message": "Le graphe existe déjà"
+      }
+    },
+    "graph_upload": {
+      "failed": {
+        "message": "Il y a une erreur durant la mise en ligne du graphe."
+      },
+      "success": {
+        "message": "Mise en ligne réussie."
+      }
     }
   },
   "card": {
@@ -87,6 +100,12 @@
         "success": "Sauvegardé ! Utilisation stockage : {storageUse, number, ::percent}",
         "failure": "Échec de la sauvegarde. {error}."
       }
+    },
+    "error": {
+      "title": "Erreur"
+    },
+    "success": {
+      "title": "Succès"
     }
   }
 }

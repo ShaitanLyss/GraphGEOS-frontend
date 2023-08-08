@@ -37,6 +37,12 @@
 
 	const handleSubmit = async (event: Event) => {
 		event.preventDefault();
+		const showErrorNotif =() => notifications.show({
+					title: $_('notification.error.title'),
+					message: $_('modal.graph_upload.failed.message'),
+					color: 'red',
+					variant: 'filled'
+				});
 
 		const formValidity = formElement.checkValidity();
 		const graph = (await graphPromise).data?.graph;
@@ -57,24 +63,14 @@
 		}
 
 		if (!editor) {
-			notifications.show({
-				title: 'Error',
-				message: 'There was an error uploading the graph.',
-				color: 'red',
-				variant: 'filled'
-			});
+			showErrorNotif();
 			console.error('No editor found in modal meta data.');
 
 			return;
 		}
 
 		if (formElement === undefined) {
-			notifications.show({
-				title: 'Error',
-				message: 'There was an error uploading the graph.',
-				color: 'red',
-				variant: 'filled'
-			});
+			showErrorNotif();
 			console.error('No form element found.');
 
 			return;
@@ -126,30 +122,20 @@
 			}
 
 			if (!requestSuccess) {
-				notifications.show({
-					title: 'Error',
-					message: 'There was an error uploading the graph.',
-					color: 'red',
-					variant: 'filled'
-				});
+				showErrorNotif();
 
 				return;
 			}
 
 			notifications.show({
-				title: 'Success',
-				message: 'Graph uploaded successfully.',
+				title: $_('notification.success.title'),
+				message: $_('modal.graph_upload.success.message'),
 				color: 'green',
 				variant: 'filled'
 			});
 			modalStore.close();
 		} catch (error) {
-			notifications.show({
-				title: 'Error',
-				message: 'There was an error uploading the graph.',
-				color: 'red',
-				variant: 'filled'
-			});
+			showErrorNotif();
 			console.error(error);
 		}
 
@@ -174,7 +160,7 @@
 						<Fa icon={faQuestionCircle} />
 						<!-- Message -->
 						<div class="alert-message">
-							<p>Graph already exists</p>
+							<p>{capitalize($_('modal.graph.already_exist.message'))}</p>
 						</div>
 					</aside>
 				{/if}
