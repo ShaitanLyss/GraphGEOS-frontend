@@ -11,7 +11,7 @@ import type { Schemes } from './node/Schemes';
 import { TypedSocketsPlugin, isConnectionInvalid } from './plugin/typed-sockets';
 import type { Socket } from './socket/Socket';
 import { notifications } from '@mantine/notifications';
-import { NodeEditor } from './NodeEditor';
+import { NodeEditor, NodeEditorSaveData } from './NodeEditor';
 import type { EditorExample } from './example/types';
 import { MegaSetup } from './setup/MegaSetup';
 import { NodeFactory } from './node/NodeFactory';
@@ -21,7 +21,8 @@ import type { MakutuClassRepository } from '../backend-interaction/types';
 export async function setupEditor(
 	container: HTMLElement,
 	makutuClasses: MakutuClassRepository,
-	loadExample?: EditorExample
+	loadExample?: EditorExample,
+	saveData?: NodeEditorSaveData
 ) {
 	if (container === null) throw new Error('Container is null');
 	const editor = new NodeEditor();
@@ -34,7 +35,7 @@ export async function setupEditor(
 	editor.use(area);
 
 	// Setup node factory
-	const nodeFactory = new NodeFactory(editor, area, makutuClasses);
+	const nodeFactory = new NodeFactory({editor, area, makutuClasses});
 
 	// Setup react renderer
 	const megaSetup = new MegaSetup();
@@ -50,19 +51,33 @@ export async function setupEditor(
 	});
 
 	let nodesToFocus: Node[] = [];
-	if (loadExample) {
+	let isExample = false;
+	if (loadExample && saveData === undefined) {
+		isExample = true;
 		nodesToFocus = await loadExample(nodeFactory);
 		await arrange.layout();
+	}
+
+	if (saveData) {
+		await nodeFactory.loadGraph(saveData);
+		nodesToFocus = editor.getNodes();
 	}
 
 	AreaExtensions.simpleNodesOrder(area);
 	// await AreaExtensions.zoomAt(area, nodesToFocus);
 
+
+
+	
+
 	nodeFactory.process();
 
 	editor.addPipe((context) => {
 		if (['connectioncreated', 'connectionremoved'].includes(context.type)) {
+			try {
 			nodeFactory.process((context as unknown as { data: { target: Node } }).data.target);
+			} catch (e) {
+			}
 		}
 
 		return context;
@@ -73,8 +88,9 @@ export async function setupEditor(
 	return {
 		destroy: () => area.destroy(),
 		firstDisplay: async () => {
-			await arrange.layout();
-			AreaExtensions.zoomAt(area, nodesToFocus);
+			// if (isExample)
+			// 	await arrange.layout();
+			await AreaExtensions.zoomAt(area, nodesToFocus);
 		},
 		editor,
 		factory: nodeFactory

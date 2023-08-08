@@ -1,3 +1,5 @@
+
+
 export function isTauri(): boolean {
-	return typeof window !== 'undefined' && window.__TAURI__ !== undefined;
+	return typeof window !== 'undefined' && Object.prototype.hasOwnProperty.call(window, '__TAURI__');
 }

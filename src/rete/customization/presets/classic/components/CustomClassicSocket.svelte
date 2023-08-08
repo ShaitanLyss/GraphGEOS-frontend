@@ -1,11 +1,10 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import type { ClassicPreset } from 'rete';
 
 	export let data: ClassicPreset.Socket;
 </script>
 
-<div class="socket" title={data.name} />
-
+<div class="socket ring-secondary-50-900-token" title={data.name} />
 <style lang="scss" scoped>
 	@use 'sass:math';
 	@import '../vars';
@@ -39,4 +38,4 @@
 			margin-left: -1 * math.div($socket-size, 2);
 		}
 	}
-</style>
+</style> -->

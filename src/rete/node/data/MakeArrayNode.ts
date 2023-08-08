@@ -133,7 +133,7 @@ export class MakeArrayNode extends AddPinNode {
 			type: this.state.type || 'any',
 			socketLabel: `data-${index}`
 		});
-		this.height += 36;
+		this.height += 43;
 		this.changeInputType(this.inputs[`data-${index}`] as Input<Socket>, this.state.type);
 		this.loadInitialValues();
 

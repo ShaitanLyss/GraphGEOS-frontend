@@ -7,6 +7,7 @@ import { Setup } from "./Setup";
 import type { Root } from "rete";
 
 export class AreaSetup extends Setup {
+    private lastClicked: HTMLElement | null = null;
     setup(editor: NodeEditor, area: AreaPlugin<Schemes, AreaExtra>, factory: NodeFactory): void {
         area.addPipe((ctx) => {
             const ignored : (AreaExtra | Area2D<Schemes> | Root<Schemes>)["type"][] = [
@@ -16,18 +17,7 @@ export class AreaSetup extends Setup {
             if (ignored.includes(ctx.type)) {
                 return ctx;
             }
-            if (ctx.type === "pointerdown" && ctx.data.event instanceof MouseEvent
-        && ctx.data.event.button === 2
-    ) {
-                const target = ctx.data.event.target as HTMLElement;
-                if (!target.classList.contains("socket")) {
-                    return ctx;
-                }
-                console.log("right click on socket")
-
-                return;
-
-            }
+            
             return ctx;
         });
     }

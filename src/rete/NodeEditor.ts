@@ -4,7 +4,7 @@ import { Connection, Node, type NodeSaveData } from './node/Node';
 
 export type NodeEditorSaveData = {
 	nodes: NodeSaveData[];
-	connections: string[];
+	connections: Connection<Node, Node>[];
 	editorName: string;
 };
 
@@ -26,6 +26,8 @@ export class NodeEditor extends BaseNodeEditor<Schemes> {
 		target: Node | string,
 		targetInput: string
 	): Promise<boolean> {
+		source = typeof source === 'string' ? this.getNode(source) : source;
+		target = typeof target === 'string' ? this.getNode(target) : target;
 		return await this.addConnection(new Connection(source, sourceOutput, target, targetInput));
 	}
 
@@ -36,7 +38,7 @@ export class NodeEditor extends BaseNodeEditor<Schemes> {
 	toJSON(): NodeEditorSaveData {
 		return {
 			nodes: this.getNodes().map((node) => node.toJSON()),
-			connections: this.getConnections().map((conn) => JSON.stringify(conn)),
+			connections: this.getConnections(),
 			editorName: this.name
 		};
 	}

@@ -2,8 +2,8 @@ import { NumberNode } from '../node/math/NumberNode';
 import { AddNode } from '../node/math/AddNode';
 import { Connection } from '../node/Node';
 import { DisplayNode } from '../node/io/DisplayNode';
-import { EditorExample } from './types';
-import { NodeFactory } from '../node/NodeFactory';
+import type { EditorExample } from './types';
+import type { NodeFactory } from '../node/NodeFactory';
 
 export const sumExample: EditorExample = async (factory: NodeFactory) => {
 	const editor = factory.getEditor();

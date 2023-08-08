@@ -5,8 +5,9 @@ import type { AreaExtra } from '../../node/AreaExtra';
 import { Node } from '../../node/Node';
 import { capitalize } from '../../../utils/string';
 import { Setup } from '../../setup/Setup';
-import { NodeEditor } from '../../NodeEditor';
-import { NodeFactory } from '../../node/NodeFactory';
+import type { NodeEditor } from '../../NodeEditor';
+import type { NodeFactory } from '../../node/NodeFactory';
+
 
 type Entry = Map<string, Entry | (() => Node | Promise<Node>)>;
 
@@ -69,6 +70,7 @@ export class ContextMenuSetup extends Setup {
 					prototype instanceof Node &&
 					prototype.constructor &&
 					!Object.prototype.hasOwnProperty.call(prototype.constructor, '__isAbstract')
+					&& !Object.prototype.hasOwnProperty.call(prototype.constructor, 'hidden')
 				);
 			}) as (typeof Node)[];
 

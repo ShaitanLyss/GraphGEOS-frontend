@@ -16,7 +16,8 @@ export class MegaSetup extends Setup {
 		new AreaSetup(),
 		new RenderSetup(),
 		new MinimapSetup(),
-		new ContextMenuSetup()];
+		new ContextMenuSetup()
+	];
 
 	setup(editor: NodeEditor, area: AreaPlugin<Schemes, AreaExtra>, factory: NodeFactory) {
 		for (const setup of this.toSetup) {

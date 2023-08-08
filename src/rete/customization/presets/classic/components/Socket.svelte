@@ -14,7 +14,13 @@
 	// }, 200);
 </script>
 
-<div class="socket {data.isArray ? 'array' : ''}" title={data.name} use:cssVars={socketVars} />
+<div
+	class="socket outline-4 outline outline-primary-400 border-white border-1 hover:border-4 "
+    class:array={data.isArray} 
+	class:outline={data.selected}
+	title={data.name}
+	use:cssVars={socketVars}
+/>
 
 <style lang="scss" scoped>
 	@use 'sass:math';
@@ -23,7 +29,7 @@
 	.socket {
 		display: inline-block;
 		cursor: pointer;
-		border: 1px solid white;
+		border-style: solid;
 		border-radius: math.div($socket-size, 2);
 		width: $socket-size;
 		height: $socket-size;
