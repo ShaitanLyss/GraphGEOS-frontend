@@ -29,7 +29,7 @@ if (rank == 0):
 			name: 'message',
 			displayName: 'Message',
 			socketLabel: 'Message',
-			type: 'string',
+			type: 'any',
 			control: {
 				type: 'textarea',
 				options: {
@@ -61,9 +61,9 @@ if (rank == 0):
 			message: string[];
 		};
 		const res = inputs.message ? inputs.message[0] : messageControl.value;
-		// console.log(res);
+		console.log(res);
 
-		notifications.show({ title: 'Log', message: res });
+		notifications.show({ title: 'Log', message: res instanceof String ? res : JSON.stringify(res) });
 
 		forward('exec');
 		super.execute(input, forward, false);
