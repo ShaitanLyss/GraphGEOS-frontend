@@ -176,9 +176,14 @@
 		showRightSidebar = !showRightSidebar;
 	});
 </script>
-
+<!-- 
 <div
 	hidden={hidden && ready}
+	class="absolute inset-0 border-surface-500 h-full"
+	style="z-index: {hidden ? -10 : 0};"
+	class:opacity-0={hidden && !ready}
+> -->
+<div 
 	class="absolute inset-0 border-surface-500 h-full"
 	style="z-index: {hidden ? -10 : 0};"
 	class:opacity-0={hidden && !ready}
