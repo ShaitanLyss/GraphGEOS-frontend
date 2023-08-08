@@ -35,7 +35,7 @@ export async function setupEditor(
 	editor.use(area);
 
 	// Setup node factory
-	const nodeFactory = new NodeFactory(editor, area, makutuClasses);
+	const nodeFactory = new NodeFactory({editor, area, makutuClasses});
 
 	// Setup react renderer
 	const megaSetup = new MegaSetup();

@@ -26,6 +26,8 @@ export class NodeEditor extends BaseNodeEditor<Schemes> {
 		target: Node | string,
 		targetInput: string
 	): Promise<boolean> {
+		source = typeof source === 'string' ? this.getNode(source) : source;
+		target = typeof target === 'string' ? this.getNode(target) : target;
 		return await this.addConnection(new Connection(source, sourceOutput, target, targetInput));
 	}
 
