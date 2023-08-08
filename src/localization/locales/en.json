@@ -112,7 +112,8 @@
     },
     "graph_loaded": {
       "title": "Graph Loaded",
-      "message": "Successfully loaded the graph."
+      "message": "Successfully loaded the graph.",
+      "failure_msg": "Failed to load the graph."
     }
   }
 }

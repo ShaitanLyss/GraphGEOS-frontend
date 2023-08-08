@@ -38,7 +38,7 @@
 					color: 'green'
 				});
 			} catch (error) {
-				notifications.show({ title: 'Error', message: 'Failed to load the graph.', color: 'red' });
+				notifications.show({ title: $_('notification.error.title'), message: $_('notification.graph_loaded.failure_msg'), color: 'red' });
 				console.error(error);
 			}
 		};

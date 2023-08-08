@@ -109,7 +109,8 @@
     },
     "graph_loaded": {
       "title": "Chargement graphe",
-      "message": "Graphe chargé avec succès."
+      "message": "Graphe chargé avec succès.",
+      "failure_msg": "Échec du chargement de graphe."
     }
   }
 }
