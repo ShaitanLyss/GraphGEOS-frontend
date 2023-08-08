@@ -110,7 +110,7 @@ export class NodeFactory {
 				}
 
 				await this.editor.addNode(node);
-				if (nodeSaveData.position)
+				if (nodeSaveData.position && this.area)
 					this.area.translate(nodeSaveData.id, {
 						x: nodeSaveData.position.x,
 						y: nodeSaveData.position.y
@@ -128,20 +128,21 @@ export class NodeFactory {
 
 			// await this.editor.addConnection(JSON.parse(connection))
 		});
+		if (this.area)
 		AreaExtensions.zoomAt(this.area, this.editor.getNodes());
 	}
-	private area: AreaPlugin<Schemes, AreaExtra>;
+	private area?: AreaPlugin<Schemes, AreaExtra>;
 	private editor: NodeEditor;
 	public readonly makutuClasses: MakutuClassRepository;
 
 	public readonly dataflowEngine = createDataflowEngine();
 	private readonly controlflowEngine = createControlflowEngine();
 
-	constructor(
-		editor: NodeEditor,
-		area: AreaPlugin<Schemes, AreaExtra>,
-		makutuClasses: MakutuClassRepository
-	) {
+	constructor({
+		editor,
+		area,
+		makutuClasses
+	}: {editor: NodeEditor; area?: AreaPlugin<Schemes, AreaExtra>; makutuClasses: MakutuClassRepository}) {
 		this.area = area;
 		this.makutuClasses = makutuClasses;
 		this.editor = editor;
@@ -200,7 +201,7 @@ export class NodeFactory {
 		return this.controlflowEngine;
 	}
 
-	getArea(): AreaPlugin<Schemes, AreaExtra> {
+	getArea(): AreaPlugin<Schemes, AreaExtra> | undefined{
 		return this.area;
 	}
 
@@ -224,7 +225,7 @@ export class NodeFactory {
 				try {
 					this.dataflowEngine.fetch(n.id);
 				} catch (e) {
-					if (e && e.message === 'cancelled') {
+					if (e && (e as {message:string}).message === 'cancelled') {
 						console.log('cancelled process', n.id);
 					} else {
 						throw e;
