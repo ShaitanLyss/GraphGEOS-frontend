@@ -106,6 +106,10 @@
     },
     "success": {
       "title": "Succès"
+    },
+    "graph_loaded": {
+      "title": "Chargement graphe",
+      "message": "Graphe chargé avec succès."
     }
   }
 }
