@@ -27,7 +27,7 @@
 	import type { UploadGraphModalMeta } from '$lib/modals/types';
 	import { MacroNode } from '$rete/node/MacroNode';
 	import type { UUID } from 'crypto';
-	import { getTranslateValues } from '$utils/html';
+	import { getScale, getTranslateValues } from '$utils/html';
 
 	// import {} from '@fortawesome/free-regular-svg-icons';
 
@@ -36,14 +36,13 @@
 	export let name: string;
 	export let saveData: NodeEditorSaveData | undefined = undefined;
 	let ready = false;
-	
+
 	export let onNameChange: ((name: string) => void) | undefined = undefined;
 
 	let firstShown = true;
 
 	let container: HTMLDivElement;
 	export let editor: NodeEditor | undefined = undefined;
-
 
 	let factory: NodeFactory;
 
@@ -87,7 +86,7 @@
 		editor.setName(name);
 		if (onNameChange) editor.addOnChangeNameListener(onNameChange);
 		factory = tools.factory;
-	
+
 		AreaExtensions.zoomAt(factory.getArea(), factory.getEditor().getNodes());
 		// const { watchResize } = await import('svelte-watch-resize');
 		// watchResize(container, () => {
@@ -112,7 +111,7 @@
 				onFirstShown().then(() => (firstShown = false));
 				// AreaExtensions.zoomAt(factory.getArea(), factory.getEditor().getNodes());
 			}, 0);
-			
+
 			// setupEditorInContainer();
 		}
 	}
@@ -121,7 +120,7 @@
 		const modal: ModalSettings = {
 			type: 'component',
 			component: 'uploadGraphModal',
-			meta: { editor  } as UploadGraphModalMeta
+			meta: { editor } as UploadGraphModalMeta
 		};
 		modalStore.trigger(modal);
 	}
@@ -183,32 +182,32 @@
 	async function onDrop(event: DragEvent) {
 		const graphId = event.dataTransfer?.getData('rete/macronode') as UUID;
 		if (!graphId) throw new Error('No graph id');
-		const graph = (await new GetGraphStore().fetch({variables: {id: graphId}})).data?.graph;
+		const graph = (await new GetGraphStore().fetch({ variables: { id: graphId } })).data?.graph;
 		if (!graph) throw new Error('Graph not found');
-		console.log("Dropped", graph.name);
+		console.log('Dropped', graph.name);
 		const saveData: NodeEditorSaveData = JSON.parse(graph.data);
-		const node = await factory.addNode(MacroNode, {saveData: saveData, graphId});
+		const node = await factory.addNode(MacroNode, { saveData: saveData, graphId });
 		if (!node) throw new Error('Node not created');
 		// Move node to drop position
 		const area = factory.getArea();
 		if (!area) throw new Error('No area');
 		const nodeView = area.nodeViews.get(node.id);
 		if (!nodeView) throw new Error('Node view not found');
-		const surface = container.children[0] as HTMLElement;		
+		const surface = container.children[0] as HTMLElement;
 		const surfaceRect = surface.getBoundingClientRect();
-		const surfacePos = {x: surfaceRect.left, y: surfaceRect.top};
-		
-		nodeView.translate(
-			event.clientX - surfacePos.x,
-			event.clientY - surfacePos.y
-		);
+		const surfacePos = { x: surfaceRect.left, y: surfaceRect.top };
 
-	
+		// Calculate scaled position
+		const zoomScale = getScale(surface); // Implement this function to retrieve the zoom scale
+		const scaledX = (event.clientX - surfacePos.x) / zoomScale.scaleX;
+		const scaledY = (event.clientY - surfacePos.y) / zoomScale.scaleY;
 
-		
+		nodeView.translate(scaledX, scaledY);
 
+		// nodeView.translate(event.clientX - surfacePos.x, event.clientY - surfacePos.y);
 	}
 </script>
+
 <!-- 
 <div
 	hidden={hidden && ready}
@@ -216,7 +215,7 @@
 	style="z-index: {hidden ? -10 : 0};"
 	class:opacity-0={hidden && !ready}
 > -->
-<div 
+<div
 	class="absolute inset-0 border-surface-500 h-full"
 	style="z-index: {hidden ? -10 : 0};"
 	class:opacity-0={hidden}
@@ -262,8 +261,12 @@
 				class="h-full"
 				class:bg-white={$modeCurrent}
 				style="z-index: {hidden ? -10 : 10};"
-				on:dragenter={(event) => {if (event.dataTransfer?.types[0] === 'rete/macronode') event.preventDefault()}}
-				on:dragover={(event) => {if (event.dataTransfer?.types[0] === 'rete/macronode') event.preventDefault()}}
+				on:dragenter={(event) => {
+					if (event.dataTransfer?.types[0] === 'rete/macronode') event.preventDefault();
+				}}
+				on:dragover={(event) => {
+					if (event.dataTransfer?.types[0] === 'rete/macronode') event.preventDefault();
+				}}
 				on:drop|preventDefault={onDrop}
 			/>
 		</div>
