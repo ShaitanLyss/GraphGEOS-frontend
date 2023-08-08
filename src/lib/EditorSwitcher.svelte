@@ -133,6 +133,13 @@
 	}
 
 	function saveEditors() {
+		// Delete editors from savedEditors that are not in editorsViews
+		for (const [key, editorSaveData] of Object.entries($savedEditors)) {
+			if (!editorsViews.find((editor) => editor.key === key)) {
+				delete $savedEditors[key];
+			}
+		}
+
 		for (let i = 0; i < editorsViews.length; i++) {
 			const editor = editors[editorsViews[i].key];
 			console.log(editor.name);
