@@ -56,7 +56,7 @@
     },
     "graph": {
       "already_exist": {
-        "message": "Le graphe existe déjà"
+        "message": "Le graphe existe déjà, il sera mis à jour."
       }
     },
     "graph_upload": {
