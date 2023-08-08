@@ -24,6 +24,7 @@
 	import type { MakutuClassRepository } from '../../backend-interaction/types';
 	import ToggleGeosButton from './ToggleGeosButton.svelte';
 	import GeosDashboard from '$lib/geos/GeosDashboard.svelte';
+	import type { UploadGraphModalMeta } from '$lib/modals/types';
 
 	// import {} from '@fortawesome/free-regular-svg-icons';
 
@@ -32,12 +33,15 @@
 	export let name: string;
 	export let saveData: NodeEditorSaveData | undefined = undefined;
 	let ready = false;
+	
 	export let onNameChange: ((name: string) => void) | undefined = undefined;
 
 	let firstShown = true;
 
 	let container: HTMLDivElement;
 	export let editor: NodeEditor | undefined = undefined;
+
+
 	let factory: NodeFactory;
 
 	let destroyEditor: () => void;
@@ -113,7 +117,7 @@
 		const modal: ModalSettings = {
 			type: 'component',
 			component: 'uploadGraphModal',
-			meta: { editor }
+			meta: { editor  } as UploadGraphModalMeta
 		};
 		modalStore.trigger(modal);
 	}

@@ -45,6 +45,10 @@ type GeosQuery {
   xmlSimpleTypes(names: [String!] = null): [XMLSimpleType!]!
 }
 
+type GraphMutation {
+  updateGraph(graphUpdateInput: GraphUpdateInput!): GraphType!
+}
+
 type GraphType {
   author: UserType!
   authorId: UUID!
@@ -53,6 +57,14 @@ type GraphType {
   id: UUID!
   isPublic: Boolean!
   name: String!
+}
+
+input GraphUpdateInput {
+  data: String = null
+  description: String = null
+  id: UUID!
+  isPublic: Boolean = null
+  name: String = null
 }
 
 type MakutuClassType {
@@ -75,6 +87,7 @@ type Mutation {
   createSession(session: SessionCreateInput!): SessionType!
   createUser(user: UserCreateInput!): UserType!
   deleteSession(sessionToken: String!): Boolean!
+  graph: GraphMutation!
   updateSession(session: SessionCreateInput!): SessionType!
 }
 
@@ -90,7 +103,7 @@ input ProviderInput {
 
 type Query {
   geos: GeosQuery!
-  graph(id: Int!): GraphType!
+  graph(authorId: UUID = null, id: UUID = null, name: String = null): GraphType!
   graphs: [GraphType!]!
   makutuClass(name: String!): MakutuClassType!
   makutuClasses: [MakutuClassType!]!

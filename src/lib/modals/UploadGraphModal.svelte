@@ -7,17 +7,45 @@
 	import type { Writable } from 'svelte/store';
 	import { _ } from 'svelte-i18n';
 	import { capitalize, words } from '$utils/string';
+	import { onMount } from 'svelte';
+	import type { UploadGraphModalMeta } from './types';
+	import { GetGraphStore, type SessionAndUser$result, UpdateGraphStore } from '$houdini';
 
-	let graphInput: HTMLInputElement;
+	import GraphForm from '$lib/forms/GraphForm.svelte';
+	import type { UUID } from 'crypto';
+	import Fa from 'svelte-fa';
+	import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
+
 	let formElement: HTMLFormElement;
 
+	const session: SessionAndUser$result['session'] | undefined = $page.data.session;
+
 	const formStore: Writable<Record<string, string>> = localStorageStore('uploadGraphForm', {});
-	const editor: NodeEditor = $modalStore[0].meta.editor;
+	const meta: UploadGraphModalMeta = $modalStore[0].meta;
+	$: editor = meta.editor;
+	$: editorName = editor.name;
+	$: userId = session?.userId as UUID;
+	$: userName = session?.user.name as string;
+	$: graphPromise = (async () => {
+		const response = await new GetGraphStore().fetch({
+			variables: { authorId: userId, name: editorName }
+		});
+		console.log(response);
+		return response;
+	})();
+	console.log('upload graph : session : user ID', session?.userId);
 
 	const handleSubmit = async (event: Event) => {
 		event.preventDefault();
+		const showErrorNotif =() => notifications.show({
+					title: $_('notification.error.title'),
+					message: $_('modal.graph_upload.failed.message'),
+					color: 'red',
+					variant: 'filled'
+				});
 
 		const formValidity = formElement.checkValidity();
+		const graph = (await graphPromise).data?.graph;
 
 		formElement.querySelectorAll(':valid:not([type="checkbox"])').forEach((element) => {
 			element.classList.remove('input-error');
@@ -34,20 +62,19 @@
 			return;
 		}
 
-		
-
 		if (!editor) {
-			notifications.show({
-				title: 'Error',
-				message: 'There was an error uploading the graph.',
-				color: 'red',
-				variant: 'filled'
-			});
+			showErrorNotif();
 			console.error('No editor found in modal meta data.');
 
 			return;
 		}
-		graphInput.value = JSON.stringify(editor);
+
+		if (formElement === undefined) {
+			showErrorNotif();
+			console.error('No form element found.');
+
+			return;
+		}
 
 		// Perform any validation or data manipulation here
 		const formData = new FormData(formElement);
@@ -57,52 +84,58 @@
 			data[key] = value;
 		}
 
-		if (!Object.prototype.hasOwnProperty.call(data, 'is_public')) {
-			data['is_public'] = false;
-		}
-
 		// Submit the form data to the API endpoint
 
 		try {
-			const response = await fetch(
-				`http://localhost:8000/api/v1/users/${$page.data.session?.user.id}/graphs/`,
-				{
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					body: JSON.stringify(data)
-				}
-			);
-
-			if (!response.ok) {
-				const { detail } = await response.json();
-				console.log(detail);
-
-				notifications.show({
-					title: 'Error',
-					message: 'There was an error uploading the graph.',
-					color: 'red',
-					variant: 'filled'
+			let requestSuccess = true;
+			if (graph) {
+				const isPublic = Object.prototype.hasOwnProperty.call(data, 'is_public');
+				const response = await new UpdateGraphStore().mutate({
+					updateGraphInput: {
+						id: graph.id,
+						description: data.description as string,
+						isPublic: isPublic,
+						data: data.data as string
+					}
 				});
+				console.log('update graph response', response);
+				requestSuccess = response.errors === null;
+			} else {
+				if (!Object.prototype.hasOwnProperty.call(data, 'is_public')) {
+					data['is_public'] = false;
+				}
+				const response = await fetch(
+					`http://localhost:8000/api/v1/users/${$page.data.session?.user.id}/graphs/`,
+					{
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						body: JSON.stringify(data)
+					}
+				);
+				if (!response.ok) {
+					requestSuccess = false;
+					const { detail } = await response.json();
+					console.log(detail);
+				}
+			}
+
+			if (!requestSuccess) {
+				showErrorNotif();
 
 				return;
 			}
 
 			notifications.show({
-				title: 'Success',
-				message: 'Graph uploaded successfully.',
+				title: $_('notification.success.title'),
+				message: $_('modal.graph_upload.success.message'),
 				color: 'green',
 				variant: 'filled'
 			});
 			modalStore.close();
 		} catch (error) {
-			notifications.show({
-				title: 'Error',
-				message: 'There was an error uploading the graph.',
-				color: 'red',
-				variant: 'filled'
-			});
+			showErrorNotif();
 			console.error(error);
 		}
 
@@ -117,68 +150,43 @@
 			<h2>{words($_('modal.title.graph.upload'))}</h2>
 			<!-- <button class="close" on:click={() => modalStore.set(null)}>×</button> -->
 		</header>
-		<section class="p-4 space-y-4">
-			<form
-				class="modal-form border border-surface-500 p-4 space-y-4 rounded-container-token"
-				bind:this={formElement}
-			>
-				<label class="label">
-					<span>{capitalize($_('form.input.graph.name.title'))}</span><span class="text-red-500 ms-1">*</span>
-					<input
-						type="text"
-						class="input"
-						name="name"
-						placeholder={words($_('form.input.graph.name_placeholder'))}
-						required
-						value={editor.name}
-					/>
-				</label>
-				<!-- Description -->
-				<label class="label">
-					<span>{$_('title.description')}</span>
-					<input
-						type="text"
-						class="input"
-						name="description"
-						placeholder={$_('form.input.graph.description_placeholder')}
-						bind:value={$formStore.description}
-					/>
-				</label>
-				<label class="label align-middle">
-					<span>{$_('form.input.make_public')}</span>
-					<input
-						type="checkbox"
-						class="input w-6 h-6 ms-2 my-auto"
-						name="is_public"
-						bind:checked={$formStore.is_public}
-					/>
-				</label>
-
-				<!-- Author -->
-				<label class="label">
-					<span>{$_('title.author')}</span><span class="text-red-500 ms-1"> *</span>
-					<input
-						type="text"
-						class="input"
-						name="author"
-						placeholder="Author"
-						required
-						readonly
-						value={$page.data.session?.user?.name}
-					/>
-				</label>
-				<input type="hidden" name="data" bind:this={graphInput} />
-			</form>
+		<section class="p-4 space-y-4 transition-all">
+			{#await graphPromise}
+				<div class="w-32 placeholder placeholde animate-pulse" />
+			{:then graph}
+				{#if graph.data?.graph}
+					<aside class="alert variant-filled-tertiary">
+						<!-- Icon -->
+						<Fa icon={faQuestionCircle} />
+						<!-- Message -->
+						<div class="alert-message">
+							<p>{capitalize($_('modal.graph.already_exist.message'))}</p>
+						</div>
+					</aside>
+				{/if}
+				<GraphForm {editor} {userName} graph={graph.data?.graph} bind:formElement />
+			{:catch error}
+				error
+			{/await}
 			<footer class="modal-footer flex justify-end space-x-2">
 				<button class="btn variant-ghost-surface" on:click={() => modalStore.close()}
 					>{$_('button.cancel')}</button
 				>
-				<button
-					class="btn variant-filled"
-					on:click={() => {
-						handleSubmit(new Event('submit'));
-					}}>{$_('button.upload')}</button
-				>
+				{#await graphPromise}
+					<div class="w-32 h-auto placeholder placeholde animate-pulse" />
+				{:then graph}
+					<button
+						class="btn variant-filled"
+						on:click={() => {
+							handleSubmit(new Event('submit'));
+						}}
+						>{capitalize(
+							graph.errors ? $_('button.upload') : $_('form.graph.button.update')
+						)}</button
+					>
+				{:catch error}
+					{error}
+				{/await}
 			</footer>
 		</section>
 	</div>

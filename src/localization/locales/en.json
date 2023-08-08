@@ -42,12 +42,30 @@
           "title": "Name"
         }
       }
+    },
+    "graph": {
+      "button": {
+        "update": "update"
+      }
     }
   },
   "modal": {
     "title": {
       "graph": {
         "upload": "Upload Graph"
+      }
+    },
+    "graph": {
+      "already_exist": {
+        "message": "Graph already exists"
+      }
+    },
+    "graph_upload": {
+      "failed": {
+        "message": "There was an error uploading the graph."
+      },
+      "success": {
+        "message": "Graph uploaded successfully."
       }
     }
   },
@@ -85,6 +103,17 @@
         "success": "Saved! Storage use : {storageUse, number, ::percent}",
         "failure": "Failed to save. An error occured : {error}"
       }
+    },
+    "error": {
+      "title": "Error"
+    },
+    "success": {
+      "title": "Success"
+    },
+    "graph_loaded": {
+      "title": "Graph Loaded",
+      "message": "Successfully loaded the graph.",
+      "failure_msg": "Failed to load the graph."
     }
   }
 }
