@@ -70,24 +70,27 @@ export async function setupEditor(
 
 	
 
-	nodeFactory.process();
+	
 
-	editor.addPipe((context) => {
-		if (['connectioncreated', 'connectionremoved'].includes(context.type)) {
-			try {
-			nodeFactory.process((context as unknown as { data: { target: Node } }).data.target);
-			} catch (e) {
-			}
-		}
-
-		return context;
-	});
+	
 
 	console.log('Editor setup');
 
 	return {
 		destroy: () => area.destroy(),
 		firstDisplay: async () => {
+			nodeFactory.dataflowEngine.reset();
+			nodeFactory.process();
+			editor.addPipe((context) => {
+				if (['connectioncreated', 'connectionremoved'].includes(context.type)) {
+					try {
+						nodeFactory.process((context as unknown as { data: { target: Node } }).data.target);
+					} catch (e) {
+					}
+				}
+
+				return context;
+			});
 			// if (isExample)
 			// 	await arrange.layout();
 			await AreaExtensions.zoomAt(area, nodesToFocus);
