@@ -2,13 +2,6 @@
 	"name": "front-svelte",
 	"version": "0.0.1",
 	"private": true,
-	"mikro-orm": {
-		"useTsNode": false,
-		"configPaths": [
-			"./src/mikro-orm.config.ts",
-			"./src/mikro-orm.config.js"
-		]
-	},
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
