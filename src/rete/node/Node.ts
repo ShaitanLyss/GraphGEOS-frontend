@@ -22,6 +22,7 @@ import type { NodeFactory } from './NodeFactory';
 import type { ComponentSupportInterface } from '$rete/components/ComponentSupportInterface';
 import type { BaseComponent } from '$rete/components/BaseComponent';
 import { PythonNodeComponent } from '$rete/components/Python_NC';
+import { R_SocketSelection_NC } from '$rete/components/R_SocketSelection_NC';
 
 interface ControlParams<N> {
 	type: InputControlTypes;
@@ -69,19 +70,19 @@ export type NodeSaveData = {
 
 export class Node<
 		Inputs extends {
-			[key in string]?: Socket;
+			[key in string]: Socket;
 		} = {
-			[key in string]?: Socket;
+			[key in string]: Socket;
 		},
 		Outputs extends {
-			[key in string]?: Socket;
+			[key in string]: Socket;
 		} = {
-			[key in string]?: Socket;
+			[key in string]: Socket;
 		},
 		Controls extends {
-			[key in string]?: Control;
+			[key in string]: Control;
 		} = {
-			[key in string]?: Control;
+			[key in string]: Control;
 		}
 	>
 	extends ClassicPreset.Node<Inputs, Outputs, Controls>
@@ -100,11 +101,18 @@ export class Node<
 	static id: string;
 	static nodeCounts = BigInt(0);
 	protected state: Record<string, unknown> = {};
+	inputs: { [key in keyof Inputs]?: Input<Exclude<Inputs[key], undefined>> | undefined; } = {};
+	outputs: { [key in keyof Outputs]?: Output<Exclude<Outputs[key], undefined>> | undefined; } = {};
 	readonly pythonComponent: PythonNodeComponent;
+	readonly socketSelectionComponent: R_SocketSelection_NC;
 	readonly ingoingDataConnections: Record<string, Connection<Node, Node>> = {};
 	readonly ingoingExecConnections: Record<string, Connection<Node, Node>> = {};
 	readonly outgoingDataConnections: Record<string, Connection<Node, Node>> = {};
 	readonly outgoingExecConnections: Record<string, Connection<Node, Node>> = {};
+	onRemoveIngoingConnection?: (conn: Connection) => void;
+
+	initializePromise?: Promise<void>;
+	afterInitialize?: () => void;
 
 	getFactory(): NodeFactory {
 		return this.factory;
@@ -114,6 +122,7 @@ export class Node<
 		const { label = '', width = 190, height = 120, factory } = params;
 		super(label);
 		this.pythonComponent = this.addComponentByClass(PythonNodeComponent);
+		this.socketSelectionComponent = this.addComponentByClass(R_SocketSelection_NC);
 		this.state = {};
 		Node.nodeCounts++;
 		this.params = params.params || {};
@@ -147,7 +156,7 @@ export class Node<
 	}
 
 	getPosition(): { x: number; y: number } | undefined {
-		return this.getArea().nodeViews.get(this.id)?.position;
+		return this.getArea()?.nodeViews.get(this.id)?.position;
 	}
 
 	applyState() {
@@ -179,7 +188,7 @@ export class Node<
 			id: this.id,
 			type: (this.constructor as typeof Node).id,
 			state: this.state,
-			position: this.getArea().nodeViews.get(this.id)?.position,
+			position: this.getArea()?.nodeViews.get(this.id)?.position,
 			inputControlValues: inputControlValues,
 			selectedInputs,
 			selectedOutputs,
@@ -214,7 +223,7 @@ export class Node<
 		try {
 			return await this.factory.dataflowEngine.fetchInputs(this.id);
 		} catch (e) {
-			if (e && e.message === 'cancelled') {
+			if (e && (e as {message:string}).message === 'cancelled') {
 				console.log('gracefully cancelled Node.fetchInputs');
 				return {};
 			} else throw e;
@@ -257,13 +266,15 @@ export class Node<
 	}
 
 	addInExec(name = 'exec', displayName = '') {
-		this.addInput(name, new Input(new ExecSocket({ name: displayName, node:this }), undefined, true));
+		const input = new Input(new ExecSocket({ name: displayName, node: this }), undefined, true);
+		this.addInput(name, input as unknown as Input<Exclude<Inputs[keyof Inputs], undefined>>);
 	}
 
 	addOutData({ name = 'data', displayName = '', isArray = false, type = 'any' }: OutDataParams) {
+		const output = new Output(new Socket({ name: displayName, isArray: isArray, type: type, node: this }), displayName)
 		this.addOutput(
 			name,
-			new Output(new Socket({ name: displayName, isArray: isArray, type: type, node:this }), displayName)
+			output as unknown as Output<Exclude<Outputs[keyof Outputs], undefined>>
 		);
 	}
 
@@ -275,7 +286,7 @@ export class Node<
 		isArray = false,
 		isRequired = false,
 		type = 'any'
-	}: InDataParams<N>) {
+	}: InDataParams<N>): Input {
 		const input = new Input(
 			new Socket({ name: socketLabel, isArray: isArray, type: type, isRequired: isRequired, node: this }),
 			displayName,
@@ -285,12 +296,14 @@ export class Node<
 		if (control) {
 			input.addControl(new InputControl(control.type, control.options));
 		}
-		this.addInput(name, input);
+		this.addInput(name, input as unknown as Input<Exclude<Inputs[keyof Inputs], undefined>>);
+		return input;
 	}
 
 	addOutExec(name = 'exec', displayName = '', isNaturalFlow = false) {
 		if (isNaturalFlow) this.naturalFlowExec = name;
-		this.addOutput(name, new Output(new ExecSocket({ name: displayName, node:this }), displayName));
+		const output = new Output(new ExecSocket({ name: displayName, node: this }), displayName);
+		this.addOutput(name, output as unknown as Output<Exclude<Outputs[keyof Outputs], undefined>>);
 	}
 
 	processDataflow = () => {
@@ -318,12 +331,12 @@ export class Node<
 			// console.log(checkedInputs);
 			// console.log("get0", checkedInputs[key][0]);
 
-			return checkedInputs[key][0];
+			return checkedInputs[key][0] as N;
 		}
 
 		if (checkedInputs && key in checkedInputs) {
 			// console.log(checkedInputs);
-			return checkedInputs[key][0];
+			return checkedInputs[key][0] as N;
 		}
 		const inputControl = this.inputs[key]?.control as InputControl<T, N>;
 
@@ -357,12 +370,13 @@ export class Node<
 
 	updateElement(type: GetRenderTypes<AreaExtra> = 'node', id?: string): void {
 		if (id === undefined) id = this.id;
-		if (this.getArea()) {
-			this.getArea().update(type, id);
-		} else console.error('Node', 'area is not set');
+		const area = this.getArea();
+		if (area) {
+			area.update(type, id);
+		}
 	}
 }
 
-export class Connection<A extends Node, B extends Node> extends ClassicPreset.Connection<A, B> {}
+export class Connection<A extends Node = Node, B extends Node = Node> extends ClassicPreset.Connection<A, B> {
 
-export const socket = new Socket({ isArray: false, type: 'any' });
+}

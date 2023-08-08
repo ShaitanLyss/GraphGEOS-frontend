@@ -7,7 +7,7 @@ export class EveryNode extends Node {
 	// state: { current: number } = { current: 0 };
 
 	constructor({ count = 100, factory }: { count?: number; factory: NodeFactory }) {
-		super({ label: 'Every', factory, height: 200, width: 200, params: { count } });
+		super({ label: 'Every', factory, height: 270, width: 200, params: { count } });
 
 		this.addInExec();
 		this.addInExec('reset', 'Reset');
@@ -24,6 +24,8 @@ export class EveryNode extends Node {
 					label: 'Count',
 					change: (value: number) => {
 						console.log('yo');
+						console.log(value);
+						this.getDataflowEngine().reset(this.id);
 						this.factory.pythonDataflowEngine.reset(this.id);
 					}
 				}

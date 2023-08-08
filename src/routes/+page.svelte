@@ -10,6 +10,7 @@
 	import { graphql } from '$houdini';
 	import { isTauri } from '$utils/tauri';
 	import { isLoading } from 'svelte-i18n';
+	import { macroNodeExample } from '$rete/example/R_macro_node_E';
 	const store = graphql(`
 		query TestQuery @load {
 			graphs {
@@ -28,12 +29,14 @@
 		<svelte:fragment slot="sidebarLeft" />
 		<!-- <a href="/auth">Login</a> -->
 		<EditorSwitcher
+			defaultTabSet="macroNode"
 			examples={[
 				// { key: 'math', example: sumExample, label: 'Math' },
 				// { key: 'timeloop', example: timeloopExample, label: 'Time Loop' },
 				// { key: 'for_each', example: forEachExample, label: 'For Each' },
 				{ key: 'acquisition', example: acquisitionModelingExample, label: 'Acquisition Modelling' },
-				{ key: 'xml', example: acquisitionXmlExample, label: 'XML' }
+				{ key: 'xml', example: acquisitionXmlExample, label: 'XML' },
+				{ key: 'macroNode', example: macroNodeExample, label: 'Macro Node'}
 			]}
 		/>
 	</AppShell>

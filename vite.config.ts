@@ -1,6 +1,6 @@
 import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vitest/config';
 import houdini from 'houdini/vite';
+import { defineConfig, type PluginOption } from 'vite';
 
 export default defineConfig({
 	build: {
@@ -23,7 +23,7 @@ export default defineConfig({
 			}
 		}
 	],
-	test: {
-		include: ['src/**/*.{test,spec}.{js,ts}']
-	}
+	// test: {
+	// 	include: ['src/**/*.{test,spec}.{js,ts}']
+	// }
 });
