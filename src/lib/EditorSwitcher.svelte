@@ -88,7 +88,6 @@
 		editorComponents.splice(index, 1);
 		editorsViews.splice(index, 1);
 		editorsViews = editorsViews;
-		delete $savedEditors[key];
 		$savedEditors = $savedEditors;
 
 		if (editorsViews.length > 0 && editorsViews.length === index) {
