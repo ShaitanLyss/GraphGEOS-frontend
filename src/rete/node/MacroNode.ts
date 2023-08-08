@@ -46,6 +46,7 @@ class OutExecNode extends Node {
         
 
 export class MacroNode extends Node {
+    static hidden = true;
 
     readonly macroEditor: NodeEditor;
     readonly macroFactory: NodeFactory;

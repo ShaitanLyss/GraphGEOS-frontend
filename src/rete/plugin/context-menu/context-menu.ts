@@ -70,6 +70,7 @@ export class ContextMenuSetup extends Setup {
 					prototype instanceof Node &&
 					prototype.constructor &&
 					!Object.prototype.hasOwnProperty.call(prototype.constructor, '__isAbstract')
+					&& !Object.prototype.hasOwnProperty.call(prototype.constructor, 'hidden')
 				);
 			}) as (typeof Node)[];
 
