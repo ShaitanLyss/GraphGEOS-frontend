@@ -19,7 +19,9 @@
 	`);
 	$: console.log('store', $store.data);
 </script>
- 
+ <svelte:head>
+    <title>Geos UI</title> 
+</svelte:head>
 <div class="h-screen">
 	<AppShell regionPage="h-full" slotPageContent="h-full">
 		<!-- <svelte:fragment slot="sidebarLeft">Sidebar left</svelte:fragment> -->

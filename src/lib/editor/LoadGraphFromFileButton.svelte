@@ -5,6 +5,7 @@
 	import { onMount } from 'svelte';
 	import type { NodeEditor } from '$rete/NodeEditor';
 	import EditorButton from './EditorButton.svelte';
+	import { _ } from 'svelte-i18n';
 	import type { NodeFactory } from '$rete/node/NodeFactory';
 
 	export let factory: NodeFactory;
@@ -32,12 +33,12 @@
 				// Process the parsedGraph as needed
 				await factory.loadGraph(parsedGraph);
 				notifications.show({
-					title: 'Graph Loaded',
-					message: 'Successfully loaded the graph.',
+					title: $_('notification.graph_loaded.title'),
+					message: $_('notification.graph_loaded.message'),
 					color: 'green'
 				});
 			} catch (error) {
-				notifications.show({ title: 'Error', message: 'Failed to load the graph.', color: 'red' });
+				notifications.show({ title: $_('notification.error.title'), message: $_('notification.graph_loaded.failure_msg'), color: 'red' });
 				console.error(error);
 			}
 		};

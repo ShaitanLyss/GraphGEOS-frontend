@@ -4,3 +4,4 @@ export class PythonObject {
 export class PythonProperty {
 	constructor(public readonly object: PythonObject, public readonly name: string) {}
 }
+ 

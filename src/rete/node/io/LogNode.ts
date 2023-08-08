@@ -6,9 +6,14 @@ import type { NodeFactory } from '../NodeFactory';
 import { InputControl } from '$rete/control/Control';
 
 export class LogNode extends Node {
+	// protected state: Record<string, unknown>;
+	// state: Record<string, unknown>;
+	state: {message: string} = { ...this.state, message: 'Hello'}
+
 	constructor({ message = 'Hello', factory }: { message?: string; factory: NodeFactory }) {
 		// super('Log', { factory });
 		super({ label: 'Log', factory, params: { message }, height: 250});
+		this.state.message = message;
 		this.pythonComponent.addCode('print($(message))');
 		this.pythonComponent.setCodeTemplateGetter(
 			() =>
@@ -29,7 +34,11 @@ if (rank == 0):
 				type: 'textarea',
 				options: {
 					initial: message,
-					label: 'Message'
+					label: 'Message',
+					debouncedOnChange: (value) => {
+						this.state.message = value;
+						console.log(this.state)
+					}
 				}
 			}
 		});
@@ -37,6 +46,12 @@ if (rank == 0):
 		// const messageInput = new Input(new Socket(), 'Message');
 		// messageInput.addControl(new InputControl('text', { initial: message }));
 		// this.addInput('message', messageInput);
+	}
+
+	override applyState(): void {
+		console.log("applyState", this.state)
+		const messageControl = this.inputs.message?.control as ClassicPreset.InputControl<'text'>;
+		messageControl.setValue(this.state.message);
 	}
 
 	async execute(input: string, forward: (output: string) => unknown) {

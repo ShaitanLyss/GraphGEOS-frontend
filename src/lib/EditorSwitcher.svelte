@@ -18,34 +18,87 @@
 	import { _ } from 'svelte-i18n';
 	import LocaleSwitcher from './LocaleSwitcher.svelte';
 	import NodeBrowser from './editor/node-browser/NodeBrowser.svelte';
-	import GeosDashboard from './geos/GeosDashboard.svelte';
-
+	import { addContextFunction } from './utils';
+	import type { NodeEditor, NodeEditorSaveData } from '$rete/NodeEditor';
+	import Fa from 'svelte-fa';
+	import { faEllipsisH, faTimes } from '@fortawesome/free-solid-svg-icons';
+	import { faUser } from '@fortawesome/free-regular-svg-icons';
+	import { v1 as uuidv1 } from 'uuid';
+	import { EditMacroNodeChannel } from './broadcast-channels';
 	let addButonClicked = -1;
 
+	const editMacroNodeChannel = new EditMacroNodeChannel();
+
 	export let examples: EditorView[] = [];
-
-	let editors: EditorView[] = examples;
-
-	const tabSet: Writable<string> = localStorageStore('exampleTabSet', 'math');
+	let editorsViews: EditorView[] = [];
+	const tabSet: Writable<string> = localStorageStore('tabSet', 'XML');
+	const savedEditors: Writable<Record<string, NodeEditorSaveData>> = localStorageStore(
+		'saveData',
+		{}
+	);
 	let ready = false;
 
-	onMount(() => {
-		ready = true;
+	// Copy names of editors in tabs
+	let tabNames: string[] = [];
+
+	onMount(async () => {
+		await import('$rete/setup/appLaunch');
+		for (const [key, editorSaveData] of Object.entries($savedEditors)) {
+			editorsViews = [
+				...editorsViews,
+				{
+					key: key,
+					label: editorSaveData.editorName,
+					saveData: editorSaveData
+				}
+			];
+		}
+		if (editorsViews.length === 0) editorsViews = examples;
+
+		for (const editorTab of editorsViews) {
+			tabNames.push(editorTab.label);
+			ready = true;
+		}
 	});
 
-	function addEditor() {
-		console.log('addEditor');
-		const key = `newEditor${editors.length}`;
-		editors = [...editors, { key: key, label: $_('new.editor') }];
-		tabNames[editors.length - 1] = $_('new.editor');
+	// Adds a new editor
+	function addEditor(saveData?: NodeEditorSaveData) {
+		const key = uuidv1();
+		console.log('addEditor', key);
+		console.log(saveData ? saveData.editorName : $_('new.editor'));
+		editorsViews = [
+			...editorsViews,
+			{ key: key, label: saveData ? saveData.editorName : $_('new.editor'), saveData }
+		];
+		tabNames[editorsViews.length - 1] = saveData ? saveData.editorName : $_('new.editor');
 		$tabSet = key;
 		setTimeout(() => {
 			addButonClicked = -1;
 		}, 0);
 	}
-	const tabNames: string[] = [];
-	for (const editorTab of editors) {
-		tabNames.push(editorTab.label);
+
+	function deleteEditor({ key }: { key: string }) {
+		const index = editorsViews.findIndex((editor) => editor.key === key);
+		console.log('deleteEditor', key, index);
+		
+		tabNames.splice(index, 1);
+		tabNames = tabNames;
+		delete editors[key];
+		editors =editors;
+		editorComponents.splice(index, 1);
+		editorsViews.splice(index, 1);
+		editorsViews = editorsViews;
+		delete $savedEditors[key];
+		$savedEditors = $savedEditors;
+
+		if (editorsViews.length > 0 && editorsViews.length === index) {
+			$tabSet = editorsViews[index - 1].key;
+		} else if (editorsViews.length > 0) {
+			$tabSet = editorsViews[index].key;
+		} else {
+			console.log("No more editors left")
+		}
+
 	}
 
 	// const draggableTabOptions: DragOptions = {
@@ -55,8 +108,8 @@
 
 	// 	}
 	// };
-
 	let editorComponents: Editor[] = [];
+	let editors: Record<string, NodeEditor> = {};
 
 	function openChangeTabNameModal(tabIndex: number) {
 		const changeTabName: ModalSettings = {
@@ -78,6 +131,21 @@
 		};
 		modalStore.trigger(changeTabName);
 	}
+
+	function saveEditors() {
+		for (let i = 0; i < editorsViews.length; i++) {
+			const editor = editors[editorsViews[i].key];
+			console.log(editor.name);
+			$savedEditors[editorsViews[i].key] = editor.toJSON();
+			console.log($savedEditors);
+		}
+	}
+	addContextFunction('onSave', saveEditors);
+
+	editMacroNodeChannel.onmessage = async (data) => {
+		console.log('editMacroNodeChannel.onmessage', data);
+		addEditor(data.graph);
+	};
 </script>
 
 {#if ready}
@@ -85,23 +153,54 @@
 		<svelte:fragment slot="header">
 			<div class="flex">
 				<TabGroup>
-					{#each editors as editor, index (index)}
-						<div role="button" tabindex={index} on:dblclick={() => openChangeTabNameModal(index)}>
+					{#each editorsViews as editor, index (index)}
+						<div
+							role="button"
+							class="relative group"
+							tabindex={index}
+							on:dblclick={() => openChangeTabNameModal(index)}
+						>
 							<!-- use:draggable={draggableTabOptions}
 						> -->
+							<button
+								type="button"
+								class="absolute top-0.5 right-0.5 p-1 hidden group-hover:block rounded-token variant-soft-surface"
+								on:click={() => {
+									deleteEditor({ key: editor.key });
+								}}
+							>
+								<Fa icon={faTimes} size="xs" />
+							</button>
 							<Tab bind:group={$tabSet} name="tab{index}" value={editor.key}>{tabNames[index]}</Tab>
 						</div>
 					{/each}
 					<Tab
-						on:click={addEditor}
+						on:click={() => addEditor()}
 						bind:group={addButonClicked}
 						name="addEditorBtn"
 						value={undefined}>+</Tab
 					>
 				</TabGroup>
-				<div class="ml-auto pe-4 pe- my-auto flex h-full space-x-3 items-center justify-end">
-					<LocaleSwitcher />
-					<LightSwitch />
+				<div class="group ml-auto pe-4 relative h-auto">
+					<div class="h-full overflow-hidden">
+						<div
+							class="opacity-0 transition-all group-hover:opacity-100 flex h-full
+						space-x-3 items-center justify-end text-surface-900-50-token
+						overflow-hidden translate-x-20 group-hover:translate-x-0 ps-6
+						"
+						>
+							<a href="/auth" class="p-1" on:click={saveEditors}>
+								<Fa icon={faUser} size="sm" class="opacity-80" />
+							</a>
+							<LocaleSwitcher />
+							<LightSwitch />
+						</div>
+						<div
+							class="absolute inset-0 transition-opacity group-hover:opacity-0 opacity-50 pe-4 flex justify-end items-center pointer-events-none"
+						>
+							<Fa icon={faEllipsisH} size="2x" />
+						</div>
+					</div>
 				</div>
 			</div>
 		</svelte:fragment>
@@ -110,11 +209,13 @@
 		</svelte:fragment>
 
 		<svelte:fragment>
-			{#each editors as editor, index (index)}
+			{#each editorsViews as editorView, index (editorView)}				
 				<Editor
+					bind:editor={editors[editorView.key]}
 					bind:this={editorComponents[index]}
-					hidden={$tabSet !== editor.key}
-					loadExample={editor.example}
+					saveData={editorView.saveData}
+					hidden={$tabSet !== editorView.key}
+					loadExample={editorView.example}
 					name={tabNames[index]}
 					onNameChange={(name) => (tabNames[index] = name)}
 				/>

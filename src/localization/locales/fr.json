@@ -41,12 +41,30 @@
           "title": "Nom"
         }
       }
+    },
+    "graph": {
+      "button": {
+        "update": "mettre à jour"
+      }
     }
   },
   "modal": {
     "title": {
       "graph": {
         "upload": "Mettre graphe en ligne"
+      }
+    },
+    "graph": {
+      "already_exist": {
+        "message": "Le graphe existe déjà, il sera mis à jour."
+      }
+    },
+    "graph_upload": {
+      "failed": {
+        "message": "Il y a une erreur durant la mise en ligne du graphe."
+      },
+      "success": {
+        "message": "Mise en ligne réussie."
       }
     }
   },
@@ -72,6 +90,27 @@
       "new_job": {
         "btn": "nouveau job"
       }
+    }
+  },
+  "notification": {
+    "save": {
+      "title": "Sauvegarde",
+      "message": {
+        "ongoing": "Sauvegarde en cours...",
+        "success": "Sauvegardé ! Utilisation stockage : {storageUse, number, ::percent}",
+        "failure": "Échec de la sauvegarde. {error}."
+      }
+    },
+    "error": {
+      "title": "Erreur"
+    },
+    "success": {
+      "title": "Succès"
+    },
+    "graph_loaded": {
+      "title": "Chargement graphe",
+      "message": "Graphe chargé avec succès.",
+      "failure_msg": "Échec du chargement de graphe."
     }
   }
 }

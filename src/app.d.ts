@@ -5,6 +5,7 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			getSession: getSession;
+			session: unknown;
 		}
 		// interface PageData {}
 		// interface Platform {}

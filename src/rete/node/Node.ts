@@ -63,6 +63,8 @@ export type NodeSaveData = {
 	position?: { x: number; y: number };
 	state: Record<string, unknown>;
 	inputControlValues: Record<string, unknown>;
+	selectedInputs: string[];
+	selectedOutputs: string[];
 };
 
 export class Node<
@@ -154,12 +156,21 @@ export class Node<
 
 	toJSON(): NodeSaveData {
 		const inputControlValues: Record<string, unknown> = {};
+		const selectedInputs: string[] = [];
+		const selectedOutputs: string[] = [];
 		for (const key in this.inputs) {
 			const value = this.getData(key);
 			if (value !== undefined) {
 				inputControlValues[key] = value;
 			}
+			if (this.inputs[key]?.socket.selected)
+				selectedInputs.push(key);
 		}
+		for (const key in this.outputs) {
+			if (this.outputs[key]?.socket.selected)
+				selectedOutputs.push(key);
+		}
+
 		// TODO: for all nodes, move state to params
 		// TODO: add control values to JSON return
 		// TODO: adapt node factory to adapt to new JSON format
@@ -169,8 +180,26 @@ export class Node<
 			type: (this.constructor as typeof Node).id,
 			state: this.state,
 			position: this.getArea().nodeViews.get(this.id)?.position,
-			inputControlValues: inputControlValues
+			inputControlValues: inputControlValues,
+			selectedInputs,
+			selectedOutputs,
 		};
+	}
+
+	selectInput(key: string) {
+		this.inputs[key]?.socket.select();
+	}
+
+	deselectInput(key: string) {
+		this.inputs[key]?.socket.deselect();
+	}
+
+	selectOutput(key: string) {
+		this.outputs[key]?.socket.select();
+	}
+
+	deselectOutput(key: string) {
+		this.outputs[key]?.socket.deselect();
 	}
 
 	setNaturalFlow(outExec: string | undefined) {
@@ -228,13 +257,13 @@ export class Node<
 	}
 
 	addInExec(name = 'exec', displayName = '') {
-		this.addInput(name, new Input(new ExecSocket({ name: displayName }), undefined, true));
+		this.addInput(name, new Input(new ExecSocket({ name: displayName, node:this }), undefined, true));
 	}
 
 	addOutData({ name = 'data', displayName = '', isArray = false, type = 'any' }: OutDataParams) {
 		this.addOutput(
 			name,
-			new Output(new Socket({ name: displayName, isArray: isArray, type: type }), displayName)
+			new Output(new Socket({ name: displayName, isArray: isArray, type: type, node:this }), displayName)
 		);
 	}
 
@@ -248,7 +277,7 @@ export class Node<
 		type = 'any'
 	}: InDataParams<N>) {
 		const input = new Input(
-			new Socket({ name: socketLabel, isArray: isArray, type: type, isRequired: isRequired }),
+			new Socket({ name: socketLabel, isArray: isArray, type: type, isRequired: isRequired, node: this }),
 			displayName,
 			false,
 			{ isRequired: isRequired }
@@ -261,7 +290,7 @@ export class Node<
 
 	addOutExec(name = 'exec', displayName = '', isNaturalFlow = false) {
 		if (isNaturalFlow) this.naturalFlowExec = name;
-		this.addOutput(name, new Output(new ExecSocket({ name: displayName }), displayName));
+		this.addOutput(name, new Output(new ExecSocket({ name: displayName, node:this }), displayName));
 	}
 
 	processDataflow = () => {
@@ -326,7 +355,8 @@ export class Node<
 		return this.outData;
 	}
 
-	updateElement(type: GetRenderTypes<AreaExtra>, id: string): void {
+	updateElement(type: GetRenderTypes<AreaExtra> = 'node', id?: string): void {
+		if (id === undefined) id = this.id;
 		if (this.getArea()) {
 			this.getArea().update(type, id);
 		} else console.error('Node', 'area is not set');
