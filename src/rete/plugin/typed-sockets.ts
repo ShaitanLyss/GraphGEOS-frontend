@@ -34,14 +34,12 @@ export function isConnectionInvalid(outputSocket: Socket, inputSocket: Socket) {
 
 	const [, outType, outSubtypes] = re.exec(outputSocket.type) || [];
 	const [, inType, inSubtypes] = re.exec(inputSocket.type) || [];
-	console.log(outType, outSubtypes, inType, inSubtypes)
 	if (inType && outType && inType === outType) {
 		if (outSubtypes === '*' || inSubtypes === '*') {
 			return false;
 		}
 		const outSubtypesArray = outSubtypes.split('|');
 		const inSubtypesArray = inSubtypes.split('|');
-		console.log(outSubtypesArray, inSubtypesArray)
 		const intersection = outSubtypesArray.filter((subtype) => inSubtypesArray.includes(subtype));
 		if (intersection.length > 0) {
 			return false;
