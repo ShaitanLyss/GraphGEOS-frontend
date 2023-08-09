@@ -36,7 +36,7 @@
 	</div>
 	{#if $graphsAndAuthorName.data}
 		{#each $graphsAndAuthorName.data.graphs as graph}
-			<GraphItem graphName={graph.name} authorName={graph.author.name} graphId={graph.id}/>
+			<GraphItem graphName={graph.name} authorName={graph.author.name} graphId={graph.id} />
 		{/each}
 	{/if}
 	<!-- <div class="mb-4">

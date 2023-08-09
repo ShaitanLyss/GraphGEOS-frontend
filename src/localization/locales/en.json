@@ -1,119 +1,119 @@
 {
-  "enter": {
-    "name": "Enter Name"
-  },
-  "prompt": {
-    "provide": {
-      "name": {
-        "graph": "Provide a new name for the graph."
-      }
-    }
-  },
-  "new": {
-    "editor": "New Editor"
-  },
-  "browser": {
-    "tab": {
-      "favorite": "Favorites",
-      "user": "User",
-      "shared": "Shared"
-    }
-  },
-  "title": {
-    "favorite": "Favorites",
-    "recent": "Recent",
-    "recents": "Recents",
-    "author": "Author",
-    "description": "Description"
-  },
-  "button": {
-    "cancel": "Cancel",
-    "confirm": "Confirm",
-    "upload": "Upload"
-  },
-  "form": {
-    "input": {
-      "make_public": "Make public",
-      "description_placeholder": "Short description of your graph",
-      "graph": {
-        "description_placeholder": "Short description of your graph",
-        "name_placeholder": "graph name",
-        "name": {
-          "title": "Name"
-        }
-      }
-    },
-    "graph": {
-      "button": {
-        "update": "update"
-      }
-    }
-  },
-  "modal": {
-    "title": {
-      "graph": {
-        "upload": "Upload Graph"
-      }
-    },
-    "graph": {
-      "already_exist": {
-        "message": "Graph already exists, it will be updated."
-      }
-    },
-    "graph_upload": {
-      "failed": {
-        "message": "There was an error uploading the graph."
-      },
-      "success": {
-        "message": "Graph uploaded successfully."
-      }
-    }
-  },
-  "card": {
-    "graphItem": {
-      "by_author": "By {name}"
-    }
-  },
-  "python-mode": {
-    "generation": {
-      "success": {
-        "message": "Python code generation successful !"
-      }
-    },
-    "notification": {
-      "title": "Python mode",
-      "description": "Click on a node to generate python code"
-    }
-  },
-  "geos": {
-    "dash": {
-      "sources": "Sources",
-      "source": "Source",
-      "job_queue": "Queue",
-      "new_job": {
-        "btn": "New Job"
-      }
-    }
-  },
-  "notification": {
-    "save": {
-      "title": "Save",
-      "message": {
-        "ongoing": "Saving...",
-        "success": "Saved! Storage use : {storageUse, number, ::percent}",
-        "failure": "Failed to save. An error occured : {error}"
-      }
-    },
-    "error": {
-      "title": "Error"
-    },
-    "success": {
-      "title": "Success"
-    },
-    "graph_loaded": {
-      "title": "Graph Loaded",
-      "message": "Successfully loaded the graph.",
-      "failure_msg": "Failed to load the graph."
-    }
-  }
+	"enter": {
+		"name": "Enter Name"
+	},
+	"prompt": {
+		"provide": {
+			"name": {
+				"graph": "Provide a new name for the graph."
+			}
+		}
+	},
+	"new": {
+		"editor": "New Editor"
+	},
+	"browser": {
+		"tab": {
+			"favorite": "Favorites",
+			"user": "User",
+			"shared": "Shared"
+		}
+	},
+	"title": {
+		"favorite": "Favorites",
+		"recent": "Recent",
+		"recents": "Recents",
+		"author": "Author",
+		"description": "Description"
+	},
+	"button": {
+		"cancel": "Cancel",
+		"confirm": "Confirm",
+		"upload": "Upload"
+	},
+	"form": {
+		"input": {
+			"make_public": "Make public",
+			"description_placeholder": "Short description of your graph",
+			"graph": {
+				"description_placeholder": "Short description of your graph",
+				"name_placeholder": "graph name",
+				"name": {
+					"title": "Name"
+				}
+			}
+		},
+		"graph": {
+			"button": {
+				"update": "update"
+			}
+		}
+	},
+	"modal": {
+		"title": {
+			"graph": {
+				"upload": "Upload Graph"
+			}
+		},
+		"graph": {
+			"already_exist": {
+				"message": "Graph already exists, it will be updated."
+			}
+		},
+		"graph_upload": {
+			"failed": {
+				"message": "There was an error uploading the graph."
+			},
+			"success": {
+				"message": "Graph uploaded successfully."
+			}
+		}
+	},
+	"card": {
+		"graphItem": {
+			"by_author": "By {name}"
+		}
+	},
+	"python-mode": {
+		"generation": {
+			"success": {
+				"message": "Python code generation successful !"
+			}
+		},
+		"notification": {
+			"title": "Python mode",
+			"description": "Click on a node to generate python code"
+		}
+	},
+	"geos": {
+		"dash": {
+			"sources": "Sources",
+			"source": "Source",
+			"job_queue": "Queue",
+			"new_job": {
+				"btn": "New Job"
+			}
+		}
+	},
+	"notification": {
+		"save": {
+			"title": "Save",
+			"message": {
+				"ongoing": "Saving...",
+				"success": "Saved! Storage use : {storageUse, number, ::percent}",
+				"failure": "Failed to save. An error occured : {error}"
+			}
+		},
+		"error": {
+			"title": "Error"
+		},
+		"success": {
+			"title": "Success"
+		},
+		"graph_loaded": {
+			"title": "Graph Loaded",
+			"message": "Successfully loaded the graph.",
+			"failure_msg": "Failed to load the graph."
+		}
+	}
 }

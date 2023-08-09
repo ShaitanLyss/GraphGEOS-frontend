@@ -1,21 +1,21 @@
 query GetXmlSchema {
-  geos {
-    xmlSchema {
-      simpleTypes {
-        name
-        pattern
-      }
-      complexTypes {
-        name
-        attributes {
-          name
-          type
-          required
-          default
-          pattern    
-        }
-        childTypes
-      }
-    }
-  }
+	geos {
+		xmlSchema {
+			simpleTypes {
+				name
+				pattern
+			}
+			complexTypes {
+				name
+				attributes {
+					name
+					type
+					required
+					default
+					pattern
+				}
+				childTypes
+			}
+		}
+	}
 }

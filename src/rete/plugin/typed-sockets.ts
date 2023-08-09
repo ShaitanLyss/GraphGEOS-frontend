@@ -59,10 +59,8 @@ export class TypedSocketsPlugin<Schemes extends BaseSchemes> extends Scope<never
 			}
 
 			if (ctx.type === 'connectioncreate' && (conn = ctx.data as Connection)) {
-
 				const outputSocket = this.getOutputSocket(conn.source, conn.sourceOutput);
 				const inputSocket = this.getInputSocket(conn.target, conn.targetInput);
-						
 
 				if (isConnectionInvalid(outputSocket, inputSocket)) {
 					console.log(

@@ -8,11 +8,11 @@ import { InputControl } from '$rete/control/Control';
 export class LogNode extends Node {
 	// protected state: Record<string, unknown>;
 	// state: Record<string, unknown>;
-	state: {message: string} = { ...this.state, message: 'Hello'}
+	state: { message: string } = { ...this.state, message: 'Hello' };
 
 	constructor({ message = 'Hello', factory }: { message?: string; factory: NodeFactory }) {
 		// super('Log', { factory });
-		super({ label: 'Log', factory, params: { message }, height: 250});
+		super({ label: 'Log', factory, params: { message }, height: 250 });
 		this.state.message = message;
 		this.pythonComponent.addCode('print($(message))');
 		this.pythonComponent.setCodeTemplateGetter(
@@ -37,7 +37,7 @@ if (rank == 0):
 					label: 'Message',
 					debouncedOnChange: (value) => {
 						this.state.message = value;
-						console.log(this.state)
+						console.log(this.state);
 					}
 				}
 			}
@@ -49,7 +49,7 @@ if (rank == 0):
 	}
 
 	override applyState(): void {
-		console.log("applyState", this.state)
+		console.log('applyState', this.state);
 		const messageControl = this.inputs.message?.control as ClassicPreset.InputControl<'text'>;
 		messageControl.setValue(this.state.message);
 	}
@@ -63,7 +63,10 @@ if (rank == 0):
 		const res = inputs.message ? inputs.message[0] : messageControl.value;
 		console.log(res);
 
-		notifications.show({ title: 'Log', message: typeof res === 'string' ? res : JSON.stringify(res) });
+		notifications.show({
+			title: 'Log',
+			message: typeof res === 'string' ? res : JSON.stringify(res)
+		});
 
 		forward('exec');
 		super.execute(input, forward, false);

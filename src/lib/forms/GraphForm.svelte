@@ -15,7 +15,7 @@
 	export let graph: GetGraph$result['graph'] | undefined;
 	const formStore: Writable<Record<string, unknown>> = localStorageStore('uploadGraphForm', {});
 	$: if (graph) {
-        console.log(graph)
+		console.log(graph);
 		for (const [key, value] of Object.entries(graph)) {
 			if (['id', 'name', 'authorId', 'data'].includes(key)) continue;
 			$formStore[key] = value;
@@ -35,7 +35,7 @@
 >
 	<label class="label">
 		<span>{capitalize($_('form.input.graph.name.title'))}</span>
-        <!-- <span class="text-red-500 ms-1">*</span>-->
+		<!-- <span class="text-red-500 ms-1">*</span>-->
 		<input
 			type="text"
 			class="input"
@@ -71,7 +71,7 @@
 	<!-- Author -->
 	<label class="label">
 		<span>{$_('title.author')}</span>
-        <!-- <span class="text-red-500 ms-1"> *</span> -->
+		<!-- <span class="text-red-500 ms-1"> *</span> -->
 		<input
 			type="text"
 			class="input"

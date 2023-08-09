@@ -17,7 +17,7 @@ export type XmlNodeParams = NodeParams & {
 	};
 };
 
-export  class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
+export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 	// static __isAbstract = true;
 	static hidden = true;
 	static counts: Record<string, bigint> = {};

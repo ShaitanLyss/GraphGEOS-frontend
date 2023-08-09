@@ -101,8 +101,8 @@ export class Node<
 	static id: string;
 	static nodeCounts = BigInt(0);
 	protected state: Record<string, unknown> = {};
-	inputs: { [key in keyof Inputs]?: Input<Exclude<Inputs[key], undefined>> | undefined; } = {};
-	outputs: { [key in keyof Outputs]?: Output<Exclude<Outputs[key], undefined>> | undefined; } = {};
+	inputs: { [key in keyof Inputs]?: Input<Exclude<Inputs[key], undefined>> | undefined } = {};
+	outputs: { [key in keyof Outputs]?: Output<Exclude<Outputs[key], undefined>> | undefined } = {};
 	readonly pythonComponent: PythonNodeComponent;
 	readonly socketSelectionComponent: R_SocketSelection_NC;
 	readonly ingoingDataConnections: Record<string, Connection<Node, Node>> = {};
@@ -172,12 +172,10 @@ export class Node<
 			if (value !== undefined) {
 				inputControlValues[key] = value;
 			}
-			if (this.inputs[key]?.socket.selected)
-				selectedInputs.push(key);
+			if (this.inputs[key]?.socket.selected) selectedInputs.push(key);
 		}
 		for (const key in this.outputs) {
-			if (this.outputs[key]?.socket.selected)
-				selectedOutputs.push(key);
+			if (this.outputs[key]?.socket.selected) selectedOutputs.push(key);
 		}
 
 		// TODO: for all nodes, move state to params
@@ -191,7 +189,7 @@ export class Node<
 			position: this.getArea()?.nodeViews.get(this.id)?.position,
 			inputControlValues: inputControlValues,
 			selectedInputs,
-			selectedOutputs,
+			selectedOutputs
 		};
 	}
 
@@ -223,7 +221,7 @@ export class Node<
 		try {
 			return await this.factory.dataflowEngine.fetchInputs(this.id);
 		} catch (e) {
-			if (e && (e as {message:string}).message === 'cancelled') {
+			if (e && (e as { message: string }).message === 'cancelled') {
 				console.log('gracefully cancelled Node.fetchInputs');
 				return {};
 			} else throw e;
@@ -271,11 +269,11 @@ export class Node<
 	}
 
 	addOutData({ name = 'data', displayName = '', isArray = false, type = 'any' }: OutDataParams) {
-		const output = new Output(new Socket({ name: displayName, isArray: isArray, type: type, node: this }), displayName)
-		this.addOutput(
-			name,
-			output as unknown as Output<Exclude<Outputs[keyof Outputs], undefined>>
+		const output = new Output(
+			new Socket({ name: displayName, isArray: isArray, type: type, node: this }),
+			displayName
 		);
+		this.addOutput(name, output as unknown as Output<Exclude<Outputs[keyof Outputs], undefined>>);
 	}
 
 	addInData<N>({
@@ -288,7 +286,13 @@ export class Node<
 		type = 'any'
 	}: InDataParams<N>): Input {
 		const input = new Input(
-			new Socket({ name: socketLabel, isArray: isArray, type: type, isRequired: isRequired, node: this }),
+			new Socket({
+				name: socketLabel,
+				isArray: isArray,
+				type: type,
+				isRequired: isRequired,
+				node: this
+			}),
 			displayName,
 			false,
 			{ isRequired: isRequired }
@@ -377,6 +381,7 @@ export class Node<
 	}
 }
 
-export class Connection<A extends Node = Node, B extends Node = Node> extends ClassicPreset.Connection<A, B> {
-
-}
+export class Connection<
+	A extends Node = Node,
+	B extends Node = Node
+> extends ClassicPreset.Connection<A, B> {}

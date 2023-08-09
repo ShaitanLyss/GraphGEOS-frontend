@@ -24,8 +24,7 @@
 		}
 		const target = event.target as HTMLInputElement;
 		const val = data.type === 'number' ? +target.value : target.value;
-		if (data.options?.change !== undefined)
-			data.options.change(val);
+		if (data.options?.change !== undefined) data.options.change(val);
 		clearTimeout(debouncedTimer);
 		debouncedTimer = setTimeout(() => {
 			debouncedValue = val;
@@ -88,7 +87,7 @@
 		<span class="text-white"> {options?.label ? options?.label : ''}</span>
 		<textarea
 			class="w-full rounded-md bg-surface-100-800-token
-			 text-surface-900-50-token border-token 
+			 text-surface-900-50-token border-token
 			 focus:border-primary-500 focus:ring-primary-500 transition-colors
 			 "
 			{value}

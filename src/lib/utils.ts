@@ -1,10 +1,10 @@
-import { getContext, setContext } from "svelte";
+import { getContext, setContext } from 'svelte';
 
 export function sayHey(name: string) {
 	console.log(`Hey ${name}!`);
 }
 
-export function addContextFunction(key: string, f : (...args: unknown[]) => unknown) {
+export function addContextFunction(key: string, f: (...args: unknown[]) => unknown) {
 	const current = getContext(key);
 	if (current === undefined) {
 		setContext(key, f);
@@ -18,7 +18,5 @@ export function addContextFunction(key: string, f : (...args: unknown[]) => unkn
 	setContext(key, (...args: unknown[]) => {
 		current(...args);
 		f(...args);
-	}
-	);
-
+	});
 }

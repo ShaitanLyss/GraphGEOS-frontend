@@ -13,21 +13,26 @@ import { XmlProperty, XmlPropertyDefinition } from '$rete/node/xml/types';
 
 type Entry = Map<string, Entry | (() => Node | Promise<Node>)>;
 function isClassConstructor(obj: unknown): boolean {
-	return typeof obj === 'function' && (!!obj.prototype && !!obj.prototype.constructor);
+	return typeof obj === 'function' && !!obj.prototype && !!obj.prototype.constructor;
 }
 
 function pushMenuItem(
 	items: Entry,
 	prefix: string[],
-	item: typeof Node  | (() => Node | Promise<Node>),
+	item: typeof Node | (() => Node | Promise<Node>),
 	factory: NodeFactory
 ): void {
 	if (prefix.length == 1) {
-			// check if item is a node class
-			// if so, add it to the menu
-			// otherwise, add it as a function			
-		
-			items.set(prefix[0].split('.')[0], isClassConstructor(item) ? () => new (item as typeof Node)({ factory: factory }): item as (() => Node | Promise<Node>));
+		// check if item is a node class
+		// if so, add it to the menu
+		// otherwise, add it as a function
+
+		items.set(
+			prefix[0].split('.')[0],
+			isClassConstructor(item)
+				? () => new (item as typeof Node)({ factory: factory })
+				: (item as () => Node | Promise<Node>)
+		);
 	} else {
 		const entry = prefix[0];
 		if (!items.has(entry)) {
@@ -78,8 +83,8 @@ export class ContextMenuSetup extends Setup {
 				return (
 					prototype instanceof Node &&
 					prototype.constructor &&
-					!Object.prototype.hasOwnProperty.call(prototype.constructor, '__isAbstract')
-					&& !Object.prototype.hasOwnProperty.call(prototype.constructor, 'hidden')
+					!Object.prototype.hasOwnProperty.call(prototype.constructor, '__isAbstract') &&
+					!Object.prototype.hasOwnProperty.call(prototype.constructor, 'hidden')
 				);
 			}) as (typeof Node)[];
 
@@ -89,32 +94,34 @@ export class ContextMenuSetup extends Setup {
 
 			// items.push([file, () => new node()]);
 		}
-		
+
 		const xmlSchema = (await new GetXmlSchemaStore().fetch()).data?.geos.xmlSchema;
 		if (xmlSchema) {
 			for (const complexType of xmlSchema.complexTypes) {
 				const name = complexType.name.match(/^(.*)Type$/)?.at(1);
 				if (!name) throw new Error(`Invalid complex type name: ${complexType.name}`);
-				pushMenuItem(items, ['xml_auto', complexType.name], () => new XmlNode({
-					label: name,
-					factory,
-					xmlConfig: {
-						xmlTag: name,
+				pushMenuItem(
+					items,
+					['xml_auto', complexType.name],
+					() =>
+						new XmlNode({
+							label: name,
+							factory,
+							xmlConfig: {
+								xmlTag: name,
 
-						xmlProperties: complexType.attributes.map<XmlPropertyDefinition>((attr) => {
-							return {
-								name: attr.name,
-								type: attr.type,
-								controlType: 'text'
-
+								xmlProperties: complexType.attributes.map<XmlPropertyDefinition>((attr) => {
+									return {
+										name: attr.name,
+										type: attr.type,
+										controlType: 'text'
+									};
+								})
 							}
-
-						})
-					}
-				})
-				, factory)
+						}),
+					factory
+				);
 			}
-
 		}
 		const contextMenu = new ContextMenuPlugin<Schemes>({
 			items: Presets.classic.setup(getMenuArray(items))

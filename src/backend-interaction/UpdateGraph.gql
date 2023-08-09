@@ -1,10 +1,10 @@
 mutation UpdateGraph($updateGraphInput: GraphUpdateInput!) {
-    graph {
-        updateGraph(graphUpdateInput: $updateGraphInput) {
-            id
-            name
-            description
-            isPublic
-        }
-    }
+	graph {
+		updateGraph(graphUpdateInput: $updateGraphInput) {
+			id
+			name
+			description
+			isPublic
+		}
+	}
 }

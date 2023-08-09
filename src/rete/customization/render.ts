@@ -28,7 +28,6 @@ export class RenderSetup implements Setup {
 		this.render.addPreset(
 			Presets.classic.setup({
 				customize: {
-					
 					socket(context) {
 						if (context.payload instanceof Socket) {
 							if (context.payload.type === 'exec') return CustomExecSocket;

@@ -177,8 +177,11 @@
 									>
 										<Fa icon={faTimes} size="xs" />
 									</button>
-									<Tab regionTab={'whitespace-nowrap'}  bind:group={$tabSet} name="tab{index}" value={editor.key}
-										>{tabNames[index]}</Tab
+									<Tab
+										regionTab={'whitespace-nowrap'}
+										bind:group={$tabSet}
+										name="tab{index}"
+										value={editor.key}>{tabNames[index]}</Tab
 									>
 								</div>
 							{/each}
