@@ -36,7 +36,7 @@
 				// { key: 'timeloop', example: timeloopExample, label: 'Time Loop' },
 				// { key: 'for_each', example: forEachExample, label: 'For Each' },
 				{ key: 'acquisition', example: acquisitionModelingExample, label: 'Acquisition Modelling' },
-				{ key: 'xml', example: acquisitionXmlExample, label: 'XML' },
+				// { key: 'xml', example: acquisitionXmlExample, label: 'XML' },
 				{ key: 'macroNode', example: macroNodeExample, label: 'Macro Node' }
 			]}
 		/>

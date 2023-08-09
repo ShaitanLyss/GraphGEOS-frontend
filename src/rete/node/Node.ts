@@ -292,9 +292,10 @@ export class Node<
 				type: type,
 				isRequired: isRequired,
 				node: this
+
 			}),
 			displayName,
-			false,
+			isArray,
 			{ isRequired: isRequired }
 		);
 		if (control) {
@@ -336,13 +337,18 @@ export class Node<
 
 		// 	return checkedInputs2[key];
 		// }
+		// if ()
 
 		const checkedInputs = inputs as Record<string, unknown[]>;
+
+		
 
 		if (checkedInputs && key in checkedInputs) {
 			// console.log(checkedInputs);
 			// console.log("get0", checkedInputs[key][0]);
-
+			if (checkedInputs[key].length > 1) {
+				return checkedInputs[key] as N;
+			}
 			return checkedInputs[key][0] as N;
 		}
 

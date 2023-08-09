@@ -98,6 +98,10 @@ export class ConnectionSetup extends Setup {
 		connection.addPreset(Presets.classic.setup());
 		connection.addPipe((ctx) => {
 			// prevent context menu from appearing when right clicking on a socket
+			if (ctx.type === 'connectiondrop') {
+				console.log(ctx.data)
+			};
+			
 			if (ctx.type === 'contextmenu' && lastClickedSocket) {
 				lastClickedSocket = false;
 				ctx.data.event.preventDefault();

@@ -184,6 +184,7 @@ export class NodeFactory {
 
 			if (context.type !== 'connectioncreated' && context.type !== 'connectionremoved')
 				return context;
+			
 			const conn = context.data;
 			const sourceNode = editor.getNode(conn.source);
 			const targetNode = editor.getNode(conn.target);

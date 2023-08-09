@@ -111,7 +111,7 @@
 {/if}
 {#if type == 'vector'}
 	<label class="label">
-		{options?.label ? options?.label : ''}
+		<span class="text-white text-sm">{options?.label ? options?.label : ''}</span>
 		<div class="flex">
 			<input
 				type="number"

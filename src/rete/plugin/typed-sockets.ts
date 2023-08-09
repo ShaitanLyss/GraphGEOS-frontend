@@ -3,8 +3,8 @@ import type { Connection } from '../node/Node';
 import type { Socket } from '../socket/Socket';
 import { ExecSocket } from '../socket/ExecSocket';
 
-export type XMLAttrType = `xmlAttr|${attrName}`;
-export type XMLElementType = `xmlElement|${tag}`;
+export type XMLAttrType = `xmlAttr:${attrName}`;
+export type XMLElementType = `xmlElement:${tag}`;
 export type SocketType =
 	// | string
 	| 'exec'
@@ -29,6 +29,26 @@ export type SocketType =
 	| XMLElementType
 	;
 export function isConnectionInvalid(outputSocket: Socket, inputSocket: Socket) {
+	const re = /(\w+):([\w|]+)/;
+
+
+	const [, outType, outSubtypes] = re.exec(outputSocket.type) || [];
+	const [, inType, inSubtypes] = re.exec(inputSocket.type) || [];
+	console.log(outType, outSubtypes, inType, inSubtypes)
+	if (inType && outType && inType === outType) {
+		if (outSubtypes === '*' || inSubtypes === '*') {
+			return false;
+		}
+		const outSubtypesArray = outSubtypes.split('|');
+		const inSubtypesArray = inSubtypes.split('|');
+		console.log(outSubtypesArray, inSubtypesArray)
+		const intersection = outSubtypesArray.filter((subtype) => inSubtypesArray.includes(subtype));
+		if (intersection.length > 0) {
+			return false;
+		}
+		
+	}
+
 	return (
 		outputSocket instanceof ExecSocket !== inputSocket instanceof ExecSocket ||
 		(outputSocket.type !== inputSocket.type &&

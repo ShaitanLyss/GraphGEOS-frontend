@@ -86,6 +86,7 @@ export class ContextMenuSetup extends Setup {
 							factory,
 
 							xmlConfig: {
+								noName: !complexType.attributes.some((attr) => attr.name === 'name'),
 								childTypes: complexType.childTypes.map((childType) => {
 									const childName = childType.match(/^(.*)Type$/)?.at(1);
 									if (!childName) return childType;
@@ -94,7 +95,7 @@ export class ContextMenuSetup extends Setup {
 								xmlTag: name,
 								outData: {
 									name: name,
-									type: `xmlElement|${name}`,
+									type: `xmlElement:${name}`,
 									socketLabel: name,
 								},
 

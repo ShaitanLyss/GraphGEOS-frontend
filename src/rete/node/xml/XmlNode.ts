@@ -35,7 +35,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 	constructor(xmlNodeParams: XmlNodeParams) {
 		let { initialValues = {} } = xmlNodeParams;
 		const xmlConfig = xmlNodeParams.xmlConfig;
-		xmlNodeParams.params = { ...xmlNodeParams.params, xmlConfig, initialValues, label: xmlNodeParams.label }
+		xmlNodeParams.params = { ...xmlNodeParams.params, xmlConfig, initialValues, label: xmlNodeParams.label, noName: xmlConfig.noName }
 		console.log("xmlNodeParams", xmlNodeParams)
 		const { outData, xmlProperties, childTypes = [] } = xmlConfig;
 		const { noName = false } = xmlConfig;
@@ -58,19 +58,16 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		if (xmlProperties)
 			xmlProperties.forEach(({ name, type, isArray, controlType, required, pattern }) => {
 				this.addInAttribute({ name, type, isArray, controlType, required, pattern, initialValues });
-				
+
 			});
 
 
 		// Add XML element inputs
-		for (const childType of childTypes) {
-			this.addXmlInData({
-				name: childType,
-				tag: childType,
-				isArray: true,
-				type: `xmlElement|${childType}`,
-			})
-		}
+		this.addXmlInData({
+			name: 'children',
+			isArray: true,
+			type: `xmlElement:${childTypes.join('|')}`,
+		})
 
 		// Add XML output
 		if (outData) {
@@ -101,10 +98,14 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		if (xmlType.startsWith('real')) {
 			type = xmlSubType && xmlSubType.endsWith('2d') ? 'vector' : 'number';
 			controlType = assignControl(type);
-		} else if (xmlType === 'string') {
+		} else if (xmlType.startsWith('R1Tensor')) {
+			type = 'vector'
+			controlType = assignControl(type)
+		}
+		else if (xmlType === 'string') {
 			type = 'string';
 		} else {
-			`xmlAttr|${type}`
+			`xmlAttr:${type}`
 		}
 		isArray = xmlSubType && xmlSubType.startsWith('array') || isArray;
 
@@ -134,11 +135,11 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 			}
 		});
 
-		this.height += isArray ? 37 : 65;
+		this.height += isArray ? 37 : 67;
 	}
 
 	override data(inputs?: Record<string, unknown>): { value: XMLData } {
-		const children: XMLData[] = [];
+		let children: XMLData[] = [];
 		for (const [key, { tag }] of Object.entries(this.xmlInputs)) {
 			const data = this.getData(key, inputs) as XMLData;
 			if (data) {
@@ -153,7 +154,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 						})
 					);
 				} else {
-					children.push(data);
+					children = [...children, ...data instanceof Array ? data : [data]]
 				}
 			}
 		}
