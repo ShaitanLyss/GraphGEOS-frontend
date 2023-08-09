@@ -57,49 +57,8 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 
 		if (xmlProperties)
 			xmlProperties.forEach(({ name, type, isArray, controlType, required, pattern }) => {
-				if (name.toLowerCase() === 'name') return;
-				if (!required) return;
-				this.xmlProperties.add(name);
+				this.addInAttribute({ name, type, isArray, controlType, required, pattern, initialValues });
 				
-				const xmlTypePattern = /([^\W_]+)(?:_([^\W_]+))?/gm;
-				const [, xmlType, xmlSubType] = xmlTypePattern.exec(type) || [];
-				if (xmlType.startsWith('real')) {
-					type = xmlSubType && xmlSubType.endsWith('2d') ? 'vector' : 'number';
-					controlType = assignControl(type);
-				} else if (xmlType === 'string') {
-					type = 'string';
-				} else {
-					`xmlAttr|${type}`
-				}
-				isArray = xmlSubType && xmlSubType.startsWith('array') || isArray;
-				
-				if (type === 'vector') this.xmlVectorProperties.add(name);
-				let control = undefined;
-				switch(type) {
-
-				}
-				this.addInData({
-					name: name,
-					displayName: titlelize(name),
-					socketLabel: titlelize(name),
-					type: type as SocketType,
-					isArray: isArray,
-					control: isArray ? undefined : controlType && {
-						type: controlType,
-						options: {
-							label: titlelize(name),
-							initial: initialValues[name],
-							pattern: pattern,
-							debouncedOnChange: (value) => {
-								console.log("debouncedOnChange", value)
-								this.state.attributeValues[name] = value;
-								this.getDataflowEngine().reset(this.id);
-							}
-						}
-					}
-				});
-				
-				this.height += isArray? 37 : 65;
 			});
 
 
@@ -130,6 +89,52 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		for (const [key, value] of Object.entries(attributeValues)) {
 			(this.inputs[key]?.control as InputControl)?.setValue(value);
 		}
+	}
+
+	addInAttribute({ name, type, isArray, controlType, required, pattern, initialValues = {} }: XmlAttributeDefinition & { initialValues?: Record<string, unknown>}) {
+		if (name.toLowerCase() === 'name') return;
+		if (!required) return;
+		this.xmlProperties.add(name);
+
+		const xmlTypePattern = /([^\W_]+)(?:_([^\W_]+))?/gm;
+		const [, xmlType, xmlSubType] = xmlTypePattern.exec(type) || [];
+		if (xmlType.startsWith('real')) {
+			type = xmlSubType && xmlSubType.endsWith('2d') ? 'vector' : 'number';
+			controlType = assignControl(type);
+		} else if (xmlType === 'string') {
+			type = 'string';
+		} else {
+			`xmlAttr|${type}`
+		}
+		isArray = xmlSubType && xmlSubType.startsWith('array') || isArray;
+
+		if (type === 'vector') this.xmlVectorProperties.add(name);
+		let control = undefined;
+		switch (type) {
+
+		}
+		this.addInData({
+			name: name,
+			displayName: titlelize(name),
+			socketLabel: titlelize(name),
+			type: type as SocketType,
+			isArray: isArray,
+			control: isArray ? undefined : controlType && {
+				type: controlType,
+				options: {
+					label: titlelize(name),
+					initial: initialValues[name],
+					pattern: pattern,
+					debouncedOnChange: (value) => {
+						console.log("debouncedOnChange", value)
+						this.state.attributeValues[name] = value;
+						this.getDataflowEngine().reset(this.id);
+					}
+				}
+			}
+		});
+
+		this.height += isArray ? 37 : 65;
 	}
 
 	override data(inputs?: Record<string, unknown>): { value: XMLData } {
