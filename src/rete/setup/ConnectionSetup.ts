@@ -4,7 +4,7 @@ import type { NodeFactory } from '$rete/node/NodeFactory';
 import type { Schemes } from '$rete/node/Schemes';
 import type { Area2D, AreaPlugin } from 'rete-area-plugin';
 import { Setup } from './Setup';
-import { BidirectFlow, ClassicFlow, ConnectionPlugin, EventType, Presets, SocketData } from 'rete-connection-plugin';
+import { BidirectFlow, ClassicFlow, ConnectionPlugin, EventType, Presets, SocketData, ClassicParams } from 'rete-connection-plugin';
 import { isConnectionInvalid } from '$rete/plugin/typed-sockets';
 import type { Socket } from '$rete/socket/Socket';
 import { notifications } from '@mantine/notifications';
@@ -104,8 +104,9 @@ export class ConnectionSetup extends Setup {
 		const connection = new MyConnectionPlugin(factory);
 		Presets.classic.setup();
 		connection.addPreset(
-			() =>
-				new BidirectFlow({
+			(socketData: SocketData & {payload: Socket}) => {
+				console.log("connectionPlugin", socketData)
+				const params: ClassicParams<Schemes> = {
 					makeConnection(from, to, context) {
 						const forward = from.side === 'output' && to.side === 'input';
 						const backward = from.side === 'input' && to.side === 'output';
@@ -122,9 +123,9 @@ export class ConnectionSetup extends Setup {
 					},
 					canMakeConnection(from, to) {
 						connection.drop();
-		
-						
-						
+
+
+
 						const forward = from.side === 'output' && to.side === 'input';
 						const backward = from.side === 'input' && to.side === 'output';
 						const [source, target] = forward ? [from, to] : backward ? [to, from] : [];
@@ -139,10 +140,10 @@ export class ConnectionSetup extends Setup {
 								return false;
 							}
 						}
-						
-						
 
-						
+
+
+
 						// this function checks if the old connection should be removed
 						if (
 							isConnectionInvalid(
@@ -161,7 +162,9 @@ export class ConnectionSetup extends Setup {
 							return false;
 						} else return true;
 					}
-				})
+				};
+				return new (socketData.payload.isArray && socketData.payload.node instanceof XmlNode && socketData.key === 'children' ? BidirectFlow : ClassicFlow)(params)
+			}
 		);
 
 		connection.addPipe(async (ctx) => {
