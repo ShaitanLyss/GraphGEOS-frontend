@@ -89,7 +89,7 @@
 		<textarea
 			class="w-full rounded-md bg-surface-100-800-token
 			 text-surface-900-50-token border-token 
-			 focus:border-primary-500 focus:ring-primary-500
+			 focus:border-primary-500 focus:ring-primary-500 transition-colors
 			 "
 			{value}
 			{readonly}
