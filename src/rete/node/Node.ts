@@ -298,6 +298,14 @@ export class Node<
 			{ isRequired: isRequired }
 		);
 		if (control) {
+			if (control.options) {
+				const debouncedOnChange = control.options.debouncedOnChange;
+				control.options.debouncedOnChange = (value: unknown) => {
+					if (debouncedOnChange)
+						debouncedOnChange(value);
+					this.getDataflowEngine().reset(this.id);
+				};
+				}
 			input.addControl(new InputControl(control.type, control.options));
 		}
 		this.addInput(name, input as unknown as Input<Exclude<Inputs[keyof Inputs], undefined>>);

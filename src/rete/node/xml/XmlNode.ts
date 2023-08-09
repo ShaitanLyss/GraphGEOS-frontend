@@ -5,6 +5,7 @@ import type { Socket } from '../../socket/Socket';
 import type { SocketType, XMLAttrType } from '$rete/plugin/typed-sockets';
 import { XMLData } from './XMLData';
 import type { InputControl } from '$rete/control/Control';
+import { assignControl } from '$rete/customization/utils';
 
 export type XmlConfig = {
 	noName?: boolean;
@@ -59,28 +60,46 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 				if (name.toLowerCase() === 'name') return;
 				if (!required) return;
 				this.xmlProperties.add(name);
+				
+				const xmlTypePattern = /([^\W_]+)(?:_([^\W_]+))?/gm;
+				const [, xmlType, xmlSubType] = xmlTypePattern.exec(type) || [];
+				if (xmlType.startsWith('real')) {
+					type = xmlSubType && xmlSubType.endsWith('2d') ? 'vector' : 'number';
+					controlType = assignControl(type);
+				} else if (xmlType === 'string') {
+					type = 'string';
+				} else {
+					`xmlAttr|${type}`
+				}
+				isArray = xmlSubType && xmlSubType.startsWith('array') || isArray;
+				
 				if (type === 'vector') this.xmlVectorProperties.add(name);
+				let control = undefined;
+				switch(type) {
 
+				}
 				this.addInData({
 					name: name,
 					displayName: titlelize(name),
 					socketLabel: titlelize(name),
-					type: `xmlAttr|${type}` as XMLAttrType,
+					type: type as SocketType,
 					isArray: isArray,
-					control: controlType && {
+					control: isArray ? undefined : controlType && {
 						type: controlType,
 						options: {
 							label: titlelize(name),
 							initial: initialValues[name],
 							pattern: pattern,
 							debouncedOnChange: (value) => {
+								console.log("debouncedOnChange", value)
 								this.state.attributeValues[name] = value;
 								this.getDataflowEngine().reset(this.id);
 							}
 						}
 					}
 				});
-				this.height += 65;
+				
+				this.height += isArray? 37 : 65;
 			});
 
 

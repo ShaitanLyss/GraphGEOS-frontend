@@ -14,8 +14,9 @@
 
 	// Debounce value
 	$: if (!isFirstSet) {
-		data.setValue(debouncedValue);
-		if (data?.options?.debouncedOnChange) data.options.debouncedOnChange(debouncedValue);
+		const val = data.type === 'vector' ? data.value : debouncedValue;
+		data.setValue(val);
+		if (data?.options?.debouncedOnChange) data.options.debouncedOnChange(val);
 	}
 
 	function change(event: Event) {
@@ -23,6 +24,7 @@
 			isFirstSet = false;
 			return;
 		}
+		
 		if (pattern) {
 			console.log("pattern")
 			const target = event.target as HTMLInputElement;
@@ -117,6 +119,7 @@
 				value={value.x}
 				readOnly={readonly}
 				on:input={(e) => {
+					change(e);
 					const val = { ...value, x: e.currentTarget.value };
 					data.setValue(val);
 				}}
@@ -128,6 +131,7 @@
 				value={value.y}
 				{readonly}
 				on:input={(e) => {
+					change(e)
 					const val = { ...value, y: e.currentTarget.value };
 					data.setValue(val);
 				}}
@@ -139,6 +143,7 @@
 				value={value.z}
 				{readonly}
 				on:input={(e) => {
+					change(e)
 					const val = { ...value, z: e.currentTarget.value };
 					data.setValue(val);
 				}}
