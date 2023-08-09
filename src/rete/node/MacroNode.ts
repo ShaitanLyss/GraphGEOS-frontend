@@ -62,7 +62,7 @@ export class MacroNode extends Node {
 		saveData: NodeEditorSaveData;
 		graphId: UUID;
 	}) {
-		super({ factory, params: { saveData, graphId }, height: 25 });
+		super({ factory, params: { saveData, graphId }, height: 70, width: 200 });
 		this.graphId = graphId;
 		this.macroEditor = new NodeEditor();
 		this.macroFactory = new NodeFactory({
@@ -73,9 +73,9 @@ export class MacroNode extends Node {
 		for (const node of saveData.nodes) {
 			numSockets += node.selectedInputs.length + node.selectedOutputs.length;
 		}
-		this.height += numSockets * 55;
+		// this.height += numSockets * 55;
 
-		this.initializePromise = this.initialize({ graphId, saveData });
+		this.initializePromise = this.initialize({ graphId, saveData, setHeight: (height: number) => this.setHeight(height) });
 		this.onRemoveIngoingConnection = (conn: Connection) => {
 			const macroKey = conn.targetInput;
 			const inputNode = this.inputNodes[macroKey];
@@ -94,8 +94,12 @@ export class MacroNode extends Node {
 		// }
 	}
 
-	async initialize(params: { graphId: UUID; saveData: NodeEditorSaveData }): Promise<void> {
-		const { saveData } = params;
+	setHeight(height: number) {
+		this.height = height;
+	}
+
+	async initialize(params: { graphId: UUID; saveData: NodeEditorSaveData; setHeight: (height: number) => void}): Promise<void> {
+		const { saveData, setHeight } = params;
 		// const data = (await new GetGraphStore().fetch({ variables: { id: graphId } })).data?.graph.data;
 		// if (data === undefined) throw new Error("Graph not found : " + graphId);
 		// const saveData: NodeEditorSaveData = JSON.parse(data);
@@ -106,6 +110,7 @@ export class MacroNode extends Node {
 				const macroKey = key + '-' + node.id;
 				if (input.socket instanceof ExecSocket) {
 					this.addInExec(macroKey, input.socket.name);
+					setHeight(this.height + 33)
 					continue;
 				}
 
@@ -114,7 +119,7 @@ export class MacroNode extends Node {
 				await this.macroEditor.addNewConnection(inputNode, 'value', node, key);
 				this.inputNodes[macroKey] = inputNode;
 
-				const baseInputControl = input.control as InputControl<'text'>;
+				const baseInputControl = input.control as InputControl<'text'> | undefined;
 
 				const macroInput = this.addInData({
 					name: macroKey,
@@ -123,7 +128,7 @@ export class MacroNode extends Node {
 					isArray: input.socket.isArray,
 					isRequired: input.socket.isRequired,
 					socketLabel: input.socket.name,
-					control: {
+					control: baseInputControl ? {
 						type: baseInputControl.type,
 						options: {
 							...baseInputControl.options,
@@ -132,8 +137,10 @@ export class MacroNode extends Node {
 								inputNode.setValue(val);
 							}
 						}
-					}
+					} : undefined
 				});
+				setHeight(this.height + (baseInputControl ? 65 : 37));
+				if (baseInputControl)
 				inputNode.setValue(baseInputControl.value);
 				
 			}
@@ -157,7 +164,7 @@ export class MacroNode extends Node {
 					});
 
 					await this.macroEditor.addNewConnection(node, microKey, execNode, 'exec');
-
+					setHeight(this.height + 33);
 					continue;
 				}
 				this.addOutput(
@@ -169,6 +176,7 @@ export class MacroNode extends Node {
 						})
 					)
 				);
+				setHeight(this.height + 37);
 			}
 		}
 		this.updateElement();
