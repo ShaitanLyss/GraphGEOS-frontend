@@ -6,6 +6,7 @@ import { ExecSocket } from '$rete/socket/ExecSocket';
 import type { UUID } from 'crypto';
 import { DataflowEngine } from 'rete-engine';
 import type { Schemes } from './Schemes';
+import { getLeavesFromOutput } from './utils';
 
 class InputNode extends Node {
 	private value: unknown;
@@ -28,16 +29,16 @@ class InputNode extends Node {
 }
 
 class OutExecNode extends Node {
-	onExecute: () => void;
+	onExecute: () => Promise<void>;
 
-	constructor({ factory, onExecute }: { factory: NodeFactory; onExecute: () => void }) {
+	constructor({ factory, onExecute }: { factory: NodeFactory; onExecute: () => Promise<void> }) {
 		super({ factory });
 		this.onExecute = onExecute;
 		this.addInExec();
 	}
 
-	override execute(input: string, forward: (output: string) => unknown): void {
-		this.onExecute();
+	override async  execute(input: string, forward: (output: string) => unknown): Promise<void> {
+		await this.onExecute();
 		super.execute(input, forward);
 	}
 }
@@ -140,11 +141,13 @@ export class MacroNode extends Node {
 				if (output.socket instanceof ExecSocket) {
 					this.addOutExec(macroKey, output.socket.name);
 					const execNode = await this.macroFactory.addNode(OutExecNode, {
-						onExecute: () => {
+						onExecute: async () => {
 							if (macroKey in this.outgoingExecConnections) {
 								const conn = this.outgoingExecConnections[macroKey];
 								if (!this.forward) throw new Error('Forward not set');
+								const promises = this.getWaitPromises(getLeavesFromOutput(this, macroKey));
 								this.factory.getControlFlowEngine().execute(conn.target, conn.targetInput);
+								await Promise.all(promises);
 							}
 							// this.execute(macroKey, () => {});
 						}
