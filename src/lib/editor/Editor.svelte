@@ -27,9 +27,9 @@
 	import type { UploadGraphModalMeta } from '$lib/modals/types';
 	import { MacroNode } from '$rete/node/MacroNode';
 	import type { UUID } from 'crypto';
-	import { getScale, getTranslateValues } from '$utils/html';
+	import { clientToSurfacePos, getScale, getTranslateValues, translateNodeFromGlobal } from '$utils/html';
 	import { spawnMoonMenu } from '$lib/context-menu/moonContextMenu';
-	import type { ConnectionDropEvent } from '$rete/setup/ConnectionSetup';
+	import { ConnectionDropEvent } from '$rete/setup/ConnectionSetup';
 
 	// import {} from '@fortawesome/free-regular-svg-icons';
 
@@ -191,35 +191,19 @@
 		const node = await factory.addNode(MacroNode, { saveData: saveData, graphId });
 		if (!node) throw new Error('Node not created');
 		// Move node to drop position
-		const area = factory.getArea();
-		if (!area) throw new Error('No area');
-		const nodeView = area.nodeViews.get(node.id);
-		if (!nodeView) throw new Error('Node view not found');
-		
-
-		nodeView.translate(...clientToSurfacePos({x: event.clientX, y: event.clientY, factory: factory}));
+		translateNodeFromGlobal({globalPos: {x: event.clientX, y: event.clientY}, node, factory});
 
 		// nodeView.translate(event.clientX - surfacePos.x, event.clientY - surfacePos.y);
 	}
 
-	function clientToSurfacePos({x, y, factory}: {x: number, y: number, factory: NodeFactory}): [number, number] {
-		const area = factory.getArea();
-		if (!area) throw new Error('No area');
-		const surface = area.container.children[0] as HTMLElement;
-		const surfaceRect = surface.getBoundingClientRect();
-		const surfacePos = { x: surfaceRect.left, y: surfaceRect.top };
+	
 
-		// Calculate scaled position
-		const zoomScale = getScale(surface); // Implement this function to retrieve the zoom scale
-		const scaledX = (x - surfacePos.x) / zoomScale.scaleX;
-		const scaledY = (y - surfacePos.y) / zoomScale.scaleY;
-
-		return [scaledX, scaledY];
-	}
+	
 
 	function onConnectionDrop(event: ConnectionDropEvent) {
-			console.log("connection drop on editor");
-			spawnMoonMenu({pos: event.pos, drop: event.drop});
+			console.log("connection drop on editor", event.socketData);
+			
+			spawnMoonMenu({connDropEvent: event, drop: () => this.drop()});
 	}
 </script>
 

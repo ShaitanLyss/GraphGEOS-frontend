@@ -4,20 +4,28 @@ import type { NodeFactory } from '$rete/node/NodeFactory';
 import type { Schemes } from '$rete/node/Schemes';
 import type { Area2D, AreaPlugin } from 'rete-area-plugin';
 import { Setup } from './Setup';
-import { ClassicFlow, ConnectionPlugin, EventType, Presets } from 'rete-connection-plugin';
+import { ClassicFlow, ConnectionPlugin, EventType, Presets, SocketData } from 'rete-connection-plugin';
 import { isConnectionInvalid } from '$rete/plugin/typed-sockets';
 import type { Socket } from '$rete/socket/Socket';
 import { notifications } from '@mantine/notifications';
 import type { Root } from 'rete';
 import { findSocket } from '$rete/socket/utils';
-import type { Node } from '$rete/node/Node';
+import type { Connection, Node } from '$rete/node/Node';
+import { moonMenuVisibleStore } from '$lib/context-menu/moonContextMenu';
 
 let lastClickedSocket = false;
+let lastPickedSockedData: SocketData | undefined;
+
+let dropMenuVisible = false;
+moonMenuVisibleStore.subscribe((value) => {
+	dropMenuVisible = value;
+});
+
 
 export class ConnectionDropEvent extends Event {
 	public readonly pos: { x: number; y: number };
 
-	constructor(public readonly pointerEvent: PointerEvent, public readonly drop: () => void) {
+	constructor(public readonly pointerEvent: PointerEvent, public readonly drop: () => void, public readonly socketData: SocketData & {payload: Socket}, public readonly factory: NodeFactory) {
 		super('connectiondrop');
 		this.pos = { x: pointerEvent.clientX, y: pointerEvent.clientY };
 	}
@@ -25,6 +33,10 @@ export class ConnectionDropEvent extends Event {
 
 class MyConnectionPlugin extends ConnectionPlugin<Schemes, AreaExtra> {
 	picked: boolean = false;
+
+	constructor(private factory: NodeFactory) {
+		super();
+	}
 
 	override async pick(event: PointerEvent, type: EventType): Promise<void> {
 		// select socket on right click
@@ -37,13 +49,13 @@ class MyConnectionPlugin extends ConnectionPlugin<Schemes, AreaExtra> {
 				}
 			}
 			
-			if (type === 'up' && this.picked) {
+			if (type === 'up' && this.picked && lastPickedSockedData) {
 				this.picked = false;
 				// Check if the pointer is over a socket
 				
 				if (!droppedSocketData) {
 					const area: AreaPlugin<Schemes, AreaExtra> = this.parent;
-					area.container.dispatchEvent(new ConnectionDropEvent(event, () => this.drop()));
+					area.container.dispatchEvent(new ConnectionDropEvent(event, () => this.drop(), lastPickedSockedData as unknown as SocketData & {payload: Socket}, this.factory));
 					return;
 				}
 			}
@@ -85,7 +97,7 @@ export class ConnectionSetup extends Setup {
 		//     console.log("pointerdown", lastButtonClicked)
 		//     return false;
 		// }, false);
-		const connection = new MyConnectionPlugin();
+		const connection = new MyConnectionPlugin(factory);
 		Presets.classic.setup();
 		connection.addPreset(
 			() =>
@@ -149,8 +161,15 @@ export class ConnectionSetup extends Setup {
 		);
 
 		connection.addPreset(Presets.classic.setup());
-		connection.addPipe((ctx) => {
-			// prevent context menu from appearing when right clicking on a socket
+		connection.addPipe(async (ctx) => {
+			// prevent the connection from moving when the drop menu is visible
+			if (ctx.type === "pointermove" && dropMenuVisible) {
+				return;
+			}
+			
+			if (ctx.type ==="connectionpick") {
+				lastPickedSockedData = ctx.data.socket;
+			}
 			if (ctx.type === 'contextmenu' && lastClickedSocket) {
 				lastClickedSocket = false;
 				ctx.data.event.preventDefault();

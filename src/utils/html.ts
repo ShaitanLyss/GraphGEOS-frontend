@@ -1,3 +1,5 @@
+import type { NodeFactory, Node } from "$rete";
+
 export function getTranslateValues(element: HTMLElement): {
 	translateX: number;
 	translateY: number;
@@ -35,4 +37,27 @@ export function getScale(element: HTMLElement): { scaleX: number; scaleY: number
 	}
 
 	return { scaleX, scaleY };
+}
+
+export function clientToSurfacePos({ x, y, factory }: { x: number, y: number, factory: NodeFactory }): [number, number] {
+	const area = factory.getArea();
+	if (!area) throw new Error('No area');
+	const surface = area.container.children[0] as HTMLElement;
+	const surfaceRect = surface.getBoundingClientRect();
+	const surfacePos = { x: surfaceRect.left, y: surfaceRect.top };
+
+	// Calculate scaled position
+	const zoomScale = getScale(surface); // Implement this function to retrieve the zoom scale
+	const scaledX = (x - surfacePos.x) / zoomScale.scaleX;
+	const scaledY = (y - surfacePos.y) / zoomScale.scaleY;
+
+	return [scaledX, scaledY];
+}
+
+export function translateNodeFromGlobal({ globalPos, node, factory }: { globalPos: { x: number, y: number }, node: Node, factory: NodeFactory }) {
+	const area = factory.getArea();
+	if (!area) throw new Error('No area');
+	const nodeView = area.nodeViews.get(node.id);
+	if (!nodeView) throw new Error('Node view not found');
+	nodeView.translate(...clientToSurfacePos({ x: globalPos.x, y: globalPos.y, factory: factory }));
 }

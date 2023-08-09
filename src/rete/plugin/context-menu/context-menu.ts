@@ -11,6 +11,7 @@ import { GetXmlSchemaStore } from '$houdini';
 import { XmlNode } from '$rete/node/xml/XmlNode';
 import type { XmlAttributeDefinition } from '$rete/node/xml/types';
 import type { SocketType } from '../typed-sockets';
+import { moonMenuItemsStore, type MoonMenuItem } from '$lib/context-menu/moonContextMenu';
 
 type Entry = Map<string, Entry | (() => Node | Promise<Node>)>;
 function isClassConstructor(obj: unknown): boolean {
@@ -74,46 +75,61 @@ export class ContextMenuSetup extends Setup {
 
 		const xmlSchema = (await new GetXmlSchemaStore().fetch()).data?.geos.xmlSchema;
 		if (xmlSchema) {
+			const moonItems: MoonMenuItem[] = [];
 			for (const complexType of xmlSchema.complexTypes) {
 				const name = complexType.name.match(/^(.*)Type$/)?.at(1);
 				if (!name) throw new Error(`Invalid complex type name: ${complexType.name}`);
+
+				const xmlNodeAction: (factory: NodeFactory) => Node = () =>
+					new XmlNode({
+						label: name,
+						factory,
+
+						xmlConfig: {
+							noName: !complexType.attributes.some((attr) => attr.name === 'name'),
+							childTypes: complexType.childTypes.map((childType) => {
+								const childName = childType.match(/^(.*)Type$/)?.at(1);
+								if (!childName) return childType;
+								return childName;
+							}),
+							xmlTag: name,
+							outData: {
+								name: name,
+								type: `xmlElement:${name}`,
+								socketLabel: name,
+							},
+
+							xmlProperties: complexType.attributes.map<XmlAttributeDefinition>((attr) => {
+								return {
+									name: attr.name,
+									required: attr.required,
+									pattern: attr.pattern,
+									type: attr.type,
+									controlType: 'text'
+								};
+							})
+						}
+
+					});
+
+				moonItems.push({
+					label: name,
+					outType: name,
+					inChildrenTypes: complexType.childTypes.map((childType) => {
+						const childName = childType.match(/^(.*)Type$/)?.at(1);
+						if (!childName) return childType;
+						return childName;
+					}),
+					action: xmlNodeAction
+				})
 				pushMenuItem(
 					items,
 					['XML', complexType.name],
-					() =>
-						new XmlNode({
-							label: name,
-							factory,
-
-							xmlConfig: {
-								noName: !complexType.attributes.some((attr) => attr.name === 'name'),
-								childTypes: complexType.childTypes.map((childType) => {
-									const childName = childType.match(/^(.*)Type$/)?.at(1);
-									if (!childName) return childType;
-									return childName;
-								}),
-								xmlTag: name,
-								outData: {
-									name: name,
-									type: `xmlElement:${name}`,
-									socketLabel: name,
-								},
-
-								xmlProperties: complexType.attributes.map<XmlAttributeDefinition>((attr) => {
-									return {
-										name: attr.name,
-										required: attr.required,
-										pattern: attr.pattern,
-										type: attr.type,
-										controlType: 'text'
-									};
-								})
-							}
-
-						}),
+					() => xmlNodeAction(factory),
 					factory
-				);
+					)
 			}
+			moonMenuItemsStore.set(moonItems);
 		}
 
 		const modules = import.meta.glob('../../node/**/*.ts');
