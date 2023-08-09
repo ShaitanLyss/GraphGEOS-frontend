@@ -127,12 +127,15 @@ export class MacroNode extends Node {
 						type: baseInputControl.type,
 						options: {
 							...baseInputControl.options,
+							initial: baseInputControl.value,
 							debouncedOnChange: async (val: unknown) => {
 								inputNode.setValue(val);
 							}
 						}
 					}
 				});
+				inputNode.setValue(baseInputControl.value);
+				
 			}
 			for (const [microKey, output] of Object.entries(
 				node.socketSelectionComponent.selectedOutputs()
