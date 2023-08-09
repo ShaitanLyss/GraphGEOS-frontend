@@ -38,7 +38,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		console.log("xmlNodeParams", xmlNodeParams)
 		const { outData, xmlProperties, childTypes = [] } = xmlConfig;
 		const { noName = false } = xmlConfig;
-		super({ ...xmlNodeParams, width: 220 });
+		super({ ...xmlNodeParams, width: 220, height: 40 });
 
 		if (!noName) {
 			let name = xmlNodeParams.label;
@@ -80,7 +80,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 						}
 					}
 				});
-				this.height += 45;
+				this.height += 65;
 			});
 
 
@@ -95,13 +95,15 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		}
 
 		// Add XML output
-		if (outData)
+		if (outData) {
 			this.addOutData({
 				name: 'value',
 				displayName: '',
 				socketLabel: outData.socketLabel,
 				type: outData.type
 			});
+			this.height += 45;
+			}
 	}
 
 	override applyState(): void {
@@ -185,6 +187,6 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 			type: type,
 			isArray: isArray
 		});
-		this.height += 45;
+		this.height += 37;
 	}
 }

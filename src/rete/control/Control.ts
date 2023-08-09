@@ -2,7 +2,7 @@ import { ClassicPreset, getUID } from 'rete';
 
 export class Control extends ClassicPreset.Control {}
 
-export type InputControlTypes = 'text' | 'number' | 'checkbox' | 'textarea' | 'vector';
+export type InputControlTypes = 'text' | 'number' | 'checkbox' | 'textarea' | 'vector' | "unknown";
 export type InputControlValueType<T extends InputControlTypes> = T extends 'text'
 	? string
 	: T extends 'number'
@@ -28,7 +28,7 @@ export type InputControlOptions<N> = {
 };
 
 export class InputControl<
-	T extends InputControlTypes,
+	T extends InputControlTypes = 'unknown',
 	N = InputControlValueType<T>
 > extends Control {
 	value?: N;
