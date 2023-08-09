@@ -14,6 +14,15 @@ import type { Node } from '$rete/node/Node';
 
 let lastClickedSocket = false;
 
+export class ConnectionDropEvent extends Event {
+	public readonly pos: { x: number; y: number };
+
+	constructor(public readonly pointerEvent: PointerEvent, public readonly drop: () => void) {
+		super('connectiondrop');
+		this.pos = { x: pointerEvent.clientX, y: pointerEvent.clientY };
+	}
+}
+
 class MyConnectionPlugin extends ConnectionPlugin<Schemes, AreaExtra> {
 	picked: boolean = false;
 
@@ -29,11 +38,12 @@ class MyConnectionPlugin extends ConnectionPlugin<Schemes, AreaExtra> {
 			}
 			
 			if (type === 'up' && this.picked) {
+				this.picked = false;
 				// Check if the pointer is over a socket
 				
 				if (!droppedSocketData) {
 					const area: AreaPlugin<Schemes, AreaExtra> = this.parent;
-					area.container.dispatchEvent(new Event('connectiondrop', event));
+					area.container.dispatchEvent(new ConnectionDropEvent(event, () => this.drop()));
 					return;
 				}
 			}

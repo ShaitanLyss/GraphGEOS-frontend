@@ -28,6 +28,8 @@
 	import { MacroNode } from '$rete/node/MacroNode';
 	import type { UUID } from 'crypto';
 	import { getScale, getTranslateValues } from '$utils/html';
+	import { spawnMoonMenu } from '$lib/context-menu/moonContextMenu';
+	import type { ConnectionDropEvent } from '$rete/setup/ConnectionSetup';
 
 	// import {} from '@fortawesome/free-regular-svg-icons';
 
@@ -193,18 +195,31 @@
 		if (!area) throw new Error('No area');
 		const nodeView = area.nodeViews.get(node.id);
 		if (!nodeView) throw new Error('Node view not found');
-		const surface = container.children[0] as HTMLElement;
+		
+
+		nodeView.translate(...clientToSurfacePos({x: event.clientX, y: event.clientY, factory: factory}));
+
+		// nodeView.translate(event.clientX - surfacePos.x, event.clientY - surfacePos.y);
+	}
+
+	function clientToSurfacePos({x, y, factory}: {x: number, y: number, factory: NodeFactory}): [number, number] {
+		const area = factory.getArea();
+		if (!area) throw new Error('No area');
+		const surface = area.container.children[0] as HTMLElement;
 		const surfaceRect = surface.getBoundingClientRect();
 		const surfacePos = { x: surfaceRect.left, y: surfaceRect.top };
 
 		// Calculate scaled position
 		const zoomScale = getScale(surface); // Implement this function to retrieve the zoom scale
-		const scaledX = (event.clientX - surfacePos.x) / zoomScale.scaleX;
-		const scaledY = (event.clientY - surfacePos.y) / zoomScale.scaleY;
+		const scaledX = (x - surfacePos.x) / zoomScale.scaleX;
+		const scaledY = (y - surfacePos.y) / zoomScale.scaleY;
 
-		nodeView.translate(scaledX, scaledY);
+		return [scaledX, scaledY];
+	}
 
-		// nodeView.translate(event.clientX - surfacePos.x, event.clientY - surfacePos.y);
+	function onConnectionDrop(event: ConnectionDropEvent) {
+			console.log("connection drop on editor");
+			spawnMoonMenu({pos: event.pos, drop: event.drop});
 	}
 </script>
 
@@ -257,10 +272,11 @@
 			<!-- Editor -->
 			<div
 				bind:this={container}
-				role="main"
+				role="region"
 				class="h-full"
 				class:bg-white={$modeCurrent}
 				style="z-index: {hidden ? -10 : 10};"
+				on:connectiondrop={onConnectionDrop}
 				on:dragenter={(event) => {
 					if (event.dataTransfer?.types[0] === 'rete/macronode') event.preventDefault();
 				}}

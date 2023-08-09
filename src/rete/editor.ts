@@ -74,8 +74,7 @@ export async function setupEditor(
 			editor.addPipe((context) => {
 				if (context.type === 'connectioncreated' || context.type === 'connectionremoved') {
 					const conn = context.data;
-					console.log("resetting nodes", conn.source, conn.target)
-					nodeFactory.dataflowEngine.reset(conn.source);
+					console.log("resetting node", conn.target)
 					nodeFactory.dataflowEngine.reset(conn.target);
 				}
 

@@ -22,6 +22,8 @@
 	// import 'app.css'
 	import '../app.postcss';
 	import { init } from 'svelte-i18n';
+	import MoonContextMenu from '$lib/context-menu/MoonContextMenu.svelte';
+	import { moonMenuVisibleStore } from '$lib/context-menu/moonContextMenu';
 
 	let i = 0;
 
@@ -43,5 +45,8 @@
 <slot />
 
 <react:Notifications position="top-right" zIndex="1000" />
+
+<MoonContextMenu />
+
 <Modal components={modalComponentRegistry} />
 <svelte:head>{@html `<\u{73}cript>(${setInitialClassState.toString()})();</script>`}</svelte:head>
