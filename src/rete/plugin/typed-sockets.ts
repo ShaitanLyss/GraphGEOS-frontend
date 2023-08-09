@@ -29,11 +29,12 @@ export type SocketType =
 	| XMLElementType
 	;
 export function isConnectionInvalid(outputSocket: Socket, inputSocket: Socket) {
-	const re = /(\w+):([\w|]+)/;
+	const re = /(\w+):(.+)/;
 
 
 	const [, outType, outSubtypes] = re.exec(outputSocket.type) || [];
 	const [, inType, inSubtypes] = re.exec(inputSocket.type) || [];
+	console.log(outSubtypes, inSubtypes)
 	if (inType && outType && inType === outType) {
 		if (outSubtypes === '*' || inSubtypes === '*') {
 			return false;

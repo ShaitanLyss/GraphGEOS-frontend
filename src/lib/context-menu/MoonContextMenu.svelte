@@ -12,16 +12,10 @@
 
 	import intersection from 'lodash.intersection';
 	import { translateNodeFromGlobal } from '$utils/html';
+	import { XmlNode } from '$rete/node/XML/XmlNode';
+	import { GetNameNode } from '$rete/node/XML/GetNameNode';
 
-	const menuSpawnPaddingY = 5;
-	const menuSpawnPaddingX = 5;
-
-	$: flipMenu = $moonMenuConnDropEvent?.socketData.side === 'input';
-	$: x = $moonMenuPositionStore.x + (flipMenu ? menuSpawnPaddingX : -menuSpawnPaddingX);
-	$: y = $moonMenuPositionStore.y - menuSpawnPaddingY;
-
-	let moonMenuElement: HTMLDivElement | undefined;
-
+	// setup width and height
 	let width = 0;
 	let height = 0;
 	$: {
@@ -31,6 +25,19 @@
 			height = rect.height;
 		}
 	}
+
+	const menuSpawnPaddingY = 5;
+	const menuSpawnPaddingX = 5;
+
+	$: flipMenuH = false && $moonMenuConnDropEvent?.socketData.side === 'input';
+	$: flipMenuV = $moonMenuConnDropEvent && $moonMenuConnDropEvent.pos.y + height > window.innerHeight;
+	$: console.log(flipMenuH, flipMenuV)
+	$: x = $moonMenuPositionStore.x + (flipMenuH ? menuSpawnPaddingX : -menuSpawnPaddingX);
+	$: y = $moonMenuPositionStore.y + (flipMenuV ? menuSpawnPaddingY + 5 : -menuSpawnPaddingY);
+
+	let moonMenuElement: HTMLDivElement | undefined;
+
+	
 	
 	// $moonMenuHideDelayStore = 10000;
 
@@ -70,11 +77,17 @@
 		if ($moonMenuConnDropEvent)
 			translateNodeFromGlobal({ globalPos: $moonMenuConnDropEvent.pos, factory, node });
 
+		if (!(node instanceof XmlNode) && !(node instanceof GetNameNode)) {
+			console.log(`Autoconnection non supporté vers ${node.label}`)
+			hideMenu();
+			return;
+		}
 		const editor = factory.getEditor();
+
 
 		if (socketData.side === 'output') {
 			const sourceNode = editor.getNode(socketData.nodeId);
-			await editor.addNewConnection(sourceNode, socketData.key, node, 'children')
+			await editor.addNewConnection(sourceNode, socketData.key, node, node instanceof GetNameNode ? 'xml' : 'children')
 		} else {
 			const targetNode = editor.getNode(socketData.nodeId);
 			await editor.addNewConnection(node, 'value', targetNode, socketData.key)
@@ -97,8 +110,11 @@
 			hideMenu();
 		} else {
 
-		console.log(types);
+		
 		filteredItems = $moonMenuItemsStore.filter((item) => {
+			if (item.label ==='GetName'){
+				console.log(item.inChildrenTypes, types)
+			}
 			const res = intersection(socketData.side === 'output' ? item.inChildrenTypes : [item.outType], types);
 			// console.log(item.inChildrenTypes, types)
 			
@@ -121,7 +137,7 @@
 		role="menu"
 		tabindex="0"
 		class="absolute variant-soft-secondary z-10 max-h-1-3"
-		style="position: absolute; left: {x}px; top: {y}px; transform: translate({flipMenu ? -width : 0}px, {0}px);"
+		style="position: absolute; left: {x}px; top: {y}px; transform: translate({flipMenuH ? -width : 0}px, {flipMenuV ? -height : 0}px);"
 		on:mouseenter={() => (isMouseOver = true)}
 		on:mouseleave={() => (isMouseOver = false)}
 	>

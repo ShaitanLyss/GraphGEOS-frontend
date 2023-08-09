@@ -12,7 +12,7 @@ import type { Root } from 'rete';
 import { findSocket } from '$rete/socket/utils';
 import type { Connection, Node } from '$rete/node/Node';
 import { moonMenuVisibleStore } from '$lib/context-menu/moonContextMenu';
-import { XmlNode } from '$rete/node/xml/XmlNode';
+import { XmlNode } from '$rete/node/XML/XmlNode';
 import { MakeArrayNode } from '$rete/node/data/MakeArrayNode';
 
 let lastClickedSocket = false;
@@ -105,7 +105,7 @@ export class ConnectionSetup extends Setup {
 		Presets.classic.setup();
 		connection.addPreset(
 			(socketData: SocketData & {payload: Socket}) => {
-				console.log("connectionPlugin", socketData)
+				// console.log("connectionPlugin", socketData)
 				const params: ClassicParams<Schemes> = {
 					makeConnection(from, to, context) {
 						const forward = from.side === 'output' && to.side === 'input';

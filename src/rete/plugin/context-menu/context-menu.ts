@@ -8,10 +8,11 @@ import { Setup } from '../../setup/Setup';
 import type { NodeEditor } from '../../NodeEditor';
 import type { NodeFactory } from '../../node/NodeFactory';
 import { GetXmlSchemaStore } from '$houdini';
-import { XmlNode } from '$rete/node/xml/XmlNode';
-import type { XmlAttributeDefinition } from '$rete/node/xml/types';
+import { XmlNode } from '$rete/node/XML/XmlNode';
+import type { XmlAttributeDefinition } from '$rete/node/XML/types';
 import type { SocketType } from '../typed-sockets';
 import { moonMenuItemsStore, type MoonMenuItem } from '$lib/context-menu/moonContextMenu';
+import { GetNameNode } from '$rete/node/XML/GetNameNode';
 
 type Entry = Map<string, Entry | (() => Node | Promise<Node>)>;
 function isClassConstructor(obj: unknown): boolean {
@@ -72,13 +73,48 @@ export class ContextMenuSetup extends Setup {
 		// console.log(nodeFiles);
 		const items = new Map<string, Entry>();
 
+		const modules = import.meta.glob('../../node/**/*.ts');
+		for (const [path, module] of Object.entries(modules)) {
+			const objects = await module();
+			const menuPath = path.slice('../../node/'.length);
+
+			// for (const file of nodeFiles) {
+			// 	const objects = await import(/* @vite-ignore */ `../../node/${file}`);
+
+			const nodeClasses: (typeof Node)[] = Object.values(objects).filter((value: unknown) => {
+				const prototype = (value as { prototype }).prototype;
+
+				return (
+					prototype instanceof Node &&
+					prototype.constructor &&
+					!Object.prototype.hasOwnProperty.call(prototype.constructor, '__isAbstract') &&
+					!Object.prototype.hasOwnProperty.call(prototype.constructor, 'hidden')
+				);
+			}) as (typeof Node)[];
+
+			nodeClasses.forEach((node) => pushMenuItem(items, menuPath.split(re), node, factory));
+
+			// console.log(nodeClasses);
+
+			// items.push([file, () => new node()]);
+		}
+
+		
+
 
 		const xmlSchema = (await new GetXmlSchemaStore().fetch()).data?.geos.xmlSchema;
 		if (xmlSchema) {
 			const moonItems: MoonMenuItem[] = [];
+			const complexTypesWithName: string[] = [];
 			for (const complexType of xmlSchema.complexTypes) {
 				const name = complexType.name.match(/^(.*)Type$/)?.at(1);
 				if (!name) throw new Error(`Invalid complex type name: ${complexType.name}`);
+
+				const hasNameAttribute = complexType.attributes.some((attr) => attr.name === 'name')
+				if (hasNameAttribute) 
+					complexTypesWithName.push(name);
+				
+
 
 				const xmlNodeAction: (factory: NodeFactory) => Node = () =>
 					new XmlNode({
@@ -86,7 +122,7 @@ export class ContextMenuSetup extends Setup {
 						factory,
 
 						xmlConfig: {
-							noName: !complexType.attributes.some((attr) => attr.name === 'name'),
+							noName: !hasNameAttribute,
 							childTypes: complexType.childTypes.map((childType) => {
 								const childName = childType.match(/^(.*)Type$/)?.at(1);
 								if (!childName) return childType;
@@ -127,35 +163,10 @@ export class ContextMenuSetup extends Setup {
 					['XML', complexType.name],
 					() => xmlNodeAction(factory),
 					factory
-					)
+				)
 			}
-			moonMenuItemsStore.set(moonItems);
-		}
-
-		const modules = import.meta.glob('../../node/**/*.ts');
-		for (const [path, module] of Object.entries(modules)) {
-			const objects = await module();
-			const menuPath = path.slice('../../node/'.length);
-
-			// for (const file of nodeFiles) {
-			// 	const objects = await import(/* @vite-ignore */ `../../node/${file}`);
-
-			const nodeClasses: (typeof Node)[] = Object.values(objects).filter((value: unknown) => {
-				const prototype = (value as { prototype }).prototype;
-
-				return (
-					prototype instanceof Node &&
-					prototype.constructor &&
-					!Object.prototype.hasOwnProperty.call(prototype.constructor, '__isAbstract') &&
-					!Object.prototype.hasOwnProperty.call(prototype.constructor, 'hidden')
-				);
-			}) as (typeof Node)[];
-
-			nodeClasses.forEach((node) => pushMenuItem(items, menuPath.split(re), node, factory));
-
-			// console.log(nodeClasses);
-
-			// items.push([file, () => new node()]);
+			const getNameNodeItem: MoonMenuItem = {action: (factory) => new GetNameNode({factory}), inChildrenTypes: complexTypesWithName, label:'Get Name', outType: 'string'}
+			moonMenuItemsStore.set([getNameNodeItem, ...moonItems]);
 		}
 
 
