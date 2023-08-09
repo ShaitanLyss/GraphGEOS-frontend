@@ -15,8 +15,30 @@ import type { Node } from '$rete/node/Node';
 let lastClickedSocket = false;
 
 class MyConnectionPlugin extends ConnectionPlugin<Schemes, AreaExtra> {
+	picked: boolean = false;
+
 	override async pick(event: PointerEvent, type: EventType): Promise<void> {
 		// select socket on right click
+		if (event.button == 0) {
+			const pointedElements = document.elementsFromPoint(event.clientX, event.clientY);
+			const droppedSocketData = findSocket(this.socketsCache, pointedElements);
+			if (type === 'down') {
+				if (droppedSocketData) {
+					this.picked = true;
+				}
+			}
+			
+			if (type === 'up' && this.picked) {
+				// Check if the pointer is over a socket
+				
+				if (!droppedSocketData) {
+					const area: AreaPlugin<Schemes, AreaExtra> = this.parent;
+					area.container.dispatchEvent(new Event('connectiondrop', event));
+					return;
+				}
+			}
+		}
+
 		if (event.button == 2) {
 			if (type === 'up') return;
 			const pointedElements = document.elementsFromPoint(event.clientX, event.clientY);
@@ -74,6 +96,27 @@ export class ConnectionSetup extends Setup {
 					},
 					canMakeConnection(from, to) {
 						connection.drop();
+		
+						
+						
+						const forward = from.side === 'output' && to.side === 'input';
+						const backward = from.side === 'input' && to.side === 'output';
+						const [source, target] = forward ? [from, to] : backward ? [to, from] : [];
+						if (!source || !target) return false;
+
+						const sourceNode = editor.getNode(source.nodeId);
+						const targetNode = editor.getNode(target.nodeId);
+						const conn = source.key in sourceNode.outgoingDataConnections ? sourceNode.outgoingDataConnections[source.key] : source.key in sourceNode.outgoingExecConnections ? sourceNode.outgoingExecConnections[source.key] : undefined;
+						if (conn) {
+							if (conn.target === target.nodeId && conn.targetInput === target.key) {
+								console.log("Connection already exists")
+								return false;
+							}
+						}
+						
+						
+
+						
 						// this function checks if the old connection should be removed
 						if (
 							isConnectionInvalid(
@@ -98,10 +141,6 @@ export class ConnectionSetup extends Setup {
 		connection.addPreset(Presets.classic.setup());
 		connection.addPipe((ctx) => {
 			// prevent context menu from appearing when right clicking on a socket
-			if (ctx.type === 'connectiondrop') {
-				console.log(ctx.data)
-			};
-			
 			if (ctx.type === 'contextmenu' && lastClickedSocket) {
 				lastClickedSocket = false;
 				ctx.data.event.preventDefault();
