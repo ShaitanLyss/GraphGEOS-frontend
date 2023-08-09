@@ -67,6 +67,15 @@ export class NodeFactory {
 	}
 	private state: Map<string, unknown> = new Map();
 
+	useState<T = unknown>(id: string, key: string, value?: T): {get: () => T; set: (value: T) => void} {
+		const stateKey = id + '_' + key;
+		if (!this.state.has(stateKey)) this.state.set(stateKey, value);
+		return {
+			get: () => this.state.get(stateKey) as T,
+			set: (value: T) => this.state.set(stateKey, value)
+		};
+	}
+
 	getState<T>(id: string, key: string, value?: T): T {
 		const stateKey = id + '_' + key;
 		if (!this.state.has(stateKey)) this.state.set(stateKey, value);
@@ -76,6 +85,7 @@ export class NodeFactory {
 	setState(id: string, key: string, value: unknown) {
 		this.state.set(id + '_' + key, value);
 	}
+
 	lastAddedNode?: Node;
 	async addNode<T extends Node, Params = Record<string, unknown>>(
 		nodeClass: new (params: Params) => T,
