@@ -13,8 +13,24 @@
 	import intersection from 'lodash.intersection';
 	import { translateNodeFromGlobal } from '$utils/html';
 
-	$: x = $moonMenuPositionStore.x;
-	$: y = $moonMenuPositionStore.y;
+	const menuSpawnPaddingY = 5;
+	const menuSpawnPaddingX = 5;
+
+	$: flipMenu = $moonMenuConnDropEvent?.socketData.side === 'input';
+	$: x = $moonMenuPositionStore.x + (flipMenu ? menuSpawnPaddingX : -menuSpawnPaddingX);
+	$: y = $moonMenuPositionStore.y - menuSpawnPaddingY;
+
+	let moonMenuElement: HTMLDivElement | undefined;
+
+	let width = 0;
+	let height = 0;
+	$: {
+		if (moonMenuElement) {
+			const rect = moonMenuElement.getBoundingClientRect();
+			width = rect.width;
+			height = rect.height;
+		}
+	}
 	
 	// $moonMenuHideDelayStore = 10000;
 
@@ -74,11 +90,12 @@
 	$: if ($moonMenuConnDropEvent) {
 		const socketData = $moonMenuConnDropEvent.socketData;
 		const socket = $moonMenuConnDropEvent.socketData.payload;
-		console.log(socketData.side)
 		
 
-		const types = socket.type.split(":")[1].split("|");
-		
+		const types = socket.type.split(":")[1]?.split("|");
+		if (!types) {
+			hideMenu();
+		} else {
 
 		console.log(types);
 		filteredItems = $moonMenuItemsStore.filter((item) => {
@@ -92,6 +109,7 @@
 		if (filteredItems.length === 0) {
 			hideMenu();
 		}
+	}
 
 	}
 	
@@ -99,10 +117,11 @@
 
 {#if $moonMenuVisibleStore}
 	<div
+		bind:this={moonMenuElement}
 		role="menu"
 		tabindex="0"
 		class="absolute variant-soft-secondary z-10 max-h-1-3"
-		style="position: absolute; left: {x}px; top: {y}px;"
+		style="position: absolute; left: {x}px; top: {y}px; transform: translate({flipMenu ? -width : 0}px, {0}px);"
 		on:mouseenter={() => (isMouseOver = true)}
 		on:mouseleave={() => (isMouseOver = false)}
 	>
