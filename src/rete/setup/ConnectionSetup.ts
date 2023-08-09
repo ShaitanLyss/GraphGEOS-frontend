@@ -4,7 +4,7 @@ import type { NodeFactory } from '$rete/node/NodeFactory';
 import type { Schemes } from '$rete/node/Schemes';
 import type { Area2D, AreaPlugin } from 'rete-area-plugin';
 import { Setup } from './Setup';
-import { ClassicFlow, ConnectionPlugin, EventType, Presets, SocketData } from 'rete-connection-plugin';
+import { BidirectFlow, ClassicFlow, ConnectionPlugin, EventType, Presets, SocketData } from 'rete-connection-plugin';
 import { isConnectionInvalid } from '$rete/plugin/typed-sockets';
 import type { Socket } from '$rete/socket/Socket';
 import { notifications } from '@mantine/notifications';
@@ -12,9 +12,11 @@ import type { Root } from 'rete';
 import { findSocket } from '$rete/socket/utils';
 import type { Connection, Node } from '$rete/node/Node';
 import { moonMenuVisibleStore } from '$lib/context-menu/moonContextMenu';
+import { XmlNode } from '$rete/node/xml/XmlNode';
+import { MakeArrayNode } from '$rete/node/data/MakeArrayNode';
 
 let lastClickedSocket = false;
-let lastPickedSockedData: SocketData | undefined;
+let lastPickedSockedData: SocketData & {payload: Socket} | undefined;
 
 let dropMenuVisible = false;
 moonMenuVisibleStore.subscribe((value) => {
@@ -42,9 +44,11 @@ class MyConnectionPlugin extends ConnectionPlugin<Schemes, AreaExtra> {
 		// select socket on right click
 		if (event.button == 0) {
 			const pointedElements = document.elementsFromPoint(event.clientX, event.clientY);
-			const droppedSocketData = findSocket(this.socketsCache, pointedElements);
+			const droppedSocketData = findSocket(this.socketsCache, pointedElements) as SocketData & {payload: Socket} | undefined;
+			const node = droppedSocketData?.payload.node;
+			
 			if (type === 'down') {
-				if (droppedSocketData) {
+				if (droppedSocketData) {					
 					this.picked = true;
 				}
 			}
@@ -53,7 +57,7 @@ class MyConnectionPlugin extends ConnectionPlugin<Schemes, AreaExtra> {
 				this.picked = false;
 				// Check if the pointer is over a socket
 				
-				if (!droppedSocketData) {
+				if (!droppedSocketData && (lastPickedSockedData.payload.node instanceof XmlNode || lastPickedSockedData.payload.node instanceof MakeArrayNode)) {
 					const area: AreaPlugin<Schemes, AreaExtra> = this.parent;
 					area.container.dispatchEvent(new ConnectionDropEvent(event, () => this.drop(), lastPickedSockedData as unknown as SocketData & {payload: Socket}, this.factory));
 					return;
@@ -101,7 +105,7 @@ export class ConnectionSetup extends Setup {
 		Presets.classic.setup();
 		connection.addPreset(
 			() =>
-				new ClassicFlow({
+				new BidirectFlow({
 					makeConnection(from, to, context) {
 						const forward = from.side === 'output' && to.side === 'input';
 						const backward = from.side === 'input' && to.side === 'output';
@@ -160,7 +164,6 @@ export class ConnectionSetup extends Setup {
 				})
 		);
 
-		connection.addPreset(Presets.classic.setup());
 		connection.addPipe(async (ctx) => {
 			// prevent the connection from moving when the drop menu is visible
 			if (ctx.type === "pointermove" && dropMenuVisible) {
