@@ -9,6 +9,7 @@
 	let debouncedValue = value;
 	let debouncedTimer: NodeJS.Timeout | undefined;
 	let options = data.options;
+	const pattern = options?.pattern;
 	let isFirstSet = true;
 
 	// Debounce value
@@ -20,6 +21,15 @@
 	function change(event: Event) {
 		if (isFirstSet) {
 			isFirstSet = false;
+			return;
+		}
+		if (pattern) {
+			console.log("pattern")
+			const target = event.target as HTMLInputElement;
+			const val = target.value;
+			if (val.match(pattern)) {
+				debouncedValue = val;
+			}
 			return;
 		}
 		const target = event.target as HTMLInputElement;

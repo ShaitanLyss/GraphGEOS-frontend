@@ -57,7 +57,7 @@ export class RenderSetup implements Setup {
 			})
 		);
 
-		this.render.addPreset(Presets.contextMenu.setup({ delay: 50 }));
+		this.render.addPreset(Presets.contextMenu.setup({delay: 50 }));
 		this.render.addPreset(Presets.minimap.setup({ size: 200 }));
 
 		area.use(this.render);

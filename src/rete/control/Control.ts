@@ -24,6 +24,7 @@ export type InputControlOptions<N> = {
 	debouncedOnChange?: (value: N) => void;
 	onHeightChange?: (height: number, info: unknown) => void;
 	label?: string;
+	pattern?: string | null;
 };
 
 export class InputControl<
@@ -32,6 +33,7 @@ export class InputControl<
 > extends Control {
 	value?: N;
 	readonly: boolean;
+
 
 	constructor(public type: T, public options?: InputControlOptions<N>) {
 		super();

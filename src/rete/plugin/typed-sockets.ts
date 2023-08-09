@@ -3,6 +3,8 @@ import type { Connection } from '../node/Node';
 import type { Socket } from '../socket/Socket';
 import { ExecSocket } from '../socket/ExecSocket';
 
+export type XMLAttrType = `xmlAttr|${attrName}`;
+export type XMLElementType = `xmlElement|${tag}`;
 export type SocketType =
 	// | string
 	| 'exec'
@@ -22,8 +24,10 @@ export type SocketType =
 	| 'pythonObject'
 	| 'pythonProperty'
 	| 'solver'
-	| 'xmlProblem';
-
+	| 'xmlProblem'
+	| XMLAttrType
+	| XMLElementType
+	;
 export function isConnectionInvalid(outputSocket: Socket, inputSocket: Socket) {
 	return (
 		outputSocket instanceof ExecSocket !== inputSocket instanceof ExecSocket ||

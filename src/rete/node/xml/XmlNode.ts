@@ -1,8 +1,8 @@
 import { Node, type NodeParams, type OutDataParams } from '../Node';
-import type { XmlProperty, XmlPropertyDefinition } from './types';
+import type { XmlAttribute, XmlAttributeDefinition } from './types';
 import { camlelcaseize, titlelize } from '../../../utils/string';
 import type { Socket } from '../../socket/Socket';
-import type { SocketType } from '$rete/plugin/typed-sockets';
+import type { SocketType, XMLAttrType } from '$rete/plugin/typed-sockets';
 import { XMLData } from './XMLData';
 
 export type XmlNodeParams = NodeParams & {
@@ -10,11 +10,11 @@ export type XmlNodeParams = NodeParams & {
 		noName?: boolean;
 		xmlTag: string;
 		outData?: OutDataParams;
-		xmlProperties?: XmlPropertyDefinition[];
-	};
-	params?: {
-		initialValues?: Record<string, unknown>;
-	};
+		xmlProperties?: XmlAttributeDefinition[];
+		childTypes?: string[];
+
+	},
+	initialValues?: Record<string, unknown>;
 };
 
 export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
@@ -28,11 +28,13 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 	xmlVectorProperties: Set<string> = new Set();
 
 	constructor(xmlNodeParams: XmlNodeParams) {
-		let initialValues = xmlNodeParams.params?.initialValues;
-		const config = xmlNodeParams.xmlConfig;
-		const { outData, xmlProperties } = config;
-		const { noName = false } = config;
-		super(xmlNodeParams);
+		let {initialValues = {} } = xmlNodeParams;
+		const xmlConfig = xmlNodeParams.xmlConfig;
+		xmlNodeParams.params = {...xmlNodeParams.params, xmlConfig, initialValues, label: xmlNodeParams.label}
+		console.log("xmlNodeParams", xmlNodeParams)
+		const { outData, xmlProperties, childTypes = [] } = xmlConfig;
+		const { noName = false } = xmlConfig;
+		super({...xmlNodeParams, width: 220});
 
 		if (!noName) {
 			let name = xmlNodeParams.label;
@@ -40,14 +42,18 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 			XmlNode.counts[name] = XmlNode.counts[name] ? XmlNode.counts[name] + BigInt(1) : BigInt(1);
 			this.name = camlelcaseize(name) + XmlNode.counts[name];
 		}
-		this.xmlTag = config.xmlTag;
+		this.xmlTag = xmlConfig.xmlTag;
 		// console.log(this.name);
 
 		// this.name = name + XmlNode.count;
 		initialValues = initialValues !== undefined ? initialValues : {};
 
+		
+
 		if (xmlProperties)
-			xmlProperties.forEach(({ name, type, isArray, controlType }) => {
+			xmlProperties.forEach(({ name, type, isArray, controlType, required, pattern }) => {
+				if (name.toLowerCase() === 'name') return;
+				if (!required) return;
 				this.xmlProperties.add(name);
 				if (type === 'vector') this.xmlVectorProperties.add(name);
 
@@ -55,18 +61,29 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 					name: name,
 					displayName: titlelize(name),
 					socketLabel: titlelize(name),
-					type: type,
+					type: `xmlAttr|${type}` as XMLAttrType,
 					isArray: isArray,
 					control: controlType && {
 						type: controlType,
 						options: {
 							label: titlelize(name),
-							initial: initialValues[name]
+							initial: initialValues[name],
+							pattern: pattern
 						}
 					}
 				});
 				this.height += 45;
 			});
+
+		for (const childType of childTypes) {
+			this.addXmlInData({
+				name: childType,
+				tag: childType,
+				isArray: true,
+				type: `xmlElement|${childType}`,
+			})
+
+		}
 
 		if (outData)
 			this.addOutData({
@@ -78,9 +95,9 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 	}
 
 	override data(inputs?: Record<string, unknown>): { value: XMLData } {
-		const children = [];
+		const children: XMLData[] = [];
 		for (const [key, { tag }] of Object.entries(this.xmlInputs)) {
-			const data = this.getData(key, inputs);
+			const data = this.getData(key, inputs) as XMLData;
 			if (data) {
 				if (tag) {
 					const childChildren: Array<XMLData> = data instanceof Array ? data : [data];
@@ -113,7 +130,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		const properties: Record<string, unknown> = {};
 		const isArray = (key: string) => (this.inputs[key]?.socket as Socket).isArray;
 		for (const key of this.xmlProperties) {
-			let data = this.getData(key, inputs);
+			let data = this.getData(key, inputs) as Record<string, unknown> | Array<Record<string, unknown>>;
 			if (data) {
 				if (isArray(key) && !(data instanceof Array)) {
 					data = [data];

@@ -16,3 +16,16 @@ body {
 .border-1 {
 	border-width: 1px;
 }
+
+.rete-context-menu .subitems {
+	width: fit-content !important;
+	min-width: 120px;
+	max-height: 33vh;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.rete-context-menu .block:not(.hasSubitems):not(:has(.search)) {
+	padding-right: 1em;
+	padding-left: 1em;
+}

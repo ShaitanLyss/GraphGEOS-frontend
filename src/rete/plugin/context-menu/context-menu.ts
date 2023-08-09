@@ -7,9 +7,10 @@ import { capitalize } from '../../../utils/string';
 import { Setup } from '../../setup/Setup';
 import type { NodeEditor } from '../../NodeEditor';
 import type { NodeFactory } from '../../node/NodeFactory';
-import { GetXmlSchema, GetXmlSchemaStore } from '$houdini';
+import { GetXmlSchemaStore } from '$houdini';
 import { XmlNode } from '$rete/node/xml/XmlNode';
-import { XmlProperty, XmlPropertyDefinition } from '$rete/node/xml/types';
+import type { XmlAttributeDefinition } from '$rete/node/xml/types';
+import type { SocketType } from '../typed-sockets';
 
 type Entry = Map<string, Entry | (() => Node | Promise<Node>)>;
 function isClassConstructor(obj: unknown): boolean {
@@ -69,6 +70,51 @@ export class ContextMenuSetup extends Setup {
 
 		// console.log(nodeFiles);
 		const items = new Map<string, Entry>();
+
+
+		const xmlSchema = (await new GetXmlSchemaStore().fetch()).data?.geos.xmlSchema;
+		if (xmlSchema) {
+			for (const complexType of xmlSchema.complexTypes) {
+				const name = complexType.name.match(/^(.*)Type$/)?.at(1);
+				if (!name) throw new Error(`Invalid complex type name: ${complexType.name}`);
+				pushMenuItem(
+					items,
+					['XML', complexType.name],
+					() =>
+						new XmlNode({
+							label: name,
+							factory,
+
+							xmlConfig: {
+								childTypes: complexType.childTypes.map((childType) => {
+									const childName = childType.match(/^(.*)Type$/)?.at(1);
+									if (!childName) return childType;
+									return childName;
+								}),
+								xmlTag: name,
+								outData: {
+									name: name,
+									type: `xmlElement|${name}`,
+									socketLabel: name,
+								},
+
+								xmlProperties: complexType.attributes.map<XmlAttributeDefinition>((attr) => {
+									return {
+										name: attr.name,
+										required: attr.required,
+										pattern: attr.pattern,
+										type: attr.type,
+										controlType: 'text'
+									};
+								})
+							}
+
+						}),
+					factory
+				);
+			}
+		}
+
 		const modules = import.meta.glob('../../node/**/*.ts');
 		for (const [path, module] of Object.entries(modules)) {
 			const objects = await module();
@@ -95,36 +141,10 @@ export class ContextMenuSetup extends Setup {
 			// items.push([file, () => new node()]);
 		}
 
-		const xmlSchema = (await new GetXmlSchemaStore().fetch()).data?.geos.xmlSchema;
-		if (xmlSchema) {
-			for (const complexType of xmlSchema.complexTypes) {
-				const name = complexType.name.match(/^(.*)Type$/)?.at(1);
-				if (!name) throw new Error(`Invalid complex type name: ${complexType.name}`);
-				pushMenuItem(
-					items,
-					['xml_auto', complexType.name],
-					() =>
-						new XmlNode({
-							label: name,
-							factory,
-							xmlConfig: {
-								xmlTag: name,
 
-								xmlProperties: complexType.attributes.map<XmlPropertyDefinition>((attr) => {
-									return {
-										name: attr.name,
-										type: attr.type,
-										controlType: 'text'
-									};
-								})
-							}
-						}),
-					factory
-				);
-			}
-		}
 		const contextMenu = new ContextMenuPlugin<Schemes>({
-			items: Presets.classic.setup(getMenuArray(items))
+			items: Presets.classic.setup(getMenuArray(items)),
+
 		});
 
 		area.use(contextMenu);
