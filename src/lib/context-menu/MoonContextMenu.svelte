@@ -109,7 +109,7 @@
 		const socket = $moonMenuConnDropEvent.socketData.payload;
 
 		const baseType = socket.type.split(':')[0];
-		const types = socket.type.split(':')[1]?.split('|');
+		const types = socket.type.split(':')[1]?.split('|') || [baseType];
 		if (!baseType) {
 			hideMenu();
 		} else {
@@ -120,9 +120,7 @@
 				if (socketData.side === 'output' ? item.inChildrenTypes.includes('*') : item.outType === '*') {
 					return true;
 				}
-				if (!types) {
-					return false;
-				}
+				
 				const res = intersection(
 					socketData.side === 'output' ? item.inChildrenTypes : [item.outType],
 					types
