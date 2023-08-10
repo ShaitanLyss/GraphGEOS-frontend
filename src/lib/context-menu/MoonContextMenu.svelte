@@ -14,6 +14,7 @@
 	import { translateNodeFromGlobal } from '$utils/html';
 	import { XmlNode } from '$rete/node/XML/XmlNode';
 	import { GetNameNode } from '$rete/node/XML/GetNameNode';
+	import { MakeArrayNode } from '$rete/node/data/MakeArrayNode';
 
 	// setup width and height
 	let width = 0;
@@ -73,7 +74,7 @@
 		if ($moonMenuConnDropEvent)
 			translateNodeFromGlobal({ globalPos: $moonMenuConnDropEvent.pos, factory, node });
 
-		if (!(node instanceof XmlNode) && !(node instanceof GetNameNode)) {
+		if (!(node instanceof XmlNode) && !(node instanceof GetNameNode) && !(node instanceof MakeArrayNode)) {
 			console.log(`Autoconnection non supporté vers ${node.label}`);
 			hideMenu();
 			return;
@@ -86,11 +87,11 @@
 				sourceNode,
 				socketData.key,
 				node,
-				node instanceof GetNameNode ? 'xml' : 'children'
+				node instanceof MakeArrayNode ? 'data-0' : node instanceof GetNameNode ? 'xml' : 'children'
 			);
 		} else {
 			const targetNode = editor.getNode(socketData.nodeId);
-			await editor.addNewConnection(node, 'value', targetNode, socketData.key);
+			await editor.addNewConnection(node, node instanceof MakeArrayNode ? 'array':'value', targetNode, socketData.key);
 		}
 
 		// nodeView.translate()
