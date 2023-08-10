@@ -15,6 +15,7 @@
 	import { XmlNode } from '$rete/node/XML/XmlNode';
 	import { GetNameNode } from '$rete/node/XML/GetNameNode';
 	import { MakeArrayNode } from '$rete/node/data/MakeArrayNode';
+	import { StringNode } from '$rete/node/data/StringNode';
 
 	// setup width and height
 	let width = 0;
@@ -77,7 +78,7 @@
 			console.error('No connection drop event found');
 		}
 
-		if (!(node instanceof XmlNode) && !(node instanceof GetNameNode) && !(node instanceof MakeArrayNode)) {
+		if (!(node instanceof XmlNode) && !(node instanceof GetNameNode) && !(node instanceof MakeArrayNode) && !(node instanceof StringNode)) {
 			console.log(`Autoconnection non supporté vers ${node.label}`);
 			hideMenu();
 			return;
@@ -94,7 +95,8 @@
 			);
 		} else {
 			const targetNode = editor.getNode(socketData.nodeId);
-			await editor.addNewConnection(node, node instanceof MakeArrayNode ? 'array':'value', targetNode, socketData.key);
+			
+			await editor.addNewConnection(node, node instanceof MakeArrayNode ? 'array': node instanceof XmlNode ? 'value' : 'data', targetNode, socketData.key);
 		}
 
 		// nodeView.translate()
