@@ -178,9 +178,6 @@ export class Node<
 			if (this.outputs[key]?.socket.selected) selectedOutputs.push(key);
 		}
 
-		// TODO: for all nodes, move state to params
-		// TODO: add control values to JSON return
-		// TODO: adapt node factory to adapt to new JSON format
 		return {
 			params: this.params,
 			id: this.id,
@@ -268,9 +265,9 @@ export class Node<
 		this.addInput(name, input as unknown as Input<Exclude<Inputs[keyof Inputs], undefined>>);
 	}
 
-	addOutData({ name = 'data', displayName = '', isArray = false, type = 'any' }: OutDataParams) {
+	addOutData({ name = 'data', displayName = '', socketLabel = '', isArray = false, type = 'any' }: OutDataParams) {
 		const output = new Output(
-			new Socket({ name: displayName, isArray: isArray, type: type, node: this }),
+			new Socket({ name: socketLabel, isArray: isArray, type: type, node: this }),
 			displayName
 		);
 		this.addOutput(name, output as unknown as Output<Exclude<Outputs[keyof Outputs], undefined>>);

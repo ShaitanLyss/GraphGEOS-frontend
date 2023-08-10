@@ -175,15 +175,13 @@ export class MacroNode extends Node {
 					setHeight(this.height + 33);
 					continue;
 				}
-				this.addOutput(
-					macroKey,
-					new Output(
-						new (output.socket.constructor as typeof Socket)({
-							...output.socket,
-							node: this
-						})
-					)
-				);
+				this.addOutData({
+					name: macroKey,
+					displayName: output.socket.name,
+					type: output.socket.type,
+					isArray: output.socket.isArray,
+					socketLabel: output.socket.name
+				})
 				setHeight(this.height + 37);
 			}
 		}
