@@ -25,6 +25,7 @@ export type SocketType =
 	| 'pythonProperty'
 	| 'solver'
 	| 'xmlProblem'
+	| 'path'
 	| XMLAttrType
 	| XMLElementType
 	;
@@ -34,7 +35,6 @@ export function isConnectionInvalid(outputSocket: Socket, inputSocket: Socket) {
 
 	const [, outType, outSubtypes] = re.exec(outputSocket.type) || [];
 	const [, inType, inSubtypes] = re.exec(inputSocket.type) || [];
-	console.log(outSubtypes, inSubtypes)
 	if (inType && outType && inType === outType) {
 		if (outSubtypes === '*' || inSubtypes === '*') {
 			return false;
