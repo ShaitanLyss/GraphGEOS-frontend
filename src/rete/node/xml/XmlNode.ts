@@ -95,7 +95,11 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 
 		const xmlTypePattern = /([^\W_]+)(?:_([^\W_]+))?/gm;
 		const [, xmlType, xmlSubType] = xmlTypePattern.exec(type) || [];
-		if (xmlType.startsWith('real')) {
+		if (assignControl(xmlType as SocketType) !== undefined) {
+			type = xmlType as SocketType;
+			controlType = assignControl(xmlType as SocketType);
+		}
+		else if (xmlType.startsWith('real')) {
 			type = xmlSubType && xmlSubType.endsWith('2d') ? 'vector' : 'number';
 			controlType = assignControl(type);
 		} else if (xmlType.startsWith('R1Tensor')) {
