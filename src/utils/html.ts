@@ -1,29 +1,63 @@
-export function getTranslateValues(element: HTMLElement): { translateX: number; translateY: number } {
-    const style = window.getComputedStyle(element);
-    const transform = style.transform;
+import type { NodeFactory, Node } from "$rete";
 
-    if (transform && transform !== 'none') {
-        const matrix = transform.match(/matrix.*\((.+)\)/)![1].split(',').map(Number);
-        const translateX = matrix[4];
-        const translateY = matrix[5];
-        return { translateX, translateY };
-    }
+export function getTranslateValues(element: HTMLElement): {
+	translateX: number;
+	translateY: number;
+} {
+	const style = window.getComputedStyle(element);
+	const transform = style.transform;
 
-    return { translateX: 0, translateY: 0 };
+	if (transform && transform !== 'none') {
+		const matrix = transform
+			.match(/matrix.*\((.+)\)/)![1]
+			.split(',')
+			.map(Number);
+		const translateX = matrix[4];
+		const translateY = matrix[5];
+		return { translateX, translateY };
+	}
+
+	return { translateX: 0, translateY: 0 };
 }
 
 export function getScale(element: HTMLElement): { scaleX: number; scaleY: number } {
-    const style = window.getComputedStyle(element);
-    const transform = style.transform;
+	const style = window.getComputedStyle(element);
+	const transform = style.transform;
 
-    let scaleX = 1;
-    let scaleY = 1;
+	let scaleX = 1;
+	let scaleY = 1;
 
-    if (transform && transform !== 'none') {
-        const matrix = transform.match(/matrix\(([^\)]+)\)/)![1].split(',').map(Number);
-        scaleX = matrix[0];
-        scaleY = matrix[3];
-    }
+	if (transform && transform !== 'none') {
+		const matrix = transform
+			.match(/matrix\(([^\)]+)\)/)![1]
+			.split(',')
+			.map(Number);
+		scaleX = matrix[0];
+		scaleY = matrix[3];
+	}
 
-    return { scaleX, scaleY };
+	return { scaleX, scaleY };
+}
+
+export function clientToSurfacePos({ x, y, factory }: { x: number, y: number, factory: NodeFactory }): [number, number] {
+	const area = factory.getArea();
+	if (!area) throw new Error('No area');
+	const surface = area.container.children[0] as HTMLElement;
+	const surfaceRect = surface.getBoundingClientRect();
+	const surfacePos = { x: surfaceRect.left, y: surfaceRect.top };
+
+	// Calculate scaled position
+	const zoomScale = getScale(surface); // Implement this function to retrieve the zoom scale
+	const scaledX = (x - surfacePos.x) / zoomScale.scaleX;
+	const scaledY = (y - surfacePos.y) / zoomScale.scaleY;
+
+	return [scaledX, scaledY];
+}
+
+export function translateNodeFromGlobal({ globalPos, node, factory }: { globalPos: { x: number, y: number }, node: Node, factory: NodeFactory }) {
+	const area = factory.getArea();
+	if (!area) throw new Error('No area');
+	const nodeView = area.nodeViews.get(node.id);
+	if (!nodeView) throw new Error('Node view not found');
+	nodeView.translate(...clientToSurfacePos({ x: globalPos.x, y: globalPos.y, factory: factory }));
 }

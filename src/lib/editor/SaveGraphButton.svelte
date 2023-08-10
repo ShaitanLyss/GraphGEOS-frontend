@@ -9,15 +9,34 @@
 	const onSave = getContext<() => unknown>('onSave');
 
 	function saveGraph() {
-		notifications.show({ title: $_('notification.save.title'), message: $_('notification.save.message.ongoing'),id: 'save', color: 'blue', withCloseButton: false });
+		notifications.show({
+			title: $_('notification.save.title'),
+			message: $_('notification.save.message.ongoing'),
+			id: 'save',
+			color: 'blue',
+			withCloseButton: false
+		});
 		if (onSave === undefined) throw new Error('onSave not defined');
 		try {
-		onSave();
-		notifications.hide('save');
-		notifications.show({ autoClose: 2000, title: $_('notification.save.title'), message: $_('notification.save.message.success', { values: {storageUse: getLocalStorageUsage()}}), color: 'green' });
+			onSave();
+			notifications.hide('save');
+			notifications.show({
+				autoClose: 2000,
+				title: $_('notification.save.title'),
+				message: $_('notification.save.message.success', {
+					values: { storageUse: getLocalStorageUsage() }
+				}),
+				color: 'green'
+			});
 		} catch (e) {
 			notifications.hide('save');
-			notifications.show({ title: $_('notification.save.title'), message: $_('notification.save.message.failure', {values:{error: (e as Error).toString()}}), color: 'red' });
+			notifications.show({
+				title: $_('notification.save.title'),
+				message: $_('notification.save.message.failure', {
+					values: { error: (e as Error).toString() }
+				}),
+				color: 'red'
+			});
 		}
 	}
 </script>

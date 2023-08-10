@@ -15,8 +15,8 @@
 </script>
 
 <div
-	class="socket outline-4 outline outline-primary-400 border-white border-1 hover:border-4 "
-    class:array={data.isArray} 
+	class="socket outline-4 outline outline-primary-400 border-white border-1 hover:border-4"
+	class:array={data.isArray}
 	class:outline={data.selected}
 	title={data.name}
 	use:cssVars={socketVars}

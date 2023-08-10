@@ -81,11 +81,11 @@
 	function deleteEditor({ key }: { key: string }) {
 		const index = editorsViews.findIndex((editor) => editor.key === key);
 		console.log('deleteEditor', key, index);
-		
+
 		tabNames.splice(index, 1);
 		tabNames = tabNames;
 		delete editors[key];
-		editors =editors;
+		editors = editors;
 		editorComponents.splice(index, 1);
 		editorsViews.splice(index, 1);
 		editorsViews = editorsViews;
@@ -96,9 +96,8 @@
 		} else if (editorsViews.length > 0) {
 			$tabSet = editorsViews[index].key;
 		} else {
-			console.log("No more editors left")
+			console.log('No more editors left');
 		}
-
 	}
 
 	// const draggableTabOptions: DragOptions = {
@@ -159,35 +158,42 @@
 	<AppShell slotPageContent="relative">
 		<svelte:fragment slot="header">
 			<div class="flex">
-				<TabGroup>
-					{#each editorsViews as editor, index (index)}
-						<div
-							role="button"
-							class="relative group"
-							tabindex={index}
-							on:dblclick={() => openChangeTabNameModal(index)}
-						>
-							<!-- use:draggable={draggableTabOptions}
-						> -->
-							<button
-								type="button"
-								class="absolute top-0.5 right-0.5 p-1 hidden group-hover:block rounded-token variant-soft-surface"
-								on:click={() => {
-									deleteEditor({ key: editor.key });
-								}}
+				<div class="overflow-x-hidden flex-grow">
+					<div class="overflow-x-auto select-none">
+						<TabGroup regionList={'overflow-x-visible'}>
+							{#each editorsViews as editor, index (index)}
+								<div
+									role="button"
+									class="relative group"
+									tabindex={index}
+									on:dblclick={() => openChangeTabNameModal(index)}
+								>
+									<button
+										type="button"
+										class="absolute top-0.5 right-0.5 p-1 hidden group-hover:block rounded-token variant-soft-surface"
+										on:click={() => {
+											deleteEditor({ key: editor.key });
+										}}
+									>
+										<Fa icon={faTimes} size="xs" />
+									</button>
+									<Tab
+										regionTab={'whitespace-nowrap'}
+										bind:group={$tabSet}
+										name="tab{index}"
+										value={editor.key}>{tabNames[index]}</Tab
+									>
+								</div>
+							{/each}
+							<Tab
+								on:click={() => addEditor()}
+								bind:group={addButonClicked}
+								name="addEditorBtn"
+								value={undefined}>+</Tab
 							>
-								<Fa icon={faTimes} size="xs" />
-							</button>
-							<Tab bind:group={$tabSet} name="tab{index}" value={editor.key}>{tabNames[index]}</Tab>
-						</div>
-					{/each}
-					<Tab
-						on:click={() => addEditor()}
-						bind:group={addButonClicked}
-						name="addEditorBtn"
-						value={undefined}>+</Tab
-					>
-				</TabGroup>
+						</TabGroup>
+					</div>
+				</div>
 				<div class="group ml-auto pe-4 relative h-auto">
 					<div class="h-full overflow-hidden">
 						<div
@@ -216,7 +222,7 @@
 		</svelte:fragment>
 
 		<svelte:fragment>
-			{#each editorsViews as editorView, index (editorView)}				
+			{#each editorsViews as editorView, index (editorView)}
 				<Editor
 					bind:editor={editors[editorView.key]}
 					bind:this={editorComponents[index]}

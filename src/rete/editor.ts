@@ -35,7 +35,7 @@ export async function setupEditor(
 	editor.use(area);
 
 	// Setup node factory
-	const nodeFactory = new NodeFactory({editor, area, makutuClasses});
+	const nodeFactory = new NodeFactory({ editor, area, makutuClasses });
 
 	// Setup react renderer
 	const megaSetup = new MegaSetup();
@@ -43,8 +43,6 @@ export async function setupEditor(
 
 	area.use(arrange);
 	AreaExtensions.showInputControl(area);
-
-	
 
 	AreaExtensions.selectableNodes(area, AreaExtensions.selector(), {
 		accumulating: AreaExtensions.accumulateOnCtrl()
@@ -66,14 +64,6 @@ export async function setupEditor(
 	AreaExtensions.simpleNodesOrder(area);
 	// await AreaExtensions.zoomAt(area, nodesToFocus);
 
-
-
-	
-
-	
-
-	
-
 	console.log('Editor setup');
 
 	return {
@@ -82,11 +72,10 @@ export async function setupEditor(
 			nodeFactory.dataflowEngine.reset();
 			nodeFactory.process();
 			editor.addPipe((context) => {
-				if (['connectioncreated', 'connectionremoved'].includes(context.type)) {
-					try {
-						nodeFactory.process((context as unknown as { data: { target: Node } }).data.target);
-					} catch (e) {
-					}
+				if (context.type === 'connectioncreated' || context.type === 'connectionremoved') {
+					const conn = context.data;
+					console.log("resetting node", conn.target)
+					nodeFactory.dataflowEngine.reset(conn.target);
 				}
 
 				return context;

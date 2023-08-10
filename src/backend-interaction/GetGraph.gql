@@ -1,9 +1,9 @@
 query GetGraph($id: UUID, $name: String, $authorId: UUID) {
-    graph(id: $id, name: $name, authorId: $authorId) {
-        id
-        name
-        description
-        isPublic
-        data
-    }
+	graph(id: $id, name: $name, authorId: $authorId) {
+		id
+		name
+		description
+		isPublic
+		data
+	}
 }

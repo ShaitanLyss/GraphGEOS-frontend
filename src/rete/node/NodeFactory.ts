@@ -67,6 +67,15 @@ export class NodeFactory {
 	}
 	private state: Map<string, unknown> = new Map();
 
+	useState<T = unknown>(id: string, key: string, value?: T): {get: () => T; set: (value: T) => void} {
+		const stateKey = id + '_' + key;
+		if (!this.state.has(stateKey)) this.state.set(stateKey, value);
+		return {
+			get: () => this.state.get(stateKey) as T,
+			set: (value: T) => this.state.set(stateKey, value)
+		};
+	}
+
 	getState<T>(id: string, key: string, value?: T): T {
 		const stateKey = id + '_' + key;
 		if (!this.state.has(stateKey)) this.state.set(stateKey, value);
@@ -76,13 +85,14 @@ export class NodeFactory {
 	setState(id: string, key: string, value: unknown) {
 		this.state.set(id + '_' + key, value);
 	}
+
 	lastAddedNode?: Node;
-	async addNode<
-	T extends Node,
-	Params = Record<string,unknown>, 
->(nodeClass: new (params: Params) => T, params: WithoutFactory<Params>): Promise<T> {
-		const paramsWithFactory: Params = {...params, factory: this} as Params;
-		
+	async addNode<T extends Node, Params = Record<string, unknown>>(
+		nodeClass: new (params: Params) => T,
+		params: WithoutFactory<Params>
+	): Promise<T> {
+		const paramsWithFactory: Params = { ...params, factory: this } as Params;
+
 		await this.editor.addNode(new nodeClass(paramsWithFactory));
 		if (!this.lastAddedNode) throw new Error('lastAddedNode is undefined');
 		return this.lastAddedNode as T;
@@ -95,7 +105,7 @@ export class NodeFactory {
 	readonly pythonDataflowEngine: PythonDataflowEngine<Schemes> = createPythonDataflowEngine();
 
 	async loadGraph(editorSaveData: NodeEditorSaveData) {
-		console.log("loadGraph", editorSaveData.editorName)
+		console.log('loadGraph', editorSaveData.editorName);
 		await this.editor.clear();
 		this.editor.setName(editorSaveData.editorName);
 		const nodes = new Map<string, Node>();
@@ -106,11 +116,9 @@ export class NodeFactory {
 				node.id = nodeSaveData.id;
 				if (node.initializePromise) {
 					await node.initializePromise;
-					if (node.afterInitialize)
-						node.afterInitialize();
+					if (node.afterInitialize) node.afterInitialize();
 				}
 
-				
 				node.setState(nodeSaveData.state);
 				node.applyState();
 				for (const key in nodeSaveData.inputControlValues) {
@@ -153,8 +161,7 @@ export class NodeFactory {
 
 			// await this.editor.addConnection(JSON.parse(connection))
 		});
-		if (this.area)
-		AreaExtensions.zoomAt(this.area, this.editor.getNodes());
+		if (this.area) AreaExtensions.zoomAt(this.area, this.editor.getNodes());
 	}
 	private area?: AreaPlugin<Schemes, AreaExtra>;
 	private editor: NodeEditor;
@@ -167,7 +174,11 @@ export class NodeFactory {
 		editor,
 		area,
 		makutuClasses
-	}: {editor: NodeEditor; area?: AreaPlugin<Schemes, AreaExtra>; makutuClasses: MakutuClassRepository}) {
+	}: {
+		editor: NodeEditor;
+		area?: AreaPlugin<Schemes, AreaExtra>;
+		makutuClasses: MakutuClassRepository;
+	}) {
 		this.area = area;
 		this.makutuClasses = makutuClasses;
 		this.editor = editor;
@@ -177,12 +188,13 @@ export class NodeFactory {
 
 		// Assign connections to nodes
 		editor.addPipe((context) => {
-			if (context.type ==='nodecreated') {
+			if (context.type === 'nodecreated') {
 				this.lastAddedNode = context.data;
 			}
 
 			if (context.type !== 'connectioncreated' && context.type !== 'connectionremoved')
 				return context;
+			
 			const conn = context.data;
 			const sourceNode = editor.getNode(conn.source);
 			const targetNode = editor.getNode(conn.target);
@@ -202,8 +214,7 @@ export class NodeFactory {
 				outgoingConnections[conn.sourceOutput] = conn;
 				ingoingConnections[conn.targetInput] = conn;
 			} else if (context.type === 'connectionremoved') {
-				if (targetNode.onRemoveIngoingConnection)
-					targetNode.onRemoveIngoingConnection(conn);
+				if (targetNode.onRemoveIngoingConnection) targetNode.onRemoveIngoingConnection(conn);
 				delete outgoingConnections[conn.sourceOutput];
 				delete ingoingConnections[conn.targetInput];
 			}
@@ -232,7 +243,7 @@ export class NodeFactory {
 		return this.controlflowEngine;
 	}
 
-	getArea(): AreaPlugin<Schemes, AreaExtra> | undefined{
+	getArea(): AreaPlugin<Schemes, AreaExtra> | undefined {
 		return this.area;
 	}
 
@@ -250,14 +261,12 @@ export class NodeFactory {
 		}
 		// dataflowEngine.reset();
 		try {
-		this.editor
-			.getNodes()
-			// .filter((n) => n instanceof AddNode || n instanceof DisplayNode)
-			.forEach((n) => {
-				
+			this.editor
+				.getNodes()
+				// .filter((n) => n instanceof AddNode || n instanceof DisplayNode)
+				.forEach((n) => {
 					this.dataflowEngine.fetch(n.id);
-			});
-		} catch (e) {
-		}
+				});
+		} catch (e) {}
 	}
 }

@@ -23,16 +23,20 @@ export class DisplayNode extends Node {
 		super({ label: 'Display', factory, params: { initial, change } });
 
 		// Setup input
-		this.addInData({name: 'input', displayName: 'Input', control: {
-			type: 'text',
-			options: {
-				debouncedOnChange: (value: string) => {
-					console.log("debounced display input change")
-					this.getDataflowEngine().reset(this.id);
-					this.getDataflowEngine().fetch(this.id);
+		this.addInData({
+			name: 'input',
+			displayName: 'Input',
+			control: {
+				type: 'text',
+				options: {
+					debouncedOnChange: (value: string) => {
+						console.log('debounced display input change');
+						this.getDataflowEngine().reset(this.id);
+						this.getDataflowEngine().fetch(this.id);
+					}
 				}
 			}
-		}});
+		});
 
 		// Display value
 		this.addControl('display', new ClassicPreset.InputControl('text', { initial, readonly: true }));
@@ -42,7 +46,6 @@ export class DisplayNode extends Node {
 		const inputValue = this.getData('input', inputs);
 		console.log('Data');
 		if (this.controls.display instanceof ClassicPreset.InputControl) {
-			
 			this.controls.display.setValue(inputValue);
 			this.updateElement('control', this.controls.display.id);
 		} else {

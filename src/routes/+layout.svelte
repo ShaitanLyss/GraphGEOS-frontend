@@ -1,7 +1,7 @@
 <script lang="ts">
-	console.log("check document ", typeof document !== undefined && document)
-	console.log("check window ", typeof window !== undefined && window)
-	
+	console.log('check document ', typeof document !== undefined && document);
+	console.log('check window ', typeof window !== undefined && window);
+
 	import '../localization/i18n';
 	// import '$rete/setup/appLaunch';
 	import { Notifications } from '@mantine/notifications';
@@ -10,7 +10,7 @@
 	import { setInitialClassState } from '@skeletonlabs/skeleton';
 	import { AppShell, LightSwitch, Modal, type ModalComponent } from '@skeletonlabs/skeleton';
 
-	console.log("layout .svelte")
+	console.log('layout .svelte');
 
 	// Your selected Skeleton theme:
 	import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
@@ -22,13 +22,15 @@
 	// import 'app.css'
 	import '../app.postcss';
 	import { init } from 'svelte-i18n';
-	
+	import MoonContextMenu from '$lib/context-menu/MoonContextMenu.svelte';
+	import { moonMenuVisibleStore } from '$lib/context-menu/moonContextMenu';
+
 	let i = 0;
-		
+
 	// import '@skeletonlabs/skeleton/styles/partials/typography-prose.css';
 	let isi18setup = false;
 	onMount(async () => {
-		console.log("layout on mount")
+		console.log('layout on mount');
 		window._init = init;
 	});
 
@@ -43,5 +45,8 @@
 <slot />
 
 <react:Notifications position="top-right" zIndex="1000" />
+
+<MoonContextMenu />
+
 <Modal components={modalComponentRegistry} />
 <svelte:head>{@html `<\u{73}cript>(${setInitialClassState.toString()})();</script>`}</svelte:head>

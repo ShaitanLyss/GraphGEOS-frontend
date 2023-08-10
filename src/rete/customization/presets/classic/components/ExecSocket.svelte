@@ -4,7 +4,11 @@
 	export let data: ExecSocket;
 </script>
 
-<div id="outerTriangle" class=" socket outline-4 outline outline-primary-400" class:outline={data.selected}>
+<div
+	id="outerTriangle"
+	class=" socket outline-4 outline outline-primary-400"
+	class:outline={data.selected}
+>
 	<div id="innerTriangle" class="socket" title={data.value ? String(data.value) : data.name} />
 </div>
 

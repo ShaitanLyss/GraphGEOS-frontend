@@ -3,6 +3,8 @@ import type { Connection } from '../node/Node';
 import type { Socket } from '../socket/Socket';
 import { ExecSocket } from '../socket/ExecSocket';
 
+export type XMLAttrType = `xmlAttr:${attrName}`;
+export type XMLElementType = `xmlElement:${tag}`;
 export type SocketType =
 	// | string
 	| 'exec'
@@ -22,9 +24,30 @@ export type SocketType =
 	| 'pythonObject'
 	| 'pythonProperty'
 	| 'solver'
-	| 'xmlProblem';
-
+	| 'xmlProblem'
+	| 'path'
+	| XMLAttrType
+	| XMLElementType
+	;
 export function isConnectionInvalid(outputSocket: Socket, inputSocket: Socket) {
+	const re = /(\w+):(.+)/;
+
+
+	const [, outType, outSubtypes] = re.exec(outputSocket.type) || [];
+	const [, inType, inSubtypes] = re.exec(inputSocket.type) || [];
+	if (inType && outType && inType === outType) {
+		if (outSubtypes === '*' || inSubtypes === '*') {
+			return false;
+		}
+		const outSubtypesArray = outSubtypes.split('|');
+		const inSubtypesArray = inSubtypes.split('|');
+		const intersection = outSubtypesArray.filter((subtype) => inSubtypesArray.includes(subtype));
+		if (intersection.length > 0) {
+			return false;
+		}
+		
+	}
+
 	return (
 		outputSocket instanceof ExecSocket !== inputSocket instanceof ExecSocket ||
 		(outputSocket.type !== inputSocket.type &&
@@ -59,10 +82,8 @@ export class TypedSocketsPlugin<Schemes extends BaseSchemes> extends Scope<never
 			}
 
 			if (ctx.type === 'connectioncreate' && (conn = ctx.data as Connection)) {
-
 				const outputSocket = this.getOutputSocket(conn.source, conn.sourceOutput);
 				const inputSocket = this.getInputSocket(conn.target, conn.targetInput);
-						
 
 				if (isConnectionInvalid(outputSocket, inputSocket)) {
 					console.log(

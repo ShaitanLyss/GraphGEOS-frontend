@@ -37,12 +37,13 @@
 
 	const handleSubmit = async (event: Event) => {
 		event.preventDefault();
-		const showErrorNotif =() => notifications.show({
-					title: $_('notification.error.title'),
-					message: $_('modal.graph_upload.failed.message'),
-					color: 'red',
-					variant: 'filled'
-				});
+		const showErrorNotif = () =>
+			notifications.show({
+				title: $_('notification.error.title'),
+				message: $_('modal.graph_upload.failed.message'),
+				color: 'red',
+				variant: 'filled'
+			});
 
 		const formValidity = formElement.checkValidity();
 		const graph = (await graphPromise).data?.graph;

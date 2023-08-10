@@ -1,3 +1,3 @@
-import type { NodeEditor } from "$rete/NodeEditor";
+import type { NodeEditor } from '$rete/NodeEditor';
 
-export type UploadGraphModalMeta = {editor: NodeEditor};
+export type UploadGraphModalMeta = { editor: NodeEditor };

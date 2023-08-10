@@ -1,12 +1,14 @@
 import { ClassicPreset, getUID } from 'rete';
 
-export class Control extends ClassicPreset.Control {}
+export class Control extends ClassicPreset.Control { }
 
-export type InputControlTypes = 'text' | 'number' | 'checkbox' | 'textarea' | 'vector';
+export type InputControlTypes = 'text' | 'number' | 'checkbox' | 'textarea' | 'vector' | "unknown" | 'file';
 export type InputControlValueType<T extends InputControlTypes> = T extends 'text'
 	? string
 	: T extends 'number'
 	? number
+	: T extends 'file'
+	? string
 	: T extends 'checkbox'
 	? boolean
 	: T extends 'textarea'
@@ -24,14 +26,16 @@ export type InputControlOptions<N> = {
 	debouncedOnChange?: (value: N) => void;
 	onHeightChange?: (height: number, info: unknown) => void;
 	label?: string;
+	pattern?: string | null;
 };
 
 export class InputControl<
-	T extends InputControlTypes,
+	T extends InputControlTypes = 'unknown',
 	N = InputControlValueType<T>
 > extends Control {
 	value?: N;
 	readonly: boolean;
+
 
 	constructor(public type: T, public options?: InputControlOptions<N>) {
 		super();
@@ -41,10 +45,15 @@ export class InputControl<
 
 		let initial = options?.initial;
 
+		
+
 		if (initial === undefined) {
 			switch (type) {
 				case 'text':
 					initial = '';
+					break;
+				case 'file':
+					initial = './vtkfile.vtk';
 					break;
 				case 'number':
 					initial = 0;
@@ -62,6 +71,10 @@ export class InputControl<
 		}
 
 		this.value = initial;
+		// if (options && initial !== undefined && options.debouncedOnChange) {
+
+		// 	options.debouncedOnChange(initial)
+		// }
 	}
 
 	setValue(value?: N) {

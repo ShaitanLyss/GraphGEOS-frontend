@@ -20,8 +20,9 @@
 	`);
 	$: console.log('store', $store.data);
 </script>
- <svelte:head>
-    <title>Geos UI</title> 
+
+<svelte:head>
+	<title>Geos UI</title>
 </svelte:head>
 <div class="h-screen">
 	<AppShell regionPage="h-full" slotPageContent="h-full">
@@ -35,8 +36,8 @@
 				// { key: 'timeloop', example: timeloopExample, label: 'Time Loop' },
 				// { key: 'for_each', example: forEachExample, label: 'For Each' },
 				{ key: 'acquisition', example: acquisitionModelingExample, label: 'Acquisition Modelling' },
-				{ key: 'xml', example: acquisitionXmlExample, label: 'XML' },
-				{ key: 'macroNode', example: macroNodeExample, label: 'Macro Node'}
+				// { key: 'xml', example: acquisitionXmlExample, label: 'XML' },
+				{ key: 'macroNode', example: macroNodeExample, label: 'Macro Node' }
 			]}
 		/>
 	</AppShell>

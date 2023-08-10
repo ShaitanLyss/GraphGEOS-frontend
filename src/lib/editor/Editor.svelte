@@ -27,7 +27,9 @@
 	import type { UploadGraphModalMeta } from '$lib/modals/types';
 	import { MacroNode } from '$rete/node/MacroNode';
 	import type { UUID } from 'crypto';
-	import { getScale, getTranslateValues } from '$utils/html';
+	import { clientToSurfacePos, getScale, getTranslateValues, translateNodeFromGlobal } from '$utils/html';
+	import { spawnMoonMenu } from '$lib/context-menu/moonContextMenu';
+	import { ConnectionDropEvent } from '$rete/setup/ConnectionSetup';
 
 	// import {} from '@fortawesome/free-regular-svg-icons';
 
@@ -189,22 +191,19 @@
 		const node = await factory.addNode(MacroNode, { saveData: saveData, graphId });
 		if (!node) throw new Error('Node not created');
 		// Move node to drop position
-		const area = factory.getArea();
-		if (!area) throw new Error('No area');
-		const nodeView = area.nodeViews.get(node.id);
-		if (!nodeView) throw new Error('Node view not found');
-		const surface = container.children[0] as HTMLElement;
-		const surfaceRect = surface.getBoundingClientRect();
-		const surfacePos = { x: surfaceRect.left, y: surfaceRect.top };
-
-		// Calculate scaled position
-		const zoomScale = getScale(surface); // Implement this function to retrieve the zoom scale
-		const scaledX = (event.clientX - surfacePos.x) / zoomScale.scaleX;
-		const scaledY = (event.clientY - surfacePos.y) / zoomScale.scaleY;
-
-		nodeView.translate(scaledX, scaledY);
+		translateNodeFromGlobal({globalPos: {x: event.clientX, y: event.clientY}, node, factory});
 
 		// nodeView.translate(event.clientX - surfacePos.x, event.clientY - surfacePos.y);
+	}
+
+	
+
+	
+
+	function onConnectionDrop(event: ConnectionDropEvent) {
+			console.log("connection drop on editor", event.socketData);
+			
+			spawnMoonMenu({connDropEvent: event, drop: () => this.drop()});
 	}
 </script>
 
@@ -257,10 +256,11 @@
 			<!-- Editor -->
 			<div
 				bind:this={container}
-				role="main"
+				role="region"
 				class="h-full"
 				class:bg-white={$modeCurrent}
 				style="z-index: {hidden ? -10 : 10};"
+				on:connectiondrop={onConnectionDrop}
 				on:dragenter={(event) => {
 					if (event.dataTransfer?.types[0] === 'rete/macronode') event.preventDefault();
 				}}

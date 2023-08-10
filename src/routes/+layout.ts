@@ -13,16 +13,16 @@ export const ssr = false;
 export const prerender = false;
 
 export const load = async (event) => {
-	console.log('load: browser', browser)
+	console.log('load: browser', browser);
 	if (!browser) {
 		return {};
 	}
 	// if (browser) {
 	// 	locale.set(window.navigator.language)
 	// }
-	await waitLocale()
-	const sessionToken = localStorage.getItem('sessionToken') ?.replaceAll('"', '');
-	console.log("load session token", sessionToken)
+	await waitLocale();
+	const sessionToken = localStorage.getItem('sessionToken')?.replaceAll('"', '');
+	console.log('load session token', sessionToken);
 	const { SessionAndUserStore } = await import('$houdini');
 	const sessionAndUser = new SessionAndUserStore();
 	let data;

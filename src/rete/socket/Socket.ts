@@ -15,8 +15,14 @@ export class Socket extends ClassicPreset.Socket {
 		isArray = false,
 		isRequired = false,
 		type = 'any',
-		node,
-	}: { name?: string; isArray?: boolean; isRequired?: boolean; type?: SocketType, node: Node }) {
+		node
+	}: {
+		name?: string;
+		isArray?: boolean;
+		isRequired?: boolean;
+		type?: SocketType;
+		node: Node;
+	}) {
 		super(name);
 		this.isArray = isArray;
 		this.isRequired = isRequired;

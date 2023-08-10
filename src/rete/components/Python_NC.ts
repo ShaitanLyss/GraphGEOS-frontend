@@ -83,9 +83,10 @@ export class PythonNodeComponent extends NodeComponent {
 	private initCode: string[] = [];
 	private parseArguments: Map<string, ParseArgumentData> = new Map();
 
-	private codeTemplateGetters: Map<string, ({inputs}: {inputs: Record<string, unknown>}) => string> = new Map([
-		['exec', this.getCodeTemplate]
-	]);
+	private codeTemplateGetters: Map<
+		string,
+		({ inputs }: { inputs: Record<string, unknown> }) => string
+	> = new Map([['exec', this.getCodeTemplate]]);
 	private newlinesBefore = 0;
 
 	constructor({ owner }: { owner: Node }) {
@@ -144,7 +145,10 @@ export class PythonNodeComponent extends NodeComponent {
 		}
 	}
 
-	setCodeTemplateGetter(getter: ({inputs}: {inputs: Record<string, unknown>}) => string, key = 'exec') {
+	setCodeTemplateGetter(
+		getter: ({ inputs }: { inputs: Record<string, unknown> }) => string,
+		key = 'exec'
+	) {
 		this.codeTemplateGetters.set(key, getter);
 	}
 
@@ -293,7 +297,7 @@ export class PythonNodeComponent extends NodeComponent {
 		if (!getter) throw new Error(`No code template getter for ${nodeInput}`);
 		const inputs = await node.fetchInputs();
 		// Cleanup code template
-		let codeTemplate = getter({inputs}).replace(/^\n*([^]*?)\s*$/, '$1');
+		let codeTemplate = getter({ inputs }).replace(/^\n*([^]*?)\s*$/, '$1');
 
 		codeTemplate = await node.pythonComponent.formatPythonVars(codeTemplate);
 
@@ -378,7 +382,7 @@ export class PythonNodeComponent extends NodeComponent {
 		// already included in child code
 		// Remove trailing ? (pass symbol) in code template
 		codeTemplate = codeTemplate.replaceAll(/^[\t ]*({{.*?}})\??(.*)$/gm, '$1$2');
-// 
+		//
 		// const resCodeTemplate = getMessageFormatter(codeTemplate).format(templateVars);
 		const resCodeTemplate = codeTemplate.replace(/{{(.*?)}}/g, (match, key) => {
 			const value = templateVars[key.trim()];

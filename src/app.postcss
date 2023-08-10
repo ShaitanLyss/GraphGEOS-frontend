@@ -13,7 +13,39 @@ body {
 	cursor: url('/cursor/python_cursor.svg'), crosshair !important;
 }
 
-
 .border-1 {
 	border-width: 1px;
+}
+
+.max-h-half {
+	max-height: 50vh;
+}
+
+.max-h-3-4 {
+	max-height: 75vh;
+}
+
+.max-h-4-5 {
+	max-height: 80vh;
+}
+
+.max-h-9-10 {
+	max-height: 90vh;
+}
+
+.max-h-1-3 {
+	max-height: 33vh;
+}
+
+.rete-context-menu .subitems {
+	width: fit-content !important;
+	min-width: 120px;
+	max-height: 33vh;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.rete-context-menu .block:not(.hasSubitems):not(:has(.search)) {
+	padding-right: 1em;
+	padding-left: 1em;
 }

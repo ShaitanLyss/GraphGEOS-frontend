@@ -1,7 +1,7 @@
 import { ButtonControl } from '$rete/control/button/button';
 import { Node } from '../Node';
 import type { NodeFactory } from '../NodeFactory';
-import type { XMLData } from '../xml/XMLData';
+import type { XMLData } from '../XML/XMLData';
 import xmlFormat from 'xml-formatter';
 
 export class DownloadNode extends Node {

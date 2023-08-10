@@ -7,27 +7,35 @@ import { capitalize } from '../../../utils/string';
 import { Setup } from '../../setup/Setup';
 import type { NodeEditor } from '../../NodeEditor';
 import type { NodeFactory } from '../../node/NodeFactory';
-import { GetXmlSchema, GetXmlSchemaStore } from '$houdini';
-import { XmlNode } from '$rete/node/xml/XmlNode';
-import { XmlProperty, XmlPropertyDefinition } from '$rete/node/xml/types';
+import { GetXmlSchemaStore } from '$houdini';
+import { XmlNode } from '$rete/node/XML/XmlNode';
+import type { XmlAttributeDefinition } from '$rete/node/XML/types';
+import type { SocketType } from '../typed-sockets';
+import { moonMenuItemsStore, type MoonMenuItem } from '$lib/context-menu/moonContextMenu';
+import { GetNameNode } from '$rete/node/XML/GetNameNode';
 
 type Entry = Map<string, Entry | (() => Node | Promise<Node>)>;
 function isClassConstructor(obj: unknown): boolean {
-	return typeof obj === 'function' && (!!obj.prototype && !!obj.prototype.constructor);
+	return typeof obj === 'function' && !!obj.prototype && !!obj.prototype.constructor;
 }
 
 function pushMenuItem(
 	items: Entry,
 	prefix: string[],
-	item: typeof Node  | (() => Node | Promise<Node>),
+	item: typeof Node | (() => Node | Promise<Node>),
 	factory: NodeFactory
 ): void {
 	if (prefix.length == 1) {
-			// check if item is a node class
-			// if so, add it to the menu
-			// otherwise, add it as a function			
-		
-			items.set(prefix[0].split('.')[0], isClassConstructor(item) ? () => new (item as typeof Node)({ factory: factory }): item as (() => Node | Promise<Node>));
+		// check if item is a node class
+		// if so, add it to the menu
+		// otherwise, add it as a function
+
+		items.set(
+			prefix[0].split('.')[0],
+			isClassConstructor(item)
+				? () => new (item as typeof Node)({ factory: factory })
+				: (item as () => Node | Promise<Node>)
+		);
 	} else {
 		const entry = prefix[0];
 		if (!items.has(entry)) {
@@ -64,6 +72,7 @@ export class ContextMenuSetup extends Setup {
 
 		// console.log(nodeFiles);
 		const items = new Map<string, Entry>();
+
 		const modules = import.meta.glob('../../node/**/*.ts');
 		for (const [path, module] of Object.entries(modules)) {
 			const objects = await module();
@@ -78,8 +87,8 @@ export class ContextMenuSetup extends Setup {
 				return (
 					prototype instanceof Node &&
 					prototype.constructor &&
-					!Object.prototype.hasOwnProperty.call(prototype.constructor, '__isAbstract')
-					&& !Object.prototype.hasOwnProperty.call(prototype.constructor, 'hidden')
+					!Object.prototype.hasOwnProperty.call(prototype.constructor, '__isAbstract') &&
+					!Object.prototype.hasOwnProperty.call(prototype.constructor, 'hidden')
 				);
 			}) as (typeof Node)[];
 
@@ -89,35 +98,81 @@ export class ContextMenuSetup extends Setup {
 
 			// items.push([file, () => new node()]);
 		}
+
 		
+
+
 		const xmlSchema = (await new GetXmlSchemaStore().fetch()).data?.geos.xmlSchema;
 		if (xmlSchema) {
+			const moonItems: MoonMenuItem[] = [];
+			const complexTypesWithName: string[] = [];
 			for (const complexType of xmlSchema.complexTypes) {
 				const name = complexType.name.match(/^(.*)Type$/)?.at(1);
 				if (!name) throw new Error(`Invalid complex type name: ${complexType.name}`);
-				pushMenuItem(items, ['xml_auto', complexType.name], () => new XmlNode({
+
+				const hasNameAttribute = complexType.attributes.some((attr) => attr.name === 'name')
+				if (hasNameAttribute) 
+					complexTypesWithName.push(name);
+				
+
+
+				const xmlNodeAction: (factory: NodeFactory) => Node = () =>
+					new XmlNode({
+						label: name,
+						factory,
+
+						xmlConfig: {
+							noName: !hasNameAttribute,
+							childTypes: complexType.childTypes.map((childType) => {
+								const childName = childType.match(/^(.*)Type$/)?.at(1);
+								if (!childName) return childType;
+								return childName;
+							}),
+							xmlTag: name,
+							outData: {
+								name: name,
+								type: `xmlElement:${name}`,
+								socketLabel: name,
+							},
+
+							xmlProperties: complexType.attributes.map<XmlAttributeDefinition>((attr) => {
+								return {
+									name: attr.name,
+									required: attr.required,
+									pattern: attr.pattern,
+									type: attr.type,
+									controlType: 'text'
+								};
+							})
+						}
+
+					});
+
+				moonItems.push({
 					label: name,
-					factory,
-					xmlConfig: {
-						xmlTag: name,
-
-						xmlProperties: complexType.attributes.map<XmlPropertyDefinition>((attr) => {
-							return {
-								name: attr.name,
-								type: attr.type,
-								controlType: 'text'
-
-							}
-
-						})
-					}
+					outType: name,
+					inChildrenTypes: complexType.childTypes.map((childType) => {
+						const childName = childType.match(/^(.*)Type$/)?.at(1);
+						if (!childName) return childType;
+						return childName;
+					}),
+					action: xmlNodeAction
 				})
-				, factory)
+				pushMenuItem(
+					items,
+					['XML', complexType.name],
+					() => xmlNodeAction(factory),
+					factory
+				)
 			}
-
+			const getNameNodeItem: MoonMenuItem = {action: (factory) => new GetNameNode({factory}), inChildrenTypes: complexTypesWithName, label:'Get Name', outType: 'string'}
+			moonMenuItemsStore.set([getNameNodeItem, ...moonItems]);
 		}
+
+
 		const contextMenu = new ContextMenuPlugin<Schemes>({
-			items: Presets.classic.setup(getMenuArray(items))
+			items: Presets.classic.setup(getMenuArray(items)),
+
 		});
 
 		area.use(contextMenu);
