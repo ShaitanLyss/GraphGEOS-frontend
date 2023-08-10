@@ -63,6 +63,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 
 
 		// Add XML element inputs
+		if (childTypes.length > 0)
 		this.addXmlInData({
 			name: 'children',
 			isArray: true,
@@ -99,7 +100,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 			type = xmlType as SocketType;
 			controlType = assignControl(xmlType as SocketType);
 		}
-		else if (xmlType.startsWith('real')) {
+		else if (xmlType.startsWith('real') || xmlType.startsWith('integer')) {
 			type = xmlSubType && xmlSubType.endsWith('2d') ? 'vector' : 'number';
 			controlType = assignControl(type);
 		} else if (xmlType.startsWith('R1Tensor')) {
