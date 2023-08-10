@@ -35,6 +35,7 @@ export function assignColor(s: Socket): string {
 
 	const colorMap: { [key in SocketType]?: string } = {
 		string: '#d88cbb',
+		path: '#8B78E6',
 		pythonObject: '#616796',
 		pythonProperty: '#949cd3',
 		number: '#d8b38c',
@@ -55,6 +56,7 @@ export function assignColor(s: Socket): string {
 
 export function assignControl(socketType: SocketType): InputControlTypes | undefined {
 	const controlMap: { [key in SocketType]?: InputControlTypes } = {
+		path: 'file',
 		string: 'text',
 		number: 'number',
 		boolean: 'checkbox',

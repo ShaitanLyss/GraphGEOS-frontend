@@ -2,11 +2,13 @@ import { ClassicPreset, getUID } from 'rete';
 
 export class Control extends ClassicPreset.Control { }
 
-export type InputControlTypes = 'text' | 'number' | 'checkbox' | 'textarea' | 'vector' | "unknown";
+export type InputControlTypes = 'text' | 'number' | 'checkbox' | 'textarea' | 'vector' | "unknown" | 'file';
 export type InputControlValueType<T extends InputControlTypes> = T extends 'text'
 	? string
 	: T extends 'number'
 	? number
+	: T extends 'file'
+	? string
 	: T extends 'checkbox'
 	? boolean
 	: T extends 'textarea'
@@ -49,6 +51,9 @@ export class InputControl<
 			switch (type) {
 				case 'text':
 					initial = '';
+					break;
+				case 'file':
+					initial = './vtkfile.vtk';
 					break;
 				case 'number':
 					initial = 0;
