@@ -6,6 +6,7 @@ import type { SocketType, XMLAttrType } from '$rete/plugin/typed-sockets';
 import { XMLData } from './XMLData';
 import type { InputControl } from '$rete/control/Control';
 import { assignControl } from '$rete/customization/utils';
+import { AddXmlAttributeControl } from './AddXmlAttributeControl';
 
 export type XmlConfig = {
 	noName?: boolean;
@@ -28,9 +29,10 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 	xmlTag: string;
 	xmlInputs: Record<string, { tag?: string }> = {};
 	xmlProperties: Set<string> = new Set();
+	optionalXmlAttributes: Set<string> = new Set();
 	xmlVectorProperties: Set<string> = new Set();
 	params: { xmlConfig: XmlConfig } = { ...this.params };
-	state: { attributeValues: Record<string, unknown> } = { ...this.state, attributeValues: {} };
+	state: { attributeValues: Record<string, unknown>, usedOptionalAttrs: string[] } = { ...this.state, attributeValues: {}, usedOptionalAttrs: [] };
 
 	constructor(xmlNodeParams: XmlNodeParams) {
 		let { initialValues = {} } = xmlNodeParams;
@@ -61,8 +63,17 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 
 		if (xmlProperties)
 			xmlProperties.forEach(({ name, type, isArray, controlType, required, pattern }) => {
+				if (required) {
 				this.addInAttribute({ name, type, isArray, controlType, required, pattern, initialValues });
+				} else {
+					this.optionalXmlAttributes.add(name);
+				}
 			});
+
+		if (this.optionalXmlAttributes.size > 0) {
+			this.addControl("addXmlAttr", new AddXmlAttributeControl(this));
+			this.height += 53;
+		}
 
 		// Add XML element inputs
 		if (childTypes.length > 0)
@@ -84,7 +95,23 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		}
 	}
 
+
+	addOptionalAttribute(name: string) {
+		const prop = this.params.xmlConfig.xmlProperties?.find((prop) => prop.name === name);
+		if (prop === undefined) throw new Error(`Property ${name} not found`);
+		if (!this.state.usedOptionalAttrs.includes(name))
+			this.state.usedOptionalAttrs.push(name);
+		this.addInAttribute(prop);
+		this.updateElement();
+		console.log("updateElement", this.controls["addXmlAttr"].id)
+		this.updateElement("control", this.controls["addXmlAttr"].id);
+	}
+
 	override applyState(): void {
+		console.log(this.state)
+		for (const name of this.state.usedOptionalAttrs) {
+			this.addOptionalAttribute(name);
+		}
 		const { attributeValues } = this.state;
 		for (const [key, value] of Object.entries(attributeValues)) {
 			(this.inputs[key]?.control as InputControl)?.setValue(value);
@@ -101,7 +128,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		initialValues = {}
 	}: XmlAttributeDefinition & { initialValues?: Record<string, unknown> }) {
 		if (name.toLowerCase() === 'name') return;
-		if (!required) return;
+	
 		this.xmlProperties.add(name);
 
 		const xmlTypePattern = /([^\W_]+)(?:_([^\W_]+))?/gm;
@@ -111,10 +138,10 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 			controlType = assignControl(xmlType as SocketType);
 		} else if (xmlType.startsWith('real') || xmlType.startsWith('integer')) {
 			type = xmlSubType && xmlSubType.endsWith('2d') ? 'vector' : 'number';
-			controlType = assignControl(type);
+			controlType = assignControl(type as SocketType);
 		} else if (xmlType.startsWith('R1Tensor')) {
 			type = 'vector';
-			controlType = assignControl(type);
+			controlType = assignControl(type as SocketType);
 		} else if (xmlType === 'string') {
 			type = 'string';
 		} else {
@@ -149,7 +176,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 				  }
 		});
 		if (attrInputControl) {
-			console.log('attrInputControl', attrInputControl);
+			// console.log('attrInputControl', attrInputControl);
 			const val = (attrInputControl as InputControl).value;
 			if (val !== undefined) {
 				this.state.attributeValues[name] = val;
