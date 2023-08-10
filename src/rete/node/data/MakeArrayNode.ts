@@ -150,7 +150,7 @@ export class MakeArrayNode extends AddPinNode {
 	}
 	override applyState(): void {
 		super.applyState();
-		this.width = this.state.type === 'vector' ? 250 : 150;
+		this.width = this.state.type === 'vector' ? 280 : 150;
 		this.changeInputType(this.inputs['data-0'] as Input<Socket>, this.state.type);
 	}
 }
