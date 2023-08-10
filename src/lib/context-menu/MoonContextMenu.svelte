@@ -78,11 +78,11 @@
 			console.error('No connection drop event found');
 		}
 
-		if (!(node instanceof XmlNode) && !(node instanceof GetNameNode) && !(node instanceof MakeArrayNode) && !(node instanceof StringNode)) {
-			console.log(`Autoconnection non supporté vers ${node.label}`);
-			hideMenu();
-			return;
-		}
+		// if (!(node instanceof XmlNode) && !(node instanceof GetNameNode) && !(node instanceof MakeArrayNode) && !(node instanceof StringNode)) {
+		// 	console.log(`Autoconnection non supporté vers ${node.label}`);
+		// 	hideMenu();
+		// 	return;
+		// }
 		const editor = factory.getEditor();
 
 		if (socketData.side === 'output') {
@@ -96,7 +96,7 @@
 		} else {
 			const targetNode = editor.getNode(socketData.nodeId);
 			
-			await editor.addNewConnection(node, node instanceof MakeArrayNode ? 'array': node instanceof XmlNode ? 'value' : 'data', targetNode, socketData.key);
+			await editor.addNewConnection(node, node instanceof MakeArrayNode ? 'array': node instanceof GetNameNode ? 'name' : node instanceof XmlNode ? 'value' : 'data', targetNode, socketData.key);
 		}
 
 		// nodeView.translate()
