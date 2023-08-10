@@ -106,9 +106,14 @@ export class MakeArrayNode extends AddPinNode {
 		input.socket.type = to || 'any';
 		const controlType = assignControl(to);
 		input.removeControl();
-		if (controlType) input.addControl(new InputControl(controlType, {debouncedOnChange: (value) => {
-			this.getDataflowEngine().reset(this.id);
-		}}));
+		if (controlType)
+			input.addControl(
+				new InputControl(controlType, {
+					debouncedOnChange: (value) => {
+						this.getDataflowEngine().reset(this.id);
+					}
+				})
+			);
 	}
 
 	override data(

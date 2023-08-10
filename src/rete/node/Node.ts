@@ -292,7 +292,6 @@ export class Node<
 				type: type,
 				isRequired: isRequired,
 				node: this
-
 			}),
 			displayName,
 			isArray,
@@ -302,11 +301,10 @@ export class Node<
 			if (control.options) {
 				const debouncedOnChange = control.options.debouncedOnChange;
 				control.options.debouncedOnChange = (value: unknown) => {
-					if (debouncedOnChange)
-						debouncedOnChange(value);
+					if (debouncedOnChange) debouncedOnChange(value);
 					this.getDataflowEngine().reset(this.id);
 				};
-				}
+			}
 			input.addControl(new InputControl(control.type, control.options));
 		}
 		this.addInput(name, input as unknown as Input<Exclude<Inputs[keyof Inputs], undefined>>);
@@ -340,8 +338,6 @@ export class Node<
 		// if ()
 
 		const checkedInputs = inputs as Record<string, unknown[]>;
-
-		
 
 		if (checkedInputs && key in checkedInputs) {
 			// console.log(checkedInputs);

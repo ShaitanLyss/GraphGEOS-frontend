@@ -30,15 +30,14 @@
 	const menuSpawnPaddingX = 5;
 
 	$: flipMenuH = false && $moonMenuConnDropEvent?.socketData.side === 'input';
-	$: flipMenuV = $moonMenuConnDropEvent && $moonMenuConnDropEvent.pos.y + height > window.innerHeight;
-	$: console.log(flipMenuH, flipMenuV)
+	$: flipMenuV =
+		$moonMenuConnDropEvent && $moonMenuConnDropEvent.pos.y + height > window.innerHeight;
+	$: console.log(flipMenuH, flipMenuV);
 	$: x = $moonMenuPositionStore.x + (flipMenuH ? menuSpawnPaddingX : -menuSpawnPaddingX);
 	$: y = $moonMenuPositionStore.y + (flipMenuV ? menuSpawnPaddingY + 5 : -menuSpawnPaddingY);
 
 	let moonMenuElement: HTMLDivElement | undefined;
 
-	
-	
 	// $moonMenuHideDelayStore = 10000;
 
 	function hideMenu() {
@@ -61,9 +60,6 @@
 		}
 	}
 
-
-
-
 	// Spawn node on item click
 	async function onItemClick(item: MoonMenuItem) {
 		if (!$moonMenuConnDropEvent) throw new Error('No connection drop event found');
@@ -78,19 +74,23 @@
 			translateNodeFromGlobal({ globalPos: $moonMenuConnDropEvent.pos, factory, node });
 
 		if (!(node instanceof XmlNode) && !(node instanceof GetNameNode)) {
-			console.log(`Autoconnection non supporté vers ${node.label}`)
+			console.log(`Autoconnection non supporté vers ${node.label}`);
 			hideMenu();
 			return;
 		}
 		const editor = factory.getEditor();
 
-
 		if (socketData.side === 'output') {
 			const sourceNode = editor.getNode(socketData.nodeId);
-			await editor.addNewConnection(sourceNode, socketData.key, node, node instanceof GetNameNode ? 'xml' : 'children')
+			await editor.addNewConnection(
+				sourceNode,
+				socketData.key,
+				node,
+				node instanceof GetNameNode ? 'xml' : 'children'
+			);
 		} else {
 			const targetNode = editor.getNode(socketData.nodeId);
-			await editor.addNewConnection(node, 'value', targetNode, socketData.key)
+			await editor.addNewConnection(node, 'value', targetNode, socketData.key);
 		}
 
 		// nodeView.translate()
@@ -103,32 +103,30 @@
 	$: if ($moonMenuConnDropEvent) {
 		const socketData = $moonMenuConnDropEvent.socketData;
 		const socket = $moonMenuConnDropEvent.socketData.payload;
-		
 
-		const types = socket.type.split(":")[1]?.split("|");
+		const types = socket.type.split(':')[1]?.split('|');
 		if (!types) {
 			hideMenu();
 		} else {
+			filteredItems = $moonMenuItemsStore.filter((item) => {
+				if (item.label === 'GetName') {
+					console.log(item.inChildrenTypes, types);
+				}
+				const res = intersection(
+					socketData.side === 'output' ? item.inChildrenTypes : [item.outType],
+					types
+				);
+				// console.log(item.inChildrenTypes, types)
 
-		
-		filteredItems = $moonMenuItemsStore.filter((item) => {
-			if (item.label ==='GetName'){
-				console.log(item.inChildrenTypes, types)
+				// console.log("intersection", res)
+				return res.length > 0;
+			});
+
+			if (filteredItems.length === 0) {
+				hideMenu();
 			}
-			const res = intersection(socketData.side === 'output' ? item.inChildrenTypes : [item.outType], types);
-			// console.log(item.inChildrenTypes, types)
-			
-			// console.log("intersection", res)
-			return res.length > 0;
-		});
-
-		if (filteredItems.length === 0) {
-			hideMenu();
 		}
 	}
-
-	}
-	
 </script>
 
 {#if $moonMenuVisibleStore}
@@ -137,11 +135,13 @@
 		role="menu"
 		tabindex="0"
 		class="absolute variant-soft-secondary z-10 max-h-1-3"
-		style="position: absolute; left: {x}px; top: {y}px; transform: translate({flipMenuH ? -width : 0}px, {flipMenuV ? -height : 0}px);"
+		style="position: absolute; left: {x}px; top: {y}px; transform: translate({flipMenuH
+			? -width
+			: 0}px, {flipMenuV ? -height : 0}px);"
 		on:mouseenter={() => (isMouseOver = true)}
 		on:mouseleave={() => (isMouseOver = false)}
 	>
-	<div class="searchbar"></div>
+		<div class="searchbar" />
 		<div class="max-h-1-3 overflow-x-auto">
 			<div class="list">
 				{#each filteredItems as item (item.label)}

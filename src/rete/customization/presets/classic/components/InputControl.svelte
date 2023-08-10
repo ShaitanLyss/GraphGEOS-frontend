@@ -23,10 +23,10 @@
 
 	function onChange(val: unknown) {
 		if (isFirstSet) {
-		isFirstSet = false;
-		// return;
+			isFirstSet = false;
+			// return;
 		}
-		
+
 		value = val;
 
 		if (data.options?.change !== undefined) data.options.change(val);

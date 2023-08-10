@@ -4,7 +4,15 @@ import type { NodeFactory } from '$rete/node/NodeFactory';
 import type { Schemes } from '$rete/node/Schemes';
 import type { Area2D, AreaPlugin } from 'rete-area-plugin';
 import { Setup } from './Setup';
-import { BidirectFlow, ClassicFlow, ConnectionPlugin, EventType, Presets, SocketData, ClassicParams } from 'rete-connection-plugin';
+import {
+	BidirectFlow,
+	ClassicFlow,
+	ConnectionPlugin,
+	EventType,
+	Presets,
+	SocketData,
+	ClassicParams
+} from 'rete-connection-plugin';
 import { isConnectionInvalid } from '$rete/plugin/typed-sockets';
 import type { Socket } from '$rete/socket/Socket';
 import { notifications } from '@mantine/notifications';
@@ -16,18 +24,22 @@ import { XmlNode } from '$rete/node/XML/XmlNode';
 import { MakeArrayNode } from '$rete/node/data/MakeArrayNode';
 
 let lastClickedSocket = false;
-let lastPickedSockedData: SocketData & {payload: Socket} | undefined;
+let lastPickedSockedData: (SocketData & { payload: Socket }) | undefined;
 
 let dropMenuVisible = false;
 moonMenuVisibleStore.subscribe((value) => {
 	dropMenuVisible = value;
 });
 
-
 export class ConnectionDropEvent extends Event {
 	public readonly pos: { x: number; y: number };
 
-	constructor(public readonly pointerEvent: PointerEvent, public readonly drop: () => void, public readonly socketData: SocketData & {payload: Socket}, public readonly factory: NodeFactory) {
+	constructor(
+		public readonly pointerEvent: PointerEvent,
+		public readonly drop: () => void,
+		public readonly socketData: SocketData & { payload: Socket },
+		public readonly factory: NodeFactory
+	) {
 		super('connectiondrop');
 		this.pos = { x: pointerEvent.clientX, y: pointerEvent.clientY };
 	}
@@ -44,22 +56,31 @@ class MyConnectionPlugin extends ConnectionPlugin<Schemes, AreaExtra> {
 		// select socket on right click
 		if (event.button == 0) {
 			const pointedElements = document.elementsFromPoint(event.clientX, event.clientY);
-			const droppedSocketData = findSocket(this.socketsCache, pointedElements) as SocketData & {payload: Socket} | undefined;
+			const droppedSocketData = findSocket(this.socketsCache, pointedElements) as
+				| (SocketData & { payload: Socket })
+				| undefined;
 			const node = droppedSocketData?.payload.node;
-			
+
 			if (type === 'down') {
-				if (droppedSocketData) {					
+				if (droppedSocketData) {
 					this.picked = true;
 				}
 			}
-			
+
 			if (type === 'up' && this.picked && lastPickedSockedData) {
 				this.picked = false;
 				// Check if the pointer is over a socket
-				
+
 				if (!droppedSocketData) {
 					const area: AreaPlugin<Schemes, AreaExtra> = this.parent;
-					area.container.dispatchEvent(new ConnectionDropEvent(event, () => this.drop(), lastPickedSockedData as unknown as SocketData & {payload: Socket}, this.factory));
+					area.container.dispatchEvent(
+						new ConnectionDropEvent(
+							event,
+							() => this.drop(),
+							lastPickedSockedData as unknown as SocketData & { payload: Socket },
+							this.factory
+						)
+					);
 					return;
 				}
 			}
@@ -103,77 +124,81 @@ export class ConnectionSetup extends Setup {
 		// }, false);
 		const connection = new MyConnectionPlugin(factory);
 		Presets.classic.setup();
-		connection.addPreset(
-			(socketData: SocketData & {payload: Socket}) => {
-				// console.log("connectionPlugin", socketData)
-				const params: ClassicParams<Schemes> = {
-					makeConnection(from, to, context) {
-						const forward = from.side === 'output' && to.side === 'input';
-						const backward = from.side === 'input' && to.side === 'output';
-						const [source, target] = forward ? [from, to] : backward ? [to, from] : [];
+		connection.addPreset((socketData: SocketData & { payload: Socket }) => {
+			// console.log("connectionPlugin", socketData)
+			const params: ClassicParams<Schemes> = {
+				makeConnection(from, to, context) {
+					const forward = from.side === 'output' && to.side === 'input';
+					const backward = from.side === 'input' && to.side === 'output';
+					const [source, target] = forward ? [from, to] : backward ? [to, from] : [];
 
-						if (!source || !target) return false;
-						editor.addNewConnection(
-							editor.getNode(source.nodeId),
-							source.key,
-							editor.getNode(target.nodeId),
-							target.key
-						);
-						return true;
-					},
-					canMakeConnection(from, to) {
-						connection.drop();
+					if (!source || !target) return false;
+					editor.addNewConnection(
+						editor.getNode(source.nodeId),
+						source.key,
+						editor.getNode(target.nodeId),
+						target.key
+					);
+					return true;
+				},
+				canMakeConnection(from, to) {
+					connection.drop();
 
+					const forward = from.side === 'output' && to.side === 'input';
+					const backward = from.side === 'input' && to.side === 'output';
+					const [source, target] = forward ? [from, to] : backward ? [to, from] : [];
+					if (!source || !target) return false;
 
-
-						const forward = from.side === 'output' && to.side === 'input';
-						const backward = from.side === 'input' && to.side === 'output';
-						const [source, target] = forward ? [from, to] : backward ? [to, from] : [];
-						if (!source || !target) return false;
-
-						const sourceNode = editor.getNode(source.nodeId);
-						const targetNode = editor.getNode(target.nodeId);
-						const conn = source.key in sourceNode.outgoingDataConnections ? sourceNode.outgoingDataConnections[source.key] : source.key in sourceNode.outgoingExecConnections ? sourceNode.outgoingExecConnections[source.key] : undefined;
-						if (conn) {
-							if (conn.target === target.nodeId && conn.targetInput === target.key) {
-								console.log("Connection already exists")
-								return false;
-							}
-						}
-
-
-
-
-						// this function checks if the old connection should be removed
-						if (
-							isConnectionInvalid(
-								(from as unknown as { payload: Socket }).payload,
-								(to as unknown as { payload: Socket }).payload
-							)
-						) {
-							console.log(
-								`Connection between ${from.nodeId} and ${to.nodeId} is not allowed. From socket type is ${from.payload.type} and to socket type is ${to.payload.type}`
-							);
-							notifications.show({
-								title: 'Erreur',
-								message: `Connection invalide entre types "${from.payload.type}" et "${to.payload.type}" !`,
-								color: 'red'
-							});
+					const sourceNode = editor.getNode(source.nodeId);
+					const targetNode = editor.getNode(target.nodeId);
+					const conn =
+						source.key in sourceNode.outgoingDataConnections
+							? sourceNode.outgoingDataConnections[source.key]
+							: source.key in sourceNode.outgoingExecConnections
+							? sourceNode.outgoingExecConnections[source.key]
+							: undefined;
+					if (conn) {
+						if (conn.target === target.nodeId && conn.targetInput === target.key) {
+							console.log('Connection already exists');
 							return false;
-						} else return true;
+						}
 					}
-				};
-				return new (socketData.payload.isArray && socketData.payload.node instanceof XmlNode && socketData.key === 'children' ? BidirectFlow : ClassicFlow)(params)
-			}
-		);
+
+					// this function checks if the old connection should be removed
+					if (
+						isConnectionInvalid(
+							(from as unknown as { payload: Socket }).payload,
+							(to as unknown as { payload: Socket }).payload
+						)
+					) {
+						console.log(
+							`Connection between ${from.nodeId} and ${to.nodeId} is not allowed. From socket type is ${from.payload.type} and to socket type is ${to.payload.type}`
+						);
+						notifications.show({
+							title: 'Erreur',
+							message: `Connection invalide entre types "${from.payload.type}" et "${to.payload.type}" !`,
+							color: 'red'
+						});
+						return false;
+					} else return true;
+				}
+			};
+			return new (
+				socketData.payload.isArray &&
+				socketData.payload.node instanceof XmlNode &&
+				socketData.key === 'children'
+					? BidirectFlow
+					: ClassicFlow
+			)(params);
+		});
 
 		connection.addPipe(async (ctx) => {
 			// prevent the connection from moving when the drop menu is visible
-			if (ctx.type === "pointermove" && dropMenuVisible) {
+			if (ctx.type === 'pointermove' && dropMenuVisible) {
 				return;
 			}
-			
-			if (ctx.type ==="connectionpick") {
+
+			if (ctx.type === 'connectionpick') {
 				lastPickedSockedData = ctx.data.socket;
 			}
 			if (ctx.type === 'contextmenu' && lastClickedSocket) {

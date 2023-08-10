@@ -1,4 +1,4 @@
-import type { NodeFactory, Node } from "$rete";
+import type { NodeFactory, Node } from '$rete';
 
 export function getTranslateValues(element: HTMLElement): {
 	translateX: number;
@@ -39,7 +39,15 @@ export function getScale(element: HTMLElement): { scaleX: number; scaleY: number
 	return { scaleX, scaleY };
 }
 
-export function clientToSurfacePos({ x, y, factory }: { x: number, y: number, factory: NodeFactory }): [number, number] {
+export function clientToSurfacePos({
+	x,
+	y,
+	factory
+}: {
+	x: number;
+	y: number;
+	factory: NodeFactory;
+}): [number, number] {
 	const area = factory.getArea();
 	if (!area) throw new Error('No area');
 	const surface = area.container.children[0] as HTMLElement;
@@ -54,7 +62,15 @@ export function clientToSurfacePos({ x, y, factory }: { x: number, y: number, fa
 	return [scaledX, scaledY];
 }
 
-export function translateNodeFromGlobal({ globalPos, node, factory }: { globalPos: { x: number, y: number }, node: Node, factory: NodeFactory }) {
+export function translateNodeFromGlobal({
+	globalPos,
+	node,
+	factory
+}: {
+	globalPos: { x: number; y: number };
+	node: Node;
+	factory: NodeFactory;
+}) {
 	const area = factory.getArea();
 	if (!area) throw new Error('No area');
 	const nodeView = area.nodeViews.get(node.id);

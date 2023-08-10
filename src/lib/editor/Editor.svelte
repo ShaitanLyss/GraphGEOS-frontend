@@ -27,7 +27,12 @@
 	import type { UploadGraphModalMeta } from '$lib/modals/types';
 	import { MacroNode } from '$rete/node/MacroNode';
 	import type { UUID } from 'crypto';
-	import { clientToSurfacePos, getScale, getTranslateValues, translateNodeFromGlobal } from '$utils/html';
+	import {
+		clientToSurfacePos,
+		getScale,
+		getTranslateValues,
+		translateNodeFromGlobal
+	} from '$utils/html';
 	import { spawnMoonMenu } from '$lib/context-menu/moonContextMenu';
 	import { ConnectionDropEvent } from '$rete/setup/ConnectionSetup';
 
@@ -191,19 +196,15 @@
 		const node = await factory.addNode(MacroNode, { saveData: saveData, graphId });
 		if (!node) throw new Error('Node not created');
 		// Move node to drop position
-		translateNodeFromGlobal({globalPos: {x: event.clientX, y: event.clientY}, node, factory});
+		translateNodeFromGlobal({ globalPos: { x: event.clientX, y: event.clientY }, node, factory });
 
 		// nodeView.translate(event.clientX - surfacePos.x, event.clientY - surfacePos.y);
 	}
 
-	
-
-	
-
 	function onConnectionDrop(event: ConnectionDropEvent) {
-			console.log("connection drop on editor", event.socketData);
-			
-			spawnMoonMenu({connDropEvent: event, drop: () => this.drop()});
+		console.log('connection drop on editor', event.socketData);
+
+		spawnMoonMenu({ connDropEvent: event, drop: () => this.drop() });
 	}
 </script>
 

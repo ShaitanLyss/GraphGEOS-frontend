@@ -13,10 +13,10 @@ export type XmlConfig = {
 	outData?: OutDataParams;
 	xmlProperties?: XmlAttributeDefinition[];
 	childTypes?: string[];
-}
+};
 
 export type XmlNodeParams = NodeParams & {
-	xmlConfig: XmlConfig,
+	xmlConfig: XmlConfig;
 	initialValues?: Record<string, unknown>;
 };
 
@@ -30,13 +30,19 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 	xmlProperties: Set<string> = new Set();
 	xmlVectorProperties: Set<string> = new Set();
 	params: { xmlConfig: XmlConfig } = { ...this.params };
-	state: { attributeValues: Record<string, unknown> } = { ...this.state, attributeValues: {}};
+	state: { attributeValues: Record<string, unknown> } = { ...this.state, attributeValues: {} };
 
 	constructor(xmlNodeParams: XmlNodeParams) {
 		let { initialValues = {} } = xmlNodeParams;
 		const xmlConfig = xmlNodeParams.xmlConfig;
-		xmlNodeParams.params = { ...xmlNodeParams.params, xmlConfig, initialValues, label: xmlNodeParams.label, noName: xmlConfig.noName }
-		console.log("xmlNodeParams", xmlNodeParams)
+		xmlNodeParams.params = {
+			...xmlNodeParams.params,
+			xmlConfig,
+			initialValues,
+			label: xmlNodeParams.label,
+			noName: xmlConfig.noName
+		};
+		console.log('xmlNodeParams', xmlNodeParams);
 		const { outData, xmlProperties, childTypes = [] } = xmlConfig;
 		const { noName = false } = xmlConfig;
 		super({ ...xmlNodeParams, width: 220, height: 40 });
@@ -53,22 +59,18 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		// this.name = name + XmlNode.count;
 		initialValues = initialValues !== undefined ? initialValues : {};
 
-
-
 		if (xmlProperties)
 			xmlProperties.forEach(({ name, type, isArray, controlType, required, pattern }) => {
 				this.addInAttribute({ name, type, isArray, controlType, required, pattern, initialValues });
-
 			});
-
 
 		// Add XML element inputs
 		if (childTypes.length > 0)
-		this.addXmlInData({
-			name: 'children',
-			isArray: true,
-			type: `xmlElement:${childTypes.join('|')}`,
-		})
+			this.addXmlInData({
+				name: 'children',
+				isArray: true,
+				type: `xmlElement:${childTypes.join('|')}`
+			});
 
 		// Add XML output
 		if (outData) {
@@ -79,7 +81,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 				type: outData.type
 			});
 			this.height += 45;
-			}
+		}
 	}
 
 	override applyState(): void {
@@ -89,7 +91,15 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		}
 	}
 
-	addInAttribute({ name, type, isArray, controlType, required, pattern, initialValues = {} }: XmlAttributeDefinition & { initialValues?: Record<string, unknown>}) {
+	addInAttribute({
+		name,
+		type,
+		isArray,
+		controlType,
+		required,
+		pattern,
+		initialValues = {}
+	}: XmlAttributeDefinition & { initialValues?: Record<string, unknown> }) {
 		if (name.toLowerCase() === 'name') return;
 		if (!required) return;
 		this.xmlProperties.add(name);
@@ -99,56 +109,53 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		if (assignControl(xmlType as SocketType) !== undefined) {
 			type = xmlType as SocketType;
 			controlType = assignControl(xmlType as SocketType);
-		}
-		else if (xmlType.startsWith('real') || xmlType.startsWith('integer')) {
+		} else if (xmlType.startsWith('real') || xmlType.startsWith('integer')) {
 			type = xmlSubType && xmlSubType.endsWith('2d') ? 'vector' : 'number';
 			controlType = assignControl(type);
 		} else if (xmlType.startsWith('R1Tensor')) {
-			type = 'vector'
-			controlType = assignControl(type)
-		}
-		else if (xmlType === 'string') {
+			type = 'vector';
+			controlType = assignControl(type);
+		} else if (xmlType === 'string') {
 			type = 'string';
 		} else {
-			`xmlAttr:${type}`
+			`xmlAttr:${type}`;
 		}
-		isArray = xmlSubType && xmlSubType.startsWith('array') || isArray;
+		isArray = (xmlSubType && xmlSubType.startsWith('array')) || isArray;
 
 		if (type === 'vector') this.xmlVectorProperties.add(name);
 		let control = undefined;
 		switch (type) {
-
 		}
-		const {control: attrInputControl} = this.addInData({
+		const { control: attrInputControl } = this.addInData({
 			name: name,
 			displayName: titlelize(name),
 			socketLabel: titlelize(name),
 			type: type as SocketType,
 			isArray: isArray,
-			control: isArray ? undefined : controlType && {
-				type: controlType,
-				options: {
-					label: titlelize(name),
-					initial: initialValues[name],
-					pattern: pattern,
-					debouncedOnChange: (value) => {
-						console.log("debouncedOnChange", value)
-						this.state.attributeValues[name] = value;
-						this.getDataflowEngine().reset(this.id);
-					}
-				}
-			}
+			control: isArray
+				? undefined
+				: controlType && {
+						type: controlType,
+						options: {
+							label: titlelize(name),
+							initial: initialValues[name],
+							pattern: pattern,
+							debouncedOnChange: (value) => {
+								console.log('debouncedOnChange', value);
+								this.state.attributeValues[name] = value;
+								this.getDataflowEngine().reset(this.id);
+							}
+						}
+				  }
 		});
 		if (attrInputControl) {
-			console.log("attrInputControl", attrInputControl)
+			console.log('attrInputControl', attrInputControl);
 			const val = (attrInputControl as InputControl).value;
 			if (val !== undefined) {
-			this.state.attributeValues[name] = val;
-			setTimeout(() => {
-				this.getDataflowEngine().reset(this.id);
-
-			})
-			
+				this.state.attributeValues[name] = val;
+				setTimeout(() => {
+					this.getDataflowEngine().reset(this.id);
+				});
 			}
 		}
 
@@ -171,7 +178,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 						})
 					);
 				} else {
-					children = [...children, ...data instanceof Array ? data : [data]]
+					children = [...children, ...(data instanceof Array ? data : [data])];
 				}
 			}
 		}
@@ -189,11 +196,13 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 
 	getProperties(inputs?: Record<string, unknown>): Record<string, unknown> {
 		const properties: Record<string, unknown> = {};
-		console.log(this.xmlProperties)
+		console.log(this.xmlProperties);
 		const isArray = (key: string) => (this.inputs[key]?.socket as Socket).isArray;
 		for (const key of this.xmlProperties) {
-			console.log(key)
-			let data = this.getData(key, inputs) as Record<string, unknown> | Array<Record<string, unknown>>;
+			console.log(key);
+			let data = this.getData(key, inputs) as
+				| Record<string, unknown>
+				| Array<Record<string, unknown>>;
 			if (data !== undefined) {
 				if (isArray(key) && !(data instanceof Array)) {
 					data = [data];
@@ -209,7 +218,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 				}
 			}
 		}
-		console.log(properties)
+		console.log(properties);
 		return properties;
 	}
 

@@ -37,7 +37,7 @@ class OutExecNode extends Node {
 		this.addInExec();
 	}
 
-	override async  execute(input: string, forward: (output: string) => unknown): Promise<void> {
+	override async execute(input: string, forward: (output: string) => unknown): Promise<void> {
 		await this.onExecute();
 		super.execute(input, forward);
 	}
@@ -75,7 +75,11 @@ export class MacroNode extends Node {
 		}
 		// this.height += numSockets * 55;
 
-		this.initializePromise = this.initialize({ graphId, saveData, setHeight: (height: number) => this.setHeight(height) });
+		this.initializePromise = this.initialize({
+			graphId,
+			saveData,
+			setHeight: (height: number) => this.setHeight(height)
+		});
 		this.onRemoveIngoingConnection = (conn: Connection) => {
 			const macroKey = conn.targetInput;
 			const inputNode = this.inputNodes[macroKey];
@@ -98,7 +102,11 @@ export class MacroNode extends Node {
 		this.height = height;
 	}
 
-	async initialize(params: { graphId: UUID; saveData: NodeEditorSaveData; setHeight: (height: number) => void}): Promise<void> {
+	async initialize(params: {
+		graphId: UUID;
+		saveData: NodeEditorSaveData;
+		setHeight: (height: number) => void;
+	}): Promise<void> {
 		const { saveData, setHeight } = params;
 		// const data = (await new GetGraphStore().fetch({ variables: { id: graphId } })).data?.graph.data;
 		// if (data === undefined) throw new Error("Graph not found : " + graphId);
@@ -110,7 +118,7 @@ export class MacroNode extends Node {
 				const macroKey = key + '-' + node.id;
 				if (input.socket instanceof ExecSocket) {
 					this.addInExec(macroKey, input.socket.name);
-					setHeight(this.height + 33)
+					setHeight(this.height + 33);
 					continue;
 				}
 
@@ -128,21 +136,21 @@ export class MacroNode extends Node {
 					isArray: input.socket.isArray,
 					isRequired: input.socket.isRequired,
 					socketLabel: input.socket.name,
-					control: baseInputControl ? {
-						type: baseInputControl.type,
-						options: {
-							...baseInputControl.options,
-							initial: baseInputControl.value,
-							debouncedOnChange: async (val: unknown) => {
-								inputNode.setValue(val);
-							}
-						}
-					} : undefined
+					control: baseInputControl
+						? {
+								type: baseInputControl.type,
+								options: {
+									...baseInputControl.options,
+									initial: baseInputControl.value,
+									debouncedOnChange: async (val: unknown) => {
+										inputNode.setValue(val);
+									}
+								}
+						  }
+						: undefined
 				});
 				setHeight(this.height + (baseInputControl ? 65 : 37));
-				if (baseInputControl)
-				inputNode.setValue(baseInputControl.value);
-				
+				if (baseInputControl) inputNode.setValue(baseInputControl.value);
 			}
 			for (const [microKey, output] of Object.entries(
 				node.socketSelectionComponent.selectedOutputs()

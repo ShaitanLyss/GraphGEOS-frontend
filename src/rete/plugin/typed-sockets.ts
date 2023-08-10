@@ -27,11 +27,9 @@ export type SocketType =
 	| 'xmlProblem'
 	| 'path'
 	| XMLAttrType
-	| XMLElementType
-	;
+	| XMLElementType;
 export function isConnectionInvalid(outputSocket: Socket, inputSocket: Socket) {
 	const re = /(\w+):(.+)/;
-
 
 	const [, outType, outSubtypes] = re.exec(outputSocket.type) || [];
 	const [, inType, inSubtypes] = re.exec(inputSocket.type) || [];
@@ -45,7 +43,6 @@ export function isConnectionInvalid(outputSocket: Socket, inputSocket: Socket) {
 		if (intersection.length > 0) {
 			return false;
 		}
-		
 	}
 
 	return (

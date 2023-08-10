@@ -67,7 +67,11 @@ export class NodeFactory {
 	}
 	private state: Map<string, unknown> = new Map();
 
-	useState<T = unknown>(id: string, key: string, value?: T): {get: () => T; set: (value: T) => void} {
+	useState<T = unknown>(
+		id: string,
+		key: string,
+		value?: T
+	): { get: () => T; set: (value: T) => void } {
 		const stateKey = id + '_' + key;
 		if (!this.state.has(stateKey)) this.state.set(stateKey, value);
 		return {
@@ -194,7 +198,7 @@ export class NodeFactory {
 
 			if (context.type !== 'connectioncreated' && context.type !== 'connectionremoved')
 				return context;
-			
+
 			const conn = context.data;
 			const sourceNode = editor.getNode(conn.source);
 			const targetNode = editor.getNode(conn.target);

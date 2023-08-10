@@ -99,9 +99,6 @@ export class ContextMenuSetup extends Setup {
 			// items.push([file, () => new node()]);
 		}
 
-		
-
-
 		const xmlSchema = (await new GetXmlSchemaStore().fetch()).data?.geos.xmlSchema;
 		if (xmlSchema) {
 			const moonItems: MoonMenuItem[] = [];
@@ -110,11 +107,8 @@ export class ContextMenuSetup extends Setup {
 				const name = complexType.name.match(/^(.*)Type$/)?.at(1);
 				if (!name) throw new Error(`Invalid complex type name: ${complexType.name}`);
 
-				const hasNameAttribute = complexType.attributes.some((attr) => attr.name === 'name')
-				if (hasNameAttribute) 
-					complexTypesWithName.push(name);
-				
-
+				const hasNameAttribute = complexType.attributes.some((attr) => attr.name === 'name');
+				if (hasNameAttribute) complexTypesWithName.push(name);
 
 				const xmlNodeAction: (factory: NodeFactory) => Node = () =>
 					new XmlNode({
@@ -132,7 +126,7 @@ export class ContextMenuSetup extends Setup {
 							outData: {
 								name: name,
 								type: `xmlElement:${name}`,
-								socketLabel: name,
+								socketLabel: name
 							},
 
 							xmlProperties: complexType.attributes.map<XmlAttributeDefinition>((attr) => {
@@ -145,7 +139,6 @@ export class ContextMenuSetup extends Setup {
 								};
 							})
 						}
-
 					});
 
 				moonItems.push({
@@ -157,22 +150,20 @@ export class ContextMenuSetup extends Setup {
 						return childName;
 					}),
 					action: xmlNodeAction
-				})
-				pushMenuItem(
-					items,
-					['XML', complexType.name],
-					() => xmlNodeAction(factory),
-					factory
-				)
+				});
+				pushMenuItem(items, ['XML', complexType.name], () => xmlNodeAction(factory), factory);
 			}
-			const getNameNodeItem: MoonMenuItem = {action: (factory) => new GetNameNode({factory}), inChildrenTypes: complexTypesWithName, label:'Get Name', outType: 'string'}
+			const getNameNodeItem: MoonMenuItem = {
+				action: (factory) => new GetNameNode({ factory }),
+				inChildrenTypes: complexTypesWithName,
+				label: 'Get Name',
+				outType: 'string'
+			};
 			moonMenuItemsStore.set([getNameNodeItem, ...moonItems]);
 		}
 
-
 		const contextMenu = new ContextMenuPlugin<Schemes>({
-			items: Presets.classic.setup(getMenuArray(items)),
-
+			items: Presets.classic.setup(getMenuArray(items))
 		});
 
 		area.use(contextMenu);
