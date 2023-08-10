@@ -4,7 +4,7 @@ import { Connection } from '../node/Node';
 import { StartNode } from '../node/control/StartNode';
 import { LogNode } from '../node/io/LogNode';
 import { MakeArrayNode } from '../node/data/MakeArrayNode';
-import { NumberNode } from '../node/math/NumberNode';
+import { NumberNode } from '../node/data/NumberNode';
 import { ForEachNode } from '../node/control/ForEachNode';
 import type { EditorExample } from './types';
 import type { NodeFactory } from '../node/NodeFactory';

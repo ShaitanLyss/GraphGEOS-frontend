@@ -14,6 +14,7 @@ import type { SocketType } from '../typed-sockets';
 import { moonMenuItemsStore, type MoonMenuItem } from '$lib/context-menu/moonContextMenu';
 import { GetNameNode } from '$rete/node/XML/GetNameNode';
 import { MakeArrayNode } from '$rete/node/data/MakeArrayNode';
+import { StringNode } from '$rete/node/data/StringNode';
 
 type Entry = Map<string, Entry | (() => Node | Promise<Node>)>;
 function isClassConstructor(obj: unknown): boolean {
@@ -168,7 +169,13 @@ export class ContextMenuSetup extends Setup {
 				label: 'Make Array',
 				outType: '*'
 			};
-			moonMenuItemsStore.set([getNameNodeItem, makeArrayNodeItem, ...moonItems]);
+			const stringNodeItem: MoonMenuItem = {
+				action: (factory) => new StringNode({ factory }),
+				inChildrenTypes: [],
+				label: 'String',
+				outType: 'string'
+			};
+			moonMenuItemsStore.set([stringNodeItem, getNameNodeItem, makeArrayNodeItem, ...moonItems]);
 		}
 
 		const contextMenu = new ContextMenuPlugin<Schemes>({

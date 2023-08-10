@@ -1,4 +1,4 @@
-import { NumberNode } from '../node/math/NumberNode';
+import { NumberNode } from '../node/data/NumberNode';
 import { AddNode } from '../node/math/AddNode';
 import { Connection } from '../node/Node';
 import { DisplayNode } from '../node/io/DisplayNode';
