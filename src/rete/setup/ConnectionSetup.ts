@@ -23,8 +23,7 @@ import { moonMenuVisibleStore } from '$lib/context-menu/moonContextMenu';
 import { XmlNode } from '$rete/node/XML/XmlNode';
 import { MakeArrayNode } from '$rete/node/data/MakeArrayNode';
 
-let lastClickedSocket = false;
-let lastPickedSockedData: (SocketData & { payload: Socket }) | undefined;
+
 
 let dropMenuVisible = false;
 moonMenuVisibleStore.subscribe((value) => {
@@ -38,7 +37,8 @@ export class ConnectionDropEvent extends Event {
 		public readonly pointerEvent: PointerEvent,
 		public readonly drop: () => void,
 		public readonly socketData: SocketData & { payload: Socket },
-		public readonly factory: NodeFactory
+		public readonly factory: NodeFactory,
+		
 	) {
 		super('connectiondrop');
 		this.pos = { x: pointerEvent.clientX, y: pointerEvent.clientY };
@@ -47,6 +47,8 @@ export class ConnectionDropEvent extends Event {
 
 class MyConnectionPlugin extends ConnectionPlugin<Schemes, AreaExtra> {
 	picked: boolean = false;
+	public lastClickedSocket: boolean = false
+	public lastPickedSockedData: (SocketData & { payload: Socket }) | undefined;
 
 	constructor(private factory: NodeFactory) {
 		super();
@@ -67,7 +69,7 @@ class MyConnectionPlugin extends ConnectionPlugin<Schemes, AreaExtra> {
 				}
 			}
 
-			if (type === 'up' && this.picked && lastPickedSockedData) {
+			if (type === 'up' && this.picked && this.lastPickedSockedData) {
 				this.picked = false;
 				// Check if the pointer is over a socket
 
@@ -77,7 +79,7 @@ class MyConnectionPlugin extends ConnectionPlugin<Schemes, AreaExtra> {
 						new ConnectionDropEvent(
 							event,
 							() => this.drop(),
-							lastPickedSockedData as unknown as SocketData & { payload: Socket },
+							this.lastPickedSockedData as unknown as SocketData & { payload: Socket },
 							this.factory
 						)
 					);
@@ -103,7 +105,7 @@ class MyConnectionPlugin extends ConnectionPlugin<Schemes, AreaExtra> {
 			if (socket === undefined)
 				throw new Error(`Socket not found for node ${node.id} and key ${pickedSocketData.key}`);
 
-			lastClickedSocket = true;
+			this.lastClickedSocket = true;
 			socket.selected = !socket?.selected;
 			node.updateElement();
 			return;
@@ -199,10 +201,10 @@ export class ConnectionSetup extends Setup {
 			}
 
 			if (ctx.type === 'connectionpick') {
-				lastPickedSockedData = ctx.data.socket;
+				connection.lastPickedSockedData = ctx.data.socket as SocketData & { payload: Socket };
 			}
-			if (ctx.type === 'contextmenu' && lastClickedSocket) {
-				lastClickedSocket = false;
+			if (ctx.type === 'contextmenu' && connection.lastClickedSocket) {
+				connection.lastClickedSocket = false;
 				ctx.data.event.preventDefault();
 				ctx.data.event.stopPropagation();
 				return;

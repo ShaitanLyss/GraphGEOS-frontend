@@ -72,7 +72,10 @@
 		const node = item.action(factory);
 		await factory.getEditor().addNode(node);
 		if ($moonMenuConnDropEvent)
-			translateNodeFromGlobal({ globalPos: $moonMenuConnDropEvent.pos, factory, node });
+			translateNodeFromGlobal({ globalPos: $moonMenuConnDropEvent.pos, factory, node })
+		else {
+			console.error('No connection drop event found');
+		}
 
 		if (!(node instanceof XmlNode) && !(node instanceof GetNameNode) && !(node instanceof MakeArrayNode)) {
 			console.log(`Autoconnection non supporté vers ${node.label}`);

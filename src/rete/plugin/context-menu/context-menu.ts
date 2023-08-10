@@ -67,7 +67,7 @@ export class ContextMenuSetup extends Setup {
 	async setup(
 		editor: NodeEditor,
 		area: AreaPlugin<Schemes, AreaExtra>,
-		factory: NodeFactory
+		__factory: NodeFactory
 	): Promise<void> {
 		const re = /[/\\]/i;
 
@@ -93,7 +93,7 @@ export class ContextMenuSetup extends Setup {
 				);
 			}) as (typeof Node)[];
 
-			nodeClasses.forEach((node) => pushMenuItem(items, menuPath.split(re), node, factory));
+			nodeClasses.forEach((node) => pushMenuItem(items, menuPath.split(re), node, __factory));
 
 			// console.log(nodeClasses);
 
@@ -113,10 +113,10 @@ export class ContextMenuSetup extends Setup {
 				if (hasNameAttribute) complexTypesWithName.push(name);
 				complexTypes.push(name);
 
-				const xmlNodeAction: (factory: NodeFactory) => Node = () =>
+				const xmlNodeAction: (factory: NodeFactory) => Node = (factory) =>
 					new XmlNode({
 						label: name,
-						factory,
+						factory: factory,
 
 						xmlConfig: {
 							noName: !hasNameAttribute,
@@ -154,7 +154,7 @@ export class ContextMenuSetup extends Setup {
 					}),
 					action: xmlNodeAction
 				});
-				pushMenuItem(items, ['XML', complexType.name], () => xmlNodeAction(factory), factory);
+				pushMenuItem(items, ['XML', complexType.name], () => xmlNodeAction(__factory), __factory);
 			}
 			const getNameNodeItem: MoonMenuItem = {
 				action: (factory) => new GetNameNode({ factory }),

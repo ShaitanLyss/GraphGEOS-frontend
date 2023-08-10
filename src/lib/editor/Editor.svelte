@@ -216,9 +216,11 @@
 	class:opacity-0={hidden && !ready}
 > -->
 <div
-	class="absolute inset-0 border-surface-500 h-full"
+	class="absolute inset-0 border-surface-500 h-full "
 	style="z-index: {hidden ? -10 : 0};"
 	class:opacity-0={hidden}
+	class:pointer-events-none={hidden}
+
 >
 	<AppShell regionPage="h-full" slotSidebarLeft="h-full" slotPageContent="h-full">
 		<div class="h-full">
