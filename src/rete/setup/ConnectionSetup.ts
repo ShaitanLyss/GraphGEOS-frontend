@@ -57,7 +57,7 @@ class MyConnectionPlugin extends ConnectionPlugin<Schemes, AreaExtra> {
 				this.picked = false;
 				// Check if the pointer is over a socket
 				
-				if (!droppedSocketData && (lastPickedSockedData.payload.node instanceof XmlNode || lastPickedSockedData.payload.node instanceof MakeArrayNode)) {
+				if (!droppedSocketData) {
 					const area: AreaPlugin<Schemes, AreaExtra> = this.parent;
 					area.container.dispatchEvent(new ConnectionDropEvent(event, () => this.drop(), lastPickedSockedData as unknown as SocketData & {payload: Socket}, this.factory));
 					return;

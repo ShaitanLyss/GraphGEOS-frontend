@@ -1,9 +1,10 @@
 <script lang="ts">
-	import type { InputControl } from '$rete/control/Control';
+	import type { InputControl, InputControlTypes } from '$rete/control/Control';
+	import { FileButton } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	export let data: InputControl<unknown>;
 	let isReady = false;
-	let type = data.type;
+	let type: InputControlTypes = data.type;
 	let readonly = data.readonly;
 	let value = data.value;
 	let debouncedValue = value;
@@ -11,36 +12,41 @@
 	let options = data.options;
 	const pattern = options?.pattern;
 	let isFirstSet = true;
+	let fileList: FileList | undefined;
 
 	// Debounce value
 	$: if (!isFirstSet) {
-		const val = data.type === 'vector' ? data.value : debouncedValue;
-		data.setValue(val);
-		if (data?.options?.debouncedOnChange) data.options.debouncedOnChange(val);
+		console.log('debounced', debouncedValue);
+		data.setValue(debouncedValue);
+		if (data?.options?.debouncedOnChange) data.options.debouncedOnChange(debouncedValue);
 	}
 
-	function change(event: Event) {
+	function onChange(val: unknown) {
 		if (isFirstSet) {
-			isFirstSet = false;
-			return;
+		isFirstSet = false;
+		return;
 		}
 		
-		if (pattern) {
-			console.log("pattern")
-			const target = event.target as HTMLInputElement;
-			const val = target.value;
-			if (val.match(pattern)) {
-				debouncedValue = val;
-			}
-			return;
-		}
-		const target = event.target as HTMLInputElement;
-		const val = data.type === 'number' ? +target.value : target.value;
+		console.log("onChange", val)
+		value = val;
+
 		if (data.options?.change !== undefined) data.options.change(val);
 		clearTimeout(debouncedTimer);
 		debouncedTimer = setTimeout(() => {
 			debouncedValue = val;
 		}, 200);
+	}
+	function onChangeFromEvent(event: Event) {
+		const target = event.target as HTMLInputElement;
+		const val = target.value;
+		onChange(val);
+	}
+
+	function onFileChange(event: Event) {
+		const val = (event.target as HTMLInputElement)?.value;
+		console.log(val);
+		console.log(typeof val);
+		onChange(val);
 	}
 </script>
 
@@ -53,13 +59,7 @@
 			{value}
 			checked={value}
 			readOnly={readonly}
-			on:change={(e) => {
-				const val = e.currentTarget.checked;
-				console.log(val);
-
-				data.setValue(val);
-				// options.change(e.currentTarget.checked);
-			}}
+			on:change={(e) => onChange(e.currentTarget.checked)}
 			label={options?.label}
 		/>
 		<!-- <span class="">{options?.label}</span> -->
@@ -71,10 +71,13 @@
 		<span class="text-white"> {options?.label ? options?.label : ''}</span>
 		<input
 			type="number"
-			class="input"
+			class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-full rounded-token bg-surface-200-700-token
+				
+			 text-surface-900-50-token border-token
+			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
 			{value}
 			{readonly}
-			on:input={change}
+			on:input={onChangeFromEvent}
 			on:pointerdown|stopPropagation={() => false}
 		/>
 	</label>
@@ -85,9 +88,12 @@
 		<span class="text-white"> {options?.label ? options?.label : ''}</span>
 		<input
 			type="text"
-			class="input"
+			class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-full rounded-token bg-surface-200-700-token
+				
+			 text-surface-900-50-token border-token
+			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
 			{value}
-			on:input={change}
+			on:input={onChangeFromEvent}
 			{readonly}
 			on:pointerdown|stopPropagation={() => false}
 		/>
@@ -98,77 +104,83 @@
 		<!-- {options?.label} -->
 		<span class="text-white"> {options?.label ? options?.label : ''}</span>
 		<textarea
-			class="w-full rounded-md bg-surface-100-800-token
+			class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-full rounded-md bg-surface-200-700-token
 			 text-surface-900-50-token border-token
 			 focus:border-primary-500 focus:ring-primary-500 transition-colors
 			 "
 			{value}
 			{readonly}
-			on:input={change}
+			on:input={onChangeFromEvent}
 			on:pointerdown|stopPropagation={() => false}
 		/>
 	</label>
 {/if}
 {#if type == 'vector'}
-	<label class="label">
+	<div class="label">
 		<span class="text-white text-sm">{options?.label ? options?.label : ''}</span>
 		<div class="flex">
 			<input
 				type="number"
-				class="input"
+				class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-full bg-surface-200-700-token
+				rounded-tl-token rounded-bl-token
+			 text-surface-900-50-token border-token
+			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
+				name="x"
 				value={value.x}
 				readOnly={readonly}
 				on:input={(e) => {
-					change(e);
-					const val = { ...value, x: e.currentTarget.value };
-					data.setValue(val);
+					onChange({ ...value, x: Number(e.currentTarget.value) });
+					// data.setValue(val);
 				}}
 				on:pointerdown|stopPropagation={() => false}
 			/>
 			<input
+				name="y"
 				type="number"
-				class="input"
+				class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-full bg-surface-200-700-token
+			 text-surface-900-50-token border-token
+			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
 				value={value.y}
 				{readonly}
 				on:input={(e) => {
-					change(e)
-					const val = { ...value, y: e.currentTarget.value };
-					data.setValue(val);
+					onChange({ ...value, y: Number(e.currentTarget.value) });
+					// data.setValue(val);
 				}}
 				on:pointerdown|stopPropagation={() => false}
 			/>
 			<input
 				type="number"
-				class="input"
+				class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-full bg-surface-200-700-token
+				rounded-tr-token rounded-br-token
+			 text-surface-900-50-token border-token
+			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
+				name="z"
 				value={value.z}
 				{readonly}
 				on:input={(e) => {
-					change(e)
-					const val = { ...value, z: e.currentTarget.value };
-					data.setValue(val);
+					const val = { ...value, z: Number(e.currentTarget.value) };
+					onChange(val);
+					// data.setValue(val);
 				}}
 				on:pointerdown|stopPropagation={() => false}
 			/>
 		</div>
+	</div>
+{/if}
+{#if type === 'file'}
+	<label class="label">
+		<!-- {options?.label ? options?.label : ''} -->
+		<span class="text-white"> {options?.label ? options?.label : ''}</span>
+		<input
+			type="text"
+			class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-full rounded-token bg-surface-200-700-token
+				
+			 text-surface-900-50-token border-token
+			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
+			{value}
+			on:input={onChangeFromEvent}
+			{readonly}
+			on:pointerdown|stopPropagation={() => false}
+		/>
 	</label>
 {/if}
-
-<!-- <input
-	type={data.type}
-	value={data.value}
-	readonly={data.readonly}
-	on:input={change}
-	on:pointerdown|stopPropagation={() => false}
-/> -->
-
-<style>
-	/* input {
-		width: 100%;
-		border-radius: 30px;
-		background-color: white;
-		padding: 2px 6px;
-		border: 1px solid #999;
-		font-size: 110%;
-		box-sizing: border-box;
-	} */
-</style>
