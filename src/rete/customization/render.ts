@@ -18,6 +18,8 @@ import { SveltePlugin, Presets } from 'rete-svelte-plugin';
 import { InputControl } from '$rete/control/Control';
 import InputControlComponent from '$rete/customization/presets/classic/components/InputControl.svelte';
 import { Socket } from '$rete/socket/Socket';
+import AddXmlAttributeControlCmpnt from '$rete/node/XML/AddXmlAttributeControl.svelte';
+import { AddXmlAttributeControl } from '$rete/node/XML/AddXmlAttributeControl';
 // import { ReactPlugin, Presets } from 'rete-react-plugin';
 
 export class RenderSetup implements Setup {
@@ -43,6 +45,8 @@ export class RenderSetup implements Setup {
 						if (data.payload instanceof ButtonControl) {
 							return CustomButton;
 						}
+						if (data.payload instanceof AddXmlAttributeControl)
+							return AddXmlAttributeControlCmpnt;
 
 						return Presets.classic.Control;
 					},
