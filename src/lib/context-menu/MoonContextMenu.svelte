@@ -104,13 +104,20 @@
 		const socketData = $moonMenuConnDropEvent.socketData;
 		const socket = $moonMenuConnDropEvent.socketData.payload;
 
+		const baseType = socket.type.split(':')[0];
 		const types = socket.type.split(':')[1]?.split('|');
-		if (!types) {
+		if (!baseType) {
 			hideMenu();
 		} else {
 			filteredItems = $moonMenuItemsStore.filter((item) => {
-				if (item.label === 'GetName') {
-					console.log(item.inChildrenTypes, types);
+				// if (item.label === 'GetName') {
+				// 	console.log(item.inChildrenTypes, types);
+				// }
+				if (socketData.side === 'output' ? item.inChildrenTypes.includes('*') : item.outType === '*') {
+					return true;
+				}
+				if (!types) {
+					return false;
 				}
 				const res = intersection(
 					socketData.side === 'output' ? item.inChildrenTypes : [item.outType],

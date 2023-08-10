@@ -13,6 +13,7 @@ import type { XmlAttributeDefinition } from '$rete/node/XML/types';
 import type { SocketType } from '../typed-sockets';
 import { moonMenuItemsStore, type MoonMenuItem } from '$lib/context-menu/moonContextMenu';
 import { GetNameNode } from '$rete/node/XML/GetNameNode';
+import { MakeArrayNode } from '$rete/node/data/MakeArrayNode';
 
 type Entry = Map<string, Entry | (() => Node | Promise<Node>)>;
 function isClassConstructor(obj: unknown): boolean {
@@ -103,12 +104,14 @@ export class ContextMenuSetup extends Setup {
 		if (xmlSchema) {
 			const moonItems: MoonMenuItem[] = [];
 			const complexTypesWithName: string[] = [];
+			const complexTypes: string[] = [];
 			for (const complexType of xmlSchema.complexTypes) {
 				const name = complexType.name.match(/^(.*)Type$/)?.at(1);
 				if (!name) throw new Error(`Invalid complex type name: ${complexType.name}`);
 
 				const hasNameAttribute = complexType.attributes.some((attr) => attr.name === 'name');
 				if (hasNameAttribute) complexTypesWithName.push(name);
+				complexTypes.push(name);
 
 				const xmlNodeAction: (factory: NodeFactory) => Node = () =>
 					new XmlNode({
@@ -159,7 +162,13 @@ export class ContextMenuSetup extends Setup {
 				label: 'Get Name',
 				outType: 'string'
 			};
-			moonMenuItemsStore.set([getNameNodeItem, ...moonItems]);
+			const makeArrayNodeItem: MoonMenuItem = {
+				action: (factory) => new MakeArrayNode({ factory }),
+				inChildrenTypes: ['*'],
+				label: 'Make Array',
+				outType: '*'
+			};
+			moonMenuItemsStore.set([getNameNodeItem, makeArrayNodeItem, ...moonItems]);
 		}
 
 		const contextMenu = new ContextMenuPlugin<Schemes>({
