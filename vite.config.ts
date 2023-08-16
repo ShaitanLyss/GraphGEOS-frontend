@@ -1,6 +1,7 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import houdini from 'houdini/vite';
 import { defineConfig, type PluginOption } from 'vite';
+import { purgeCss } from 'vite-plugin-tailwind-purgecss';
 
 export default defineConfig({
 	build: {
@@ -21,7 +22,13 @@ export default defineConfig({
 					)};`
 				});
 			}
-		}
+		},
+		purgeCss({
+			safelist: {
+				// any selectors that begin with "hljs-" will not be purged
+				greedy: [/^hljs-/],
+			},
+		}),
 	]
 	// test: {
 	// 	include: ['src/**/*.{test,spec}.{js,ts}']

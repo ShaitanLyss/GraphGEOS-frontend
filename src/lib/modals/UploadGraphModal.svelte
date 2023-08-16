@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { modalStore, localStorageStore } from '@skeletonlabs/skeleton';
+	import { getModalStore, localStorageStore } from '@skeletonlabs/skeleton';
 	import { notifications } from '@mantine/notifications';
 	import { page } from '$app/stores';
 
@@ -15,6 +15,8 @@
 	import type { UUID } from 'crypto';
 	import Fa from 'svelte-fa';
 	import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
+
+	const modalStore = getModalStore();
 
 	let formElement: HTMLFormElement;
 

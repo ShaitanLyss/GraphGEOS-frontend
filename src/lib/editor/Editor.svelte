@@ -5,7 +5,7 @@
 	import { AppShell, ModalSettings, modeCurrent } from '@skeletonlabs/skeleton';
 	import { faCloud, faCubes, faCubesStacked, faEarth } from '@fortawesome/free-solid-svg-icons';
 	import { faPython } from '@fortawesome/free-brands-svg-icons';
-	import { modalStore } from '@skeletonlabs/skeleton';
+	import { getModalStore } from '@skeletonlabs/skeleton';
 	import DownloadGraphButton from '$lib/editor/DownloadGraphButton.svelte';
 	import SaveGraphButton from './SaveGraphButton.svelte';
 	import EditorButton from './EditorButton.svelte';
@@ -34,9 +34,11 @@
 		translateNodeFromGlobal
 	} from '$utils/html';
 	import { spawnMoonMenu } from '$lib/context-menu/moonContextMenu';
-	import { ConnectionDropEvent } from '$rete/setup/ConnectionSetup';
+	import type { ConnectionDropEvent } from '$rete/setup/ConnectionSetup';
 
 	// import {} from '@fortawesome/free-regular-svg-icons';
+
+	const modalStore = getModalStore();
 
 	export let loadExample: EditorExample | undefined = undefined;
 	export let hidden = false;

@@ -7,16 +7,10 @@
 	import { Notifications } from '@mantine/notifications';
 	import UploadGraphModal from '$lib/modals/UploadGraphModal.svelte';
 	import { onMount } from 'svelte';
-	import { setInitialClassState } from '@skeletonlabs/skeleton';
-	import { AppShell, LightSwitch, Modal, type ModalComponent } from '@skeletonlabs/skeleton';
+	import { AppShell, LightSwitch, Modal, type ModalComponent, initializeStores, setInitialClassState } from '@skeletonlabs/skeleton';
+	
 
 	console.log('layout .svelte');
-
-	// Your selected Skeleton theme:
-	import '@skeletonlabs/skeleton/themes/theme-skeleton.css';
-
-	// This contains the bulk of Skeletons required styles:
-	import '@skeletonlabs/skeleton/styles/skeleton.css';
 
 	// Finally, your application's global stylesheet (sometimes labeled 'app.css')
 	// import 'app.css'
@@ -24,7 +18,9 @@
 	import { init } from 'svelte-i18n';
 	import MoonContextMenu from '$lib/context-menu/MoonContextMenu.svelte';
 	import { moonMenuVisibleStore } from '$lib/context-menu/moonContextMenu';
-
+	
+	initializeStores();
+	
 	let i = 0;
 
 	// import '@skeletonlabs/skeleton/styles/partials/typography-prose.css';

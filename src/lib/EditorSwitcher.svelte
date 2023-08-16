@@ -4,7 +4,7 @@
 		Tab,
 		LightSwitch,
 		ModalSettings,
-		modalStore,
+		getModalStore,
 		AppShell
 	} from '@skeletonlabs/skeleton';
 	// import { type DragOptions, draggable } from '@neodrag/svelte';
@@ -28,6 +28,7 @@
 	let addButonClicked = -1;
 
 	const editMacroNodeChannel = new EditMacroNodeChannel();
+	const modalStore = getModalStore();
 
 	export let examples: EditorView[] = [];
 	export let defaultTabSet: string = '';
