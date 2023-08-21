@@ -159,6 +159,11 @@
 	<AppShell slotPageContent="relative">
 		<svelte:fragment slot="header">
 			<div class="flex">
+				<h1 class="h3 mx-auto px-2 my-auto pb-1">
+					<span class="bg-gradient-to-tr from-red-900 to-yellow-700 dark:from-red-500 dark:to-yellow-500 bg-clip-text text-transparent box-decoration-clone">
+					GEOS
+					</span>
+				</h1>
 				<div class="overflow-x-hidden flex-grow">
 					<div class="overflow-x-auto select-none">
 						<TabGroup regionList={'overflow-x-visible'}>
