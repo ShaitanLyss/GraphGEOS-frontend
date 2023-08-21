@@ -54,7 +54,7 @@
 </script>
 
 <div
-	class="node {data.selected ? 'selected' : ''}"
+	class="rounded-container-token node {data.selected ? 'selected' : ''}"
 	style:width
 	style:height
 	data-testid="node"
@@ -174,7 +174,6 @@
 
 	.node {
 		border: 2px solid #4e58bf;
-		border-radius: 10px;
 		cursor: pointer;
 		box-sizing: border-box;
 		width: $node-width;
