@@ -2,6 +2,8 @@ import { browser } from '$app/environment';
 import { setSession } from '$houdini';
 import { locale, waitLocale } from 'svelte-i18n';
 import { sessionTokenStore } from './sessionTokenStore.js';
+import { redirect } from '@sveltejs/kit';
+
 
 // import { getLocaleFromNavigator, init } from 'svelte-i18n';
 // init({
@@ -17,11 +19,16 @@ export const load = async (event) => {
 	if (!browser) {
 		return {};
 	}
+	
+	
 	// if (browser) {
 	// 	locale.set(window.navigator.language)
 	// }
 	await waitLocale();
 	const sessionToken = localStorage.getItem('sessionToken')?.replaceAll('"', '');
+	if (sessionToken == null) {
+		throw redirect(307, '/auth');
+	}
 	console.log('load session token', sessionToken);
 	const { SessionAndUserStore } = await import('$houdini');
 	const sessionAndUser = new SessionAndUserStore();
