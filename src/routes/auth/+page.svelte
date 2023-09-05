@@ -93,7 +93,7 @@
 		<h1 class="h1">Loading...</h1>
 	{:else}
 		<div class="text-center space-y-6 card py-8 px-12 variant-soft-surface">
-			<h1 class="h1 pb-2">Lunar Auth</h1>
+			<h1 class="h1 pb-2">GEOS UI</h1>
 			{#if session}
 				<h2 class="h2">You are logged in as</h2>
 				<div class="py-4">

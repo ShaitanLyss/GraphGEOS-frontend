@@ -1,0 +1,21 @@
+:80
+
+root * /usr/share/caddy
+
+file_server {
+    hide .git
+}
+
+log {
+    output stdout
+}
+
+@notStatic {
+    not path *.js *.css *.png *.jpg *.svg *.html
+}
+
+route {
+    try_files {uri} {uri}.html index.html
+    rewrite @notStatic /index.html
+    file_server
+}

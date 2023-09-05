@@ -26,9 +26,10 @@ export const load = async (event) => {
 	// }
 	await waitLocale();
 	const sessionToken = localStorage.getItem('sessionToken')?.replaceAll('"', '');
-	if (sessionToken == null) {
-		throw redirect(307, '/auth');
-	}
+	// console.log(window.location)
+	// if (typeof sessionToken !== 'string' && window.location.pathname !== '/auth') {
+	// 	throw redirect(307, '/auth');
+	// }
 	console.log('load session token', sessionToken);
 	const { SessionAndUserStore } = await import('$houdini');
 	const sessionAndUser = new SessionAndUserStore();

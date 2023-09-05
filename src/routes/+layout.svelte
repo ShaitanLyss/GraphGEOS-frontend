@@ -8,9 +8,15 @@
 	import UploadGraphModal from '$lib/modals/UploadGraphModal.svelte';
 	import { onMount } from 'svelte';
 	import { AppShell, LightSwitch, Modal, type ModalComponent, initializeStores, setInitialClassState } from '@skeletonlabs/skeleton';
+
+	export let data: LayoutData;
 	
 
 	console.log('layout .svelte');
+	console.log('layou data ', data);
+	if (!('session' in data) && window.location.pathname !== '/auth') {
+		goto(`/auth?redirect=${window.location.pathname}`)
+	}
 
 	// Finally, your application's global stylesheet (sometimes labeled 'app.css')
 	// import 'app.css'
@@ -18,6 +24,8 @@
 	import { init } from 'svelte-i18n';
 	import MoonContextMenu from '$lib/context-menu/MoonContextMenu.svelte';
 	import { moonMenuVisibleStore } from '$lib/context-menu/moonContextMenu';
+	import type { LayoutData } from './$types';
+	import { goto } from '$app/navigation';
 	
 	initializeStores();
 	
