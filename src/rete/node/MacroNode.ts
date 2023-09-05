@@ -11,10 +11,11 @@ import { getLeavesFromOutput } from './utils';
 class InputNode extends Node {
 	private value: unknown;
 
-	constructor({ factory }: { factory: NodeFactory }) {
+	constructor({ factory, isArray }: { factory: NodeFactory, isArray: boolean }) {
 		super({ factory });
 		this.addOutData({
-			name: 'value'
+			name: 'value',
+			isArray
 		});
 	}
 
@@ -69,6 +70,17 @@ export class MacroNode extends Node {
 			editor: this.macroEditor,
 			makutuClasses: factory.makutuClasses
 		});
+		this.macroEditor.addPipe(async (ctx) => {
+			if (ctx.type === 'connectioncreate') {
+				const outputSocket = this.macroEditor.getNode(ctx.data.source).outputs[ctx.data.sourceOutput]?.socket;
+				const inputSocket = this.macroEditor.getNode(ctx.data.target).inputs[ctx.data.targetInput]?.socket;
+				if (outputSocket?.isArray === true && inputSocket?.isArray === true) {
+					if (ctx.data.targetInput in inputSocket.node.ingoingDataConnections)
+						await this.macroEditor.removeConnection(inputSocket.node.ingoingDataConnections[ctx.data.targetInput].id)
+				}
+			}
+			return ctx;
+		});
 		let numSockets = 0;
 		for (const node of saveData.nodes) {
 			numSockets += node.selectedInputs.length + node.selectedOutputs.length;
@@ -122,7 +134,7 @@ export class MacroNode extends Node {
 					continue;
 				}
 
-				const inputNode = await this.macroFactory.addNode(InputNode, {});
+				const inputNode = await this.macroFactory.addNode(InputNode, {isArray: input.socket.isArray});
 				if (!inputNode) throw new Error('Failed to add input node ' + macroKey);
 				await this.macroEditor.addNewConnection(inputNode, 'value', node, key);
 				this.inputNodes[macroKey] = inputNode;

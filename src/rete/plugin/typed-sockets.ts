@@ -106,9 +106,13 @@ export class TypedSocketsPlugin<Schemes extends BaseSchemes> extends Scope<never
 									connection.source === conn.source &&
 									(connection as Connection).sourceOutput === conn.sourceOutput
 							)
-							.forEach((connection) => {
-								nodeEditor.removeConnection(connection.id);
+							.forEach(async (connection) => {
+								await nodeEditor.removeConnection(connection.id);
 							});
+					}
+					if (outputSocket.isArray === true && inputSocket.isArray === true) {
+						if (conn.targetInput in inputSocket.node.ingoingDataConnections)
+							await nodeEditor.removeConnection(inputSocket.node.ingoingDataConnections[conn.targetInput].id)
 					}
 				}
 			}
