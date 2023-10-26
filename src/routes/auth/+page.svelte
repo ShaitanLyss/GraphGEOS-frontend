@@ -6,7 +6,7 @@
 	let checkingForDeadBackend = false;
 	export let data: LayoutData;
 	const session = data.session;
-	
+
 	import { onMount, setContext } from 'svelte';
 	import { notifications } from '@mantine/notifications';
 	let ready = false;
@@ -20,7 +20,9 @@
 	import Fa from 'svelte-fa';
 	import { faHome } from '@fortawesome/free-solid-svg-icons';
 	import { env } from '$env/dynamic/public';
-	console.log(env)
+	import { env as privateEnv } from '$env/dynamic/private';
+	console.log('public dynamic env', env);
+	console.log('private dynamic env', privateEnv);
 	let reload = false;
 	let login: () => Promise<void>;
 	// TODO : handle web app context
