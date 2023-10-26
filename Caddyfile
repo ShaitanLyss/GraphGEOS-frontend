@@ -15,6 +15,7 @@ log {
 }
 
 route {
+    header Set-Cookie "Dog=Woof"
     try_files {uri} {uri}.html index.html
     rewrite @notStatic /index.html
     file_server
