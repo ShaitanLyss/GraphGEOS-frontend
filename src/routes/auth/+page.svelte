@@ -20,9 +20,7 @@
 	import Fa from 'svelte-fa';
 	import { faHome } from '@fortawesome/free-solid-svg-icons';
 	import { env } from '$env/dynamic/public';
-	import { env as privateEnv } from '$env/dynamic/private';
 	console.log('public dynamic env', env);
-	console.log('private dynamic env', privateEnv);
 	let reload = false;
 	let login: () => Promise<void>;
 	// TODO : handle web app context
