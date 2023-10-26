@@ -1,6 +1,6 @@
 import { Node, type NodeParams } from './Node';
-import { env } from '$env/dynamic/public';
-
+// import { env } from '$env/dynamic/public';
+import { getCookie } from 'typescript-cookie';
 export interface APINodeParams extends NodeParams {
 	url: string;
 	defaultOutExec?: boolean;
@@ -20,7 +20,7 @@ export abstract class APINode extends Node {
 		} = params;
 		super({ label, height: height, width: width, factory });
 
-		this.url = `${env.PUBLIC_BACKEND_ADDRESS}/api/v1` + url;
+		this.url = `${getCookie('PUBLIC_BACKEND_ADDRESS')}/api/v1` + url;
 
 		this.addInExec();
 		if (defaultOutExec) this.addOutExec();

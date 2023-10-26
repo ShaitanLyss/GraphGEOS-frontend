@@ -6,7 +6,7 @@
 	let checkingForDeadBackend = false;
 	export let data: LayoutData;
 	const session = data.session;
-
+	import {getCookie} from 'typescript-cookie';
 	import { onMount, setContext } from 'svelte';
 	import { notifications } from '@mantine/notifications';
 	let ready = false;
@@ -71,7 +71,7 @@
 			if (isTauri())
 				shell.open(`${env.PUBLIC_BACKEND_ADDRESS}/auth/login?callbackUri=geos-gui://auth-callback`);
 			else {
-				window.location.href = `${env.PUBLIC_BACKEND_ADDRESS}/auth/login?callbackUri=${window.location.href}`;
+				window.location.href = `${getCookie('PUBLIC_BACKEND_ADDRESS')}/auth/login?callbackUri=${window.location.href}`;
 			}
 		};
 	}

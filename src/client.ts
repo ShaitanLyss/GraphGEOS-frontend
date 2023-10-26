@@ -1,9 +1,9 @@
 import { browser } from '$app/environment';
 import { HoudiniClient } from '$houdini';
-import { env } from '$env/dynamic/public';
+import {getCookie} from 'typescript-cookie';
 
 export default new HoudiniClient({
-	url: `${env.PUBLIC_BACKEND_ADDRESS}/api/v1/graphql`,
+	url: `${getCookie('PUBLIC_BACKEND_ADDRESS')}/api/v1/graphql`,
 	// uncomment this to configure the network call (for things like authentication)
 	// for more information, please visit here: https://www.houdinigraphql.com/guides/authentication
 

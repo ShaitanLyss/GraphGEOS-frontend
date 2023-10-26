@@ -15,7 +15,7 @@ log {
 }
 
 route {
-    header Set-Cookie "Dog=Woof"
+    header Set-Cookie "PUBLIC_BACKEND_ADDRESS=${PUBLIC_BACKEND_ADDRESS:http://127.0.0.1:8000}"
     try_files {uri} {uri}.html index.html
     rewrite @notStatic /index.html
     file_server
