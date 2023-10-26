@@ -29,7 +29,7 @@ async function authorization({ event, resolve }) {
 		if (!session) {
 			let shouldRedirect = false;
 			try {
-				const response = await fetch('http://127.0.0.1:8000/health');
+				const response = await fetch(`${env.PUBLIC_BACKEND_ADDRESS}/health`);
 				if (response.ok) shouldRedirect = true;
 				else {
 					const body = await response.json();

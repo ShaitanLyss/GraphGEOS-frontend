@@ -19,6 +19,7 @@
 	import { removeCookie, setCookie } from 'typescript-cookie';
 	import Fa from 'svelte-fa';
 	import { faHome } from '@fortawesome/free-solid-svg-icons';
+	import { env } from '$env/dynamic/public';
 	let reload = false;
 	let login: () => Promise<void>;
 	// TODO : handle web app context
@@ -67,10 +68,9 @@
 		}
 		login = async () => {
 			if (isTauri())
-				shell.open('http://localhost:8000/auth/login?callbackUri=geos-gui://auth-callback');
+				shell.open(`${env.PUBLIC_BACKEND_ADDRESS}/auth/login?callbackUri=geos-gui://auth-callback`);
 			else {
-				const backendHost = 'localhost:8000';
-				window.location.href = `http://${backendHost}/auth/login?callbackUri=${window.location.href}`;
+				window.location.href = `${env.PUBLIC_BACKEND_ADDRESS}/auth/login?callbackUri=${window.location.href}`;
 			}
 		};
 	}

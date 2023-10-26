@@ -2,6 +2,7 @@
 	import { getModalStore, localStorageStore } from '@skeletonlabs/skeleton';
 	import { notifications } from '@mantine/notifications';
 	import { page } from '$app/stores';
+	import { env } from '$env/dynamic/public';
 
 	import type { NodeEditor } from '$rete/NodeEditor';
 	import type { Writable } from 'svelte/store';
@@ -9,6 +10,7 @@
 	import { capitalize, words } from '$utils/string';
 	import { onMount } from 'svelte';
 	import type { UploadGraphModalMeta } from './types';
+
 	import { GetGraphStore, type SessionAndUser$result, UpdateGraphStore } from '$houdini';
 
 	import GraphForm from '$lib/forms/GraphForm.svelte';
@@ -108,7 +110,7 @@
 					data['is_public'] = false;
 				}
 				const response = await fetch(
-					`http://localhost:8000/api/v1/users/${$page.data.session?.user.id}/graphs/`,
+					`${env.PUBLIC_BACKEND_ADDRESS}/api/v1/users/${$page.data.session?.user.id}/graphs/`,
 					{
 						method: 'POST',
 						headers: {

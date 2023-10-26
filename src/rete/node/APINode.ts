@@ -1,4 +1,5 @@
 import { Node, type NodeParams } from './Node';
+import { env } from '$env/dynamic/public';
 
 export interface APINodeParams extends NodeParams {
 	url: string;
@@ -19,7 +20,7 @@ export abstract class APINode extends Node {
 		} = params;
 		super({ label, height: height, width: width, factory });
 
-		this.url = 'http://localhost:8000/api/v1' + url;
+		this.url = `${env.PUBLIC_BACKEND_ADDRESS}/api/v1` + url;
 
 		this.addInExec();
 		if (defaultOutExec) this.addOutExec();
