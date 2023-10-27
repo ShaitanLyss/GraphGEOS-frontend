@@ -1,9 +1,10 @@
 import { browser } from '$app/environment';
 import { HoudiniClient } from '$houdini';
 import {getCookie} from 'typescript-cookie';
+import { getBackendAddress} from './utils/config';
 
 export default new HoudiniClient({
-	url: `${getCookie('PUBLIC_BACKEND_ADDRESS')}/api/v1/graphql`,
+	url: getBackendAddress('/api/v1/graphql'),
 	// uncomment this to configure the network call (for things like authentication)
 	// for more information, please visit here: https://www.houdinigraphql.com/guides/authentication
 

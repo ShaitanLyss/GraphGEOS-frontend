@@ -20,6 +20,7 @@
 	import Fa from 'svelte-fa';
 	import { faHome } from '@fortawesome/free-solid-svg-icons';
 	import { env } from '$env/dynamic/public';
+	import { getBackendAddress } from '$utils/config';
 	console.log('public dynamic env', env);
 	let reload = false;
 	let login: () => Promise<void>;
@@ -69,9 +70,9 @@
 		}
 		login = async () => {
 			if (isTauri())
-				shell.open(`${env.PUBLIC_BACKEND_ADDRESS}/auth/login?callbackUri=geos-gui://auth-callback`);
+				shell.open(getBackendAddress(`/auth/login?callbackUri=geos-gui://auth-callback`));
 			else {
-				window.location.href = `${getCookie('PUBLIC_BACKEND_ADDRESS')}/auth/login?callbackUri=${window.location.href}`;
+				window.location.href = getBackendAddress(`/auth/login?callbackUri=${window.location.href}`);
 			}
 		};
 	}

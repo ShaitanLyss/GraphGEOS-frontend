@@ -9,6 +9,7 @@
 	import { _ } from 'svelte-i18n';
 	import { capitalize, words } from '$utils/string';
 	import { onMount } from 'svelte';
+	import { getBackendAddress } from '$utils/config';
 	import type { UploadGraphModalMeta } from './types';
 
 	import { GetGraphStore, type SessionAndUser$result, UpdateGraphStore } from '$houdini';
@@ -110,7 +111,7 @@
 					data['is_public'] = false;
 				}
 				const response = await fetch(
-					`${getCookie('PUBLIC_BACKEND_ADDRESS')}/api/v1/users/${$page.data.session?.user.id}/graphs/`,
+					getBackendAddress(`/api/v1/users/${$page.data.session?.user.id}/graphs/`),
 					{
 						method: 'POST',
 						headers: {

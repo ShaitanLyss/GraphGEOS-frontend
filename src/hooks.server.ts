@@ -2,7 +2,7 @@ import { redirect, type Handle } from '@sveltejs/kit';
 import { locale } from 'svelte-i18n';
 import { sequence } from '@sveltejs/kit/hooks';
 import { setSession } from '$houdini';
-import { getCookie } from 'typescript-cookie';
+import { getBackendAddress } from '$utils/config';
 // import { SessionAndUser} from '$houdini'
 
 const public_routes = [
@@ -30,7 +30,7 @@ async function authorization({ event, resolve }) {
 		if (!session) {
 			let shouldRedirect = false;
 			try {
-				const response = await fetch(`${getCookie('PUBLIC_BACKEND_ADDRESS')}/health`);
+				const response = await fetch(getBackendAddress(`/health`));
 				if (response.ok) shouldRedirect = true;
 				else {
 					const body = await response.json();

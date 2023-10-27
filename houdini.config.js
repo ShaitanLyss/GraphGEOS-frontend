@@ -3,12 +3,12 @@
 /** @type {import('houdini').ConfigFile} */
 const config = {
 	watchSchema: {
-		url: 'http://127.0.0.1:8000/api/v1/graphql',
-		headers: {
-			Authorization(env) {
-				return `Bearer 05785ac6-25eb-4c1f-80a1-c6f6a96c8e45`;
-			}
-		}
+		url: 'http://backend:8000/api/v1/graphql',
+		// headers: {
+		// 	Authorization(env) {
+		// 		return `Bearer 05785ac6-25eb-4c1f-80a1-c6f6a96c8e45`;
+		// 	}
+		// }
 	},
 	plugins: {
 		'houdini-svelte': {
