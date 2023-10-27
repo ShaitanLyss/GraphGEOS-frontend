@@ -29,7 +29,14 @@ export default defineConfig({
 				greedy: [/^hljs-/],
 			},
 		}),
-	]
+	],
+	server: {
+		
+		watch: {
+			usePolling: true,
+			interval: 10,
+		}
+	}
 	// test: {
 	// 	include: ['src/**/*.{test,spec}.{js,ts}']
 	// }

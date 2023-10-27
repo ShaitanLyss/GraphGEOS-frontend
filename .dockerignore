@@ -1,2 +1,13 @@
 # Caddyfile
 README.md
+node_modules
+src-tauri
+.env
+.env.example
+.github
+.svelte-kit/**
+!.svelte-kit/tsconfig.json
+.vscode
+build
+example
+scripts

@@ -1,12 +1,18 @@
 # Build stage
-FROM node:21-slim AS build
-
+FROM node:21-slim AS base
 WORKDIR /app
+RUN --mount=type=secret,id=certificate [ -f "/run/secrets/certificate" ] && yarn config set cafile /run/secrets/certificate
 
 # Install dependencies and build
 COPY package.json yarn.lock ./
-RUN yarn install
+# Set yarn certificate
+RUN --mount=type=secret,id=certificate yarn install
 COPY . .
+
+FROM base AS dev
+CMD ["yarn", "dev", "--host"]
+
+FROM base AS build
 RUN yarn build
 
 # Production stage
