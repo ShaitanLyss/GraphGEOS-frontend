@@ -15,7 +15,7 @@ input AccountCreateInput {
 type AccountType {
   access_token: String
   expires_at: Int
-  id: UUID!
+  id: UUID
   id_token: String
   provider: String
   providerAccountId: String
@@ -51,7 +51,7 @@ type GraphMutation {
 
 type GraphType {
   author: UserType!
-  authorId: UUID!
+  authorId: UUID
   data: String!
   description: String
   id: UUID!
@@ -103,12 +103,12 @@ input ProviderInput {
 
 type Query {
   geos: GeosQuery!
-  graph(authorId: UUID = null, id: UUID = null, name: String = null): GraphType!
+  graph(authorId: UUID = null, id: UUID = null, name: String = null): GraphType
   graphs: [GraphType!]!
   makutuClass(name: String!): MakutuClassType!
   makutuClasses: [MakutuClassType!]!
   session(sessionToken: String!): SessionType!
-  user(email: String = null, id: UUID = null, provider: ProviderInput = null): UserType!
+  user(email: String = null, id: UUID = null, provider: ProviderInput = null): UserType
   users: [UserType!]!
 }
 
@@ -120,7 +120,7 @@ input SessionCreateInput {
 
 type SessionType {
   expires: DateTime
-  id: UUID!
+  id: UUID
   sessionToken: UUID
   user: UserType!
   userId: UUID
@@ -130,16 +130,15 @@ scalar UUID
 
 input UserCreateInput {
   email: String = null
-  emailVerified: DateTime = null
   image: String = null
+  isActive: Boolean! = true
   name: String = null
 }
 
 type UserType {
   email: String
-  emailVerified: DateTime
   graphs: [GraphType!]!
-  id: UUID!
+  id: UUID
   image: String
   name: String
 }
