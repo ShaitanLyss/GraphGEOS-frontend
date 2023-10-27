@@ -1,8 +1,8 @@
 # Build stage
 FROM node:21-slim AS base
 WORKDIR /app
-# RUN --mount=type=secret,id=certificate [ -f "/run/secrets/certificate" ] && yarn config set cafile /run/secrets/certificate
-RUN --mount=type=secret,id=certificate if [ -e "/run/secrets/certificate" ] ; then yarn config set cafile /run/secrets/certificate ; fi
+RUN apt update && apt upgrade -y
+RUN --mount=type=secret,id=certificate if [ -f "/run/secrets/certificate" ] ; then yarn config set cafile /run/secrets/certificate ; fi
 
 # Install dependencies and build
 COPY package.json yarn.lock ./
