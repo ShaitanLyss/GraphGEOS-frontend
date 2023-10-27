@@ -1,7 +1,6 @@
 # Build stage
 FROM node:21-slim AS base
 WORKDIR /app
-RUN apt update && apt upgrade -y
 RUN --mount=type=secret,id=certificate if [ -f "/run/secrets/certificate" ] ; then yarn config set cafile /run/secrets/certificate ; fi
 
 # Install dependencies and build
@@ -18,6 +17,7 @@ RUN yarn build
 
 # Production stage
 FROM caddy:2 AS production
+RUN apt update && apt upgrade -y
 
 # Copy the build output to replace the default Caddyfile and serve with Caddy
 COPY --from=build /app/build /usr/share/caddy
