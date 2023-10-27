@@ -8,7 +8,7 @@ COPY package.json yarn.lock ./
 # Set yarn certificate
 RUN --mount=type=secret,id=certificate yarn install
 COPY . .
-COPY .svelte-kit/tsconfig.json .svelte-kit/tsconfig.json
+# COPY .svelte-kit/tsconfig.json .svelte-kit/tsconfig.json
 
 FROM base AS dev
 CMD ["yarn", "dev", "--host"]
