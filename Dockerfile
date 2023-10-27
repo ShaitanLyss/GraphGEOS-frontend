@@ -17,7 +17,7 @@ RUN yarn build
 
 # Production stage
 FROM caddy:2 AS production
-RUN apt update && apt upgrade -y
+RUN apk update && apk upgrade -y
 
 # Copy the build output to replace the default Caddyfile and serve with Caddy
 COPY --from=build /app/build /usr/share/caddy
