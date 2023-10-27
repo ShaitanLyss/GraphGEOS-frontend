@@ -25,4 +25,4 @@ COPY --from=build /app/build /usr/share/caddy
 # Optional: If you have a custom Caddyfile, you can copy it here
 COPY Caddyfile /etc/caddy/Caddyfile
 
-EXPOSE 80
+EXPOSE 80 443
