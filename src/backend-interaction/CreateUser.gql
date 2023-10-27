@@ -3,6 +3,6 @@ mutation CreateUser($user: UserCreateInput!) {
 		id
 		name
 		email
-		emailVerified
+		# emailVerified
 	}
 }

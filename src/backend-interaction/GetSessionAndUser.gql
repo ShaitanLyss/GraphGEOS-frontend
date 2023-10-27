@@ -9,7 +9,7 @@ query SessionAndUser($sessionToken: String!) {
 			image
 			name
 			email
-			emailVerified
+			# emailVerified
 		}
 	}
 }
