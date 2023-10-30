@@ -6,7 +6,7 @@ RUN --mount=type=secret,id=certificate if [ -f "/run/secrets/certificate" ] ; th
 # Install dependencies and build
 COPY package.json yarn.lock ./
 # Set yarn certificate
-RUN --mount=type=secret,id=certificate yarn install
+RUN --mount=type=secret,id=certificate yarn install --verbosity
 COPY . .
 # COPY .svelte-kit/tsconfig.json .svelte-kit/tsconfig.json
 
