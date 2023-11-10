@@ -66,5 +66,5 @@
 <MoonContextMenu />
 
 <Modal components={modalComponentRegistry} />
-<!-- eslint-disable-next-line -->
+<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 <svelte:head>{@html `<\u{73}cript>(${setInitialClassState.toString()})();</script>`}</svelte:head>
