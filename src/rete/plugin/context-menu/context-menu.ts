@@ -11,7 +11,7 @@ import { GetXmlSchemaStore } from '$houdini';
 import { XmlNode } from '$rete/node/XML/XmlNode';
 import type { XmlAttributeDefinition } from '$rete/node/XML/types';
 import type { SocketType } from '../typed-sockets';
-import { moonMenuItemsStore, type MoonMenuItem } from '$lib/context-menu/moonContextMenu';
+import { moonMenuItemsStore, type MoonMenuItem } from '$lib/menu/context-menu/moonContextMenu';
 import { GetNameNode } from '$rete/node/XML/GetNameNode';
 import { MakeArrayNode } from '$rete/node/data/MakeArrayNode';
 import { StringNode } from '$rete/node/data/StringNode';

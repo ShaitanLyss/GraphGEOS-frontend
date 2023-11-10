@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { on } from 'events';
 	import {
 		moonMenuPositionStore,
 		moonMenuVisibleStore,
@@ -73,7 +72,7 @@
 		const node = item.action(factory);
 		await factory.getEditor().addNode(node);
 		if ($moonMenuConnDropEvent)
-			translateNodeFromGlobal({ globalPos: $moonMenuConnDropEvent.pos, factory, node })
+			translateNodeFromGlobal({ globalPos: $moonMenuConnDropEvent.pos, factory, node });
 		else {
 			console.error('No connection drop event found');
 		}
@@ -95,8 +94,19 @@
 			);
 		} else {
 			const targetNode = editor.getNode(socketData.nodeId);
-			
-			await editor.addNewConnection(node, node instanceof MakeArrayNode ? 'array': node instanceof GetNameNode ? 'name' : node instanceof XmlNode ? 'value' : 'data', targetNode, socketData.key);
+
+			await editor.addNewConnection(
+				node,
+				node instanceof MakeArrayNode
+					? 'array'
+					: node instanceof GetNameNode
+					? 'name'
+					: node instanceof XmlNode
+					? 'value'
+					: 'data',
+				targetNode,
+				socketData.key
+			);
 		}
 
 		// nodeView.translate()
@@ -119,10 +129,12 @@
 				// if (item.label === 'GetName') {
 				// 	console.log(item.inChildrenTypes, types);
 				// }
-				if (socketData.side === 'output' ? item.inChildrenTypes.includes('*') : item.outType === '*') {
+				if (
+					socketData.side === 'output' ? item.inChildrenTypes.includes('*') : item.outType === '*'
+				) {
 					return true;
 				}
-				
+
 				const res = intersection(
 					socketData.side === 'output' ? item.inChildrenTypes : [item.outType],
 					types
@@ -155,6 +167,7 @@
 		<div class="searchbar" />
 		<div class="max-h-1-3 overflow-x-auto">
 			<div class="list">
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
 				{#each filteredItems as item (item.label)}
 					<div
 						role="menuitem"

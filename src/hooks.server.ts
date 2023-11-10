@@ -2,7 +2,7 @@ import { redirect, type Handle } from '@sveltejs/kit';
 import { locale } from 'svelte-i18n';
 import { sequence } from '@sveltejs/kit/hooks';
 import { setSession } from '$houdini';
-import { getBackendAddress } from '$utils/config';
+import { getBackendAddress, isAuthEnabled } from '$utils/config';
 // import { SessionAndUser} from '$houdini'
 
 const public_routes = [
@@ -19,7 +19,9 @@ async function authorization({ event, resolve }) {
 		);
 		return regexPattern.test(event.url.pathname);
 	});
-	// console.log(import.meta.env.MODE)
+	if (!isAuthEnabled()) {
+		return resolve(event);
+	}
 	// If the requested URL is not a public route
 	// return resolve(event);
 	// TODO : handle static site generation

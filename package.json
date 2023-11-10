@@ -11,7 +11,8 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test:unit": "vitest",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
-		"format": "prettier --plugin-search-dir . --write ."
+		"format": "prettier --plugin-search-dir . --write .",
+		"prepare": "husky install"
 	},
 	"devDependencies": {
 		"@emotion/react": "^11.11.0",
@@ -51,7 +52,9 @@
 		"eslint-plugin-svelte": "^2.30.0",
 		"houdini": "^1.2.6",
 		"houdini-svelte": "^1.2.6",
+		"husky": "^8.0.0",
 		"install-peers": "^1.0.4",
+		"lint-staged": "^15.0.2",
 		"lodash.intersection": "^4.4.0",
 		"lodash.throttle": "^4.1.1",
 		"postcss": "^8.4.23",
@@ -86,6 +89,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@floating-ui/dom": "^1.5.3",
 		"@tauri-apps/api": "^1.4.0",
 		"@types/react": "18",
 		"react": "18",

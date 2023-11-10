@@ -11,7 +11,7 @@ export interface MoonMenuItem {
 
 export const moonMenuPositionStore = writable<{ x: number; y: number }>({ x: 500, y: 500 });
 export const moonMenuVisibleStore = writable<boolean>(false);
-export const moonMenuDropConnectionStore = writable<() => void>(() => {});
+export const moonMenuDropConnectionStore = writable<() => void>(() => {}); // eslint-disable-line @typescript-eslint/no-empty-function
 export const moonMenuHideDelayStore = writable<number>(100);
 export const moonMenuConnDropEvent = writable<ConnectionDropEvent | null>(null);
 export const moonMenuItemsStore = writable<MoonMenuItem[]>([]);
