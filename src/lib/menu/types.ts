@@ -38,6 +38,11 @@ function createMenuItem(properties: {
 	};
 }
 
+/**
+ * Returns a new INodeMenuItem
+ * @param properties
+ * @returns
+ */
 function createNodeMenuItem(properties: {
 	label: string;
 	description: string;
