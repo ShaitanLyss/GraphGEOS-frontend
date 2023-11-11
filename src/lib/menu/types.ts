@@ -1,5 +1,6 @@
 import type { EditorType } from '$lib/editor/types';
 import type { NodeFactory } from '$rete';
+import type { Node } from '$rete/node/Node';
 
 interface IMenuItem {
 	getLabel: () => string;
@@ -8,7 +9,8 @@ interface IMenuItem {
 	getTags: () => string[];
 }
 
-enum MenuItemType {
+export enum MenuItemType {
+	Base,
 	Node,
 	Action
 }
@@ -16,7 +18,7 @@ enum MenuItemType {
 interface INodeMenuItem extends IMenuItem {
 	getInTypes: () => string[];
 	getOutTypes: () => string[];
-	getAddNode: ({ factory }: { factory: NodeFactory }) => Node;
+	getAddNode: () => ({ factory }: { factory: NodeFactory }) => Node;
 	getEditorType: () => EditorType;
 }
 
@@ -24,16 +26,15 @@ interface IActionMenuItem extends IMenuItem {
 	executeAction: () => void;
 }
 
-function createMenuItem(properties: {
+export function createMenuItem(properties: {
 	label: string;
 	description: string;
-	type: MenuItemType;
 	tags: string[]; // Include tags in the properties
 }): IMenuItem {
 	return {
 		getLabel: () => properties.label,
 		getDescription: () => properties.description,
-		getType: () => properties.type,
+		getType: () => MenuItemType.Base,
 		getTags: () => properties.tags // Implement getter for tags
 	};
 }
@@ -43,7 +44,7 @@ function createMenuItem(properties: {
  * @param properties
  * @returns
  */
-function createNodeMenuItem(properties: {
+export function createNodeMenuItem(properties: {
 	label: string;
 	description: string;
 	tags: string[];
@@ -53,10 +54,11 @@ function createNodeMenuItem(properties: {
 	editorType: EditorType;
 }): INodeMenuItem {
 	return {
-		...createMenuItem({ ...properties, type: MenuItemType.Node }),
+		...createMenuItem({ ...properties }),
+		getType: () => MenuItemType.Node,
 		getInTypes: () => properties.inTypes,
 		getOutTypes: () => properties.outTypes,
-		getAddNode: ({ factory }) => properties.addNode({ factory }),
+		getAddNode: () => properties.addNode,
 		getEditorType: () => properties.editorType
 	};
 }

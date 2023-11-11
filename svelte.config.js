@@ -1,4 +1,4 @@
-import preprocess from 'svelte-preprocess';
+import sveltePreprocess from 'svelte-preprocess';
 // import adapter from '@sveltejs/adapter-auto';
 import adapter from '@sveltejs/adapter-static'; // change l' adaptateur depuis adapter-auto vers adapter-static
 import { vitePreprocess } from '@sveltejs/kit/vite';
@@ -13,8 +13,9 @@ const config = {
 		preprocessReact({
 			preprocess: vitePreprocess()
 		}),
-		preprocess({
-			postcss: true
+		sveltePreprocess({
+			postcss: true,
+			typescript: true
 		}),
 		delegateEvents()
 	],

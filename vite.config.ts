@@ -9,32 +9,31 @@ export default defineConfig({
 	},
 
 	plugins: [
-		houdini(),
+		!process.env.VITEST ? houdini() : houdini({ watchSchema: undefined }),
 		sveltekit(),
-		{
-			name: 'replaceCompileTimeVariable',
-			generateBundle() {
-				this.emitFile({
-					fileName: 'yoyo.js',
-					type: 'asset',
-					source: `export const COMPILE_TIME_VARIABLE = ${JSON.stringify(
-						'Your compile-time value'
-					)};`
-				});
-			}
-		},
+		// {
+		// 	name: 'replaceCompileTimeVariable',
+		// 	generateBundle() {
+		// 		this.emitFile({
+		// 			fileName: 'yoyo.js',
+		// 			type: 'asset',
+		// 			source: `export const COMPILE_TIME_VARIABLE = ${JSON.stringify(
+		// 				'Your compile-time value'
+		// 			)};`
+		// 		});
+		// 	}
+		// },
 		purgeCss({
 			safelist: {
 				// any selectors that begin with "hljs-" will not be purged
-				greedy: [/^hljs-/],
-			},
-		}),
+				greedy: [/^hljs-/]
+			}
+		})
 	],
 	server: {
-		
 		watch: {
 			usePolling: true,
-			interval: 10,
+			interval: 10
 		}
 	}
 	// test: {
