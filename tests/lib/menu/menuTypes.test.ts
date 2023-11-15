@@ -13,15 +13,18 @@ describe('createMenuItem', () => {
 		const properties = {
 			label: 'Test Label',
 			description: 'Test Description',
-			tags: ['tag1', 'tag2']
+			tags: ['tag1', 'tag2'],
+			menuPath: ['menu', 'path']
 		};
 
 		const menuItem = createMenuItem(properties);
 
 		expect(menuItem.getLabel()).toBe(properties.label);
 		expect(menuItem.getDescription()).toBe(properties.description);
-		expect(menuItem.getType()).toBe(MenuItemType.Base);
+		expect(menuItem.type).toBe(MenuItemType.Base);
 		expect(menuItem.getTags()).toEqual(properties.tags);
+		expect(menuItem.getMenuPath).toBeDefined();
+		expect(menuItem.getMenuPath && menuItem.getMenuPath()).toEqual(properties.menuPath);
 	});
 });
 
@@ -77,15 +80,18 @@ it('should return a new INodeMenuItem with the correct properties', () => {
 		inTypes: ['type1', 'type2'],
 		outTypes: ['type3', 'type4'],
 		addNode: addNode,
-		editorType: NodeEditorType.All
+		editorType: NodeEditorType.All,
+		menuPath: ['menu', 'path']
 	});
 
 	expect(nodeMenuItem.getLabel()).toBe('Node Menu Item');
 	expect(nodeMenuItem.getDescription()).toBe('This is a node menu item');
-	expect(nodeMenuItem.getType()).toBe(MenuItemType.Node);
+	expect(nodeMenuItem.type).toBe(MenuItemType.Node);
 	expect(nodeMenuItem.getTags()).toEqual(['tag1', 'tag2']);
 	expect(nodeMenuItem.getInTypes()).toEqual(['type1', 'type2']);
 	expect(nodeMenuItem.getOutTypes()).toEqual(['type3', 'type4']);
 	expect(nodeMenuItem.getAddNode()).toBeDefined();
 	expect(nodeMenuItem.getEditorType()).toBe(NodeEditorType.All);
+	expect(nodeMenuItem.getMenuPath).toBeDefined();
+	expect(nodeMenuItem.getMenuPath && nodeMenuItem.getMenuPath()).toEqual(['menu', 'path']);
 });
