@@ -87,6 +87,7 @@ export function createMenuItem({
 		getDescription: () => description,
 		type: MenuItemType.Base,
 		getTags: () => tags, // Implement getter for tags
+		debug: label,
 		...(menuPath && { getMenuPath: () => menuPath as string[] })
 	};
 }

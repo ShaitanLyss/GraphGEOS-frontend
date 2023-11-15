@@ -440,4 +440,49 @@ describe('filterMenuItems', () => {
 		const filteredMenuItems = filterMenuItems({ menuItems, filter: { inTypes: ['type1'] } });
 		expect(filteredMenuItems).toEqual([menuItems[0], menuItems[2], menuItems[3]]);
 	});
+
+	it('should return menu items with label containing a specific string or menu items with outTypes containing a type, test verify all = false', () => {
+		const menuItems = [
+			{
+				label: 'Test Label',
+				description: 'Test Description',
+				tags: ['tag1'],
+				menuPath: ['menu', 'path'],
+				type: MenuItemType.Node,
+				inTypes: ['type1', 'type2']
+			},
+			{
+				label: 'Test Label 2',
+				description: 'Description 2',
+				tags: ['tag2'],
+				menuPath: ['menu', 'path'],
+				type: MenuItemType.Node,
+				outTypes: ['type3', 'type4']
+			},
+			{
+				label: 'Label',
+				description: 'Test Description 2',
+				tags: ['tag3'],
+				menuPath: ['menu', 'path'],
+				type: MenuItemType.Node,
+				outTypes: ['type5', 'type6', 'type1']
+			},
+			{
+				label: 'Outsider',
+				description: 'Test Description',
+				tags: ['tag4'],
+				menuPath: ['menu', 'path'],
+				type: MenuItemType.Base,
+				inTypes: ['type1', 'type2']
+			}
+		].map(createQueriableMenuItem);
+
+		const filteredMenuItems = filterMenuItems({
+			menuItems,
+			filter: { label: 'Test', outTypes: ['type1'] },
+			verifyAll: false,
+			allowMissingKey: false
+		});
+		expect(filteredMenuItems).toEqual([menuItems[0], menuItems[1], menuItems[2]]);
+	});
 });
