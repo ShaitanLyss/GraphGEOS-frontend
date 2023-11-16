@@ -6,8 +6,9 @@ export interface IBaseMenuItem {
 	getLabel: () => string;
 	getDescription: () => string;
 	type: MenuItemType;
+	[key: string]: unknown;
 	getTags: () => string[];
-	getMenuPath?: () => string[];
+	getMenuPath: () => string[];
 }
 
 export enum MenuItemType {
@@ -34,12 +35,6 @@ type OptionalProperties<T> = {
 export type QueriableMenuItem = Omit<IBaseMenuItem, 'type'> &
 	Partial<Omit<INodeMenuItem, 'type'>> &
 	Partial<Omit<IActionMenuItem, 'type'>> & { type: MenuItemType };
-const c: QueriableMenuItem = {
-	getDescription: () => '',
-	getLabel: () => '',
-	getTags: () => [],
-	type: MenuItemType.Base
-};
 
 export function createQueriableMenuItem(properties: StaticMenuItem): QueriableMenuItem {
 	const res = { ...createMenuItem(properties) };

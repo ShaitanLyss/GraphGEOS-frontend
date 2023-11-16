@@ -1,6 +1,21 @@
 import { describe, it, expect } from 'vitest';
-import { filterMenuItems } from '$lib/menu/utils';
-import { MenuItemType, QueriableMenuItem, createQueriableMenuItem } from '$lib/menu/types';
+import {
+	collectMenuView,
+	filterMenuItems,
+	IHierachicalMenu,
+	isHierachicalMenu,
+	MenuArrayView
+} from '$lib/menu/utils';
+import {
+	IMenuItem,
+	INodeMenuItem,
+	MenuItemType,
+	QueriableMenuItem,
+	StaticMenuItem,
+	createActionMenuItem,
+	createNodeMenuItem,
+	createQueriableMenuItem
+} from '$lib/menu/types';
 
 // check test case are careful about items being the same object
 it('should return false for two distinct objects albeit similar', () => {
@@ -484,5 +499,48 @@ describe('filterMenuItems', () => {
 			allowMissingKey: false
 		});
 		expect(filteredMenuItems).toEqual([menuItems[0], menuItems[1], menuItems[2]]);
+	});
+});
+
+describe('collectMenu', () => {
+	// Should correctly create a hierarchical menu from a list of menu items
+	it('should correctly create a hierarchical menu from a list of menu items', () => {
+		const menuItems: IMenuItem[] = [
+			createNodeMenuItem({
+				label: 'Test node',
+				description: 'Test node description',
+				menuPath: ['menu', 'path']
+			}),
+			createActionMenuItem({
+				label: 'Test action',
+				description: 'Test action description',
+				menuPath: ['menu', 'path'],
+				executeAction: () => undefined
+			})
+		];
+
+		const result = collectMenuView(menuItems);
+
+		// assert the result is an instance of HierachicalMenu
+
+		expect(isHierachicalMenu(result)).toBeTruthy();
+
+		const expectedRes: MenuArrayView = [
+			[
+				'menu',
+				[
+					[
+						'path',
+						[
+							['Test node', menuItems[0]],
+							['Test action', menuItems[1]]
+						]
+					]
+				]
+			]
+		];
+
+		// assert the result contains all the menu items
+		expect(result.getArrayView()).toEqual(expectedRes);
 	});
 });

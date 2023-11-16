@@ -3,4 +3,6 @@
 	import AddNodeMenu from '$lib/menu/addNode/AddNodeMenu.svelte';
 </script>
 
-<AddNodeMenu />
+<div class="h-full flex justify-center items-start">
+	<AddNodeMenu />
+</div>
