@@ -6,7 +6,8 @@
 		createNodeMenuItem({
 			label: 'Test node',
 			description: 'Test node description',
-			menuPath: ['menu', 'path']
+			menuPath: ['menu', 'path'],
+			inTypes: ['cat']
 		}),
 		createActionMenuItem({
 			label: 'Test action',

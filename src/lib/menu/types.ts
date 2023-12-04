@@ -17,6 +17,8 @@ export enum MenuItemType {
 	Action
 }
 
+export type MenuType = 'tree' | 'flat' | 'popover';
+
 export interface INodeMenuItem extends IBaseMenuItem {
 	type: MenuItemType.Node;
 	getInTypes: () => string[];
