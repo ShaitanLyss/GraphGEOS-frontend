@@ -25,6 +25,7 @@ RUN pnpm build
 
 # Production stage
 FROM caddy:2 AS production
+ENV PUBLIC_ENABLE_AUTH true
 # RUN apk update && apk upgrade
 
 # Copy the build output to replace the default Caddyfile and serve with Caddy
