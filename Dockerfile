@@ -1,20 +1,27 @@
 # Build stage
 FROM node:21-slim AS base
 WORKDIR /app
-RUN --mount=type=secret,id=certificate if [ -f "/run/secrets/certificate" ] ; then yarn config set cafile /run/secrets/certificate ; fi
+RUN --mount=type=secret,id=certificate if [ -f "/run/secrets/certificate" ] ; then npm config set cafile /run/secrets/certificate ; fi
 
 # Install dependencies and build
-COPY package.json yarn.lock ./
+COPY package.json pnpm-lock.yaml ./
 # Set yarn certificate
-RUN --mount=type=secret,id=certificate yarn install --verbosity
+# RUN yarn config list
+RUN npm config set strict-ssl false
+RUN --mount=type=secret,id=certificate npm --global install pnpm
+# RUN pnpm config set "//registry.npmjs.org/:_authToken" "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"
+# RUN npm config list
+# RUN pnpm config list
+RUN --mount=type=secret,id=certificate pnpm install
+
 COPY . .
 # COPY .svelte-kit/tsconfig.json .svelte-kit/tsconfig.json
 
 FROM base AS dev
-CMD ["yarn", "dev", "--host"]
+CMD ["pnpm", "dev", "--host"]
 
 FROM base AS build
-RUN yarn build
+RUN pnpm build
 
 # Production stage
 FROM caddy:2 AS production

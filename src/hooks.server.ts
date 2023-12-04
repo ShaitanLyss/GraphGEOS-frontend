@@ -90,4 +90,8 @@ const moonAuth: Handle = async ({ event, resolve }) => {
 	return resolve(event);
 };
 
-export const handle: Handle = sequence(localization, moonAuth, authorization);
+export const handle: Handle = sequence(
+	localization, 
+	moonAuth, 
+	authorization
+	);
