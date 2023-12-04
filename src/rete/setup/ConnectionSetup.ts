@@ -19,11 +19,9 @@ import { notifications } from '@mantine/notifications';
 import type { Root } from 'rete';
 import { findSocket } from '$rete/socket/utils';
 import type { Connection, Node } from '$rete/node/Node';
-import { moonMenuVisibleStore } from '$lib/context-menu/moonContextMenu';
+import { moonMenuVisibleStore } from '$lib/menu/context-menu/moonContextMenu';
 import { XmlNode } from '$rete/node/XML/XmlNode';
 import { MakeArrayNode } from '$rete/node/data/MakeArrayNode';
-
-
 
 let dropMenuVisible = false;
 moonMenuVisibleStore.subscribe((value) => {
@@ -37,8 +35,7 @@ export class ConnectionDropEvent extends Event {
 		public readonly pointerEvent: PointerEvent,
 		public readonly drop: () => void,
 		public readonly socketData: SocketData & { payload: Socket },
-		public readonly factory: NodeFactory,
-		
+		public readonly factory: NodeFactory
 	) {
 		super('connectiondrop');
 		this.pos = { x: pointerEvent.clientX, y: pointerEvent.clientY };
@@ -46,8 +43,8 @@ export class ConnectionDropEvent extends Event {
 }
 
 class MyConnectionPlugin extends ConnectionPlugin<Schemes, AreaExtra> {
-	picked: boolean = false;
-	public lastClickedSocket: boolean = false
+	picked = false;
+	public lastClickedSocket = false;
 	public lastPickedSockedData: (SocketData & { payload: Socket }) | undefined;
 
 	constructor(private factory: NodeFactory) {

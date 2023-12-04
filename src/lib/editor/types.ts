@@ -8,4 +8,10 @@ export type EditorView = {
 	saveData?: NodeEditorSaveData;
 };
 
+export enum EditorType {
+	XML,
+	All,
+	PyWorkflow
+}
+
 export type DragData = { type: 'macroNode'; graphId: string };

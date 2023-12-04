@@ -33,8 +33,10 @@
 		getTranslateValues,
 		translateNodeFromGlobal
 	} from '$utils/html';
-	import { spawnMoonMenu } from '$lib/context-menu/moonContextMenu';
+	import { spawnMoonMenu } from '$lib/menu/context-menu/moonContextMenu';
 	import type { ConnectionDropEvent } from '$rete/setup/ConnectionSetup';
+	import { AddNode } from '$rete/node/math/AddNode';
+	import AddNodeMenu from '$lib/menu/addNode/AddNodeMenu.svelte';
 
 	// import {} from '@fortawesome/free-regular-svg-icons';
 
@@ -218,11 +220,10 @@
 	class:opacity-0={hidden && !ready}
 > -->
 <div
-	class="absolute inset-0 border-surface-500 h-full "
+	class="absolute inset-0 border-surface-500 h-full"
 	style="z-index: {hidden ? -10 : 0};"
 	class:opacity-0={hidden}
 	class:pointer-events-none={hidden}
-
 >
 	<AppShell regionPage="h-full" slotSidebarLeft="h-full" slotPageContent="h-full">
 		<div class="h-full">
@@ -258,6 +259,7 @@
 					</svelte:fragment>
 				</AppShell>
 			{/if}
+
 			<!-- Editor -->
 			<div
 				bind:this={container}
