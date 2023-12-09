@@ -13,18 +13,20 @@
 	<title>Geos UI</title>
 </svelte:head>
 <Localization />
-{#if !$isLocaleLoading}
-	<MainView>
-		<svelte:fragment slot="sidebarLeft">
+<MainView>
+	<svelte:fragment slot="sidebarLeft">
+		{#if !$isLocaleLoading}
 			<svelte:component this={$page.data.sidebarLeft} {...$page.data.sidebarLeftProps} />
-		</svelte:fragment>
+		{/if}
+	</svelte:fragment>
+	{#if !$isLocaleLoading}
 		<slot />
-		<svelte:fragment slot="tabs">
-			<svelte:component this={$page.data.tabs} />
-		</svelte:fragment>
-	</MainView>
+	{/if}
+	<svelte:fragment slot="tabs">
+		<svelte:component this={$page.data.tabs} />
+	</svelte:fragment>
 	<Modals />
-{/if}
+</MainView>
 <Popups />
 <Notifications />
 <Lightmode />
