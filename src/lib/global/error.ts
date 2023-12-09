@@ -1,9 +1,11 @@
 import { notifications } from '@mantine/notifications';
-import { _ } from 'svelte-i18n';
+import { _ } from '$lib/global';
+import { get } from 'svelte/store';
+import { isLoading } from 'svelte-i18n';
 
 let defaultErrorTitle = 'Error';
 _.subscribe((locale) => {
-	defaultErrorTitle = locale('notifications.error.title');
+	if (!get(isLoading)) defaultErrorTitle = locale('notifications.error.title');
 });
 
 export class ErrorWNotif extends Error {

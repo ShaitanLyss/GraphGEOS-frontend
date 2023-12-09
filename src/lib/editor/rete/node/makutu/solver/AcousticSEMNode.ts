@@ -1,8 +1,3 @@
-import { Node } from '../../Node';
-import { Socket } from '../../../socket/Socket';
-import { Input } from '../../../Input';
-import { PythonObject } from '../../../../backend-interaction/python';
-import { SolverAPINode } from './SolverAPINode';
 import { APINode } from '../../APINode';
 import type { NodeFactory } from '../../NodeFactory';
 

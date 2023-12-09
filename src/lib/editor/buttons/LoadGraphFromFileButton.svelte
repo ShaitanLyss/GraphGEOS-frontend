@@ -2,7 +2,7 @@
 	import { faCalendarTimes, faUpload } from '@fortawesome/free-solid-svg-icons';
 	import { notifications } from '@mantine/notifications';
 	import EditorButton from './EditorButton.svelte';
-	import { _ } from 'svelte-i18n';
+	import { _ } from '$lib/global';
 	import type { NodeFactory } from '$rete/node/NodeFactory';
 
 	let factory: NodeFactory;

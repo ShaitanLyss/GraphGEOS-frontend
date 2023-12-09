@@ -1,4 +1,4 @@
 <script lang="ts">
 	// Setup localization
-	import '$lib/localization/init_i18n';
+	import '$lib/global/localization/init_i18n';
 </script>

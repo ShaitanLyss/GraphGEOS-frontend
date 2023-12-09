@@ -5,24 +5,17 @@ import { purgeCss } from 'vite-plugin-tailwind-purgecss';
 
 export default defineConfig({
 	build: {
-		target: 'esnext'
+		target: 'es2022',
+		minify: false,
+		commonjsOptions: {
+			// include: []
+		}
 	},
 
 	plugins: [
-		!process.env.VITEST ? houdini() : houdini({ watchSchema: undefined }),
+		// !process.env.VITEST ? houdini() : houdini({ watchSchema: undefined }),
+		houdini(),
 		sveltekit(),
-		// {
-		// 	name: 'replaceCompileTimeVariable',
-		// 	generateBundle() {
-		// 		this.emitFile({
-		// 			fileName: 'yoyo.js',
-		// 			type: 'asset',
-		// 			source: `export const COMPILE_TIME_VARIABLE = ${JSON.stringify(
-		// 				'Your compile-time value'
-		// 			)};`
-		// 		});
-		// 	}
-		// },
 		purgeCss({
 			safelist: {
 				// any selectors that begin with "hljs-" will not be purged

@@ -1,6 +1,6 @@
 import { getMessageFormatter, t } from 'svelte-i18n';
 import { Node, type NodeParams } from '../Node';
-import { capitalize, getVarsFromFormatString } from '../../../utils/string';
+import { capitalize, getVarsFromFormatString } from '$lib/utils/string';
 
 export interface FormatNodeParams extends NodeParams {
 	format?: string;

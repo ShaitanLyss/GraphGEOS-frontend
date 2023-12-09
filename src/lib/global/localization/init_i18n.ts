@@ -11,8 +11,9 @@ Object.entries(locales_files).forEach(([path, module]) => {
 	register(locale, () => module());
 });
 
-// Init i18n
-init({
-	fallbackLocale: defaultLocale,
-	initialLocale: browser ? getCookie('locale') ?? window.navigator.language : defaultLocale
-});
+export const init_i18n = () => {
+	init({
+		fallbackLocale: defaultLocale,
+		initialLocale: browser ? getCookie('locale') ?? window.navigator.language : defaultLocale
+	});
+};

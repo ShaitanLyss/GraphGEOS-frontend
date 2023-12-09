@@ -3,7 +3,7 @@ import type { Schemes } from '../../node/Schemes';
 import type { AreaPlugin } from 'rete-area-plugin';
 import type { AreaExtra } from '../../node/AreaExtra';
 import { Node } from '../../node/Node';
-import { capitalize } from '../../../utils/string';
+import { capitalize } from '$utils/string';
 import { Setup } from '../../setup/Setup';
 import type { NodeEditor } from '../../NodeEditor';
 import type { NodeFactory } from '../../node/NodeFactory';

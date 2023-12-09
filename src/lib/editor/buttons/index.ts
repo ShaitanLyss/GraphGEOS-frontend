@@ -6,6 +6,7 @@ import SaveGraphButton from './SaveGraphButton.svelte';
 import ToggleGeosButton from './ToggleGeosButton.svelte';
 import ToPythonButton from './ToPythonButton.svelte';
 import UploadGraphButton from './UploadGraphButton.svelte';
+import EditorButtons__SvelteComponent_ from './EditorButtons.svelte';
 
 export {
 	DownloadGraphButton,
@@ -14,7 +15,8 @@ export {
 	SaveGraphButton,
 	ToggleGeosButton,
 	ToPythonButton,
-	UploadGraphButton
+	UploadGraphButton,
+	EditorButtons__SvelteComponent_ as EditorButtons
 };
 
 export type ButtonExec = (params: {

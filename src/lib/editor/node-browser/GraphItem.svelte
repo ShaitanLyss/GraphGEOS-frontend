@@ -3,7 +3,7 @@
 	import type { NodeEditorSaveData } from '$rete/NodeEditor';
 	import { faUser } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import { _ } from 'svelte-i18n';
+	import { _ } from '$lib/global';
 	import { draggable } from '@neodrag/svelte';
 	import type { DragData } from '../types';
 	export let graphName: string | undefined = undefined;

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { faSearch } from '@fortawesome/free-solid-svg-icons';
-	import { _ } from 'svelte-i18n';
+	import { _ } from '$lib/global';
 	import Fa from 'svelte-fa';
 	import GraphItem from './GraphItem.svelte';
 	import { graphql, query } from '$houdini';

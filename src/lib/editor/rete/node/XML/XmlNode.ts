@@ -1,6 +1,6 @@
 import { Node, type NodeParams, type OutDataParams } from '../Node';
 import type { XmlAttribute, XmlAttributeDefinition } from './types';
-import { camlelcaseize, titlelize } from '../../../utils/string';
+import { camlelcaseize, titlelize } from '$lib/utils/string';
 import type { Socket } from '../../socket/Socket';
 import type { SocketType, XMLAttrType } from '$rete/plugin/typed-sockets';
 import { XMLData } from './XMLData';

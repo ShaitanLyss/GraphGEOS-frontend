@@ -43,7 +43,7 @@ const config = {
 		},
 		alias: {
 			$rete: 'src/lib/editor/rete',
-			$houdini: './$houdini',
+			$houdini: '$houdini',
 			'$custom-components': 'src/lib/editor/rete/customization/presets/classic/components',
 			$utils: 'src/lib/utils'
 		}

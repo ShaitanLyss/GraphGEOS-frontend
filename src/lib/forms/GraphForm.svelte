@@ -5,7 +5,7 @@
 	import { localStorageStore } from '@skeletonlabs/skeleton';
 	import type { UUID } from 'crypto';
 	import { onMount } from 'svelte';
-	import { _ } from 'svelte-i18n';
+	import { _ } from '$lib/global';
 	import type { Writable } from 'svelte/store';
 
 	export let formElement: HTMLFormElement | undefined = undefined;

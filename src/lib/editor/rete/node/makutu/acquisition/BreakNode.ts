@@ -1,4 +1,4 @@
-import { PythonObject, PythonProperty } from '../../../../backend-interaction/python';
+import { PythonObject, PythonProperty } from '$lib/backend-interaction/python';
 import { Node } from '../../Node';
 import type { NodeFactory } from '../../NodeFactory';
 

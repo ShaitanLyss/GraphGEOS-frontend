@@ -1,5 +1,5 @@
 <script lang="ts">
-	import LocaleSwitcher from '$lib/LocaleSwitcher.svelte';
+	import LocaleSwitcher from '$lib/global/LocaleSwitcher.svelte';
 	import { faUser } from '@fortawesome/free-regular-svg-icons';
 	import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
 	import { TabGroup, LightSwitch, AppShell, modeCurrent } from '@skeletonlabs/skeleton';

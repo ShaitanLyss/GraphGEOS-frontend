@@ -3,7 +3,7 @@
 	import EditorButton from './EditorButton.svelte';
 	import { getContext } from 'svelte';
 	import { notifications } from '@mantine/notifications';
-	import { _ } from 'svelte-i18n';
+	import { _ } from '$lib/global';
 
 	const toggleGeos = getContext('toggleGeos');
 

@@ -3,10 +3,10 @@
 	import { notifications } from '@mantine/notifications';
 	import { page } from '$app/stores';
 	// import { env } from '$env/dynamic/public';
-	import {getCookie} from 'typescript-cookie';
+	import { getCookie } from 'typescript-cookie';
 	import type { NodeEditor } from '$rete/NodeEditor';
 	import type { Writable } from 'svelte/store';
-	import { _ } from 'svelte-i18n';
+	import { _ } from '$lib/global';
 	import { capitalize, words } from '$utils/string';
 	import { onMount } from 'svelte';
 	import { getBackendAddress } from '$utils/config';

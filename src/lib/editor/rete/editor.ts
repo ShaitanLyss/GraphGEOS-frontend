@@ -1,29 +1,26 @@
 import { AreaExtensions, AreaPlugin } from 'rete-area-plugin';
-import {
-	ClassicFlow,
-	ConnectionPlugin,
-	Presets as ConnectionPresets
-} from 'rete-connection-plugin';
 import { AutoArrangePlugin, Presets as ArrangePresets } from 'rete-auto-arrange-plugin';
 import type { Node } from './node/Node';
 import type { AreaExtra } from './node/AreaExtra';
 import type { Schemes } from './node/Schemes';
-import { TypedSocketsPlugin, isConnectionInvalid } from './plugin/typed-sockets';
-import type { Socket } from './socket/Socket';
-import { notifications } from '@mantine/notifications';
+import { TypedSocketsPlugin } from './plugin/typed-sockets';
 import { NodeEditor, NodeEditorSaveData } from './NodeEditor';
 import type { EditorExample } from './example/types';
 import { MegaSetup } from './setup/MegaSetup';
 import { NodeFactory } from './node/NodeFactory';
-import type { MakutuClasses, MakutuClasses$result } from '$houdini';
-import type { MakutuClassRepository } from '../backend-interaction/types';
+import type { MakutuClassRepository } from '$lib/backend-interaction/types';
 
-export async function setupEditor(
-	container: HTMLElement,
-	makutuClasses: MakutuClassRepository,
-	loadExample?: EditorExample,
-	saveData?: NodeEditorSaveData
-) {
+export async function setupEditor({
+	container,
+	makutuClasses,
+	loadExample,
+	saveData
+}: {
+	container: HTMLElement;
+	makutuClasses: MakutuClassRepository;
+	loadExample?: EditorExample;
+	saveData?: NodeEditorSaveData;
+}) {
 	if (container === null) throw new Error('Container is null');
 	const editor = new NodeEditor();
 	const arrange = new AutoArrangePlugin<Schemes>();

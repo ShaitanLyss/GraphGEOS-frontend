@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { _ } from 'svelte-i18n';
+	import { _ } from '$lib/global';
 	import { ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
 	import { capitalize, words } from '$utils/string';
 

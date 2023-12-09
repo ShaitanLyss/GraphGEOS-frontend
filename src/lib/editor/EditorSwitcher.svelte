@@ -1,8 +1,7 @@
 <script lang="ts">
-	import Editor from '$lib/editor/NewEditor.svelte';
-	import EditorSharedOverlay from './EditorSharedOverlay.svelte';
-	import { setContext } from '$lib/global';
-	import { notifications } from '@mantine/notifications';
+	import { Editor, EditorSharedOverlay } from '$lib/editor';
+	import { setContext, notifications } from '$lib/global';
+
 	let editors: number[] = [1];
 	let container: HTMLElement;
 

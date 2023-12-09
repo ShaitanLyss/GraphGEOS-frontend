@@ -2,12 +2,10 @@
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 	import { popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import Fa from 'svelte-fa';
-	import newUniqueId from 'locally-unique-id-generator';
-	import type { NodeFactory } from '$rete';
-	import { _ } from 'svelte-i18n';
-	import { getContext } from '$lib/global/context';
 	import type { ButtonExec, ButtonExecNoNeedFactory } from '.';
-	import { ErrorWNotif } from '$lib/global/error';
+	import { ErrorWNotif, getContext } from '$lib/global';
+	import newUniqueId from 'locally-unique-id-generator';
+	import { _ } from '$lib/global';
 
 	export let icon: IconDefinition;
 	export let active = false;

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { faDownload } from '@fortawesome/free-solid-svg-icons';
 	import { type ButtonExec, EditorButton } from '$lib/editor/buttons';
-	import { _ } from 'svelte-i18n';
+	import { _ } from '$lib/global';
 
 	const downloadGraph: ButtonExec = ({ editor }) => {
 		// notifications.show({title: 'Download', message: 'Downloading graph...'});
