@@ -1,13 +1,12 @@
 <script lang="ts">
 	import Menu from '../Menu.svelte';
-	import { createActionMenuItem, createNodeMenuItem, type IMenuItem } from '../types';
+	import { createActionMenuItem, createMenuItem, type IMenuItem } from '../types';
 
 	const menuItems: IMenuItem[] = [
-		createNodeMenuItem({
+		createMenuItem({
 			label: 'Test node',
 			description: 'Test node description',
-			menuPath: ['menu', 'path'],
-			inTypes: ['cat']
+			menuPath: ['menu', 'path']
 		}),
 		createActionMenuItem({
 			label: 'Test action',

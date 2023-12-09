@@ -1,7 +1,7 @@
 import { browser } from '$app/environment';
 import { HoudiniClient } from '$houdini';
-import {getCookie} from 'typescript-cookie';
-import { getBackendAddress} from './utils/config';
+import { getCookie } from 'typescript-cookie';
+import { getBackendAddress } from '$lib/utils/config';
 
 export default new HoudiniClient({
 	url: getBackendAddress('/api/v1/graphql'),

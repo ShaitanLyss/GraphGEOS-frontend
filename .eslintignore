@@ -11,6 +11,7 @@ svelte-jsx.d.ts
 src-tauri/icons
 src-tauri/target
 src/rete/customization/trash
+src/lib/editor/rete/customization/trash
 
 # Ignore files for PNPM, NPM and YARN
 pnpm-lock.yaml

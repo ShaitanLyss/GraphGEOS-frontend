@@ -1,6 +1,6 @@
 import { EditorType } from '$lib/editor/types';
 import type { NodeFactory } from '$rete';
-import { Node } from '$rete/node/Node';
+import type { Node } from '$rete/node/Node';
 
 export interface IBaseMenuItem {
 	getLabel: () => string;
@@ -114,24 +114,24 @@ export type IMenuItem<T extends MenuItemType = MenuItemType.Base> = T extends Me
  * @param properties
  * @returns
  */
-export function createNodeMenuItem(properties: StaticNodeMenuItem): INodeMenuItem {
-	const {
-		addNode = ({ factory }) => new Node({ factory, label: 'Node' }),
-		editorType = EditorType.All,
-		description = 'create node',
-		inTypes = [],
-		outTypes = [],
-		label = 'Node'
-	} = properties;
-	return {
-		...createMenuItem({ ...properties, label, description }),
-		type: MenuItemType.Node,
-		getInTypes: () => inTypes,
-		getOutTypes: () => outTypes,
-		getAddNode: () => addNode,
-		getEditorType: () => editorType
-	};
-}
+// export function createNodeMenuItem(properties: StaticNodeMenuItem): INodeMenuItem {
+// 	const {
+// 		addNode = ({ factory }) => new Node({ factory, label: 'Node' }),
+// 		editorType = EditorType.All,
+// 		description = 'create node',
+// 		inTypes = [],
+// 		outTypes = [],
+// 		label = 'Node'
+// 	} = properties;
+// 	return {
+// 		...createMenuItem({ ...properties, label, description }),
+// 		type: MenuItemType.Node,
+// 		getInTypes: () => inTypes,
+// 		getOutTypes: () => outTypes,
+// 		getAddNode: () => addNode,
+// 		getEditorType: () => editorType
+// 	};
+// }
 
 export function createActionMenuItem(properties: StaticActionMenuItem): IActionMenuItem {
 	const {

@@ -1,0 +1,13 @@
+{
+	App: {
+		app: {
+			title: "GEOS UI",
+			description: "My App Description"
+		},
+
+		// "db": {
+
+		// }
+	}
+	
+}

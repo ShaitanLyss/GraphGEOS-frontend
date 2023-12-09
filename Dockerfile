@@ -18,6 +18,7 @@ COPY . .
 # COPY .svelte-kit/tsconfig.json .svelte-kit/tsconfig.json
 
 FROM base AS dev
+ENV PUBLIC_ENABLE_AUTH true
 CMD ["pnpm", "dev", "--host"]
 
 FROM base AS build

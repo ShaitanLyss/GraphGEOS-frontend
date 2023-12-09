@@ -4,6 +4,8 @@ import { sequence } from '@sveltejs/kit/hooks';
 import { setSession } from '$houdini';
 import { getBackendAddress, isAuthEnabled } from '$utils/config';
 // import { SessionAndUser} from '$houdini'
+import { config } from '$lib/config';
+import { getCookie, getCookieServer } from '$lib/global/cookies';
 
 const public_routes = [
 	// '/auth/**',
@@ -51,7 +53,8 @@ async function authorization({ event, resolve }) {
 }
 
 const localization: Handle = ({ event, resolve }) => {
-	const lang = event.request.headers.get('accept-language')?.split(',')[0];
+	let lang = getCookieServer('locale', event);
+	if (!lang) lang = event.request.headers.get('accept-language')?.split(',')[0];
 	if (lang) {
 		locale.set(lang);
 	}
@@ -93,7 +96,7 @@ const moonAuth: Handle = async ({ event, resolve }) => {
 };
 
 export const handle: Handle = sequence(
-	localization, 
-	moonAuth, 
-	authorization
-	);
+	localization
+	// moonAuth,
+	// authorization
+);
