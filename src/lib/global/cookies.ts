@@ -24,6 +24,7 @@ export const setCookie: setCookieType = (name, value, options = {}) => {
 	if (forever) {
 		attributes.expires = new Date(253402300000000);
 	}
+	attributes.sameSite = 'lax';
 	ts_cookies.setCookie(CookieNames[name], value, attributes);
 };
 

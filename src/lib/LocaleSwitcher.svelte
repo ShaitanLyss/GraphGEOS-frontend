@@ -18,7 +18,7 @@
 		on:change={setLocale}
 	>
 		{#each $locales as locale}
-			<option value={locale}>{locale}</option>
+			<option class="text-black" value={locale}>{locale}</option>
 		{/each}
 	</select>
 </div>

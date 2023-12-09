@@ -18,7 +18,7 @@
 	`);
 </script>
 
-<div class="px-4 pb-32">
+<div class="px-4 pb-32 bg-surface-200-700-token h-full">
 	<!-- Searchbar -->
 	<div class="flex flex-row items-center justify-between p-2 mb-2">
 		<div class="flex flex-row items-center">
