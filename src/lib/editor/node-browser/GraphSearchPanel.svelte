@@ -28,7 +28,7 @@
 				placeholder="Search"
 			/>
 			<div
-				class="flex flex-row items-center justify-center w-8 h-8 ms-2 rounded-full bg-primary-500"
+				class="flex flex-row items-center justify-center w-8 h-8 ms-2 rounded-full variant-ringed-surface px-2.5 text-surface-600-300-token"
 			>
 				<Fa icon={faSearch} />
 			</div>
