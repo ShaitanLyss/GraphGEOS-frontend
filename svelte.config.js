@@ -42,9 +42,9 @@ const config = {
 			checkOrigin: false
 		},
 		alias: {
-			$rete: 'src/rete',
+			$rete: 'src/lib/editor/rete',
 			$houdini: './$houdini',
-			'$custom-components': 'src/rete/customization/presets/classic/components',
+			'$custom-components': 'src/lib/editor/rete/customization/presets/classic/components',
 			$utils: 'src/lib/utils'
 		}
 	}

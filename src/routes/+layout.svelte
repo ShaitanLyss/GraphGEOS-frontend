@@ -5,7 +5,9 @@
 	import MainView from '$lib/layout/MainView.svelte';
 	import Localization from '$lib/localization/Localization.svelte';
 
+	import { page } from '$app/stores';
 	import '../app.pcss';
+	import Lightmode from '$lib/global/Lightmode.svelte';
 </script>
 
 <svelte:head>
@@ -14,14 +16,15 @@
 
 <MainView>
 	<svelte:fragment slot="sidebarLeft">
-		<slot name="sidebarLeft" />
+		<svelte:component this={$page.data.sidebarLeft} {...$page.data.sidebarLeftProps} />
 	</svelte:fragment>
 	<slot />
 	<svelte:fragment slot="tabs">
-		<slot name="tabs" />
+		<svelte:component this={$page.data.tabs} />
 	</svelte:fragment>
 </MainView>
 
+<Lightmode />
 <Localization />
 <Popups />
 <Notifications />

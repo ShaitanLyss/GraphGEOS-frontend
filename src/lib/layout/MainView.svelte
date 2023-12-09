@@ -2,7 +2,7 @@
 	import LocaleSwitcher from '$lib/LocaleSwitcher.svelte';
 	import { faUser } from '@fortawesome/free-regular-svg-icons';
 	import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
-	import { TabGroup, LightSwitch, AppShell } from '@skeletonlabs/skeleton';
+	import { TabGroup, LightSwitch, AppShell, modeCurrent } from '@skeletonlabs/skeleton';
 	import Fa from 'svelte-fa';
 
 	export let titleButtonUrl = '/';

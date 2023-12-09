@@ -6,6 +6,7 @@ import { getBackendAddress, isAuthEnabled } from '$utils/config';
 // import { SessionAndUser} from '$houdini'
 import { config } from '$lib/config';
 import { getCookie, getCookieServer } from '$lib/global/cookies';
+import { modeCurrent, modeUserPrefers } from '@skeletonlabs/skeleton';
 
 const public_routes = [
 	// '/auth/**',
@@ -54,10 +55,20 @@ async function authorization({ event, resolve }) {
 
 const localization: Handle = ({ event, resolve }) => {
 	let lang = getCookieServer('locale', event);
+	console.log('hey');
 	if (!lang) lang = event.request.headers.get('accept-language')?.split(',')[0];
 	if (lang) {
 		locale.set(lang);
 	}
+	return resolve(event);
+};
+
+const lightmode: Handle = ({ event, resolve }) => {
+	const lightmode = getCookieServer('current', event);
+	if (lightmode !== undefined) {
+		modeCurrent.set(lightmode === 'true');
+	}
+
 	return resolve(event);
 };
 
@@ -96,7 +107,8 @@ const moonAuth: Handle = async ({ event, resolve }) => {
 };
 
 export const handle: Handle = sequence(
-	localization
+	localization,
+	lightmode
 	// moonAuth,
 	// authorization
 );

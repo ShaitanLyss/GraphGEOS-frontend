@@ -1,28 +1,26 @@
 <script lang="ts">
 	import { onDestroy, onMount, setContext } from 'svelte';
 
-	import type { EditorExample } from '../../rete/example/types';
+	import type { EditorExample } from '$rete/example/types';
 	import { AppShell, ModalSettings, modeCurrent } from '@skeletonlabs/skeleton';
 	import { faCloud, faCubes, faCubesStacked, faEarth } from '@fortawesome/free-solid-svg-icons';
 	import { faPython } from '@fortawesome/free-brands-svg-icons';
 	import { getModalStore } from '@skeletonlabs/skeleton';
-	import DownloadGraphButton from '$lib/editor/DownloadGraphButton.svelte';
-	import SaveGraphButton from './SaveGraphButton.svelte';
+	import DownloadGraphButton from '$lib/editor/buttons/DownloadGraphButton.svelte';
+	import SaveGraphButton from './buttons/SaveGraphButton.svelte';
 	import EditorButton from './EditorButton.svelte';
-	import LoadGraphFromFileButton from './LoadGraphFromFileButton.svelte';
+	import LoadGraphFromFileButton from './buttons/LoadGraphFromFileButton.svelte';
 	import type { NodeFactory } from '$rete/node/NodeFactory';
 	import type { NodeEditor, NodeEditorSaveData } from '$rete/NodeEditor';
-	import OpenGraphDrawer from './OpenGraphDrawer.svelte';
-	import NodeBrowser from './node-browser/NodeBrowser.svelte';
 	import { AreaExtensions } from 'rete-area-plugin';
 	import type { Node } from '$rete/node/Node';
 	import { page } from '$app/stores';
 
 	import { notifications } from '@mantine/notifications';
-	import ToPythonButton from './ToPythonButton.svelte';
+	import ToPythonButton from './buttons/ToPythonButton.svelte';
 	import { GetGraphStore, type MakutuClassesStore } from '$houdini';
 	import type { MakutuClassRepository } from '../../backend-interaction/types';
-	import ToggleGeosButton from './ToggleGeosButton.svelte';
+	import ToggleGeosButton from './buttons/ToggleGeosButton.svelte';
 	import GeosDashboard from '$lib/geos/GeosDashboard.svelte';
 	import type { UploadGraphModalMeta } from '$lib/modals/types';
 	import { MacroNode } from '$rete/node/MacroNode';

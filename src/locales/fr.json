@@ -77,6 +77,9 @@
     "generation": {
       "success": {
         "message": "Génération du code python réussie !"
+      },
+      "failure": {
+        "message": "Echec de la génération : Area is undefined"
       }
     },
     "notification": {
@@ -116,6 +119,20 @@
   "test": {
     "hello": {
       "world": "Bonjour Monde"
+    }
+  },
+  "editor": {
+    "button": {
+      "save": "Sauvegarder tous les graphes",
+      "python-mode": {
+        "tooltip": "Générer un workflow python"
+      },
+      "toggle-geos": "Montrer / Cacher le panneau geos"
+    }
+  },
+  "toggle-geos": {
+    "failure": {
+      "missing-toggle": "Erreur pour changer l'affichage du panneau geos : Missing toggle function"
     }
   }
 }

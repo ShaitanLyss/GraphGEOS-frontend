@@ -8,24 +8,28 @@
 	import type { Area2D } from 'rete-area-plugin';
 	import type { AreaExtra } from '$rete/node/AreaExtra';
 	import type { Schemes } from '$rete/node/Schemes';
+	import { browser } from '$app/environment';
 
 	export let factory: NodeFactory;
 	export let container: HTMLElement;
 
 	let active = false;
-	$: window.factory = factory;
 
-	$: if (active) {
-		notifications.show({
-			title: $_('python-mode.notification.title'),
-			message: $_('python-mode.notification.description'),
-			color: 'blue',
-			id: 'python-mode',
-			autoClose: false,
-			withCloseButton: false
-		});
-	} else {
-		notifications.hide('python-mode');
+	// $: window.factory = factory;
+
+	$: if (browser) {
+		if (active) {
+			notifications.show({
+				title: $_('python-mode.notification.title'),
+				message: $_('python-mode.notification.description'),
+				color: 'blue',
+				id: 'python-mode',
+				autoClose: false,
+				withCloseButton: false
+			});
+		} else {
+			notifications.hide('python-mode');
+		}
 	}
 
 	$: if (factory) {
@@ -65,6 +69,15 @@
 			const editor = factory.getEditor();
 			console.log('adding area pipe');
 
+			if (area === undefined) {
+				notifications.show({
+					title: $_('python-mode.notification.title'),
+					message: $_('python-mode.generation.failure.message'),
+					color: 'red'
+				});
+				throw new Error('area is undefined');
+			}
+
 			area.addPipe(async (context) => {
 				factory.getState<(context: AreaExtra | Area2D<Schemes> | Root<Schemes>) => void>(
 					'toPythonBtn',
@@ -81,4 +94,9 @@
 	}
 </script>
 
-<EditorButton icon={faPython} on:click={togglePythonMode} {active} />
+<EditorButton
+	icon={faPython}
+	on:click={togglePythonMode}
+	{active}
+	tooltip={$_('editor.button.python-mode.tooltip')}
+/>

@@ -1,6 +1,5 @@
 import { browser } from '$app/environment';
 import { HoudiniClient } from '$houdini';
-import { getCookie } from 'typescript-cookie';
 import { getBackendAddress } from '$lib/utils/config';
 
 export default new HoudiniClient({

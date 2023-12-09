@@ -41,4 +41,4 @@
 	}
 </script>
 
-<EditorButton on:click={saveGraph} icon={faFloppyDisk} />
+<EditorButton on:click={saveGraph} icon={faFloppyDisk} tooltip={$_('editor.button.save')} />

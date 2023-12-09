@@ -9,7 +9,7 @@ import { ExecSocket } from '../socket/ExecSocket';
 import { Output } from '../Output';
 import { Input } from '../Input';
 import { format } from 'svelte-i18n';
-import { Stack } from '../../types/Stack';
+import { Stack } from '$lib/types/Stack';
 import type { SocketType, TypedSocketsPlugin } from '../plugin/typed-sockets';
 import {
 	Control,

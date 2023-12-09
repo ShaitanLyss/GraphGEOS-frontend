@@ -3,7 +3,8 @@ import * as ts_cookies from 'typescript-cookie';
 import type { CookieAttributes as CookieAttributes_ } from 'typescript-cookie/dist/types';
 
 enum CookieNames {
-	locale = 'geos_graph_locale'
+	locale = 'geos_graph_locale',
+	current = 'geos_graph_lightmode'
 }
 
 type CookieAttributes = {
