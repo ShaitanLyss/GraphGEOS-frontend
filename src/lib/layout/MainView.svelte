@@ -20,7 +20,7 @@
 			</h1>
 			<div class="overflow-x-hidden flex-grow">
 				<div class="overflow-x-auto select-none">
-					<TabGroup regionList={'overflow-x-visible'}>
+					<TabGroup regionList={'overflow-x-visible'} border="">
 						<slot name="tabs" />
 					</TabGroup>
 				</div>

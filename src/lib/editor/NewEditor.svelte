@@ -3,4 +3,9 @@
 	export let position = 'absolute';
 </script>
 
-<div class="{position} h-full w-full bg-surface-50-900-token" role="region" />
+<div
+	class="{position} h-full w-full"
+	class:bg-surface-50-900-token={!$modeCurrent}
+	class:bg-white={$modeCurrent}
+	role="region"
+/>

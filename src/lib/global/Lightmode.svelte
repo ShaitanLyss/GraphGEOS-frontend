@@ -4,6 +4,6 @@
 	import { setCookie } from './cookies';
 
 	$: if (browser) {
-		setCookie('current', String($modeCurrent));
+		setCookie('current', String($modeCurrent), { forever: true });
 	}
 </script>
