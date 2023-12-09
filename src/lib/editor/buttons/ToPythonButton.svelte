@@ -10,9 +10,8 @@
 	import type { Schemes } from '$rete/node/Schemes';
 	import { browser } from '$app/environment';
 
-	export let factory: NodeFactory;
-	export let container: HTMLElement;
-
+	let factory: NodeFactory;
+	let editorViewport: HTMLElement;
 	let active = false;
 
 	// $: window.factory = factory;
@@ -89,14 +88,18 @@
 	}
 
 	function togglePythonMode() {
-		container.classList.toggle('python-cursor');
+		editorViewport.classList.toggle('python-cursor');
 		active = !active;
 	}
 </script>
 
 <EditorButton
 	icon={faPython}
-	on:click={togglePythonMode}
+	exec={({ factory, editorViewport }) => {
+		factory = factory;
+		editorViewport = editorViewport;
+		togglePythonMode();
+	}}
 	{active}
 	tooltip={$_('editor.button.python-mode.tooltip')}
 />

@@ -20,4 +20,8 @@
 	}
 </script>
 
-<EditorButton icon={faEarth} on:click={onClick} tooltip={$_('editor.button.toggle-geos')} />
+<EditorButton
+	icon={faEarth}
+	execNoNeedActiveFactory={onClick}
+	tooltip={$_('editor.button.toggle-geos')}
+/>

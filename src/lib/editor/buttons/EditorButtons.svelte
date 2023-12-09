@@ -1,15 +1,12 @@
 <script lang="ts">
-	import { faCloud } from '@fortawesome/free-solid-svg-icons';
-	import DownloadGraphButton from './DownloadGraphButton.svelte';
-	import EditorButton from './EditorButton.svelte';
-	import LoadGraphFromFileButton from './LoadGraphFromFileButton.svelte';
-	import SaveGraphButton from './SaveGraphButton.svelte';
-	import ToPythonButton from './ToPythonButton.svelte';
-	import ToggleGeosButton from './ToggleGeosButton.svelte';
-
-	let openUploadGraphModal = () => {
-		console.log('hey');
-	};
+	import {
+		DownloadGraphButton,
+		LoadGraphFromFileButton,
+		SaveGraphButton,
+		ToPythonButton,
+		ToggleGeosButton,
+		UploadGraphButton
+	} from '.';
 </script>
 
 <div
@@ -23,7 +20,7 @@
 	</div>
 	<div class="flex gap-4">
 		<DownloadGraphButton />
-		<EditorButton icon={faCloud} on:click={openUploadGraphModal} />
+		<UploadGraphButton />
 		<ToggleGeosButton />
 	</div>
 </div>

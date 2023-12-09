@@ -1,3 +1,4 @@
+import type { NodeFactory } from '$rete';
 import type { NodeEditorSaveData } from '$rete/NodeEditor';
 import type { EditorExample } from '$rete/example/types';
 
@@ -13,5 +14,10 @@ export enum EditorType {
 	All,
 	PyWorkflow
 }
+
+export type EditorContext = {
+	getActiveFactory: () => NodeFactory | undefined;
+	getEditorViewport: () => HTMLElement | undefined;
+};
 
 export type DragData = { type: 'macroNode'; graphId: string };

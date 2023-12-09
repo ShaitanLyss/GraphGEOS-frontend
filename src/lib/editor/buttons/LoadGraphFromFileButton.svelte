@@ -1,15 +1,11 @@
 <script lang="ts">
 	import { faCalendarTimes, faUpload } from '@fortawesome/free-solid-svg-icons';
 	import { notifications } from '@mantine/notifications';
-	import Fa from 'svelte-fa';
-	import { onMount } from 'svelte';
-	import type { NodeEditor } from '$rete/NodeEditor';
 	import EditorButton from './EditorButton.svelte';
 	import { _ } from 'svelte-i18n';
 	import type { NodeFactory } from '$rete/node/NodeFactory';
 
-	export let factory: NodeFactory;
-
+	let factory: NodeFactory;
 	let fileInput: HTMLInputElement;
 
 	async function loadGraph(event: Event) {
@@ -52,4 +48,11 @@
 </script>
 
 <input type="file" bind:this={fileInput} accept=".txt" on:change={loadGraph} hidden />
-<EditorButton on:click={() => fileInput.click()} icon={faUpload} />
+<EditorButton
+	exec={({ factory }) => {
+		factory = factory;
+		fileInput.click();
+	}}
+	icon={faUpload}
+	tooltip={$_('editor.button.load-graph-from-file')}
+/>

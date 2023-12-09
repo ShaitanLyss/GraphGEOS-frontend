@@ -127,12 +127,31 @@
       "python-mode": {
         "tooltip": "Générer un workflow python"
       },
-      "toggle-geos": "Montrer / Cacher le panneau geos"
+      "toggle-geos": "Montrer / Cacher le panneau geos",
+      "downloadGraph": {
+        "tooltip": "Télécharger ce graphe"
+      },
+      "load-graph-from-file": "Charger un graphe depuis un fichier",
+      "error": {
+        "no_active_factory": "Pas de graphe ouvert",
+        "no_exec_function": "Fonctionnalité manquante"
+      },
+      "upload-graph": {
+        "tooltip": "Mettre en ligne le graphe"
+      }
+    },
+    "notification": {
+      "title": "Éditeur"
     }
   },
   "toggle-geos": {
     "failure": {
       "missing-toggle": "Erreur pour changer l'affichage du panneau geos : Missing toggle function"
+    }
+  },
+  "notifications": {
+    "error": {
+      "title": "Erreur"
     }
   }
 }

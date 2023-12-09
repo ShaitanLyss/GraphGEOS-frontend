@@ -55,7 +55,6 @@ async function authorization({ event, resolve }) {
 
 const localization: Handle = ({ event, resolve }) => {
 	let lang = getCookieServer('locale', event);
-	console.log('hey');
 	if (!lang) lang = event.request.headers.get('accept-language')?.split(',')[0];
 	if (lang) {
 		locale.set(lang);

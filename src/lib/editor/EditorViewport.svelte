@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { modeCurrent } from '@skeletonlabs/skeleton';
-
 	export let position = 'absolute';
 </script>
 

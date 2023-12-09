@@ -1,13 +1,9 @@
 <script lang="ts">
 	import { faDownload } from '@fortawesome/free-solid-svg-icons';
-	import { notifications } from '@mantine/notifications';
-	import Fa from 'svelte-fa';
-	import type { NodeEditor } from '$rete/NodeEditor';
-	import EditorButton from './EditorButton.svelte';
+	import { type ButtonExec, EditorButton } from '$lib/editor/buttons';
+	import { _ } from 'svelte-i18n';
 
-	export let editor: NodeEditor;
-
-	function downloadGraph() {
+	const downloadGraph: ButtonExec = ({ editor }) => {
 		// notifications.show({title: 'Download', message: 'Downloading graph...'});
 
 		const content = JSON.stringify(editor);
@@ -21,7 +17,11 @@
 
 		URL.revokeObjectURL(link.href);
 		link.remove();
-	}
+	};
 </script>
 
-<EditorButton on:click={downloadGraph} icon={faDownload} />
+<EditorButton
+	exec={downloadGraph}
+	icon={faDownload}
+	tooltip={$_('editor.button.downloadGraph.tooltip')}
+/>

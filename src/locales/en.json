@@ -130,12 +130,31 @@
       "python-mode": {
         "tooltip": "Generate python workflow"
       },
-      "toggle-geos": "Toggle geos panel"
+      "toggle-geos": "Toggle geos panel",
+      "downloadGraph": {
+        "tooltip": "Download this graph"
+      },
+      "load-graph-from-file": "Load a graph from file",
+      "error": {
+        "no_active_factory": "No active editor found",
+        "no_exec_function": "Missing feature"
+      },
+      "upload-graph": {
+        "tooltip": "Upload graph online"
+      }
+    },
+    "notification": {
+      "title": "Editor"
     }
   },
   "toggle-geos": {
     "failure": {
       "missing-toggle": "Error toggling the geos panel : Missing toggle function"
+    }
+  },
+  "notifications": {
+    "error": {
+      "title": "Error"
     }
   }
 }

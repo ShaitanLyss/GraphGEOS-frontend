@@ -3,8 +3,9 @@
 	import { notifications } from '@mantine/notifications';
 	import { _ } from 'svelte-i18n';
 	import EditorButton from './EditorButton.svelte';
-	import { getContext } from 'svelte';
+	import { getContext } from '$lib/global';
 	import { getLocalStorageUsagePercent as getLocalStorageUsage } from '$utils/localStorage';
+	import { ErrorWNotif } from '$lib/global/error';
 
 	const onSave = getContext<() => unknown>('onSave');
 
@@ -16,7 +17,7 @@
 			color: 'blue',
 			withCloseButton: false
 		});
-		if (onSave === undefined) throw new Error('onSave not defined');
+		if (onSave === undefined) throw new ErrorWNotif({ emessage: 'onSave not defined' });
 		try {
 			onSave();
 			notifications.hide('save');
@@ -41,4 +42,8 @@
 	}
 </script>
 
-<EditorButton on:click={saveGraph} icon={faFloppyDisk} tooltip={$_('editor.button.save')} />
+<EditorButton
+	execNoNeedActiveFactory={saveGraph}
+	icon={faFloppyDisk}
+	tooltip={$_('editor.button.save')}
+/>
