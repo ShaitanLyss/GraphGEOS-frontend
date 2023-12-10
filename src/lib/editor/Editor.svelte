@@ -1,19 +1,21 @@
 <script lang="ts">
+	import type { setupEditor } from '$rete';
+	import type { EditorExample } from '$rete/example/types';
 	import { modeCurrent } from '@skeletonlabs/skeleton';
 	export let position = 'absolute';
-	// import {setupEditor} from '$rete';
-	// import { onMount } from 'svelte';
+	export let loadExample: EditorExample | undefined = undefined;
+	import { onDestroy, onMount } from 'svelte';
 	let container: HTMLElement;
 
-	// onMount(async () => {
-	// 	// await setupEditor({container, makutuClasses: {}})
-	// })
+	let editorData: Awaited<ReturnType<typeof setupEditor>>;
+	onMount(async () => {
+		const { setupEditor } = await import('$rete');
+		editorData = await setupEditor({ container, makutuClasses: {}, loadExample });
+		await editorData.firstDisplay();
+	});
+	onDestroy(() => {
+		editorData?.destroy();
+	});
 </script>
 
-<div
-	bind:this={container}
-	class="{position} h-full w-full"
-	class:bg-surface-50-900-token={!$modeCurrent}
-	class:bg-white={$modeCurrent}
-	role="region"
-/>
+<div bind:this={container} class="{position} h-full w-full bg-none" role="region" />
