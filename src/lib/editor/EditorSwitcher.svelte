@@ -7,6 +7,7 @@
 	import { newUniqueId } from '$utils';
 	import { modeCurrent } from '@skeletonlabs/skeleton';
 	import { onDestroy, onMount } from 'svelte';
+	import { fade } from 'svelte/transition';
 
 	let factories: NodeFactory[] = [];
 	let examples: EditorExample[] = [];
@@ -60,6 +61,7 @@
 	class="h-full w-full"
 	class:bg-surface-50-900-token={!$modeCurrent}
 	class:bg-white={$modeCurrent}
+	in:fade
 >
 	<EditorSharedOverlay />
 	{#each examples as example, i (example)}

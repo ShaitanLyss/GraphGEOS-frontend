@@ -63,6 +63,7 @@
 			</div>
 		</div>
 	</svelte:fragment>
+
 	<svelte:fragment slot="sidebarLeft">
 		<slot name="sidebarLeft" />
 	</svelte:fragment>

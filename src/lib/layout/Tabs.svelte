@@ -15,7 +15,7 @@
 	}
 </script>
 
-<TabGroup regionList={'overflow-x-visible'} border="">
+<TabGroup regionList={'overflow-x-visible overflow-y-hidden'} border="">
 	{#if tabs.length > 0}
 		<div
 			class="h-full"
