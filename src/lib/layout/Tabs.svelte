@@ -16,11 +16,18 @@
 </script>
 
 <TabGroup regionList={'overflow-x-visible'} border="">
-	{#each tabs as tab (tab.id)}
-		<div in:fly={{ y: '100%' }} out:fade={{ duration: 100 }}>
-			<Tab bind:group={tabSet} value={tab.id} name={tab.name}>
-				{tab.name}
-			</Tab>
+	{#if tabs.length > 0}
+		<div
+			class="h-full"
+			data-comment-
+			in:fly={{ y: '100%' }}
+			out:fly={{ x: '-100%', duration: 400 }}
+		>
+			{#each tabs as tab (tab.id)}
+				<Tab bind:group={tabSet} value={tab.id} name={tab.name}>
+					{tab.name}
+				</Tab>
+			{/each}
 		</div>
-	{/each}
+	{/if}
 </TabGroup>

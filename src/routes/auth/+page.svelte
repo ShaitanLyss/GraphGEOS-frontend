@@ -92,7 +92,7 @@
 </svelte:head>
 <div
 	class="fixed inset-0 h-full w-full flex justify-center items-center"
-	transition:fly={{ y: '50%', duration: 600 }}
+	transition:fly={{ y: '100%', duration: 500 }}
 >
 	{#if !ready || checkingForDeadBackend}
 		<h1 class="h1">Loading...</h1>

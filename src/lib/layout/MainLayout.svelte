@@ -7,6 +7,7 @@
 	import Fa from 'svelte-fa';
 	import { writable } from 'svelte/store';
 	import type { TabContext } from '.';
+	import { fly } from 'svelte/transition';
 
 	const tabs: TabContext['tabs'] = writable([]);
 	let tabSet: TabContext['tabSet'] = writable();
