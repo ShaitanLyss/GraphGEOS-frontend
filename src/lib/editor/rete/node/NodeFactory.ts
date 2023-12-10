@@ -12,6 +12,7 @@ import { Writable, writable } from 'svelte/store';
 import { PythonDataflowEngine } from '$rete/engine/PythonDataflowEngine';
 import type { MakutuClasses$result } from '$houdini';
 import type { MakutuClassRepository } from '../../backend-interaction/types';
+import { newUniqueId } from '$utils';
 
 function createDataflowEngine() {
 	return new DataflowEngine<Schemes>(({ inputs, outputs }) => {
@@ -66,6 +67,8 @@ export class NodeFactory {
 		this.classRegistry[id] = nodeClass;
 	}
 	private state: Map<string, unknown> = new Map();
+
+	public id = newUniqueId('node-factory');
 
 	useState<T = unknown>(
 		id: string,

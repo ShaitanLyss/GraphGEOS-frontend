@@ -22,9 +22,6 @@
 	{#if !$isLocaleLoading}
 		<slot />
 	{/if}
-	<svelte:fragment slot="tabs">
-		<svelte:component this={$page.data.tabs} />
-	</svelte:fragment>
 	<Modals />
 </MainLayout>
 <Popups />

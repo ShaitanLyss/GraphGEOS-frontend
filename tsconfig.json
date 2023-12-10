@@ -13,7 +13,9 @@
 		"strict": true,
 		"preserveValueImports": false,
 		"experimentalDecorators": true,
-		"emitDecoratorMetadata": true
+		"emitDecoratorMetadata": true,
+		"rootDirs": [".", "./.svelte-kit/types", "./$houdini/types"]
+		
 		// "importsNotUsedAsValues":
 	}
 	// 	"include": [

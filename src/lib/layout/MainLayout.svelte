@@ -1,16 +1,31 @@
 <script lang="ts">
-	import LocaleSwitcher from '$lib/global/LocaleSwitcher.svelte';
+	import { setContext, LocaleSwitcher } from '$lib/global';
+	import { Tabs } from '$lib/layout';
 	import { faUser } from '@fortawesome/free-regular-svg-icons';
 	import { faEllipsisH } from '@fortawesome/free-solid-svg-icons';
-	import { TabGroup, LightSwitch, AppShell, modeCurrent } from '@skeletonlabs/skeleton';
+	import { LightSwitch, AppShell } from '@skeletonlabs/skeleton';
 	import Fa from 'svelte-fa';
+	import { writable } from 'svelte/store';
+	import type { TabContext } from '.';
+
+	const tabs: TabContext['tabs'] = writable([]);
+	let tabSet: TabContext['tabSet'] = writable();
+	let clearTabs: TabContext['clearTabs'] = writable();
+
+	const tabContext: TabContext = {
+		tabs: tabs,
+		tabSet,
+		clearTabs
+	};
+
+	setContext('tabs', tabContext);
 
 	export let titleButtonUrl = '/';
 </script>
 
 <AppShell slotPageContent="relative">
 	<svelte:fragment slot="header">
-		<div class="flex">
+		<div class="flex" style="height: 2.63em;">
 			<h1 class="h3 mx-auto px-2 my-auto pb-1.5">
 				<span
 					class="bg-gradient-to-tr from-red-900 to-yellow-700 dark:from-red-500 dark:to-yellow-500 bg-clip-text text-transparent box-decoration-clone"
@@ -19,10 +34,9 @@
 				</span>
 			</h1>
 			<div class="overflow-x-hidden flex-grow">
+				<!-- flex items-end-->
 				<div class="overflow-x-auto select-none">
-					<TabGroup regionList={'overflow-x-visible'} border="">
-						<slot name="tabs" />
-					</TabGroup>
+					<Tabs tabs={$tabs} bind:tabSet={$tabSet} bind:clearTabs={$clearTabs} />
 				</div>
 			</div>
 			<div class="group ml-auto pe-4 relative h-auto">

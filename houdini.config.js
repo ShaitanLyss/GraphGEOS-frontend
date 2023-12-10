@@ -1,21 +1,10 @@
 /// <references types="houdini-svelte">
 
 /** @type {import('houdini').ConfigFile} */
-const config = {
-	watchSchema: {
-		url: 'http://backend:8000/api/v1/graphql',
-		// headers: {
-		// 	Authorization(env) {
-		// 		return `Bearer 05785ac6-25eb-4c1f-80a1-c6f6a96c8e45`;
-		// 	}
-		// }
-	},
+let config = {
 	plugins: {
-		'houdini-svelte': {
-			static: true
-		}
+		'houdini-svelte': {}
 	},
-
 	scalars: {
 		/* in your case, something like */
 		UUID: {
@@ -37,5 +26,34 @@ const config = {
 		}
 	}
 };
+
+if (typeof window === 'undefined') {
+	const { getConfig } = await import('@selenial/typed-config');
+	const houdiniConf = await getConfig({
+		domain: 'Houdini',
+		schema: {
+			schemaUrl: 'string',
+			watch: 'boolean',
+			static: 'boolean'
+		}
+	});
+
+	config = {
+		...config,
+
+		watchSchema: {
+			url: houdiniConf.schemaUrl
+			// headers: {
+			// 	Authorization(env) {
+			// 		return `Bearer 05785ac6-25eb-4c1f-80a1-c6f6a96c8e45`;
+			// 	}
+			// }
+		}
+	};
+	if (!houdiniConf.watch) {
+		config.watchSchema = undefined;
+	}
+	config.plugins['houdini-svelte'].static = houdiniConf.static;
+}
 
 export default config;

@@ -4,10 +4,13 @@
 			title: "GEOS UI",
 			description: "My App Description"
 		},
-
 		// "db": {
 
 		// }
+	},
+	Houdini: {
+		schemaUrl: "http://localhost:8000/api/v1/graphql",
+		static: false,
+		watch: false,
 	}
-	
 }

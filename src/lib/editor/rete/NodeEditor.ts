@@ -1,6 +1,7 @@
 import { NodeEditor as BaseNodeEditor } from 'rete';
 import type { Schemes } from './node/Schemes';
 import { Connection, Node, type NodeSaveData } from './node/Node';
+import { newUniqueId } from '$utils';
 
 export type NodeEditorSaveData = {
 	nodes: NodeSaveData[];
@@ -15,6 +16,7 @@ export class NodeEditor extends BaseNodeEditor<Schemes> {
 	}
 	name = 'New Editor';
 	onChangeNameListeners: ((name: string) => void)[] = [];
+	id = newUniqueId('node-editor');
 
 	async addExecConnection(source: Node, target: Node): Promise<boolean> {
 		return await this.addConnection(new Connection(source, 'exec', target, 'exec'));

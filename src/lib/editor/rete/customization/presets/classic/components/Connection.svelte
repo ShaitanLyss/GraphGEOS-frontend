@@ -5,20 +5,21 @@
 	// svelte-ignore unused-export-let
 	// export let data: ClassicScheme['Connection'] & { isLoop?: boolean };
 	// svelte-ignore unused-export-let
-	// export let start: Position;
+	export let start: Position;
 	// svelte-ignore unused-export-let
-	// export let end: Position;
+	export let end: Position;
 	// svelte-ignore unused-export-let
-	// export let targetInput: string;
+	export let targetInput: string;
 	// svelte-ignore unused-export-let
-	// export let target: string;
+	export let target: string;
 	// svelte-ignore unused-export-let
-	// export let source: string;
+	export let source: string;
 	// svelte-ignore unused-export-let
-	// export let sourceOutput: string;
-	// export let isPseudo = undefined;
+	export let sourceOutput: string;
 	// svelte-ignore unused-export-let
-	// export let id: string;
+	export let isPseudo = undefined;
+	// svelte-ignore unused-export-let
+	export let id: string;
 	// svelte-ignore unused-export-let
 	export let path: string;
 </script>
