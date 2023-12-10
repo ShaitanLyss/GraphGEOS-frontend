@@ -52,3 +52,17 @@ body {
 	padding-right: 1em;
 	padding-left: 1em;
 }
+
+
+@keyframes slideInLeftToRight {
+	from {
+		transform: translateX(-100%);
+	}
+	to {
+		transform: translateX(0);
+	}
+}
+
+.slide-in-l2r {
+	animation: slideInLeftToRight 0.5s ease-in-out forwards;
+}

@@ -21,6 +21,7 @@
 	import { faHome } from '@fortawesome/free-solid-svg-icons';
 	import { env } from '$env/dynamic/public';
 	import { getBackendAddress } from '$utils/config';
+	import { fade, fly } from 'svelte/transition';
 	console.log('public dynamic env', env);
 	let reload = false;
 	let login: () => Promise<void>;
@@ -89,7 +90,10 @@
 <svelte:head>
 	<title>Geos UI - Auth</title>
 </svelte:head>
-<div class="fixed inset-0 h-full w-full flex justify-center items-center">
+<div
+	class="fixed inset-0 h-full w-full flex justify-center items-center"
+	transition:fly={{ y: '50%', duration: 600 }}
+>
 	{#if !ready || checkingForDeadBackend}
 		<h1 class="h1">Loading...</h1>
 	{:else if backendDed}

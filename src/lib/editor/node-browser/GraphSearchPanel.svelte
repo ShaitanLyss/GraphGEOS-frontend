@@ -4,6 +4,7 @@
 	import Fa from 'svelte-fa';
 	import GraphItem from './GraphItem.svelte';
 	import { graphql, query } from '$houdini';
+	import { fade } from 'svelte/transition';
 
 	const graphsAndAuthorName = graphql(`
 		query GraphsAndAuthorName @load {

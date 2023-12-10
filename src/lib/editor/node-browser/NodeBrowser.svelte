@@ -6,6 +6,8 @@
 	import Fa from 'svelte-fa';
 	import { isLoading, _ } from 'svelte-i18n';
 	import GraphSearchPanel from './GraphSearchPanel.svelte';
+	import { fade, slide } from 'svelte/transition';
+	import { flip } from 'svelte/animate';
 
 	let currentTile: string | undefined = undefined;
 	let drawerMode = false;
@@ -57,19 +59,18 @@
 			<span>{$_('browser.tab.shared')}</span>
 		</AppRailTile>
 	</AppRail>
-	{#if currentTile === 'favorites'}
-		<div class="max-h-full overflow-y-auto">
-			<GraphSearchPanel />
-		</div>
-	{/if}
-	{#if currentTile === 'user'}
-		<div class="max-h-full overflow-y-auto">
-			<GraphSearchPanel />
-		</div>
-	{/if}
-	{#if currentTile === 'shared'}
-		<div class="max-h-full overflow-y-auto">
-			<GraphSearchPanel />
+	{#if currentTile}
+		<div
+			class="max-h-full overflow-y-auto overflow-x-clip"
+			transition:slide={{ axis: 'x', duration: 200 }}
+		>
+			{#if currentTile === 'favorites'}
+				<GraphSearchPanel />
+			{:else if currentTile === 'user'}
+				<GraphSearchPanel />
+			{:else if currentTile === 'shared'}
+				<GraphSearchPanel />
+			{/if}
 		</div>
 	{/if}
 </div>

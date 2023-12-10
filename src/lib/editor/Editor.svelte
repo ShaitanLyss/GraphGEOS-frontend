@@ -7,6 +7,7 @@
 
 	export let loadExample: EditorExample | undefined = undefined;
 	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
+	import { draw, fade } from 'svelte/transition';
 
 	export let editor: NodeEditor | undefined = undefined;
 	export let factory: NodeFactory | undefined = undefined;
@@ -24,11 +25,12 @@
 
 	$: editor = editorData?.editor;
 	$: factory = editorData?.factory;
-
+	let mounted = false;
 	onMount(async () => {
 		await import('$rete/setup/appLaunch');
 		const { setupEditor } = await import('$rete');
 		editorData = await setupEditor({ container, makutuClasses: {}, loadExample });
+		mounted = true;
 	});
 
 	onDestroy(() => {
@@ -41,6 +43,9 @@
 
 <div
 	bind:this={container}
-	class="{position} h-full w-full bg-none {hidden ? 'opacity-0 pointer-events-none' : ''}"
+	class:opacity-0={!mounted}
+	class="{position} transition-opacity h-full w-full bg-none {hidden
+		? 'opacity-0 pointer-events-none'
+		: ''}"
 	role="region"
 />

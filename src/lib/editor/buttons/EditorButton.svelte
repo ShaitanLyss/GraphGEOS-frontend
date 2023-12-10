@@ -6,6 +6,7 @@
 	import { ErrorWNotif, getContext } from '$lib/global';
 	import newUniqueId from 'locally-unique-id-generator';
 	import { _ } from '$lib/global';
+	import { fade, scale } from 'svelte/transition';
 
 	export let icon: IconDefinition;
 	export let active = false;
