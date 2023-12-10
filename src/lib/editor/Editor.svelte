@@ -1,21 +1,41 @@
 <script lang="ts">
-	import type { setupEditor } from '$rete';
+	import type { NodeEditor, NodeFactory, setupEditor } from '$rete';
 	import type { EditorExample } from '$rete/example/types';
 	import { modeCurrent } from '@skeletonlabs/skeleton';
 	export let position = 'absolute';
+	export let hidden = true;
+
 	export let loadExample: EditorExample | undefined = undefined;
 	import { onDestroy, onMount } from 'svelte';
-	let container: HTMLElement;
 
+	export let editor: NodeEditor | undefined = undefined;
+	export let factory: NodeFactory | undefined = undefined;
+
+	let container: HTMLElement;
 	let editorData: Awaited<ReturnType<typeof setupEditor>>;
+
+	let firstShown = true;
+	$: if (!hidden && firstShown && editorData?.firstDisplay) {
+		firstShown = false;
+		console.log('firstShown');
+		setTimeout(() => editorData.firstDisplay(), 0);
+	}
+
+	$: editor = editorData?.editor;
+	$: factory = editorData?.factory;
+
 	onMount(async () => {
+		await import('$rete/setup/appLaunch');
 		const { setupEditor } = await import('$rete');
 		editorData = await setupEditor({ container, makutuClasses: {}, loadExample });
-		await editorData.firstDisplay();
 	});
 	onDestroy(() => {
 		editorData?.destroy();
 	});
 </script>
 
-<div bind:this={container} class="{position} h-full w-full bg-none" role="region" />
+<div
+	bind:this={container}
+	class="{position} h-full w-full bg-none {hidden ? 'opacity-0 pointer-events-none' : ''}"
+	role="region"
+/>

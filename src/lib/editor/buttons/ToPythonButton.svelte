@@ -86,6 +86,10 @@
 			});
 		}
 	}
+	function setData(params: { factory: NodeFactory; editorViewport: HTMLElement }) {
+		editorViewport = params.editorViewport;
+		factory = params.factory;
+	}
 
 	function togglePythonMode() {
 		editorViewport.classList.toggle('python-cursor');
@@ -97,7 +101,7 @@
 	icon={faPython}
 	exec={({ factory, editorViewport }) => {
 		factory = factory;
-		editorViewport = editorViewport;
+		setData({ editorViewport, factory });
 		togglePythonMode();
 	}}
 	{active}

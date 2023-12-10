@@ -45,12 +45,16 @@
 
 		reader.readAsText(file);
 	}
+
+	function setData(params: { factory: NodeFactory }) {
+		factory = params.factory;
+	}
 </script>
 
 <input type="file" bind:this={fileInput} accept=".txt" on:change={loadGraph} hidden />
 <EditorButton
-	exec={({ factory }) => {
-		factory = factory;
+	exec={(params) => {
+		setData(params);
 		fileInput.click();
 	}}
 	icon={faUpload}
