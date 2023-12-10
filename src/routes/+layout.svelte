@@ -2,7 +2,7 @@
 	import Modals from '$lib/global/Modals.svelte';
 	import Notifications from '$lib/global/Notifications.svelte';
 	import Popups from '$lib/global/Popups.svelte';
-	import MainView from '$lib/layout/MainView.svelte';
+	import MainLayout from '$lib/layout/MainLayout.svelte';
 	import { isLocaleLoading, Localization } from '$lib/global';
 	import { page } from '$app/stores';
 	import '../app.pcss';
@@ -13,7 +13,7 @@
 	<title>Geos UI</title>
 </svelte:head>
 <Localization />
-<MainView>
+<MainLayout>
 	<svelte:fragment slot="sidebarLeft">
 		{#if !$isLocaleLoading}
 			<svelte:component this={$page.data.sidebarLeft} {...$page.data.sidebarLeftProps} />
@@ -26,7 +26,7 @@
 		<svelte:component this={$page.data.tabs} />
 	</svelte:fragment>
 	<Modals />
-</MainView>
+</MainLayout>
 <Popups />
 <Notifications />
 <Lightmode />
