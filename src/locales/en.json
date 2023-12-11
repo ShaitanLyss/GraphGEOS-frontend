@@ -71,7 +71,8 @@
   },
   "card": {
     "graphItem": {
-      "by_author": "By {name}"
+      "by_author": " {name}",
+      "on_date": "On {date}"
     }
   },
   "python-mode": {

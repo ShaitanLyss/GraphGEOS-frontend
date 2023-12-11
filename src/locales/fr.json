@@ -70,7 +70,8 @@
   },
   "card": {
     "graphItem": {
-      "by_author": "Par {name}"
+      "by_author": " {name}",
+      "on_date": "Le {date}"
     }
   },
   "python-mode": {

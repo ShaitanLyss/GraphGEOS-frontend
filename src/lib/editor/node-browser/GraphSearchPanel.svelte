@@ -4,7 +4,6 @@
 	import Fa from 'svelte-fa';
 	import GraphItem from './GraphItem.svelte';
 	import { graphql, query } from '$houdini';
-	import { fade } from 'svelte/transition';
 
 	const graphsAndAuthorName = graphql(`
 		query GraphsAndAuthorName @load {
@@ -19,7 +18,9 @@
 	`);
 </script>
 
-<div class="px-4 pb-32 bg-surface-200-700-token h-full">
+<div
+	class="px-4 pb-32 bg-surface-200-700-token h-full flex flex-col items-center graph-search-pannel"
+>
 	<!-- Searchbar -->
 	<div class="flex flex-row items-center justify-between p-2 mb-2">
 		<div class="flex flex-row items-center">
@@ -36,9 +37,11 @@
 		</div>
 	</div>
 	{#if $graphsAndAuthorName.data}
-		{#each $graphsAndAuthorName.data.graphs as graph}
-			<GraphItem graphName={graph.name} authorName={graph.author.name} graphId={graph.id} />
-		{/each}
+		<div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+			{#each $graphsAndAuthorName.data.graphs as graph (graph.id)}
+				<GraphItem graphName={graph.name} authorName={graph.author.name} graphId={graph.id} />
+			{/each}
+		</div>
 	{/if}
 	<!-- <div class="mb-4">
 		<h2 class="h2 mb-4">{$_('title.favorite')}</h2>
@@ -60,3 +63,15 @@
 		</div>
 	</div> -->
 </div>
+
+<style>
+	.graph-search-pannel {
+		width: 29rem;
+	}
+
+	@media (max-width: 1024px) {
+		.graph-search-pannel {
+			width: 15rem;
+		}
+	}
+</style>

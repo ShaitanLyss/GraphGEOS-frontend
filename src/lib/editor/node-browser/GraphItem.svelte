@@ -6,6 +6,7 @@
 	import { _ } from '$lib/global';
 	import { draggable } from '@neodrag/svelte';
 	import type { DragData } from '../types';
+	import { locale } from 'svelte-i18n';
 	export let graphName: string | undefined = undefined;
 	export let authorName: string | null | undefined = undefined;
 	export let graphId: string;
@@ -40,30 +41,37 @@
 	draggable="true"
 	on:dblclick={ondblclick}
 	on:dragstart={onDragStart}
-	class="card card-hover overflow-hidden variant-filled w-52"
+	class="card card-hover overflow-hidden variant-filled-surface w-52 text-xs select-none"
 >
-	<header>
+	<!-- <header>
 		<img
 			draggable="false"
 			src="https://source.unsplash.com/vjUokUWbFOs/400x175"
 			class="bg-black/50 w-full aspect-[21/9]"
 			alt="Post"
 		/>
-	</header>
+	</header> -->
 	<div class="p-4 space-y-4">
-		<h6 class="h6"><div class="placeholder w-24 h-2" /></h6>
+		<!-- <h6 class="h6"><div class="placeholder w-24 h-2" /></h6> -->
 		<!-- <h3 class="h3"><div class="placeholder w-32" /></h3> -->
-		<h3 class="h3">{graphName}</h3>
+		<h3 class="h5">{graphName}</h3>
 	</div>
 
 	<hr class="opacity-50" />
-	<footer class="p-4 flex justify-start items-center space-x-4">
-		<Fa icon={faUser} class="w-8" />
+	<footer class="p-4 flex justify-start items-center space-x-2">
+		<Fa icon={faUser} class="w-2" />
 		<div class="flex-auto flex justify-between items-center">
-			<h6 class="font-bold">
+			<h6
+				class="font-bold h-4 overflow-hidden text-ellipsis whitespace-nowrap"
+				style="width: 5.3rem;"
+			>
 				{$_('card.graphItem.by_author', { values: { name: authorName } })}
 			</h6>
-			<small>On {new Date().toLocaleDateString()}</small>
+			<small
+				>{$_('card.graphItem.on_date', {
+					values: { date: new Date().toLocaleDateString($locale) }
+				})}</small
+			>
 		</div>
 	</footer>
 </div>
