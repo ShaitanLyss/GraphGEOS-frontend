@@ -66,3 +66,20 @@ body {
 .slide-in-l2r {
 	animation: slideInLeftToRight 0.5s ease-in-out forwards;
 }
+
+.minimap {
+	transition: background-color 0.1s ease-in-out;
+}
+.dark .minimap {
+	background-color: rgba(55,68,107, 0.65) !important;
+}
+
+.minimap .mini-viewport {
+	transition: border-color 0.1s ease-in-out, background-color 0.1s ease-in-out;	
+}
+
+.dark .minimap .mini-viewport {
+	--tw-ring-opacity: 1;
+	border-color: rgb(var(--color-secondary-500) / var(--tw-ring-opacity)) !important;
+	background-color: rgba(var(--color-secondary-500) / 0.2) !important;
+}
