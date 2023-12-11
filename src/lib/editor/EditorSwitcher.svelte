@@ -49,11 +49,14 @@
 	$: if (factories.length > 0) {
 		activeFactory = factories[0];
 	}
-	$: clearTabs = tabsContext?.clearTabs;
 
 	onDestroy(() => {
-		if ($clearTabs) $clearTabs();
+		onDestroyCleanup();
 	});
+	$: clearTabs = tabsContext?.clearTabs;
+	function onDestroyCleanup() {
+		if ($clearTabs) $clearTabs();
+	}
 </script>
 
 <div
@@ -62,6 +65,8 @@
 	class:bg-surface-50-900-token={!$modeCurrent}
 	class:bg-white={$modeCurrent}
 	in:fade
+	out:fade={{ duration: 200 }}
+	on:outrostart={onDestroyCleanup}
 >
 	<EditorSharedOverlay />
 	{#each examples as example, i (example)}

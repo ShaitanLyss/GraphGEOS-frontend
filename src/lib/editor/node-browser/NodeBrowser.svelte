@@ -20,7 +20,7 @@
 	}
 </script>
 
-<div class="flex h-full" in:fade>
+<div class="flex h-full" in:fade out:fade={{ duration: 200 }}>
 	<AppRail regionDefault="select-none">
 		<AppRailTile
 			bind:group={currentTile}

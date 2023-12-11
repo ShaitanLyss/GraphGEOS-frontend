@@ -7,7 +7,7 @@
 	import Fa from 'svelte-fa';
 	import { writable } from 'svelte/store';
 	import type { TabContext } from '.';
-	import { fly } from 'svelte/transition';
+	import { fade, fly } from 'svelte/transition';
 
 	const tabs: TabContext['tabs'] = writable([]);
 	let tabSet: TabContext['tabSet'] = writable();
@@ -27,7 +27,7 @@
 <AppShell slotPageContent="relative">
 	<svelte:fragment slot="header">
 		<div class="flex" style="height: 2.63em;">
-			<h1 class="h3 mx-auto px-2 my-auto pb-1.5 w-20 text-center">
+			<h1 class="h3 mx-auto my-auto pb-1.5 w-20 text-center">
 				<span
 					class="bg-gradient-to-tr from-red-900 to-yellow-700 dark:from-red-500 dark:to-yellow-500 bg-clip-text text-transparent box-decoration-clone"
 				>
@@ -63,7 +63,6 @@
 			</div>
 		</div>
 	</svelte:fragment>
-
 	<svelte:fragment slot="sidebarLeft">
 		<slot name="sidebarLeft" />
 	</svelte:fragment>
