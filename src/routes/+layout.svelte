@@ -3,10 +3,11 @@
 	import Notifications from '$lib/global/Notifications.svelte';
 	import Popups from '$lib/global/Popups.svelte';
 	import MainLayout from '$lib/layout/MainLayout.svelte';
-	import { isLocaleLoading, Localization } from '$lib/global';
+	import { isLocaleLoading, Localization, setTheme, theme } from '$lib/global';
 	import { page } from '$app/stores';
 	import '../app.pcss';
 	import Lightmode from '$lib/global/Lightmode.svelte';
+	import { onMount } from 'svelte';
 </script>
 
 <svelte:head>

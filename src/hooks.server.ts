@@ -4,9 +4,10 @@ import { sequence } from '@sveltejs/kit/hooks';
 import { setSession } from '$houdini';
 import { getBackendAddress, isAuthEnabled } from '$utils/config';
 // import { SessionAndUser} from '$houdini'
-import { config } from '$lib/config';
-import { getCookie, getCookieServer } from '$lib/global/cookies';
-import { modeCurrent, modeUserPrefers } from '@skeletonlabs/skeleton';
+import { getCookieServer } from '$lib/global/cookies';
+import { modeCurrent } from '@skeletonlabs/skeleton';
+import { theme as activeTheme } from '$lib/global';
+import { get } from 'svelte/store';
 
 const public_routes = [
 	// '/auth/**',
@@ -59,7 +60,19 @@ const localization: Handle = ({ event, resolve }) => {
 	if (lang) {
 		locale.set(lang);
 	}
-	return resolve(event);
+	return resolve(event, {
+		transformPageChunk: ({ html }) => html.replace('%lang%', lang ?? 'en')
+	});
+};
+const theme: Handle = ({ event, resolve }) => {
+	const theme = getCookieServer('theme', event);
+	if (theme) {
+		console.log('hooks:theme', theme);
+		activeTheme.set(theme);
+	}
+	return resolve(event, {
+		transformPageChunk: ({ html }) => html.replace('%theme%', theme ?? 'skeleton')
+	});
 };
 
 const lightmode: Handle = ({ event, resolve }) => {
@@ -107,7 +120,8 @@ const moonAuth: Handle = async ({ event, resolve }) => {
 
 export const handle: Handle = sequence(
 	localization,
-	lightmode
+	lightmode,
+	theme
 	// moonAuth,
 	// authorization
 );

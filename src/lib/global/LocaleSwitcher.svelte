@@ -10,6 +10,12 @@
 	}
 </script>
 
+<svelte:head>
+	<!-- <html lang={$locale} /> -->
+</svelte:head>
+
+<!-- <svelte:body data-yo="o"></svelte:body> -->
+
 <!-- {"rounded-token h-7 cursor-pointer"} -->
 <div>
 	<select
