@@ -27,6 +27,7 @@ module.exports = {
 		'@typescript-eslint/no-unused-vars': 'off',
 		'svelte/no-unused-svelte-ignore': 'off',
 		'no-empty': 'off',
+		'no-fallthrough': 'off',
 	},
 	overrides: [
 		{

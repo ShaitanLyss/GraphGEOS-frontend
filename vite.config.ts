@@ -6,7 +6,7 @@ import { purgeCss } from 'vite-plugin-tailwind-purgecss';
 export default defineConfig({
 	build: {
 		target: 'es2022',
-		minify: false,
+		minify: true,
 		commonjsOptions: {
 			// include: []
 		}
