@@ -8,6 +8,7 @@ import { getCookieServer } from '$lib/global/cookies';
 import { modeCurrent } from '@skeletonlabs/skeleton';
 import { theme as activeTheme } from '$lib/global';
 import { get } from 'svelte/store';
+// import { publicConfig } from '$lib/config';
 
 const public_routes = [
 	// '/auth/**',
@@ -70,6 +71,9 @@ const theme: Handle = ({ event, resolve }) => {
 		console.log('hooks:theme', theme);
 		activeTheme.set(theme);
 	}
+
+	// event.locals.publicConfig = publicConfig;
+
 	return resolve(event, {
 		transformPageChunk: ({ html }) => html.replace('%theme%', theme ?? 'skeleton')
 	});
