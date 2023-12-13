@@ -1,19 +1,29 @@
-import * as path from 'path';
 import { skeleton } from '@skeletonlabs/tw-plugin';
 import prosePlugin from '@tailwindcss/typography';
 import formPlugin from '@tailwindcss/forms';
 import { join } from 'path';
 import type { Config } from 'tailwindcss';
+import { publicConfig } from './src/lib/config';
 
+const { themes } = publicConfig;
+// const { themes } = getConfig({
+// 	domain: 'Public',
+// 	schema: {
+// 		themes: {
+// 			presets: '("crimson" | "gold-nouveau" | "hamlindigo" | "modern" | "rocket" | "sahara" | "seafoam" | "skeleton" | "vintage" | "wintry")[]',
+// 			customs: 'string[]'
+// 		}
+// 	}
+// }
+// );
+
+// const themes = { presets: ['crimson', 'gold-nouveau', 'hamlindigo', 'modern', 'rocket', 'sahara', 'seafoam', 'skeleton', 'vintage', 'wintry'] };
 
 const config = {
 	darkMode: 'class',
 	content: [
 		'./src/**/*.{html,js,svelte,ts, jsx, tsx}',
-		join(require.resolve(
-			'@skeletonlabs/skeleton'),
-			'../**/*.{html,js,svelte,ts}'
-		)
+		join(require.resolve('@skeletonlabs/skeleton'), '../**/*.{html,js,svelte,ts}')
 	],
 
 	theme: {
@@ -26,13 +36,15 @@ const config = {
 		}
 	},
 	include: ['src/**/*'],
-	plugins: [formPlugin, skeleton({
-		themes: {
-			preset: [{ name: "skeleton", enhancements: true }, 
-			{ name: "modern", enhancements: true }, { name: "gold-nouveau", enhancements: true }
-		]
-		}
-	}), prosePlugin]
-} satisfies Config ;
+	plugins: [
+		formPlugin,
+		skeleton({
+			themes: {
+				preset: themes.presets.map((theme) => ({ name: theme, enhancements: true }))
+			}
+		}),
+		prosePlugin
+	]
+} satisfies Config;
 
 module.exports = config;

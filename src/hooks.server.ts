@@ -8,7 +8,7 @@ import { getCookieServer } from '$lib/global/cookies';
 import { modeCurrent } from '@skeletonlabs/skeleton';
 import { theme as activeTheme } from '$lib/global';
 import { get } from 'svelte/store';
-// import { publicConfig } from '$lib/config';
+import { publicConfig } from '$lib/config';
 
 const public_routes = [
 	// '/auth/**',

@@ -12,5 +12,11 @@
 		schemaUrl: "http://localhost:8000/api/v1/graphql",
 		static: false,
 		watch: false,
+	},
+	Public: {
+		themes: {
+			presets: ['crimson', 'gold-nouveau', 'hamlindigo', 'modern', 'rocket', 'sahara', 'seafoam', 'skeleton', 'vintage', 'wintry'],
+			customs: []
+		}
 	}
 }

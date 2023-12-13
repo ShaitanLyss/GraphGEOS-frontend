@@ -5,13 +5,7 @@ import type { SessionAndUser$result, UserAuthInfo } from '$houdini';
 
 export const ssr = true;
 
-export const load: LayoutLoad<
-	Promise<
-		| { session: SessionAndUser$result['session']; user: SessionAndUser$result['session']['user'] }
-		| null
-		| undefined
-	>
-> = async (event) => {
+export const load: LayoutLoad = async (event) => {
 	await loadLocale();
 
 	if (!browser) return;

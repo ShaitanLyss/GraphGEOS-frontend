@@ -1,6 +1,6 @@
 import { getConfig } from '@selenial/typed-config';
 
-export const config = await getConfig({
+export const config = getConfig({
 	schema: {
 		app: {
 			title: 'string'
@@ -8,7 +8,7 @@ export const config = await getConfig({
 	}
 });
 
-export const publicConfig = await getConfig({
+export const publicConfig = getConfig({
 	domain: 'Public',
 	schema: {
 		themes: {
