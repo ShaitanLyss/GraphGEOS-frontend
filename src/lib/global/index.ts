@@ -3,6 +3,7 @@ export * from './cookies';
 export * from './error';
 export * from './notification';
 export * from './sessionTokenStore';
+export * from './popup';
 
 import { browser } from '$app/environment';
 import { Writable, writable } from 'svelte/store';
