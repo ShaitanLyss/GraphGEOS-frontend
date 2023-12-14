@@ -11,6 +11,12 @@
 	import type { LayoutData } from './$types';
 	import type { publicConfig } from '$lib/config';
 	export let data: LayoutData & { publicConfig: typeof publicConfig };
+	import monacoLoader from '@monaco-editor/loader';
+
+	onMount(async () => {
+		// preload monaco
+		await monacoLoader.init();
+	});
 
 	setContext('publicConfig', data.publicConfig);
 </script>
