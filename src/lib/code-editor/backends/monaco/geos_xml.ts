@@ -3,7 +3,13 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import { languages } from 'monaco-editor/esm/vs/editor/editor.api';
+import type { languages } from 'monaco-editor/esm/vs/editor/editor.api';
+enum IndentAction {
+	None = 0,
+	Indent = 1,
+	IndentOutdent = 2,
+	Outdent = 3
+}
 
 export const conf: languages.LanguageConfiguration = {
 	comments: {
@@ -25,17 +31,17 @@ export const conf: languages.LanguageConfiguration = {
 			beforeText: new RegExp(`<([_:\\w][_:\\w-.\\d]*)([^/>]*(?!/)>)[^<]*$`, 'i'),
 			afterText: /^<\/([_:\w][_:\w-.\d]*)\s*>$/i,
 			action: {
-				indentAction: languages.IndentAction.IndentOutdent
+				indentAction: IndentAction.IndentOutdent
 			}
 		},
 		{
 			beforeText: new RegExp(/<\w+\s*/, 'i'),
 			// afterText: /.*?>/,
-			action: { indentAction: languages.IndentAction.Indent }
+			action: { indentAction: IndentAction.Indent }
 		},
 		{
 			beforeText: new RegExp(`<(\\w[\\w\\d]*)([^/>]*(?!/)>)[^<]*$`, 'i'),
-			action: { indentAction: languages.IndentAction.Indent }
+			action: { indentAction: IndentAction.Indent }
 		}
 	]
 };

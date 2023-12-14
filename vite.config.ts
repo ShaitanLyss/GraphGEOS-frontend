@@ -4,12 +4,16 @@ import { defineConfig, type PluginOption } from 'vite';
 import { purgeCss } from 'vite-plugin-tailwind-purgecss';
 
 export default defineConfig({
+	optimizeDeps: {
+		exclude: ['monaco-editor']
+	},
 	build: {
 		target: 'es2022',
 		minify: true,
 		// rollupOptions: {
 		// 	external:
 		// }
+
 		commonjsOptions: {
 			// include: []
 		}

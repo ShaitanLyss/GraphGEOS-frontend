@@ -2,6 +2,7 @@ import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import { CodeEditor } from '../../CodeEditor';
 import formatXml from 'xml-formatter';
 import { conf, language } from './geos_xml';
+import loader from '@monaco-editor/loader';
 
 export default class MonacoCodeEditor extends CodeEditor {
 	private monaco: typeof Monaco;
@@ -46,8 +47,8 @@ export default class MonacoCodeEditor extends CodeEditor {
 	}
 
 	public static async create() {
-		// const monaco = await loader.init();
-		const monaco = (await import('./monaco')).default;
+		const monaco = await loader.init();
+		// const monaco = (await import('./monaco')).default;
 		return new MonacoCodeEditor({ monaco });
 	}
 
