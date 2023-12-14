@@ -3,10 +3,11 @@
 	import { getPublicConfig, setCookie, setTheme } from '.';
 	import { capitalize } from '$utils/string';
 	import { browser } from '$app/environment';
+	const publicConfig = getPublicConfig();
 
 	// const themes = ['skeleton', 'modern', 'gold-nouveau'];
 	const themes: string[] = getPublicConfig().themes.presets;
-	const theme = localStorageStore('zz-theme', 'skeleton');
+	const theme = localStorageStore('zz-theme', publicConfig.default_theme);
 	$: if (browser && $theme !== undefined) {
 		setTheme($theme);
 	}

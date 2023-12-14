@@ -72,10 +72,10 @@ const theme: Handle = ({ event, resolve }) => {
 		activeTheme.set(theme);
 	}
 
-	// event.locals.publicConfig = publicConfig;
+	event.locals.publicConfig = publicConfig;
 
 	return resolve(event, {
-		transformPageChunk: ({ html }) => html.replace('%theme%', theme ?? 'skeleton')
+		transformPageChunk: ({ html }) => html.replace('%theme%', theme ?? publicConfig.default_theme)
 	});
 };
 

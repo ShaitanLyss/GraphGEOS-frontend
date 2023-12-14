@@ -11,13 +11,17 @@ export const config = getConfig({
 	}
 });
 
-export const publicConfig = getConfig({
+export const publicConfig: {
+	themes: { presets: string[] };
+	default_theme: string;
+} = getConfig({
 	domain: 'Public',
 	schema: {
 		themes: {
 			presets:
 				'("crimson" | "gold-nouveau" | "hamlindigo" | "modern" | "rocket" | "sahara" | "seafoam" | "skeleton" | "vintage" | "wintry")[]',
 			customs: 'string[]'
-		}
+		},
+		default_theme: 'string'
 	}
 });
