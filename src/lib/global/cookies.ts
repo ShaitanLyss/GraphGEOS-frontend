@@ -11,6 +11,7 @@ enum CookieNames {
 
 type CookieAttributes = {
 	forever?: boolean;
+	global?: boolean;
 };
 
 // Define the options for the setCookieType
@@ -21,10 +22,13 @@ export type setCookieType = (
 ) => void;
 
 export const setCookie: setCookieType = (name, value, options = {}) => {
-	const { forever = false } = options;
+	const { forever = false, global = true } = options;
 	const attributes: CookieAttributes_ = {};
 	if (forever) {
 		attributes.expires = new Date(253402300000000);
+	}
+	if (global) {
+		attributes.path = '/';
 	}
 	attributes.sameSite = 'lax';
 	ts_cookies.setCookie(CookieNames[name], value, attributes);
