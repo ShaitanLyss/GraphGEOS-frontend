@@ -1,5 +1,8 @@
-import { getConfig } from '@selenial/typed-config';
-
+// import { getConfig } from '@selenial/typed-config';
+import nodeConfig from 'config';
+const getConfig = ({ domain }: { domain?: string; schema: unknown }) => {
+	return nodeConfig.util.toObject(nodeConfig.get(domain ?? 'App'));
+};
 export const config = getConfig({
 	schema: {
 		app: {

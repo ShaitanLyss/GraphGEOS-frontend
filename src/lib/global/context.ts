@@ -2,17 +2,37 @@ import type { publicConfig } from '$lib/config';
 import type { EditorContext } from '$lib/editor';
 import type { GeosDataContext } from '$lib/geos';
 import type { TabContext } from '$lib/layout';
-import { getContext as svelteGetContext, setContext as svelteSetContext } from 'svelte';
+import {
+	ComponentProps,
+	ComponentType,
+	SvelteComponent,
+	SvelteComponent_1,
+	hasContext,
+	getContext as svelteGetContext,
+	setContext as svelteSetContext
+} from 'svelte';
+import { ErrorWNotif } from './error';
+import type { Writable } from 'svelte/store';
 
 enum Context {
 	'editor' = 'Editor Context',
 	'onSave' = 'What to do when saving',
 	'tabs' = 'Tabs Context',
 	'geos' = 'Geos Data',
-	'publicConfig' = 'Public Configuration'
+	'publicConfig' = 'Public Configuration',
+	'toggleCodeEditor' = 'Toggle Code Editor',
+	'mainRightSideBar' = 'Main Right Side Bar'
 }
 
-type resolveContext<K = keyof typeof Context> = K extends 'editor'
+export type RightSidebar<T extends SvelteComponent> = {
+	component?: ComponentType<T>;
+	props?: ComponentProps<T>;
+};
+
+type resolveContext<
+	K = keyof typeof Context,
+	Component extends SvelteComponent = SvelteComponent
+> = K extends 'editor'
 	? EditorContext
 	: K extends 'onSave'
 	? () => void
@@ -22,10 +42,20 @@ type resolveContext<K = keyof typeof Context> = K extends 'editor'
 	? GeosDataContext
 	: K extends 'publicConfig'
 	? typeof publicConfig
+	: K extends 'toggleCodeEditor'
+	? () => void
+	: K extends 'mainRightSideBar'
+	? Writable<RightSidebar<Component>>
 	: never;
 
-export function getContext<K extends keyof typeof Context>(key: K): resolveContext<K> | undefined {
-	return svelteGetContext<resolveContext<K> | undefined>(key);
+export function getContext<
+	K extends keyof typeof Context,
+	Component extends SvelteComponent = SvelteComponent
+>(key: K): resolveContext<K, Component> {
+	if (!hasContext(key)) {
+		throw new ErrorWNotif({ emessage: `Context ${key} not found` });
+	}
+	return svelteGetContext<resolveContext<K, Component>>(key);
 }
 
 export function setContext<K extends keyof typeof Context>(key: K, value: resolveContext<K>): void {

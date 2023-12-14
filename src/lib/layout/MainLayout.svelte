@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { setContext, GlobalPopups } from '$lib/global';
+	import { setContext, GlobalPopups, RightSidebar } from '$lib/global';
 	import { AppShell } from '@skeletonlabs/skeleton';
 	import { writable } from 'svelte/store';
 	import { MainHeader, type TabContext } from '$lib/layout';
+	import type { ComponentType } from 'svelte';
 
 	const tabs: TabContext['tabs'] = writable([]);
 	let tabSet: TabContext['tabSet'] = writable();
@@ -15,6 +16,9 @@
 	};
 
 	setContext('tabs', tabContext);
+	const mainRightSidebar = writable<RightSidebar>({});
+	setContext('mainRightSideBar', mainRightSidebar);
+	$: console.log($mainRightSidebar);
 </script>
 
 <GlobalPopups />
@@ -24,6 +28,12 @@
 	</svelte:fragment>
 	<svelte:fragment slot="sidebarLeft">
 		<slot name="sidebarLeft" />
+	</svelte:fragment>
+
+	<svelte:fragment slot="sidebarRight">
+		{#if $mainRightSidebar !== undefined}
+			<svelte:component this={$mainRightSidebar.component} {...$mainRightSidebar.props} />
+		{/if}
 	</svelte:fragment>
 
 	<svelte:fragment>

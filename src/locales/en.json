@@ -142,6 +142,9 @@
       },
       "upload-graph": {
         "tooltip": "Upload graph online"
+      },
+      "toggle-code-editor": {
+        "tooltip": "Open code editor"
       }
     },
     "notification": {

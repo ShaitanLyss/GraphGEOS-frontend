@@ -7,6 +7,9 @@ export default defineConfig({
 	build: {
 		target: 'es2022',
 		minify: true,
+		// rollupOptions: {
+		// 	external:
+		// }
 		commonjsOptions: {
 			// include: []
 		}

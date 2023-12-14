@@ -28,6 +28,8 @@ module.exports = {
 		'svelte/no-unused-svelte-ignore': 'off',
 		'no-empty': 'off',
 		'no-fallthrough': 'off',
+		'no-useless-escape': 'off',
+		'@typescript-eslint/no-empty-function': 'off',
 	},
 	overrides: [
 		{

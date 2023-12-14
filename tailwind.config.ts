@@ -3,9 +3,14 @@ import prosePlugin from '@tailwindcss/typography';
 import formPlugin from '@tailwindcss/forms';
 import { join } from 'path';
 import type { Config } from 'tailwindcss';
-import { publicConfig } from './src/lib/config';
 
-const { themes } = publicConfig;
+/*
+ Warning: this will cause an infinite call stack error if this file
+or a config file are edited because they each depend on each other.
+(I am not entirely sure this is the reason but it seems to be)
+*/
+// import { getConfig } from '@selenial/typed-config';
+
 // const { themes } = getConfig({
 // 	domain: 'Public',
 // 	schema: {
@@ -17,7 +22,20 @@ const { themes } = publicConfig;
 // }
 // );
 
-// const themes = { presets: ['crimson', 'gold-nouveau', 'hamlindigo', 'modern', 'rocket', 'sahara', 'seafoam', 'skeleton', 'vintage', 'wintry'] };
+const themes = {
+	presets: [
+		'crimson',
+		'gold-nouveau',
+		'hamlindigo',
+		'modern',
+		'rocket',
+		'sahara',
+		'seafoam',
+		'skeleton',
+		'vintage',
+		'wintry'
+	]
+};
 
 const config = {
 	darkMode: 'class',

@@ -1,5 +1,7 @@
 <script lang="ts">
+	import type { Action } from 'svelte/action';
 	import {
+		CodeEditorButton,
 		DownloadGraphButton,
 		LoadGraphFromFileButton,
 		SaveGraphButton,
@@ -7,11 +9,26 @@
 		ToggleGeosButton,
 		UploadGraphButton
 	} from '.';
+
+	const pointerEventsOnlyOnOverflow: Action = (node) => {
+		node.classList.add('pointer-events-none');
+		const resizeObserver = new ResizeObserver((entries) => {
+			if (node.scrollWidth > node.clientWidth) node.classList.add('pointer-events-auto');
+			else node.classList.remove('pointer-events-auto');
+		});
+		resizeObserver.observe(node);
+		return {
+			destroy() {
+				resizeObserver.unobserve(node);
+			}
+		};
+	};
 </script>
 
 <div
+	use:pointerEventsOnlyOnOverflow
 	class="flex
- w-full justify-between pointer-events-none p-2"
+ w-full justify-between p-2 overflow-x-auto gap-4"
 >
 	<div class="flex gap-4">
 		<SaveGraphButton />
@@ -21,6 +38,7 @@
 	<div class="flex gap-4">
 		<DownloadGraphButton />
 		<UploadGraphButton />
-		<ToggleGeosButton />
+		<CodeEditorButton />
+		<!-- <ToggleGeosButton /> -->
 	</div>
 </div>

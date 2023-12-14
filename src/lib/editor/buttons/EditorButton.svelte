@@ -23,13 +23,13 @@
 		placement: 'bottom'
 	};
 
-	function onExec() {
+	async function onExec() {
 		if (!exec && !execNoNeedActiveFactory)
 			throw new ErrorWNotif({
 				emessage: 'Missing exec function',
 				message: $_('editor.button.error.no_exec_function')
 			});
-		if (execNoNeedActiveFactory) execNoNeedActiveFactory();
+		if (execNoNeedActiveFactory) await execNoNeedActiveFactory();
 		if (!exec) return;
 
 		if (!editorContext) throw new ErrorWNotif({ emessage: 'Missing editor context' });
@@ -47,7 +47,7 @@
 				emessage: 'Missing editor viewport'
 			});
 
-		if (exec) exec({ editor: factory.getEditor(), factory, editorViewport });
+		if (exec) await exec({ editor: factory.getEditor(), factory, editorViewport });
 	}
 </script>
 

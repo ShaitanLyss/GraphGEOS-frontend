@@ -7,6 +7,7 @@ import ToggleGeosButton from './ToggleGeosButton.svelte';
 import ToPythonButton from './ToPythonButton.svelte';
 import UploadGraphButton from './UploadGraphButton.svelte';
 import EditorButtons__SvelteComponent_ from './EditorButtons.svelte';
+import CodeEditorButton__SvelteComponent_ from './CodeEditorButton.svelte';
 
 export {
 	DownloadGraphButton,
@@ -16,6 +17,7 @@ export {
 	ToggleGeosButton,
 	ToPythonButton,
 	UploadGraphButton,
+	CodeEditorButton__SvelteComponent_ as CodeEditorButton,
 	EditorButtons__SvelteComponent_ as EditorButtons
 };
 

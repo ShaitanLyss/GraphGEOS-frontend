@@ -139,6 +139,9 @@
       },
       "upload-graph": {
         "tooltip": "Mettre en ligne le graphe"
+      },
+      "toggle-code-editor": {
+        "tooltip": "Ouvrir l'éditeur de code"
       }
     },
     "notification": {
