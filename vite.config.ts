@@ -9,18 +9,11 @@ export default defineConfig({
 	},
 	build: {
 		target: 'es2022',
-		minify: true,
-		// rollupOptions: {
-		// 	external:
-		// }
-
-		commonjsOptions: {
-			// include: []
-		}
+		minify: true
 	},
 
 	plugins: [
-		// !process.env.VITEST ? houdini() : houdini({ watchSchema: undefined }),
+		!process.env.VITEST ? houdini() : houdini({ watchSchema: undefined }),
 		houdini(),
 		sveltekit(),
 		purgeCss({
@@ -36,7 +29,4 @@ export default defineConfig({
 			interval: 10
 		}
 	}
-	// test: {
-	// 	include: ['src/**/*.{test,spec}.{js,ts}']
-	// }
 });

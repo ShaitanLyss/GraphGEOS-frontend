@@ -1,4 +1,13 @@
 # Caddyfile
+.git
+.eslint*
+.prettier*
+.git*
+.vscode
+Dockerfile*
+public
+.svelte-kit
+build
 README.md
 node_modules
 src-tauri

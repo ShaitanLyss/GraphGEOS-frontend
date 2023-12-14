@@ -52,7 +52,6 @@
 		"autoprefixer": "^10.4.16",
 		"broadcast-channel": "^5.5.1",
 		"build-esm": "^4.2.2",
-		"config": "^3.3.9",
 		"elkjs": "^0.8.2",
 		"eslint": "^8.55.0",
 		"eslint-config-prettier": "^8.10.0",
@@ -108,5 +107,8 @@
 		"web-worker": "^1.2.0",
 		"xml-formatter": "^3.6.0"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"config": "^3.3.9"
+	}
 }

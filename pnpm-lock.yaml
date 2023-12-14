@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+dependencies:
+  config:
+    specifier: ^3.3.9
+    version: 3.3.9
+
 devDependencies:
   '@floating-ui/core':
     specifier: ^1.5.2
@@ -116,9 +121,6 @@ devDependencies:
   build-esm:
     specifier: ^4.2.2
     version: 4.2.2
-  config:
-    specifier: ^3.3.9
-    version: 3.3.9
   elkjs:
     specifier: ^0.8.2
     version: 0.8.2
@@ -3919,7 +3921,6 @@ packages:
     engines: {node: '>= 10.0.0'}
     dependencies:
       json5: 2.2.3
-    dev: true
 
   /convert-source-map@1.9.0:
     resolution: {integrity: sha512-ASFBup0Mz1uyiIjANan1jzLQami9z1PoYSZCiiYW2FczPbenXc45FZdBZLzOT+r6+iciuEModtmCti+hjaAk0A==}
@@ -5159,7 +5160,6 @@ packages:
     resolution: {integrity: sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==}
     engines: {node: '>=6'}
     hasBin: true
-    dev: true
 
   /jsonc-parser@3.2.0:
     resolution: {integrity: sha512-gfFQZrcTc8CnKXp6Y4/CBT3fTc0OVuDofpre4aEeEpSBPV5X5v4+Vmx+8snU7RLPrNHPKSgLxGo9YuQzz20o+w==}
