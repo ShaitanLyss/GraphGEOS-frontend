@@ -14,7 +14,7 @@ export default defineConfig({
 
 	plugins: [
 		!process.env.VITEST ? houdini() : houdini({ watchSchema: undefined }),
-		houdini(),
+		// houdini(),
 		sveltekit(),
 		purgeCss({
 			safelist: {
