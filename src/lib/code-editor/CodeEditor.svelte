@@ -51,15 +51,17 @@
 	});
 	codeEditorPromise;
 	$: codeEditor.setLightTheme($modeCurrent);
+	export let border = '';
 </script>
 
 <div
-	class="border-s-2 border-surface-100-800-token transition-colors"
+	class="{border} transition-colors"
 	style="width: {width}; height: {height};"
 	transition:slide={{ axis: 'x', duration: 200 }}
 >
 	{#await codeEditorPromise}
 		<div class="w-full flex justify-center p-2">Loading...</div>
+	{:then}
+		<div class="h-full w-full" use:codeEditorAction transition:fade={{ duration: 50 }} />
 	{/await}
-	<div class="h-full w-full" use:codeEditorAction />
 </div>

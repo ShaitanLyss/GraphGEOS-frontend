@@ -22,7 +22,10 @@
 			$mainRightSideBar = { component: undefined };
 			return;
 		}
-		$mainRightSideBar = { component: codeEditor, props: { width: '40vw' } };
+		$mainRightSideBar = {
+			component: codeEditor,
+			props: { width: '40vw', border: 'border-s-2 border-surface-100-800-token' }
+		};
 	}
 </script>
 

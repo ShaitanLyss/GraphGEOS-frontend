@@ -3,7 +3,7 @@
 	import { AppShell } from '@skeletonlabs/skeleton';
 	import { writable } from 'svelte/store';
 	import { MainHeader, type TabContext } from '$lib/layout';
-	import type { ComponentType } from 'svelte';
+	import type { SvelteComponent } from 'svelte';
 
 	const tabs: TabContext['tabs'] = writable([]);
 	let tabSet: TabContext['tabSet'] = writable();
@@ -16,9 +16,8 @@
 	};
 
 	setContext('tabs', tabContext);
-	const mainRightSidebar = writable<RightSidebar>({});
+	const mainRightSidebar = writable<RightSidebar<SvelteComponent>>({});
 	setContext('mainRightSideBar', mainRightSidebar);
-	$: console.log($mainRightSidebar);
 </script>
 
 <GlobalPopups />
