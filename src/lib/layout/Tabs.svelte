@@ -41,7 +41,7 @@
 </script>
 
 <TabGroup regionList={'overflow-x-visible overflow-y-hidden'} border="">
-	{#each tabs as [key, tab] (key)}
+	{#each tabs as [key, tab], i (key)}
 		<div class="h-full" in:fly={{ y: '100%' }} out:fly={{ x: '-100%', duration: 400 }}>
 			<Tab bind:group={$tabSet} value={key} name={tab.name} regionTab="">
 				{tab.name}
@@ -49,7 +49,11 @@
 		</div>
 	{/each}
 	{#if mainAddModel}
-		<div class="h-full" in:fly={{ y: '100%' }} out:fly={{ x: '-100%', duration: 400 }}>
+		<div
+			class="h-full"
+			in:fly={{ y: '100%', delay: tabs.size * 60 }}
+			out:fly={{ x: '-100%', duration: 400 }}
+		>
 			<Tab
 				on:click={mainAddModel.addModel}
 				bind:group={addButtonSet}
