@@ -8,10 +8,10 @@ import {
 	BidirectFlow,
 	ClassicFlow,
 	ConnectionPlugin,
-	EventType,
+	type EventType,
 	Presets,
-	SocketData,
-	ClassicParams
+	type SocketData,
+	type ClassicParams
 } from 'rete-connection-plugin';
 import { isConnectionInvalid } from '$rete/plugin/typed-sockets';
 import type { Socket } from '$rete/socket/Socket';

@@ -89,3 +89,29 @@ body {
 	border-color: rgb(var(--color-tertiary-500) / var(--tw-ring-opacity)) !important;
 	background-color: rgba(var(--color-tertiary-500) / 0.2) !important;
 }
+
+@keyframes float {
+  0%, 100% { transform: translateY(+1px); }
+  50% { transform: translateY(-1px); }
+}
+
+.levitate {
+  animation: float 2s ease-in-out infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.cool-spin {
+  animation: spin 3s infinite;
+  animation-timing-function: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}

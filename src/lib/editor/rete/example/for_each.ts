@@ -1,5 +1,5 @@
 import { NodeEditor } from 'rete';
-import { Schemes } from '../node/Schemes';
+import { type Schemes } from '../node/Schemes';
 import { Connection } from '../node/Node';
 import { StartNode } from '../node/control/StartNode';
 import { LogNode } from '../node/io/LogNode';

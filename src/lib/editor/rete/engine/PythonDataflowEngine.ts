@@ -1,6 +1,6 @@
 import type { Schemes } from '$rete/node/Schemes';
-import { GetSchemes, NodeEditor, NodeId, Root, Scope } from 'rete';
-import { Cancellable, Dataflow, createCancellblePromise } from 'rete-engine';
+import { type GetSchemes, NodeEditor, type NodeId, type Root, Scope } from 'rete';
+import { type Cancellable, Dataflow, createCancellblePromise } from 'rete-engine';
 
 import { Cache } from './utils/Cache';
 // import { Cancellable, createCancellblePromise } from './utils/cancellable'

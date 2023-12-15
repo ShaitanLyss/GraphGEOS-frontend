@@ -173,6 +173,9 @@
       },
       "code-editor": {
         "tooltip": "Code Editor"
+      },
+      "graph-editor": {
+        "tooltip": "Graph Editor"
       }
     }
   }

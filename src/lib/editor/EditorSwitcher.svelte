@@ -30,6 +30,7 @@
 	);
 
 	const tabsContext = getContext('tabs');
+	const rightSidebar = getContext('mainRightSideBar');
 
 	$: tabs = tabsContext?.tabs;
 
@@ -56,6 +57,7 @@
 	$: clearTabs = tabsContext?.clearTabs;
 	function onDestroyCleanup() {
 		if ($clearTabs) $clearTabs();
+		$rightSidebar = { component: undefined };
 	}
 </script>
 

@@ -119,13 +119,8 @@ function makeGlobalPopupAction({
 		return {
 			update(newParams) {
 				if (originalUpdate) originalUpdate({ ...newParams, target: target });
-				throw new Error('Not implemented');
-				// Optionally handle parameter updates
-				// If the original action has an update method, you should call it here
 			},
 			destroy() {
-				// Clean up the enhanced action
-				// Call the original action's cleanup
 				if (originalDestroy) originalDestroy();
 			}
 		};

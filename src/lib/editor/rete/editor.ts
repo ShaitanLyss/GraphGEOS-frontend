@@ -4,7 +4,7 @@ import type { Node } from './node/Node';
 import type { AreaExtra } from './node/AreaExtra';
 import type { Schemes } from './node/Schemes';
 import { TypedSocketsPlugin } from './plugin/typed-sockets';
-import { NodeEditor, NodeEditorSaveData } from './NodeEditor';
+import { NodeEditor, type NodeEditorSaveData } from './NodeEditor';
 import type { EditorExample } from './example/types';
 import { MegaSetup } from './setup/MegaSetup';
 import { NodeFactory } from './node/NodeFactory';

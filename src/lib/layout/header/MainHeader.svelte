@@ -2,7 +2,14 @@
 	import { LocaleSwitcher, ThemeSwitcher, _ } from '$lib/global';
 	import { Tabs, type TabProps, HeaderButton } from '$lib/layout';
 	import { faUser } from '@fortawesome/free-regular-svg-icons';
-	import { faEllipsisH, faFileCode, faPaintBrush } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faCircleNodes,
+		faEllipsisH,
+		faFileCode,
+		faPaintBrush,
+		faShareNodes,
+		faTachographDigital
+	} from '@fortawesome/free-solid-svg-icons';
 	import { LightSwitch } from '@skeletonlabs/skeleton';
 	import Fa from 'svelte-fa';
 
@@ -32,19 +39,25 @@
 		<div class="h-full overflow-hidden">
 			<div
 				class="opacity-0 transition-all group-hover:opacity-100 flex h-full
-						divide-x items-center justify-end text-surface-900-50-token
+						items-center justify-end text-surface-900-50-token
 						overflow-hidden translate-x-20 group-hover:translate-x-0 ps-6
 						"
 			>
-				<div class="flex gap-0 items-center pe-3">
-					<HeaderLink href="/auth" icon={faUser} tooltip={$_('header.link.auth.tooltip')} />
+				<div class="flex gap-0 items-center me-1">
+					<HeaderLink
+						href="/"
+						icon={faCircleNodes}
+						tooltip={$_('header.link.graph-editor.tooltip')}
+					/>
 					<HeaderLink
 						href="/code-editor"
 						icon={faFileCode}
 						tooltip={$_('header.link.code-editor.tooltip')}
 					/>
+					<HeaderLink href="/auth" icon={faUser} tooltip={$_('header.link.auth.tooltip')} />
 				</div>
-				<div class="border-surface-800-100-token flex gap-3 items-center ps-3">
+				<span class="divider-vertical border-surface-400-500-token h-4 my-auto" />
+				<div class="flex gap-3 items-center ms-3">
 					<HeaderButton icon={faPaintBrush} content={ThemeSwitcher} popupArrow={false} />
 					<LocaleSwitcher />
 					<LightSwitch />
