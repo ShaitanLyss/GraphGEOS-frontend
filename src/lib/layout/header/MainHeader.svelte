@@ -2,7 +2,7 @@
 	import { LocaleSwitcher, ThemeSwitcher } from '$lib/global';
 	import { Tabs, type TabProps, HeaderButton } from '$lib/layout';
 	import { faUser } from '@fortawesome/free-regular-svg-icons';
-	import { faEllipsisH, faPaintBrush } from '@fortawesome/free-solid-svg-icons';
+	import { faEllipsisH, faFileCode, faPaintBrush } from '@fortawesome/free-solid-svg-icons';
 	import { LightSwitch } from '@skeletonlabs/skeleton';
 	import Fa from 'svelte-fa';
 
@@ -30,17 +30,24 @@
 		<div class="h-full overflow-hidden">
 			<div
 				class="opacity-0 transition-all group-hover:opacity-100 flex h-full
-						space-x-3 items-center justify-end text-surface-900-50-token
+						divide-x-8 items-center justify-end text-surface-900-50-token
 						overflow-hidden translate-x-20 group-hover:translate-x-0 ps-6
 						"
 			>
-				<a href="/auth" class="p-1">
-					<Fa icon={faUser} size="sm" class="opacity-80" />
-				</a>
-				<HeaderButton icon={faPaintBrush} content={ThemeSwitcher} popupArrow={false} />
+				<div class="flex gap-3 items-center">
+					<a href="/auth" class="p-1">
+						<Fa icon={faUser} size="sm" class="opacity-80" />
+					</a>
+					<a href="/code-editor" class="p-1">
+						<Fa icon={faFileCode} size="sm" class="opacity-80" />
+					</a>
+				</div>
+				<div class="border-surface-100-800-token flex gap-3 items-center">
+					<HeaderButton icon={faPaintBrush} content={ThemeSwitcher} popupArrow={false} />
 
-				<LocaleSwitcher />
-				<LightSwitch />
+					<LocaleSwitcher />
+					<LightSwitch />
+				</div>
 			</div>
 			<div
 				class="absolute inset-0 transition-opacity group-hover:opacity-0 opacity-50 pe-4 flex justify-end items-center pointer-events-none"

@@ -4,7 +4,7 @@
 	import type { ComponentType } from 'svelte';
 	import { globalPopup, type GlobalPopupSettings, _, globalTooltip } from '$lib/global';
 
-	export let content: ComponentType | string = 'Missing popup content';
+	export let content: ComponentType | string | undefined = undefined;
 	export let icon: IconDefinition;
 	// export let tooltip = 'Missing tooltip';
 	export let popupArrow = true;
