@@ -75,7 +75,10 @@ const theme: Handle = ({ event, resolve }) => {
 	event.locals.publicConfig = publicConfig;
 
 	return resolve(event, {
-		transformPageChunk: ({ html }) => html.replace('%theme%', theme ?? publicConfig.default_theme)
+		transformPageChunk: ({ html }) =>
+			html
+				.replace('%theme%', theme ?? publicConfig.default_theme)
+				.replace('%title%', publicConfig.title)
 	});
 };
 

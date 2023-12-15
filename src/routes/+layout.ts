@@ -7,7 +7,7 @@ export const ssr = true;
 
 export const load: LayoutLoad = async (event) => {
 	await loadLocale();
-
+	return { publicConfig: event.data.publicConfig };
 	if (!browser) return;
 	return null;
 	// const sessionToken = localStorage.getItem('sessionToken')?.replaceAll('"', '');

@@ -35,11 +35,9 @@
 		label: 'Add Model'
 	});
 	let activeId: string | undefined;
-	$: console.log('tabSet', $tabsContext?.tabSet);
 	$: $tabsContext?.tabSet.subscribe((value) => {
 		activeId = value;
 	});
-	$: console.log('active id', activeId);
 	$: if ($tabsContext) {
 		if (Object.keys(editors).length === 0) {
 			addNewEditor();

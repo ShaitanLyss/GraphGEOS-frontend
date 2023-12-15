@@ -12,6 +12,7 @@ export const config = getConfig({
 });
 
 export const publicConfig: {
+	title: string;
 	themes: { presets: string[] };
 	default_theme: string;
 } = getConfig({

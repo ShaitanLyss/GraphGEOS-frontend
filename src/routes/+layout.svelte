@@ -3,7 +3,14 @@
 	import Notifications from '$lib/global/Notifications.svelte';
 	import Popups from '$lib/global/Popups.svelte';
 	import MainLayout from '$lib/layout/MainLayout.svelte';
-	import { isLocaleLoading, Localization, setContext, setTheme, theme } from '$lib/global';
+	import {
+		getPublicConfig,
+		isLocaleLoading,
+		Localization,
+		setContext,
+		setTheme,
+		theme
+	} from '$lib/global';
 	import { page } from '$app/stores';
 	import '../app.pcss';
 	import Lightmode from '$lib/global/Lightmode.svelte';
@@ -22,7 +29,7 @@
 </script>
 
 <svelte:head>
-	<title>Geos UI</title>
+	<title>{data.publicConfig.title}</title>
 </svelte:head>
 <Localization />
 <MainLayout>
