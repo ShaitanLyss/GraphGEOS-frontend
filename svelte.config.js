@@ -2,7 +2,7 @@ import sveltePreprocess from 'svelte-preprocess';
 // import adapter from '@sveltejs/adapter-auto';
 import staticAdapter from '@sveltejs/adapter-static'; // change l' adaptateur depuis adapter-auto vers adapter-static
 import nodeAdapter from '@sveltejs/adapter-node';
-import { vitePreprocess } from '@sveltejs/kit/vite';
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import preprocessReact from 'svelte-preprocess-react/preprocessReact';
 import delegateEvents from 'svelte-preprocess-delegate-events/preprocess';
 

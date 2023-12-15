@@ -47,7 +47,7 @@ async function authorization({ event, resolve }) {
 				console.log('MoonAuth : Backend is dead', error);
 			}
 			if (shouldRedirect) {
-				throw redirect(303, '/auth?redirect=' + event.url.pathname);
+				redirect(303, '/auth?redirect=' + event.url.pathname);
 			}
 		}
 	}

@@ -6,7 +6,7 @@ export * from './sessionTokenStore';
 export * from './popup';
 
 import { browser } from '$app/environment';
-import { Writable, writable } from 'svelte/store';
+import { type Writable, writable } from 'svelte/store';
 import LocaleSwitcher__SvelteComponent_ from './LocaleSwitcher.svelte';
 import ThemeSwitcher__SvelteComponent_ from './ThemeSwitcher.svelte';
 import { getCookie } from './cookies';

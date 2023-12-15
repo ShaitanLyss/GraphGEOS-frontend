@@ -8,7 +8,7 @@ import { structures } from 'rete-structures';
 import { Connection, Node } from './Node';
 import { ClassicPreset } from 'rete';
 import { InputControl } from '$rete/control/Control';
-import { Writable, writable } from 'svelte/store';
+import { type Writable, writable } from 'svelte/store';
 import { PythonDataflowEngine } from '$rete/engine/PythonDataflowEngine';
 import type { MakutuClasses$result } from '$houdini';
 import type { MakutuClassRepository } from '../../backend-interaction/types';

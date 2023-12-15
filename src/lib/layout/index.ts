@@ -4,7 +4,7 @@ export * from './header';
 import HeaderButton__SvelteComponent_ from './header/HeaderButton.svelte';
 import GlobalPopup__SvelteComponent_ from '../global/popup/GlobalPopup.svelte';
 import Popup__SvelteComponent_ from './Popup.svelte';
-import { Writable, writable } from 'svelte/store';
+import { type Writable, writable } from 'svelte/store';
 import type { ComponentType } from 'svelte';
 
 export {

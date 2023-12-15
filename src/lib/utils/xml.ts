@@ -1,8 +1,8 @@
 import {
-	X2jOptionsOptional,
+	type X2jOptionsOptional,
 	XMLBuilder,
 	XMLParser,
-	XmlBuilderOptionsOptional
+	type XmlBuilderOptionsOptional
 } from 'fast-xml-parser';
 
 const fxpSettings: X2jOptionsOptional & XmlBuilderOptionsOptional = {

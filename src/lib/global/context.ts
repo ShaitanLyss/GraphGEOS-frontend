@@ -3,10 +3,10 @@ import type { EditorContext } from '$lib/editor';
 import type { GeosDataContext } from '$lib/geos';
 import type { TabContext } from '$lib/layout';
 import {
-	ComponentProps,
-	ComponentType,
-	SvelteComponent,
-	SvelteComponent_1,
+	type ComponentProps,
+	type ComponentType,
+	type SvelteComponent,
+	type SvelteComponent_1,
 	hasContext,
 	getContext as svelteGetContext,
 	setContext as svelteSetContext

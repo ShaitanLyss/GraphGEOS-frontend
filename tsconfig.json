@@ -11,12 +11,10 @@
 		"sourceMap": true,
 		// "jsx": "react",
 		"strict": true,
-		"preserveValueImports": false,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
 		"rootDirs": [".", "./.svelte-kit/types", "./$houdini/types"]
 		
-		// "importsNotUsedAsValues":
 	}
 	// 	"include": [
 	// 	"./svelte-jsx.d.ts",
