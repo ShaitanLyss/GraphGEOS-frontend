@@ -7,19 +7,10 @@
 		makeGlobalPopupsProps
 	} from '$lib/global';
 	import { AppShell } from '@skeletonlabs/skeleton';
-	import { writable } from 'svelte/store';
+	import { writable, type Writable } from 'svelte/store';
 	import { MainHeader, type TabContext } from '$lib/layout';
 	import type { SvelteComponent } from 'svelte';
 
-	const tabs: TabContext['tabs'] = writable([]);
-	let tabSet: TabContext['tabSet'] = writable();
-	let clearTabs: TabContext['clearTabs'] = writable();
-
-	const tabContext: TabContext = {
-		tabs: tabs,
-		tabSet,
-		clearTabs
-	};
 	const numGlobalTooltips = 3;
 	let tooltipUseCount = 0;
 	const numGlobalPopups = 3;
@@ -31,7 +22,11 @@
 		globalPopupsProps: makeGlobalPopupsProps({ type: 'popup', num: numGlobalPopups })
 	});
 
-	setContext('tabs', tabContext);
+	// Tabs
+	let tabsContext: Writable<TabContext> = writable();
+	setContext('tabs', tabsContext);
+
+	// Right Sidebar
 	const mainRightSidebar = writable<RightSidebar<SvelteComponent>>({});
 	setContext('mainRightSideBar', mainRightSidebar);
 </script>
@@ -39,7 +34,7 @@
 <GlobalPopups />
 <AppShell slotPageContent="relative">
 	<svelte:fragment slot="header">
-		<MainHeader tabs={$tabs} bind:tabSet={$tabSet} bind:clearTabs={$clearTabs} />
+		<MainHeader bind:tabsContext={$tabsContext} />
 	</svelte:fragment>
 	<svelte:fragment slot="sidebarLeft">
 		<slot name="sidebarLeft" />

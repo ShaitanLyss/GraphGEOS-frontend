@@ -43,7 +43,7 @@
 
 <div
 	bind:this={container}
-	class:opacity-0={!mounted}
+	class:opacity-0={!mounted || hidden}
 	class="{position} transition-opacity h-full w-full bg-none {hidden
 		? 'opacity-0 pointer-events-none'
 		: ''}"

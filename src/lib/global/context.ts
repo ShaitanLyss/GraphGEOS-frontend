@@ -39,7 +39,7 @@ export type resolveContext<
 	: K extends 'onSave'
 	? () => void
 	: K extends 'tabs'
-	? TabContext
+	? Writable<TabContext | undefined>
 	: K extends 'geos'
 	? GeosDataContext
 	: K extends 'publicConfig'

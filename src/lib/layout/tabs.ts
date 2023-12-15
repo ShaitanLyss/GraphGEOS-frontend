@@ -5,8 +5,20 @@ export type TabProps = {
 	name: string;
 };
 
+export type AddModel = () => void;
+export type AddModelProps = {
+	addModel: AddModel;
+	label: string;
+	tooltip: string;
+	path?: string;
+};
+export type AddModelOptions = AddModelProps[];
+export type SetMainAddModel = (options: AddModelProps | undefined) => void;
+
 export type TabContext = {
-	tabs: Writable<TabProps[]>;
 	tabSet: Writable<string | undefined>;
-	clearTabs: Writable<() => void>;
+	clearTabs: () => void;
+	setMainAddModel: SetMainAddModel;
+	addTab: (params: { key: string; props: TabProps }) => void;
+	deleteTab: (key: string) => void;
 };

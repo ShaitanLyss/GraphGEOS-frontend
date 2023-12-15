@@ -1,16 +1,5 @@
 <script lang="ts">
-	import {
-		faBook,
-		faCode,
-		faFileCode,
-		faLaptopCode,
-		faPen,
-		faPenAlt,
-		faPenClip,
-		faPenFancy,
-		faPenNib,
-		faPenRuler
-	} from '@fortawesome/free-solid-svg-icons';
+	import { faFileCode } from '@fortawesome/free-solid-svg-icons';
 	import EditorButton from './EditorButton.svelte';
 	import { _, getContext } from '$lib/global';
 	import type CodeEditor from '$lib/code-editor/CodeEditor.svelte';

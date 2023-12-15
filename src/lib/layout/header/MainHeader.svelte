@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { LocaleSwitcher, ThemeSwitcher, _ } from '$lib/global';
-	import { Tabs, type TabProps, HeaderButton } from '$lib/layout';
+	import { Tabs, type TabProps, HeaderButton, type TabContext } from '$lib/layout';
 	import { faUser } from '@fortawesome/free-regular-svg-icons';
 	import {
 		faCircleNodes,
@@ -16,9 +16,7 @@
 	import HeaderLink from './HeaderLink.svelte';
 
 	export let titleButtonUrl = '/';
-	export let tabs: TabProps[] = [];
-	export let tabSet: string | undefined = undefined;
-	export let clearTabs: () => void;
+	export let tabsContext: TabContext;
 </script>
 
 <div class="flex" style="height: 2.63em;">
@@ -32,7 +30,7 @@
 	<div class="overflow-x-hidden flex-grow">
 		<!-- flex items-end-->
 		<div class="overflow-x-auto select-none">
-			<Tabs {tabs} bind:tabSet bind:clearTabs />
+			<Tabs bind:tabsContext />
 		</div>
 	</div>
 	<div class="group ml-auto pe-4 relative h-auto">
