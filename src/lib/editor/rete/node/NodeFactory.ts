@@ -163,12 +163,10 @@ export class NodeFactory {
 
 		editorSaveData.connections.forEach(async (connectionSaveData) => {
 			await this.editor.addConnection(connectionSaveData);
-
-			// await this.editor.addConnection(JSON.parse(connectionSaveData));
-
-			// await this.editor.addConnection(JSON.parse(connection))
 		});
-		if (this.area) AreaExtensions.zoomAt(this.area, this.editor.getNodes());
+		setTimeout(() => {
+			if (this.area) AreaExtensions.zoomAt(this.area, this.editor.getNodes());
+		});
 	}
 	private area?: AreaPlugin<Schemes, AreaExtra>;
 	private editor: NodeEditor;

@@ -7,7 +7,6 @@
 			ref: UploadGraphModal
 		}
 	};
-	initializeStores();
 </script>
 
 <Modal components={modalComponentRegistry} />

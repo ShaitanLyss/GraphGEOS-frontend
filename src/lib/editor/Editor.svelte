@@ -2,8 +2,11 @@
 	import type { NodeEditor, NodeFactory, setupEditor } from '$rete';
 	import type { EditorExample } from '$rete/example/types';
 	import { newUniqueId } from '$utils';
+	import { _ } from '$lib/global';
 	export let position = 'absolute';
 	export let hidden = true;
+	export let name = $_('editor.default-name');
+	export let id = newUniqueId('node-editor');
 
 	export let loadExample: EditorExample | undefined = undefined;
 	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
@@ -11,7 +14,6 @@
 
 	export let editor: NodeEditor | undefined = undefined;
 	export let factory: NodeFactory | undefined = undefined;
-
 	let container: HTMLElement;
 	let editorData: Awaited<ReturnType<typeof setupEditor>>;
 	const dispatch = createEventDispatcher<{ destroy: { id: string } }>();
@@ -30,6 +32,8 @@
 		await import('$rete/setup/appLaunch');
 		const { setupEditor } = await import('$rete');
 		editorData = await setupEditor({ container, makutuClasses: {}, loadExample });
+		editorData.editor.id = id;
+		editorData.editor.setName(name);
 		mounted = true;
 	});
 

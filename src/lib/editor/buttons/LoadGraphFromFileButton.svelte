@@ -2,11 +2,12 @@
 	import { faCalendarTimes, faUpload } from '@fortawesome/free-solid-svg-icons';
 	import { notifications } from '@mantine/notifications';
 	import EditorButton from './EditorButton.svelte';
-	import { _ } from '$lib/global';
+	import { _, getContext } from '$lib/global';
 	import type { NodeFactory } from '$rete/node/NodeFactory';
 
 	let factory: NodeFactory;
 	let fileInput: HTMLInputElement;
+	const tabsContext = getContext('tabs');
 
 	async function loadGraph(event: Event) {
 		if (!factory) {
@@ -28,6 +29,7 @@
 				const parsedGraph = JSON.parse(content);
 				// Process the parsedGraph as needed
 				await factory.loadGraph(parsedGraph);
+				$tabsContext?.renameTab(factory.getEditor().id, factory.getEditor().name);
 				notifications.show({
 					title: $_('notification.graph_loaded.title'),
 					message: $_('notification.graph_loaded.message'),
