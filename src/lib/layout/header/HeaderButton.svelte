@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import type { ComponentType } from 'svelte';
-	import { globalPopup, type GlobalPopupActionParams, _ } from '$lib/global';
+	import { type ComponentType } from 'svelte';
+	import { globalPopup, type GlobalPopupActionParams, _, getContext } from '$lib/global';
 
 	export let content: ComponentType | string | undefined = undefined;
 	export let icon: IconDefinition;
@@ -15,7 +15,8 @@
 		middleware: { offset: { crossAxis: 10, mainAxis: 5 } },
 		content: content,
 		type: 'popup',
-		arrow: popupArrow
+		arrow: popupArrow,
+		globalPopupContext: getContext('globalPopups')
 	};
 	// const tooltipPopup: GlobalPopupSettings = {
 	// 	event: 'hover',

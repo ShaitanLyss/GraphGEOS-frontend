@@ -2,7 +2,7 @@
 	import {
 		setContext,
 		GlobalPopups,
-		RightSidebar,
+		type RightSidebar,
 		makeGlobalPopupContext,
 		makeGlobalPopupsProps
 	} from '$lib/global';
@@ -22,11 +22,13 @@
 	};
 	const numGlobalTooltips = 3;
 	let tooltipUseCount = 0;
+	const numGlobalPopups = 3;
+	let globalPopupUseCount = 0;
 	setContext('globalPopups', {
-		nextPopupKey: () => 0,
+		nextPopupKey: () => globalPopupUseCount++ % numGlobalPopups,
 		nextTooltipKey: () => tooltipUseCount++ % numGlobalTooltips,
-		globalTooltipsProps: makeGlobalPopupsProps({ type: 'tooltip', num: 3 }),
-		globalPopupsProps: makeGlobalPopupsProps({ type: 'popup' })
+		globalTooltipsProps: makeGlobalPopupsProps({ type: 'tooltip', num: numGlobalTooltips }),
+		globalPopupsProps: makeGlobalPopupsProps({ type: 'popup', num: numGlobalPopups })
 	});
 
 	setContext('tabs', tabContext);
