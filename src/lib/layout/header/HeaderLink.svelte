@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getContext, globalPopup, globalTooltip } from '$lib/global';
+	import { getContext, globalTooltip } from '$lib/global';
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 	import Fa from 'svelte-fa';
