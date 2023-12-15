@@ -4,7 +4,7 @@
 	import { type ComponentType } from 'svelte';
 	import { globalPopup, type GlobalPopupActionParams, _, getContext } from '$lib/global';
 
-	export let content: ComponentType | string | undefined = undefined;
+	export let content: ComponentType | string;
 	export let icon: IconDefinition;
 	// export let tooltip = 'Missing tooltip';
 	export let popupArrow = true;
@@ -14,7 +14,6 @@
 		placement: 'bottom-start',
 		middleware: { offset: { crossAxis: 10, mainAxis: 5 } },
 		content: content,
-		type: 'popup',
 		arrow: popupArrow,
 		globalPopupContext: getContext('globalPopups')
 	};
