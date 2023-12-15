@@ -1,10 +1,12 @@
 <script lang="ts">
-	import { LocaleSwitcher, ThemeSwitcher } from '$lib/global';
+	import { LocaleSwitcher, ThemeSwitcher, _ } from '$lib/global';
 	import { Tabs, type TabProps, HeaderButton } from '$lib/layout';
 	import { faUser } from '@fortawesome/free-regular-svg-icons';
 	import { faEllipsisH, faFileCode, faPaintBrush } from '@fortawesome/free-solid-svg-icons';
 	import { LightSwitch } from '@skeletonlabs/skeleton';
 	import Fa from 'svelte-fa';
+
+	import HeaderLink from './HeaderLink.svelte';
 
 	export let titleButtonUrl = '/';
 	export let tabs: TabProps[] = [];
@@ -30,21 +32,20 @@
 		<div class="h-full overflow-hidden">
 			<div
 				class="opacity-0 transition-all group-hover:opacity-100 flex h-full
-						divide-x-8 items-center justify-end text-surface-900-50-token
+						divide-x items-center justify-end text-surface-900-50-token
 						overflow-hidden translate-x-20 group-hover:translate-x-0 ps-6
 						"
 			>
-				<div class="flex gap-3 items-center">
-					<a href="/auth" class="p-1">
-						<Fa icon={faUser} size="sm" class="opacity-80" />
-					</a>
-					<a href="/code-editor" class="p-1">
-						<Fa icon={faFileCode} size="sm" class="opacity-80" />
-					</a>
+				<div class="flex gap-0 items-center pe-3">
+					<HeaderLink href="/auth" icon={faUser} tooltip={$_('header.link.auth.tooltip')} />
+					<HeaderLink
+						href="/code-editor"
+						icon={faFileCode}
+						tooltip={$_('header.link.code-editor.tooltip')}
+					/>
 				</div>
-				<div class="border-surface-100-800-token flex gap-3 items-center">
+				<div class="border-surface-800-100-token flex gap-3 items-center ps-3">
 					<HeaderButton icon={faPaintBrush} content={ThemeSwitcher} popupArrow={false} />
-
 					<LocaleSwitcher />
 					<LightSwitch />
 				</div>

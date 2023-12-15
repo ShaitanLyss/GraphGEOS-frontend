@@ -2,18 +2,19 @@
 	import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 	import type { ComponentType } from 'svelte';
-	import { globalPopup, type GlobalPopupSettings, _, globalTooltip } from '$lib/global';
+	import { globalPopup, type GlobalPopupActionParams, _ } from '$lib/global';
 
 	export let content: ComponentType | string | undefined = undefined;
 	export let icon: IconDefinition;
 	// export let tooltip = 'Missing tooltip';
 	export let popupArrow = true;
 
-	const popupClick: GlobalPopupSettings = {
+	const popupClick: GlobalPopupActionParams = {
 		event: 'focus-click',
 		placement: 'bottom-start',
 		middleware: { offset: { crossAxis: 10, mainAxis: 5 } },
 		content: content,
+		type: 'popup',
 		arrow: popupArrow
 	};
 	// const tooltipPopup: GlobalPopupSettings = {

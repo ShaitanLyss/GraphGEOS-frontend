@@ -157,5 +157,20 @@
     "error": {
       "title": "Erreur"
     }
+  },
+  "page": {
+    "auth": {
+      "name": "Éditeur de code"
+    }
+  },
+  "header": {
+    "link": {
+      "auth": {
+        "tooltip": "Authentification"
+      },
+      "code-editor": {
+        "tooltip": "Éditeur de code"
+      }
+    }
   }
 }

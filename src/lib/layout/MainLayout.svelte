@@ -1,5 +1,11 @@
 <script lang="ts">
-	import { setContext, GlobalPopups, RightSidebar } from '$lib/global';
+	import {
+		setContext,
+		GlobalPopups,
+		RightSidebar,
+		makeGlobalPopupContext,
+		makeGlobalPopupsProps
+	} from '$lib/global';
 	import { AppShell } from '@skeletonlabs/skeleton';
 	import { writable } from 'svelte/store';
 	import { MainHeader, type TabContext } from '$lib/layout';
@@ -14,6 +20,14 @@
 		tabSet,
 		clearTabs
 	};
+	const numGlobalTooltips = 3;
+	let tooltipUseCount = 0;
+	setContext('globalPopups', {
+		nextPopupKey: () => 0,
+		nextTooltipKey: () => tooltipUseCount++ % numGlobalTooltips,
+		globalTooltipsProps: makeGlobalPopupsProps({ type: 'tooltip', num: 3 }),
+		globalPopupsProps: makeGlobalPopupsProps({ type: 'popup' })
+	});
 
 	setContext('tabs', tabContext);
 	const mainRightSidebar = writable<RightSidebar<SvelteComponent>>({});

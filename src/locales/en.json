@@ -160,5 +160,20 @@
     "error": {
       "title": "Error"
     }
+  },
+  "page": {
+    "auth": {
+      "name": "Code Editor"
+    }
+  },
+  "header": {
+    "link": {
+      "auth": {
+        "tooltip": "Authentication"
+      },
+      "code-editor": {
+        "tooltip": "Code Editor"
+      }
+    }
   }
 }

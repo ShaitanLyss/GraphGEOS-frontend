@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { Popup } from '$lib/layout';
-	import { globalTooltipProps } from './popup';
+	import type { Writable } from 'svelte/store';
+	import type { GlobalPopupProps } from './popup';
+	export let globalTooltipProps: Writable<GlobalPopupProps>;
+	export let target: string;
 </script>
 
-<Popup target="globalTooltip" classList="z-30" {...$globalTooltipProps} />
+<Popup {target} classList="z-30" {...$globalTooltipProps} />

@@ -13,6 +13,7 @@ import {
 } from 'svelte';
 import { ErrorWNotif } from './error';
 import type { Writable } from 'svelte/store';
+import type { GlobalPopupsContext } from './popup';
 
 enum Context {
 	'editor' = 'Editor Context',
@@ -21,7 +22,8 @@ enum Context {
 	'geos' = 'Geos Data',
 	'publicConfig' = 'Public Configuration',
 	'toggleCodeEditor' = 'Toggle Code Editor',
-	'mainRightSideBar' = 'Main Right Side Bar'
+	'mainRightSideBar' = 'Main Right Side Bar',
+	'globalPopups' = 'Global Popups Context'
 }
 
 export type RightSidebar<T extends SvelteComponent> = {
@@ -29,7 +31,7 @@ export type RightSidebar<T extends SvelteComponent> = {
 	props?: ComponentProps<T>;
 };
 
-type resolveContext<
+export type resolveContext<
 	K = keyof typeof Context,
 	Component extends SvelteComponent = SvelteComponent
 > = K extends 'editor'
@@ -46,6 +48,8 @@ type resolveContext<
 	? () => void
 	: K extends 'mainRightSideBar'
 	? Writable<RightSidebar<Component>>
+	: K extends 'globalPopups'
+	? GlobalPopupsContext
 	: never;
 
 export function getContext<
