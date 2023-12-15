@@ -5,9 +5,7 @@ const getConfig = ({ domain }: { domain?: string; schema: unknown }) => {
 };
 export const config = getConfig({
 	schema: {
-		app: {
-			title: 'string'
-		}
+		app: {}
 	}
 });
 
