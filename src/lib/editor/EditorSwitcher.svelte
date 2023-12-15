@@ -23,13 +23,14 @@
 
 	// Setup Tabs
 	const tabsContext = getContext('tabs');
+	function addNewEditor() {
+		const id = newUniqueId('node-editor');
+		editors[id] = undefined;
+		editors = editors;
+		$tabsContext?.addTab({ key: id, props: { id, name: 'New Editor' } });
+	}
 	$: $tabsContext?.setMainAddModel({
-		addModel: () => {
-			const id = newUniqueId('node-editor');
-			editors[id] = undefined;
-			editors = editors;
-			$tabsContext?.addTab({ key: id, props: { id, name: 'New Editor' } });
-		},
+		addModel: addNewEditor,
 		tooltip: 'Add Model',
 		label: 'Add Model'
 	});
@@ -39,6 +40,11 @@
 		activeId = value;
 	});
 	$: console.log('active id', activeId);
+	$: if ($tabsContext) {
+		if (Object.keys(editors).length === 0) {
+			addNewEditor();
+		}
+	}
 
 	// Setup Cleanup
 	const rightSidebar = getContext('mainRightSideBar');
