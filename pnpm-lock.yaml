@@ -235,6 +235,9 @@ devDependencies:
   svelte-css-vars:
     specifier: ^0.0.3
     version: 0.0.3
+  svelte-dnd-action:
+    specifier: ^0.9.33
+    version: 0.9.33(svelte@4.2.8)
   svelte-fa:
     specifier: ^3.0.4
     version: 3.0.4
@@ -6688,6 +6691,14 @@ packages:
 
   /svelte-css-vars@0.0.3:
     resolution: {integrity: sha512-B7SLi7HGICpHI5oAx+NJRDsQChAIJ6wISwEUWN4CTU0h9WygKhcYwastnIoRkfdGE7tLfiKvEm+d102RRc8zwQ==}
+    dev: true
+
+  /svelte-dnd-action@0.9.33(svelte@4.2.8):
+    resolution: {integrity: sha512-sX9ML9yrjw/f5zTS4psfGZk9B20IYZ1Q9f9Zb/YcH7hXPBISGR8vu87VxKvg99AYOVKbkjJAQoDjJGgC7SorVw==}
+    peerDependencies:
+      svelte: '>=3.23.0'
+    dependencies:
+      svelte: 4.2.8
     dev: true
 
   /svelte-eslint-parser@0.33.1(svelte@4.2.8):

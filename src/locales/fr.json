@@ -146,7 +146,8 @@
     },
     "notification": {
       "title": "Éditeur"
-    }
+    },
+    "default-name": "Nouvel éditeur"
   },
   "toggle-geos": {
     "failure": {

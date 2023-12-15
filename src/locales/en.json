@@ -149,7 +149,8 @@
     },
     "notification": {
       "title": "Editor"
-    }
+    },
+    "default-name": "New Editor"
   },
   "toggle-geos": {
     "failure": {

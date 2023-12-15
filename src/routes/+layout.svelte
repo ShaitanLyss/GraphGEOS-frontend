@@ -19,12 +19,13 @@
 	import type { publicConfig } from '$lib/config';
 	export let data: LayoutData & { publicConfig: typeof publicConfig };
 	import monacoLoader from '@monaco-editor/loader';
+	import { initializeStores } from '@skeletonlabs/skeleton';
 
 	onMount(async () => {
 		// preload monaco
 		await monacoLoader.init();
 	});
-
+	initializeStores();
 	setContext('publicConfig', data.publicConfig);
 </script>
 
@@ -41,8 +42,8 @@
 	{#if !$isLocaleLoading}
 		<slot />
 	{/if}
-	<Modals />
 </MainLayout>
+<Modals />
 <Popups />
 <Notifications />
 <Lightmode />
