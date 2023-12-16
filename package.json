@@ -29,7 +29,7 @@
 		"@rollup/plugin-json": "^6.1.0",
 		"@selenial/typed-config": "^0.2.0",
 		"@skeletonlabs/skeleton": "^2.6.0",
-		"@skeletonlabs/tw-plugin": "^0.1.0",
+		"@skeletonlabs/tw-plugin": "^0.3.0",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-node": "^2.0.0",
 		"@sveltejs/adapter-static": "^3.0.0",
