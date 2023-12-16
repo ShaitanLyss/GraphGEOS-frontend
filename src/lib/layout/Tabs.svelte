@@ -119,6 +119,7 @@
 	}
 	type Point = { x: number; y: number };
 	let addButtonSet: string | undefined = undefined;
+	let addButton: HTMLElement | undefined = undefined;
 	$: if (addButtonSet !== undefined) addButtonSet = undefined;
 	const drag: Action<
 		HTMLElement,
@@ -178,11 +179,16 @@
 		});
 
 		function computeOffset(event: MouseEvent): Point {
+			if (!addButton) throw new ErrorWNotif({ emessage: 'No addButton' });
+			const mainButtonRect = addButton.getBoundingClientRect();
 			return {
 				x:
 					axis === 'y'
 						? 0
-						: Math.max(event.clientX, boundsRect.x + startPos.x - baseNodeRect.x) - startPos.x,
+						: Math.min(
+								Math.max(event.clientX, boundsRect.x + startPos.x - baseNodeRect.x),
+								mainButtonRect.x - (baseNodeRect.x + baseNodeRect.width - startPos.x)
+						  ) - startPos.x,
 				y: axis === 'x' ? 0 : event.clientY - startPos.y
 			};
 		}
@@ -304,9 +310,11 @@
 		{/each}
 		{#if mainAddModel}
 			<div
+				role="button"
 				class="h-full"
 				in:fly={{ y: '100%', delay: tabs.size * 60 }}
 				out:fly={{ x: '-100%', duration: 400 }}
+				bind:this={addButton}
 			>
 				<Tab
 					on:click={mainAddModel.addModel}
