@@ -8,8 +8,6 @@ export const ssr = true;
 export const load: LayoutLoad = async (event) => {
 	await loadLocale();
 	return { publicConfig: event.data.publicConfig };
-	if (!browser) return;
-	return null;
 	// const sessionToken = localStorage.getItem('sessionToken')?.replaceAll('"', '');
 	// // console.log(window.location)
 	// // if (typeof sessionToken !== 'string' && window.location.pathname !== '/auth') {
