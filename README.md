@@ -1,29 +1,56 @@
-dépendance : yarn
+# GraphGEOS
 
+The frontend of the GraphGEOS project.
 
-# Install
-yarn install
+GraphGEOS is an attempt at creating a graph based configuration system for [GEOS](https://github.com/GEOS-DEV/GEOS). The goal is to significantly improve the experience of all GEOS users.
 
-# Run
-yarn build
-yarn preview
+It has been developped within the Makutu team.
 
+## Prerequisites
 
-Pour cacher des messages d'erreurs inutiles
--/(rem|flush|cancell)/
-TODO: https://vite-plugin-ssr.com/client-only-components to allow use of SSR and fix styled.div issue
-TODO: add dynamic imports for performance https://vite-plugin-ssr.com/dynamic-import
+- [Node.js](https://nodejs.org) (version 20.X.X)
+- [pnpm](https://pnpm.io)
+- [GraphGEOS-backend](https://github.com/ShaitanLyss/GEOS-UI-backend)
 
-# Install
-```bash 
-sudo apt update
-# tauri dependencies
-sudo apt install -f libwebkit2gtk-4.0-dev \
-    build-essential \
-    curl \
-    wget \
-    libssl-dev \
-    libgtk-3-dev \
-    libayatana-appindicator3-dev \
-    librsvg2-dev
-``` 
+## Getting Started
+
+1. Clone the repository:
+
+    ```bash
+    git clone https://github.com/ShaitanLyss/GraphGEOS-frontend
+    ```
+
+2. Install the dependencies using pnpm:
+
+    ```bash
+    pnpm install
+    ```
+
+3. Start the development server:
+
+    ```bash
+    pnpm dev
+    ```
+
+4. Open your browser and visit `http://localhost:5173` to see the app.
+
+## Folder Structure
+
+Explain the structure of your project's folders and files.
+
+## Deployment
+
+Describe how to deploy your project.
+
+## Built With
+
+- [Svelte Kit](https://kit.svelte.dev)
+- [pnpm](https://pnpm.io)
+
+## Contributing
+
+Explain how others can contribute to your project.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
