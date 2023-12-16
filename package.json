@@ -103,7 +103,7 @@
 		"typescript": "^5.3.3",
 		"typescript-cookie": "^1.0.6",
 		"uuid": "^9.0.1",
-		"vite": "^5.0.9",
+		"vite": "^5.0.10",
 		"vite-plugin-tailwind-purgecss": "^0.1.4",
 		"vitest": "^1.0.4",
 		"web-worker": "^1.2.0",
