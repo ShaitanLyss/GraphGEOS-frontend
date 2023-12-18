@@ -1,13 +1,16 @@
 import type { LayoutLoad } from './$types';
 import { loadLocale } from '$lib/global/localization';
 import { browser } from '$app/environment';
-import type { SessionAndUser$result, UserAuthInfo } from '$houdini';
+import { load_GraphEditorData, type SessionAndUser$result, type UserAuthInfo } from '$houdini';
 
 export const ssr = true;
 
 export const load: LayoutLoad = async (event) => {
 	await loadLocale();
-	return { publicConfig: event.data.publicConfig };
+	return {
+		publicConfig: event.data.publicConfig,
+		...(await load_GraphEditorData({ event }))
+	};
 	// const sessionToken = localStorage.getItem('sessionToken')?.replaceAll('"', '');
 	// // console.log(window.location)
 	// // if (typeof sessionToken !== 'string' && window.location.pathname !== '/auth') {

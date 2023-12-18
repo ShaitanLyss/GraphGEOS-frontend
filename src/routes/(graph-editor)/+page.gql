@@ -1,0 +1,21 @@
+query GraphEditorData {
+	geos @loading {
+		xmlSchema @loading {
+			simpleTypes @loading {
+				name @loading
+				pattern @loading
+			}
+			complexTypes @loading {
+				name @loading
+				attributes @loading {
+					name @loading
+					type @loading
+					required @loading
+					default @loading
+					pattern @loading
+				}
+				childTypes @loading
+			}
+		}
+	}
+}

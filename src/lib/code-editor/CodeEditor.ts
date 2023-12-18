@@ -1,3 +1,4 @@
+import type { GeosSchema } from '$lib/geos';
 import { ErrorWNotif } from '$lib/global';
 import type { Action } from 'svelte/action';
 import { writable, type Writable } from 'svelte/store';
@@ -13,7 +14,10 @@ export abstract class CodeEditor implements ICodeEditor {
 	setLightTheme(light: boolean): void {
 		throw new ErrorWNotif('Method not implemented.');
 	}
-	public static async create(params: { container: HTMLElement }): Promise<CodeEditor> {
+	public static async create(params: {
+		container: HTMLElement;
+		geosSchema: GeosSchema;
+	}): Promise<CodeEditor> {
 		throw new ErrorWNotif('Not implemented');
 	}
 
@@ -32,14 +36,14 @@ export abstract class CodeEditor implements ICodeEditor {
 
 export type codeEditorBackends = 'monaco';
 
-export function makeCodeEditor({ backend }: { backend: codeEditorBackends }): {
+export function makeCodeEditor(params: { backend: codeEditorBackends; geosSchema: GeosSchema }): {
 	codeEditor: ICodeEditor;
 	codeEditorStore: Writable<CodeEditor>;
 	codeEditorPromise: Promise<CodeEditor>;
 	codeEditorAction: Action<HTMLDivElement>;
 } {
 	const editorStore = writable<CodeEditor>(undefined);
-	const codeEditorPromise = createCodeEditor({ backend });
+	const codeEditorPromise = createCodeEditor(params);
 	let resolvePostSetupEditorPromise: (value: ICodeEditor) => void;
 	const postSetupEditorPromise = new Promise<ICodeEditor>((resolve) => {
 		resolvePostSetupEditorPromise = resolve;
@@ -85,10 +89,13 @@ export function makeCodeEditor({ backend }: { backend: codeEditorBackends }): {
 
 export async function createCodeEditor(params: {
 	backend: codeEditorBackends;
+	geosSchema: GeosSchema;
 }): Promise<CodeEditor> {
 	switch (params.backend) {
 		case 'monaco':
-			return await (await import('./backends/monaco/MonacoCodeEditor')).default.create();
+			return await (
+				await import('./backends/monaco/MonacoCodeEditor')
+			).default.create({ geosSchema: params.geosSchema });
 		default:
 			throw new Error('Not implemented');
 	}

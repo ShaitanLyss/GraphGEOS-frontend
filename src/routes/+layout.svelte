@@ -17,9 +17,11 @@
 	import { onMount } from 'svelte';
 	import type { LayoutData } from './$types';
 	import type { publicConfig } from '$lib/config';
-	export let data: LayoutData & { publicConfig: typeof publicConfig };
+	export let data: LayoutData;
 	import monacoLoader from '@monaco-editor/loader';
 	import { initializeStores } from '@skeletonlabs/skeleton';
+	import type { GeosDataContext } from '$lib/geos';
+	import { writable } from 'svelte/store';
 
 	onMount(async () => {
 		// preload monaco
@@ -27,6 +29,13 @@
 	});
 	initializeStores();
 	setContext('publicConfig', data.publicConfig);
+
+	const xmlSchema: GeosDataContext['xmlSchema'] = writable();
+	setContext('geos', {
+		xmlSchema: xmlSchema
+	});
+	$: ({ GraphEditorData } = data);
+	$: $xmlSchema = $GraphEditorData.data?.geos.xmlSchema;
 </script>
 
 <svelte:head>

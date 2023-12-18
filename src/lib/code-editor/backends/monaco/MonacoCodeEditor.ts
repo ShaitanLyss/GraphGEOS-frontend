@@ -3,13 +3,17 @@ import { CodeEditor } from '../../CodeEditor';
 import formatXml from 'xml-formatter';
 import { conf, language } from './geos_xml';
 import loader from '@monaco-editor/loader';
+import type { GeosSchema } from '$lib/geos';
 
 export default class MonacoCodeEditor extends CodeEditor {
 	private monaco: typeof Monaco;
 	private editor?: Monaco.editor.IStandaloneCodeEditor;
+	private geosSchema: GeosSchema;
 
-	private constructor(params: { monaco: typeof Monaco }) {
+	private constructor(params: { monaco: typeof Monaco; geosSchema: GeosSchema }) {
 		super();
+		const { geosSchema } = params;
+		this.geosSchema = params.geosSchema;
 		this.monaco = params.monaco;
 		// Register XML configuration
 		this.monaco.languages.register({ id: 'geos_xml', extensions: ['.xml'] });
@@ -34,7 +38,23 @@ export default class MonacoCodeEditor extends CodeEditor {
 				console.log('isTag', isTag, 'isWithinTag', isWithinTag);
 
 				if (isTag) {
-					return { contents: [{ value: 'Tag : ' + hoveredWord.word }] };
+					const tag = hoveredWord.word;
+					const complexType = geosSchema.complexTypes.get(tag);
+					if (complexType) {
+						return {
+							contents: [
+								{
+									supportHtml: true,
+									value: `<b>${tag}</b><br/><ul><li>${complexType.childTypes.join(
+										'</li><li>'
+									)}</li></ul>
+						`
+								}
+							]
+						};
+					} else {
+						console.error(`${tag} not found`);
+					}
 				}
 				if (isWithinTag) {
 					const attributeMatch = model.findPreviousMatch(
@@ -51,8 +71,20 @@ export default class MonacoCodeEditor extends CodeEditor {
 						attributeMatch !== null &&
 						attributeMatch.matches?.at(1) === undefined &&
 						attributeMatch.matches?.at(0) !== '=';
+
 					if (isAttr) {
-						return { contents: [{ value: 'Attribute : ' + hoveredWord.word }] };
+						const tag = tagMatch.matches?.at(1);
+						if (tag) {
+							const complexType = geosSchema.complexTypes.get(tag);
+							if (complexType) {
+								const attr = complexType.attributes.get(hoveredWord.word);
+								if (attr) {
+									return {
+										contents: [{ value: 'Attribute : ' + attr.name + ', type : ' + attr.type }]
+									};
+								}
+							}
+						}
 					}
 				}
 				return { contents: [] };
@@ -89,10 +121,10 @@ export default class MonacoCodeEditor extends CodeEditor {
 		this.editor?.dispose();
 	}
 
-	public static async create() {
+	public static override async create({ geosSchema }: { geosSchema: GeosSchema }) {
 		const monaco = await loader.init();
 		// const monaco = (await import('./monaco')).default;
-		return new MonacoCodeEditor({ monaco });
+		return new MonacoCodeEditor({ monaco, geosSchema });
 	}
 
 	public createModel(params: { value?: string; language?: string }) {
