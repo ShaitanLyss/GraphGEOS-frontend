@@ -94,7 +94,7 @@
 		"svelte-fa": "^3.0.4",
 		"svelte-floating-ui": "^1.5.8",
 		"svelte-i18n": "^4.0.0",
-		"svelte-preprocess": "^5.1.2",
+		"svelte-preprocess": "^5.1.3",
 		"svelte-preprocess-delegate-events": "^0.4.3",
 		"svelte-preprocess-react": "^0.15.0",
 		"svelte-watch-resize": "^1.0.3",
