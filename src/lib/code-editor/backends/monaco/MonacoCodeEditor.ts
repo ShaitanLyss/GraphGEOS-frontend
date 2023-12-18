@@ -80,7 +80,9 @@ export default class MonacoCodeEditor extends CodeEditor {
 								const attr = complexType.attributes.get(hoveredWord.word);
 								if (attr) {
 									return {
-										contents: [{ value: 'Attribute : ' + attr.name + ', type : ' + attr.type }]
+										contents: [
+											{ supportHtml: true, value: `<b>${attr.name} </b><i> ${attr.type}</i>` }
+										]
 									};
 								}
 							}
