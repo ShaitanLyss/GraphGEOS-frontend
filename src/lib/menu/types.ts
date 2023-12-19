@@ -42,7 +42,7 @@ export function createQueriableMenuItem(properties: StaticMenuItem): QueriableMe
 	const res = { ...createMenuItem(properties) };
 	switch (properties.type) {
 		case MenuItemType.Node:
-			Object.assign(res, { ...createNodeMenuItem({ ...properties }) });
+			Object.assign(res, { ...createMenuItem({ ...properties }) });
 			break;
 		case MenuItemType.Action:
 			Object.assign(res, { ...createActionMenuItem({ ...properties }) });

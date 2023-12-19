@@ -145,8 +145,8 @@ type UserType {
 
 type XMLAttribute {
   default: String
+  description: String!
   name: String!
-  pattern: String
   required: Boolean!
   type: String!
 }
@@ -156,6 +156,7 @@ union XMLAttributeXMLComplexType = XMLAttribute | XMLComplexType
 type XMLComplexType {
   attributes: [XMLAttribute!]!
   childTypes: [String!]!
+  link: String!
   name: String!
   properties: [XMLAttributeXMLComplexType!]!
 }

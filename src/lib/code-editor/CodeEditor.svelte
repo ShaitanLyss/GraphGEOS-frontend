@@ -2,11 +2,40 @@
 	import { fade, slide } from 'svelte/transition';
 	import { makeCodeEditor } from './CodeEditor';
 	import { modeCurrent } from '@skeletonlabs/skeleton';
+	import { getContext } from '$lib/global';
+	import type { GeosSchema } from '$lib/geos';
+	import { PendingValue } from '$houdini';
 
 	export let width = '100%';
 	export let height = '100%';
+	const geosSchema: GeosSchema = {
+		complexTypes: new Map(),
+		simpleTypes: new Map()
+	};
+	const { xmlSchema } = getContext('geos');
 
-	const { codeEditor, codeEditorAction, codeEditorPromise } = makeCodeEditor({ backend: 'monaco' });
+	$: if ($xmlSchema) {
+		$xmlSchema.complexTypes.forEach((value) => {
+			if (value === PendingValue) return;
+			let { name, attributes, childTypes, link } = value;
+			name = name.replace(/Type$/, '');
+			childTypes = childTypes.map((child) => child.replace(/Type$/, '')).sort();
+			geosSchema.complexTypes.set(name, {
+				childTypes,
+				name,
+				link,
+				attributes: attributes.reduce((map, attr) => {
+					map.set(attr.name, attr);
+					return map;
+				}, new Map())
+			});
+		});
+	}
+
+	const { codeEditor, codeEditorAction, codeEditorPromise } = makeCodeEditor({
+		backend: 'monaco',
+		geosSchema
+	});
 	codeEditor.createModel({
 		language: 'geos_xml',
 		value: `
