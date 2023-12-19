@@ -1,7 +1,7 @@
 import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import { CodeEditor } from '../../CodeEditor';
 import formatXml from 'xml-formatter';
-import { conf, language } from './geos_xml';
+import { conf, getGeosXmlCompletionItemProvider, language } from './geos_xml';
 import loader from '@monaco-editor/loader';
 import type { GeosSchema } from '$lib/geos';
 
@@ -45,7 +45,9 @@ export default class MonacoCodeEditor extends CodeEditor {
 							contents: [
 								{
 									supportHtml: true,
-									value: `<b>${tag}</b><br/><ul><li>${complexType.childTypes.join(
+									value: `<b><a href="${
+										complexType.link
+									}"> ${tag}</a></b><br/><ul><li>${complexType.childTypes.join(
 										'</li><li>'
 									)}</li></ul>
 						`
@@ -79,9 +81,13 @@ export default class MonacoCodeEditor extends CodeEditor {
 							if (complexType) {
 								const attr = complexType.attributes.get(hoveredWord.word);
 								if (attr) {
+									const requiredOrDefault = attr.required ? '<small> required</small>' : '';
 									return {
 										contents: [
-											{ supportHtml: true, value: `<b>${attr.name} </b><i> ${attr.type}</i>` }
+											{
+												supportHtml: true,
+												value: `<b>${attr.name} </b><i> ${attr.type}</i><br/>${requiredOrDefault}<br/>${attr.description}`
+											}
 										]
 									};
 								}
@@ -92,6 +98,10 @@ export default class MonacoCodeEditor extends CodeEditor {
 				return { contents: [] };
 			}
 		});
+		this.monaco.languages.registerCompletionItemProvider(
+			'geos_xml',
+			getGeosXmlCompletionItemProvider({ geosSchema })
+		);
 		this.monaco.languages.registerDocumentFormattingEditProvider('geos_xml', {
 			provideDocumentFormattingEdits: (model, options, token) => {
 				const text = model.getValue();

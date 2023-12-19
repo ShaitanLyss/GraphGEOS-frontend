@@ -6,13 +6,14 @@ query GraphEditorData {
 				pattern @loading
 			}
 			complexTypes @loading {
+				link
 				name @loading
 				attributes @loading {
+					description
 					name @loading
 					type @loading
 					required @loading
 					default @loading
-					pattern @loading
 				}
 				childTypes @loading
 			}

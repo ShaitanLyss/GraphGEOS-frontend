@@ -17,12 +17,13 @@
 	$: if ($xmlSchema) {
 		$xmlSchema.complexTypes.forEach((value) => {
 			if (value === PendingValue) return;
-			let { name, attributes, childTypes } = value;
+			let { name, attributes, childTypes, link } = value;
 			name = name.replace(/Type$/, '');
 			childTypes = childTypes.map((child) => child.replace(/Type$/, '')).sort();
 			geosSchema.complexTypes.set(name, {
 				childTypes,
 				name,
+				link,
 				attributes: attributes.reduce((map, attr) => {
 					map.set(attr.name, attr);
 					return map;

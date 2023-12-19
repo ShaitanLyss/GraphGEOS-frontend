@@ -3,7 +3,13 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-import type { languages } from 'monaco-editor/esm/vs/editor/editor.api';
+import type { GeosSchema } from '$lib/geos';
+import { ErrorWNotif } from '$lib/global';
+import { XMLParser, XMLBuilder, XMLValidator } from 'fast-xml-parser';
+import { languages, editor, Position } from 'monaco-editor/esm/vs/editor/editor.api';
+import _ from 'lodash';
+import wu from 'wu';
+import levenshtein from 'js-levenshtein';
 enum IndentAction {
 	None = 0,
 	Indent = 1,
@@ -115,3 +121,235 @@ export const language = <languages.IMonarchLanguage>{
 		]
 	}
 };
+
+const s = '[\\r\\s\\n]*';
+/**
+ * Returns the xml tag enclosing a position. Undefined if not found
+ */
+export function extractXMLNode({
+	model,
+	position
+}: {
+	model: editor.ITextModel;
+	position: Position;
+}): string | undefined {
+	const before = model.findPreviousMatch('<[\\r\\s\\n]*(\\w+)', position, true, false, null, true);
+	const tag = before?.matches?.at(1);
+	console.log(tag);
+	if (!before || !tag) return undefined;
+	let after = model.findNextMatch(`</${tag}>`, position, true, false, null, true);
+	if (!after) {
+		after = model.findNextMatch('/>', position, true, false, null, true);
+	}
+	if (!after) return undefined;
+
+	console.log(after.matches);
+	return model.getValueInRange({
+		startColumn: before.range.startColumn,
+		startLineNumber: before.range.startLineNumber,
+		endColumn: after.range.endColumn,
+		endLineNumber: after.range.endLineNumber
+	});
+}
+
+export function getXmlParser(): XMLParser {
+	return new XMLParser({
+		ignoreAttributes: false,
+		attributeNamePrefix: '',
+		preserveOrder: false,
+		attributesGroupName: '@a'
+	});
+}
+
+export function parseXMLNode({
+	model,
+	position
+}: {
+	model: editor.ITextModel;
+	position: Position;
+}): { [key: string]: { '@a': Record<string, unknown> } } | undefined {
+	const node = extractXMLNode({ model, position });
+	if (!node) return undefined;
+	const res = getXmlParser().parse(node);
+	return res;
+}
+
+/**
+ * Finds the xml attributes located around the given position. The position must be within a tag
+ * @param param {model, position} model: the model to search in, position: the position to search around
+ * @returns the attributes found before and after the given position
+ */
+export function getAttrsAround({
+	model,
+	position
+}: {
+	model: editor.ITextModel;
+	position: Position;
+}): string[] {
+	const res: string[] = [];
+	const node = parseXMLNode({ model, position });
+	console.log('attrs around', node);
+	if (!node) return res;
+
+	const keys = Object.keys(node);
+	if (keys.length !== 1) throw new ErrorWNotif({ emessage: 'Wrong numbers of keys' });
+	const key = keys[0];
+	if (!('@a' in node[key])) return [];
+	return Object.keys(node[key]['@a']);
+}
+
+export function getGeosModelContext({
+	model,
+	position,
+	word
+}: {
+	model: editor.ITextModel;
+	position: Position;
+	word?: string | undefined;
+}): { tag: string | undefined; attributes: string[] } {
+	const res: { tag: string | undefined; attributes: string[] } = { tag: undefined, attributes: [] };
+	const tagMatch = model.findPreviousMatch(
+		'(?:<\\?|>|<(\\w+)[\\s\\r\\n]+|</?\\s*(\\w+))',
+		position,
+		true,
+		false,
+		null,
+		true
+	);
+	const isWithinTag = tagMatch !== null && tagMatch.matches?.at(1) !== undefined;
+	const isTag = tagMatch?.matches?.at(2) !== undefined;
+
+	if (isWithinTag) {
+		res.tag = tagMatch.matches?.at(1);
+		res.attributes = getAttrsAround({ model, position });
+	}
+	return res;
+}
+
+export function getGeosXmlCompletionItemProvider({
+	geosSchema
+}: {
+	geosSchema: GeosSchema;
+}): languages.CompletionItemProvider {
+	return {
+		provideCompletionItems(model, position, context, token) {
+			const res: languages.ProviderResult<languages.CompletionList> = {
+				incomplete: false,
+				suggestions: []
+			};
+			const wordMatch = model.findPreviousMatch(
+				'(?:\\s|(\\w+))',
+				position,
+				true,
+				false,
+				null,
+				true
+			);
+			const word = wordMatch?.matches?.at(1);
+
+			const after = model.getValueInRange({
+				startColumn: position.column,
+				startLineNumber: position.lineNumber,
+				endLineNumber: position.lineNumber,
+				endColumn: model.getLineMaxColumn(position.lineNumber)
+			});
+
+			const geosContext = getGeosModelContext({ model, position });
+			if (geosContext.tag === undefined) {
+				const parentNodeMatch = model.findPreviousMatch(
+					'<(\\w+)>[.\\n]*?(?:<[.\\n]*?\\/>|<[.\\n]*?>[.\\n]*?<[.\\n]*?\\/>)*[.\\n]*?',
+					position,
+					true,
+					false,
+					null,
+					true
+				);
+				const parentNode = parentNodeMatch?.matches?.at(1);
+				if (!parentNode) return res;
+
+				const parentElement = geosSchema.complexTypes.get(parentNode);
+				if (!parentElement) return res;
+
+				console.log(parentElement);
+				parentElement.childTypes.forEach((childType) => {
+					const element = geosSchema.complexTypes.get(childType);
+					if (!element) return;
+
+					// prepare insert text
+					// insert text includes required attributes
+					// with name first
+					const requiredAttrs = wu(element.attributes.keys()).filter(
+						(k) => element.attributes.get(k)?.required ?? false
+					);
+					const hasName = requiredAttrs.find((a) => a == 'name') !== undefined;
+					const notNameAttrs = !hasName
+						? requiredAttrs.toArray()
+						: requiredAttrs.filter((a) => a !== 'name');
+					const preppedAttrs = wu([...(hasName ? ['name'] : []), ...notNameAttrs])
+						.map((a) => ` ${a}="${element.attributes.get(a)?.type ?? 'required'}"`)
+						.toArray()
+						.join('\n');
+
+					const insertText = `<${childType}\n${preppedAttrs}\n/>`;
+
+					res.suggestions.push({
+						label: childType,
+						insertText,
+						kind: languages.CompletionItemKind.Class,
+						detail: parentNode,
+						// insertTextRules: languages.CompletionItemInsertTextRule.KeepWhitespace,
+						documentation: {
+							supportHtml: true,
+							value: `<a href="${element.link}">${element.name}</a>`
+						},
+						range: {
+							startColumn: position.column,
+							endColumn: position.column,
+							endLineNumber: position.lineNumber,
+							startLineNumber: position.lineNumber
+						}
+					});
+				});
+
+				return res;
+			}
+			const complexType = geosSchema.complexTypes.get(geosContext.tag);
+			if (!complexType) return res;
+			const allAttributes = complexType.attributes;
+			const remainingAttrs: typeof allAttributes = new Map();
+			allAttributes.forEach((attr, name) => {
+				if (!geosContext.attributes.includes(name)) remainingAttrs.set(name, attr);
+			});
+			const startColumn = word ? (wordMatch?.range.startColumn as number) : position.column;
+			remainingAttrs.forEach((attr, name) => {
+				const insertText = `${name}="${attr.default ?? ''}"`;
+				res.suggestions.push({
+					label: name + (attr.required ? '*' : ''),
+					kind: languages.CompletionItemKind.Field,
+					range: {
+						startLineNumber: position.lineNumber,
+						endLineNumber: position.lineNumber,
+						startColumn: startColumn,
+						endColumn: position.column
+					},
+					insertText: insertText,
+					sortText: (attr.required ? '0' : '1') + name,
+					detail: attr.description,
+					preselect: false,
+					documentation: { value: `<em>${attr.type}</em>`, supportHtml: true }
+				});
+			});
+
+			// if (res.suggestions.length > 0) {
+			// 	res.suggestions[0].preselect = true;
+			// }
+			console.log(res);
+			return res;
+		}
+		// resolveCompletionItem(item, token) {
+		// 	return item;
+
+		// },
+		// triggerCharacters: undefined
+	};
+}

@@ -17,11 +17,15 @@ export type GeosSchema = {
 		string,
 		{
 			name: string;
+			link: string;
 			attributes: Map<
 				string,
 				{
 					name: string;
 					type: string;
+					default: string | undefined;
+					description: string;
+					required: boolean;
 				}
 			>;
 			childTypes: string[];

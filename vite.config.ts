@@ -13,8 +13,8 @@ export default defineConfig({
 	},
 
 	plugins: [
-		!process.env.VITEST ? houdini() : houdini({ watchSchema: undefined }),
-		// houdini(),
+		// !process.env.VITEST ? houdini() : houdini({ watchSchema: undefined }),
+		houdini(),
 		sveltekit()
 		// purgeCss({
 		// 	safelist: {
@@ -28,5 +28,8 @@ export default defineConfig({
 			usePolling: true,
 			interval: 10
 		}
+	},
+	test: {
+		environment: 'jsdom'
 	}
 });
