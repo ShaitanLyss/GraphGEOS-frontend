@@ -6,10 +6,10 @@
 import type { GeosSchema } from '$lib/geos';
 import { ErrorWNotif } from '$lib/global';
 import { XMLParser, XMLBuilder, XMLValidator } from 'fast-xml-parser';
-import { languages, editor, Position } from 'monaco-editor/esm/vs/editor/editor.api';
+import type { languages, editor, Position } from 'monaco-editor/esm/vs/editor/editor.api';
+import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import _ from 'lodash';
 import wu from 'wu';
-import levenshtein from 'js-levenshtein';
 enum IndentAction {
 	None = 0,
 	Indent = 1,
@@ -227,9 +227,11 @@ export function getGeosModelContext({
 }
 
 export function getGeosXmlCompletionItemProvider({
-	geosSchema
+	geosSchema,
+	monaco
 }: {
 	geosSchema: GeosSchema;
+	monaco: typeof Monaco;
 }): languages.CompletionItemProvider {
 	return {
 		provideCompletionItems(model, position, context, token) {
@@ -256,6 +258,7 @@ export function getGeosXmlCompletionItemProvider({
 
 			const geosContext = getGeosModelContext({ model, position });
 			if (geosContext.tag === undefined) {
+				// We are not within a tag but maybe within a node
 				const parentNodeMatch = model.findPreviousMatch(
 					'<(\\w+)>[.\\n]*?(?:<[.\\n]*?\\/>|<[.\\n]*?>[.\\n]*?<[.\\n]*?\\/>)*[.\\n]*?',
 					position,
@@ -264,11 +267,20 @@ export function getGeosXmlCompletionItemProvider({
 					null,
 					true
 				);
+
 				const parentNode = parentNodeMatch?.matches?.at(1);
 				if (!parentNode) return res;
 
 				const parentElement = geosSchema.complexTypes.get(parentNode);
 				if (!parentElement) return res;
+
+				// Parent element found
+				// Look if there are < or > to overwrite
+				const beforeMatch = model.findPreviousMatch('[^<]|(<)', position, true, false, null, true);
+				const beforeBracket = beforeMatch?.matches?.at(1);
+				const afterMatch = model.findNextMatch('<|(>)', position, true, false, null, true);
+				const afterBracket = afterMatch?.matches?.at(1);
+				console.log('beforeBracket', beforeBracket, 'afterBracket', afterBracket);
 
 				console.log(parentElement);
 				parentElement.childTypes.forEach((childType) => {
@@ -291,11 +303,19 @@ export function getGeosXmlCompletionItemProvider({
 						.join('\n');
 
 					const insertText = `<${childType}\n${preppedAttrs}\n/>`;
+					const startColumn = beforeBracket
+						? (beforeMatch as editor.FindMatch).range.startColumn
+						: position.column;
+					const endColumn = afterBracket
+						? (afterMatch as editor.FindMatch).range.endColumn
+						: position.column;
+					console.log('startColumn', startColumn);
 
 					res.suggestions.push({
 						label: childType,
 						insertText,
-						kind: languages.CompletionItemKind.Class,
+						filterText: `<${childType}`,
+						kind: monaco.languages.CompletionItemKind.Class,
 						detail: parentNode,
 						// insertTextRules: languages.CompletionItemInsertTextRule.KeepWhitespace,
 						documentation: {
@@ -303,8 +323,8 @@ export function getGeosXmlCompletionItemProvider({
 							value: `<a href="${element.link}">${element.name}</a>`
 						},
 						range: {
-							startColumn: position.column,
-							endColumn: position.column,
+							startColumn,
+							endColumn,
 							endLineNumber: position.lineNumber,
 							startLineNumber: position.lineNumber
 						}
@@ -325,7 +345,7 @@ export function getGeosXmlCompletionItemProvider({
 				const insertText = `${name}="${attr.default ?? ''}"`;
 				res.suggestions.push({
 					label: name + (attr.required ? '*' : ''),
-					kind: languages.CompletionItemKind.Field,
+					kind: monaco.languages.CompletionItemKind.Field,
 					range: {
 						startLineNumber: position.lineNumber,
 						endLineNumber: position.lineNumber,

@@ -6,6 +6,7 @@ node_modules
 .env
 .env.*
 $houdini
+schema.graphql
 svelte-jsx.d.ts
 !.env.example
 src-tauri/icons

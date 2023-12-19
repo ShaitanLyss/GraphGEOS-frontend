@@ -100,7 +100,7 @@ export default class MonacoCodeEditor extends CodeEditor {
 		});
 		this.monaco.languages.registerCompletionItemProvider(
 			'geos_xml',
-			getGeosXmlCompletionItemProvider({ geosSchema })
+			getGeosXmlCompletionItemProvider({ geosSchema, monaco: this.monaco })
 		);
 		this.monaco.languages.registerDocumentFormattingEditProvider('geos_xml', {
 			provideDocumentFormattingEdits: (model, options, token) => {
