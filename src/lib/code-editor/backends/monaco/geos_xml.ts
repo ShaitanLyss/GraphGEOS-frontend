@@ -290,13 +290,12 @@ export function getGeosXmlCompletionItemProvider({
 					// prepare insert text
 					// insert text includes required attributes
 					// with name first
-					const requiredAttrs = wu(element.attributes.keys()).filter(
-						(k) => element.attributes.get(k)?.required ?? false
-					);
+					const requiredAttrs = wu(element.attributes.keys())
+						.filter((k) => element.attributes.get(k)?.required ?? false)
+						.toArray();
+
 					const hasName = requiredAttrs.find((a) => a == 'name') !== undefined;
-					const notNameAttrs = !hasName
-						? requiredAttrs.toArray()
-						: requiredAttrs.filter((a) => a !== 'name');
+					const notNameAttrs = !hasName ? requiredAttrs : requiredAttrs.filter((a) => a !== 'name');
 					const preppedAttrs = wu([...(hasName ? ['name'] : []), ...notNameAttrs])
 						.map((a) => ` ${a}="${element.attributes.get(a)?.type ?? 'required'}"`)
 						.toArray()
