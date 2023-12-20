@@ -56,7 +56,12 @@
 				</div>
 				<span class="divider-vertical border-surface-400-500-token h-4 my-auto" />
 				<div class="flex gap-3 items-center ms-3">
-					<HeaderButton icon={faPaintBrush} content={ThemeSwitcher} popupArrow={false} />
+					<HeaderButton
+						icon={faPaintBrush}
+						content={ThemeSwitcher}
+						popupArrow={false}
+						tooltip={$_('main.header.button.theme-switcher.tooltip')}
+					/>
 					<LocaleSwitcher />
 					<LightSwitch />
 				</div>

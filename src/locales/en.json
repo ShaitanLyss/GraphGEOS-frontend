@@ -179,5 +179,14 @@
         "tooltip": "Graph Editor"
       }
     }
+  },
+  "main": {
+    "header": {
+      "button": {
+        "theme-switcher": {
+          "tooltip": "Change theme"
+        }
+      }
+    }
   }
 }
