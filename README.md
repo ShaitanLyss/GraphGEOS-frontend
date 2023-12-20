@@ -4,7 +4,7 @@ The frontend of the GraphGEOS project.
 
 GraphGEOS is an attempt at creating a graph based configuration system for [GEOS](https://github.com/GEOS-DEV/GEOS). The goal is to significantly improve the experience of all GEOS users.
 
-It has been developped within the Makutu team.
+It has been developed within the Makutu team.
 
 ## Prerequisites
 

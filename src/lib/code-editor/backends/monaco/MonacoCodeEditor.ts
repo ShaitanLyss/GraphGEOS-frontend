@@ -1,9 +1,10 @@
 import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import { CodeEditor } from '../../CodeEditor';
-import formatXml from 'xml-formatter';
+// import formatXml from 'xml-formatter';
 import { conf, getGeosXmlCompletionItemProvider, language } from './geos_xml';
 import loader from '@monaco-editor/loader';
 import type { GeosSchema } from '$lib/geos';
+import { formatXml } from '$utils';
 
 export default class MonacoCodeEditor extends CodeEditor {
 	private monaco: typeof Monaco;
@@ -106,8 +107,8 @@ export default class MonacoCodeEditor extends CodeEditor {
 		);
 		this.monaco.languages.registerDocumentFormattingEditProvider('geos_xml', {
 			provideDocumentFormattingEdits: (model, options, token) => {
-				const text = model.getValue();
-				const formatted = formatXml(text);
+				const xml = model.getValue();
+				const formatted = formatXml({ xml });
 				return [
 					{
 						range: model.getFullModelRange(),

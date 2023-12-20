@@ -1,8 +1,8 @@
 import { ButtonControl } from '$rete/control/button/button';
+import { formatXml } from '$utils';
 import { Node } from '../Node';
 import type { NodeFactory } from '../NodeFactory';
 import type { XMLData } from '../XML/XMLData';
-import xmlFormat from 'xml-formatter';
 
 export class DownloadNode extends Node {
 	constructor({ factory }: { factory: NodeFactory }) {
@@ -13,14 +13,14 @@ export class DownloadNode extends Node {
 			new ButtonControl('Download', async () => {
 				const inputs = await this.fetchInputs();
 				const data = this.getData('data', inputs) as XMLData;
-				console.log(xmlFormat(data.toXml()));
+				console.log(formatXml({ xml: data.toXml() }));
 
 				// download to computer
 				const element = document.createElement('a');
 
 				element.setAttribute(
 					'href',
-					'data:text/plain;charset=utf-8,' + encodeURIComponent(xmlFormat(data.toXml()))
+					'data:text/plain;charset=utf-8,' + encodeURIComponent(formatXml({ xml: data.toXml() }))
 				);
 				element.setAttribute('download', 'geosx.xml');
 

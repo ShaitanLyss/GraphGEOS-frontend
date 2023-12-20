@@ -48,6 +48,10 @@ export const conf: languages.LanguageConfiguration = {
 		{
 			beforeText: new RegExp(`<(\\w[\\w\\d]*)([^/>]*(?!/)>)[^<]*$`, 'i'),
 			action: { indentAction: IndentAction.Indent }
+		},
+		{
+			beforeText: new RegExp(/^\s*[^<]*?[^<\s]+\s*?\/>.*?$/, 'i'),
+			action: { indentAction: IndentAction.Outdent }
 		}
 	]
 };
@@ -225,6 +229,44 @@ export function getGeosModelContext({
 	}
 	return res;
 }
+/**
+ * V2 of context using parsing and bfs search
+ */
+function getModelGeosContext({
+	model,
+	position
+}: {
+	model: editor.ITextModel;
+	position: Position;
+}) {
+	const fullModel = model.getValue();
+	const queryTag = 'cursorPositionQueryyy';
+	const offset = model.getOffsetAt(position);
+	const queryXml = fullModel.slice(0, offset) + `<${queryTag}/>` + fullModel.slice(offset);
+
+	const parsed = new XMLParser().parse(queryXml);
+
+	const toVisit: { xml: Record<string, unknown>; payload: { parents: string[] } }[] = [];
+	let i = 0;
+	// init toVisit queue
+	toVisit.push({ xml: parsed, payload: { parents: [] } });
+	while (i < toVisit.length) {
+		const item = toVisit[i];
+		for (const key in item.xml) {
+			if (key === queryTag) {
+				return item.payload;
+			}
+			const xml = item.xml[key];
+			const { parents } = item.payload;
+			if (xml && typeof xml === 'object')
+				toVisit.push({
+					xml: xml as Record<string, unknown>,
+					payload: { parents: [...parents, key] }
+				});
+		}
+		i++;
+	}
+}
 
 export function getGeosXmlCompletionItemProvider({
 	geosSchema,
@@ -259,16 +301,15 @@ export function getGeosXmlCompletionItemProvider({
 			const geosContext = getGeosModelContext({ model, position });
 			if (geosContext.tag === undefined) {
 				// We are not within a tag but maybe within a node
-				const parentNodeMatch = model.findPreviousMatch(
-					'<(\\w+)>[.\\n]*?(?:<[.\\n]*?\\/>|<[.\\n]*?>[.\\n]*?<[.\\n]*?\\/>)*[.\\n]*?',
-					position,
-					true,
-					false,
-					null,
-					true
-				);
+				const beforeMatch = model.findPreviousMatch('[^<]|(<)', position, true, false, null, true);
+				const beforeBracket = beforeMatch?.matches?.at(1);
 
-				const parentNode = parentNodeMatch?.matches?.at(1);
+				const context = getModelGeosContext({
+					model,
+					position: beforeMatch ? beforeMatch.range.getStartPosition() : position
+				});
+
+				const parentNode = context?.parents.at(-1);
 				if (!parentNode) return res;
 
 				const parentElement = geosSchema.complexTypes.get(parentNode);
@@ -276,8 +317,7 @@ export function getGeosXmlCompletionItemProvider({
 
 				// Parent element found
 				// Look if there are < or > to overwrite
-				const beforeMatch = model.findPreviousMatch('[^<]|(<)', position, true, false, null, true);
-				const beforeBracket = beforeMatch?.matches?.at(1);
+
 				const afterMatch = model.findNextMatch('<|(>)', position, true, false, null, true);
 				const afterBracket = afterMatch?.matches?.at(1);
 				console.log('beforeBracket', beforeBracket, 'afterBracket', afterBracket);
@@ -300,11 +340,12 @@ export function getGeosXmlCompletionItemProvider({
 						.map((a) => ` ${a}="${element.attributes.get(a)?.type ?? 'required'}"`)
 						.toArray()
 						.join('\n');
+					console.log('preppedAttrs', preppedAttrs);
 
 					const insertText =
 						preppedAttrs.length === 0 && element.childTypes.length > 0
 							? `<${childType}>\n\t\n</${childType}>`
-							: `<${childType}${notNameAttrs.length > 0 ? `\n${preppedAttrs}\n` : ''}/>`;
+							: `<${childType}${notNameAttrs.length > 0 || hasName ? `\n${preppedAttrs}\n` : ''}/>`;
 					const startColumn = beforeBracket
 						? (beforeMatch as editor.FindMatch).range.startColumn
 						: position.column;

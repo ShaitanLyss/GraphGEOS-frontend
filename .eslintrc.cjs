@@ -30,6 +30,7 @@ module.exports = {
 		'no-fallthrough': 'off',
 		'no-useless-escape': 'off',
 		'@typescript-eslint/no-empty-function': 'off',
+		'no-case-declarations': 'off'
 	},
 	overrides: [
 		{
