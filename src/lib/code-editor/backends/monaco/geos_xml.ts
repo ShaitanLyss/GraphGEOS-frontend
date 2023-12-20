@@ -9,6 +9,7 @@ import { XMLParser, XMLBuilder, XMLValidator } from 'fast-xml-parser';
 import type { languages, editor, Position } from 'monaco-editor/esm/vs/editor/editor.api';
 import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import _ from 'lodash';
+import 'regenerator-runtime/runtime';
 import wu from 'wu';
 enum IndentAction {
 	None = 0,

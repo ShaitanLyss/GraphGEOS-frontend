@@ -4,6 +4,7 @@ import {
 	XMLParser,
 	type XmlBuilderOptionsOptional
 } from 'fast-xml-parser';
+import 'regenerator-runtime/runtime';
 import wu from 'wu';
 
 const fxpSettings: X2jOptionsOptional & XmlBuilderOptionsOptional = {
