@@ -301,7 +301,13 @@ export function getGeosXmlCompletionItemProvider({
 			const geosContext = getGeosModelContext({ model, position });
 			if (geosContext.tag === undefined) {
 				// We are not within a tag but maybe within a node
-				const context = getModelGeosContext({ model, position });
+				const beforeMatch = model.findPreviousMatch('[^<]|(<)', position, true, false, null, true);
+				const beforeBracket = beforeMatch?.matches?.at(1);
+
+				const context = getModelGeosContext({
+					model,
+					position: beforeMatch ? beforeMatch.range.getStartPosition() : position
+				});
 
 				const parentNode = context?.parents.at(-1);
 				if (!parentNode) return res;
@@ -311,8 +317,7 @@ export function getGeosXmlCompletionItemProvider({
 
 				// Parent element found
 				// Look if there are < or > to overwrite
-				const beforeMatch = model.findPreviousMatch('[^<]|(<)', position, true, false, null, true);
-				const beforeBracket = beforeMatch?.matches?.at(1);
+
 				const afterMatch = model.findNextMatch('<|(>)', position, true, false, null, true);
 				const afterBracket = afterMatch?.matches?.at(1);
 				console.log('beforeBracket', beforeBracket, 'afterBracket', afterBracket);
@@ -335,6 +340,7 @@ export function getGeosXmlCompletionItemProvider({
 						.map((a) => ` ${a}="${element.attributes.get(a)?.type ?? 'required'}"`)
 						.toArray()
 						.join('\n');
+					console.log('preppedAttrs', preppedAttrs);
 
 					const insertText =
 						preppedAttrs.length === 0 && element.childTypes.length > 0
