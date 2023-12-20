@@ -86,6 +86,8 @@ const lightmode: Handle = ({ event, resolve }) => {
 	const lightmode = getCookieServer('current', event);
 	if (lightmode !== undefined) {
 		modeCurrent.set(lightmode === 'true');
+	} else {
+		modeCurrent.set(true);
 	}
 
 	return resolve(event);
