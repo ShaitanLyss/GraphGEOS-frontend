@@ -9,7 +9,7 @@ export function getBackendAddress(path = ''): string {
 		if (!backendAddr) {
 			throw new Error('BACKEND_ADDRESS environment variable is not set');
 		}
-		return backendAddr;
+		return backendAddr + path;
 	}
 
 	return (
