@@ -345,7 +345,7 @@ export function getGeosXmlCompletionItemProvider({
 					const insertText =
 						preppedAttrs.length === 0 && element.childTypes.length > 0
 							? `<${childType}>\n\t\n</${childType}>`
-							: `<${childType}${notNameAttrs.length > 0 ? `\n${preppedAttrs}\n` : ''}/>`;
+							: `<${childType}${notNameAttrs.length > 0 || hasName ? `\n${preppedAttrs}\n` : ''}/>`;
 					const startColumn = beforeBracket
 						? (beforeMatch as editor.FindMatch).range.startColumn
 						: position.column;
