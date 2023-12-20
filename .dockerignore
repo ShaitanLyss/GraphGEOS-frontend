@@ -14,8 +14,6 @@ src-tauri
 .env
 .env.example
 .github
-.svelte-kit/**
-!.svelte-kit/tsconfig.json
 .vscode
 build
 example
