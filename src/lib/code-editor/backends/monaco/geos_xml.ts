@@ -50,7 +50,7 @@ export const conf: languages.LanguageConfiguration = {
 			action: { indentAction: IndentAction.Indent }
 		},
 		{
-			beforeText: new RegExp(/[^\s]+\s*?\/>.*?$/, 'i'),
+			beforeText: new RegExp(/^\s*[^<]*?[^<\s]+\s*?\/>.*?$/, 'i'),
 			action: { indentAction: IndentAction.Outdent }
 		}
 	]
@@ -256,11 +256,11 @@ function getModelGeosContext({
 			if (key === queryTag) {
 				return item.payload;
 			}
-			const { xml } = item;
+			const xml = item.xml[key];
 			const { parents } = item.payload;
-			if (xml)
+			if (xml && typeof xml === 'object')
 				toVisit.push({
-					xml: xml[key] as Record<string, unknown>,
+					xml: xml as Record<string, unknown>,
 					payload: { parents: [...parents, key] }
 				});
 		}
