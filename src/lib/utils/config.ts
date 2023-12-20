@@ -1,8 +1,17 @@
 import { env } from '$env/dynamic/public';
 import { getCookie, getCookies } from 'typescript-cookie';
 import { PUBLIC_ENABLE_AUTH } from '$env/static/public';
+import { browser } from '$app/environment';
 
 export function getBackendAddress(path = ''): string {
+	if (!browser) {
+		const backendAddr = process.env.BACKEND_ADDRESS;
+		if (!backendAddr) {
+			throw new Error('BACKEND_ADDRESS environment variable is not set');
+		}
+		return backendAddr;
+	}
+
 	return (
 		('PUBLIC_BACKEND_ADDRESS' in env
 			? env.PUBLIC_BACKEND_ADDRESS
