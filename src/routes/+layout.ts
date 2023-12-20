@@ -1,6 +1,5 @@
 import type { LayoutLoad } from './$types';
 import { loadLocale } from '$lib/global/localization';
-import { browser } from '$app/environment';
 import { load_GraphEditorData, type SessionAndUser$result, type UserAuthInfo } from '$houdini';
 
 export const ssr = true;

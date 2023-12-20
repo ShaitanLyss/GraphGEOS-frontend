@@ -23,7 +23,8 @@ CMD ["pnpm", "dev", "--host"]
 
 FROM dev-deps AS build
 COPY . .
-ENV PUBLIC_ENABLE_AUTH true
+ENV PUBLIC_ENABLE_AUTH false
+RUN --mount=type=secret,id=certificate pnpm install 
 RUN pnpm build
 
 # Production stage

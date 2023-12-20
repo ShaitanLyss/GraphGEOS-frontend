@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Editor, EditorSharedOverlay } from '$lib/editor';
 	import { setContext, notifications, getContext, _ } from '$lib/global';
-	import type { NodeEditor, NodeFactory } from '$rete';
+	import type { NodeFactory } from '$rete';
 	import { newUniqueId } from '$utils';
 	import { modeCurrent, type ModalSettings, getModalStore } from '@skeletonlabs/skeleton';
 	import { onDestroy } from 'svelte';
