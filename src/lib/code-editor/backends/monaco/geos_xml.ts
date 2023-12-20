@@ -41,7 +41,7 @@ export const conf: languages.LanguageConfiguration = {
 			}
 		},
 		{
-			beforeText: new RegExp(/<\w+\s*/, 'i'),
+			beforeText: new RegExp(/<\w+\s*[^>.\n]*?$/, 'i'),
 			// afterText: /.*?>/,
 			action: { indentAction: IndentAction.Indent }
 		},
@@ -301,7 +301,9 @@ export function getGeosXmlCompletionItemProvider({
 						.toArray()
 						.join('\n');
 
-					const insertText = `<${childType}\n${preppedAttrs}\n/>`;
+					const insertText = `<${childType}${
+						notNameAttrs.length > 0 ? `\n${preppedAttrs}\n` : ''
+					}/>`;
 					const startColumn = beforeBracket
 						? (beforeMatch as editor.FindMatch).range.startColumn
 						: position.column;
