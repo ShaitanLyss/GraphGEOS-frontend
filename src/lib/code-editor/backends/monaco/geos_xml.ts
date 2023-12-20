@@ -194,7 +194,7 @@ export function getAttrsAround({
 	const keys = Object.keys(node);
 	if (keys.length !== 1) throw new ErrorWNotif({ emessage: 'Wrong numbers of keys' });
 	const key = keys[0];
-	if (!('@a' in node[key])) return [];
+	if (typeof node[key] === 'string' || !('@a' in node[key])) return [];
 	return Object.keys(node[key]['@a']);
 }
 
@@ -301,9 +301,10 @@ export function getGeosXmlCompletionItemProvider({
 						.toArray()
 						.join('\n');
 
-					const insertText = `<${childType}${
-						notNameAttrs.length > 0 ? `\n${preppedAttrs}\n` : ''
-					}/>`;
+					const insertText =
+						preppedAttrs.length === 0 && element.childTypes.length > 0
+							? `<${childType}>\n\t\n</${childType}>`
+							: `<${childType}${notNameAttrs.length > 0 ? `\n${preppedAttrs}\n` : ''}/>`;
 					const startColumn = beforeBracket
 						? (beforeMatch as editor.FindMatch).range.startColumn
 						: position.column;
