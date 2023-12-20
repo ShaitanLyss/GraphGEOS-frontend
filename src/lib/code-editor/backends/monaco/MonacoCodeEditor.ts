@@ -16,6 +16,8 @@ export default class MonacoCodeEditor extends CodeEditor {
 		this.geosSchema = params.geosSchema;
 		this.monaco = params.monaco;
 		// Register XML configuration
+		const geos_xml = this.monaco.languages.getLanguages().find((v) => v.id == 'geos_xml');
+		if (geos_xml) return;
 		this.monaco.languages.register({ id: 'geos_xml', extensions: ['.xml'] });
 		this.monaco.languages.setLanguageConfiguration('geos_xml', conf);
 		this.monaco.languages.setMonarchTokensProvider('geos_xml', language);
