@@ -38,45 +38,7 @@
 	});
 	codeEditor.createModel({
 		language: 'geos_xml',
-		value: `
-        <?xml version="1.0"?>
-
-<Problem>
-  <Solvers>
-    <!-- define the solver
-    we'll have to discuss the cflFactor with Randy
-    define the source coordinates
-    define the time source frequency
-    define the receiver coordinates -->
-    <AcousticSEM
-      name="acousticSolver"
-      cflFactor="0.25"
-      discretization="FE1"
-      targetRegions="{ Region }"
-      sourceCoordinates="{ { 1005.0, 1005.0, 1005.0 } }"
-      timeSourceFrequency="2.0"
-      receiverCoordinates="{ { 1105,1005, 1005 } }"
-      outputSeismoTrace="0"
-      dtSeismoTrace="0.005" />
-
-  </Solvers>
-
-  <Mesh>
-    <VTKMesh
-      name="mesh"
-      fieldsToImport="{ mediumVelocity }"
-      fieldNamesInGEOSX="{ mediumVelocity }"
-      file="../models/bicouche50x50x50.vtu" />
-  </Mesh>
-
-  <Geometry>
-    <Box
-      name="zpos"
-      xMin="{-0.01, -0.01, 499.99}"
-      xMax="{500.01, 500.01, 500.01}" />
-  </Geometry>
-</Problem>
-        `.trim()
+		value: `<?xml version="1.0"?>\n\n<Problem>\n  \n</Problem>`
 	});
 	codeEditorPromise;
 	$: codeEditor.setLightTheme($modeCurrent);

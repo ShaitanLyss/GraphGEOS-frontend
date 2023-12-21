@@ -9,6 +9,7 @@ import type { Writable } from 'svelte/store';
 export type TabProps = {
 	id: string;
 	name: string;
+	select?: boolean;
 	onClose?: () => void;
 	onDblClick?: () => void;
 };

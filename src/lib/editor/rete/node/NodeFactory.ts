@@ -10,9 +10,9 @@ import { ClassicPreset } from 'rete';
 import { InputControl } from '$rete/control/Control';
 import { type Writable, writable } from 'svelte/store';
 import { PythonDataflowEngine } from '$rete/engine/PythonDataflowEngine';
-import type { MakutuClasses$result } from '$houdini';
-import type { MakutuClassRepository } from '../../backend-interaction/types';
+import type { MakutuClassRepository } from '$lib/backend-interaction/types';
 import { newUniqueId } from '$utils';
+import type { SelectorEntity } from 'rete-area-plugin/_types/extensions/selectable';
 
 function createDataflowEngine() {
 	return new DataflowEngine<Schemes>(({ inputs, outputs }) => {
@@ -58,6 +58,7 @@ function createControlflowEngine() {
 		};
 	});
 }
+
 // type ParamsConstraint = [Record<string, unknown> & { factory: NodeFactory }, ...unknown[]];
 type WithFactory<T extends Record<string, unknown>> = T & { factory: NodeFactory };
 type WithoutFactory<T> = Omit<T, 'factory'>;
@@ -174,16 +175,19 @@ export class NodeFactory {
 
 	public readonly dataflowEngine = createDataflowEngine();
 	private readonly controlflowEngine = createControlflowEngine();
-
+	public readonly selector: AreaExtensions.Selector<SelectorEntity>;
 	constructor({
 		editor,
 		area,
-		makutuClasses
+		makutuClasses,
+		selector
 	}: {
 		editor: NodeEditor;
 		area?: AreaPlugin<Schemes, AreaExtra>;
 		makutuClasses: MakutuClassRepository;
+		selector: AreaExtensions.Selector<SelectorEntity>;
 	}) {
+		this.selector = selector;
 		this.area = area;
 		this.makutuClasses = makutuClasses;
 		this.editor = editor;

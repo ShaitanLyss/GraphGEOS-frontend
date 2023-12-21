@@ -17,7 +17,8 @@ import type { GlobalPopupsContext } from './popup';
 
 enum Context {
 	'editor' = 'Editor Context',
-	'onSave' = 'What to do when saving',
+	'onSave' = 'What to do when saving (depreciated)',
+	'save' = 'What do when saving',
 	'tabs' = 'Tabs Context',
 	'geos' = 'Geos Data',
 	'publicConfig' = 'Public Configuration',
@@ -31,6 +32,10 @@ export type RightSidebar<T extends SvelteComponent> = {
 	props?: ComponentProps<T>;
 };
 
+export type SaveHandler = {
+	save: () => void;
+};
+
 export type resolveContext<
 	K = keyof typeof Context,
 	Component extends SvelteComponent = SvelteComponent
@@ -38,6 +43,8 @@ export type resolveContext<
 	? EditorContext
 	: K extends 'onSave'
 	? () => void
+	: K extends 'save'
+	? Writable<Map<string, SaveHandler>>
 	: K extends 'tabs'
 	? Writable<TabContext | undefined>
 	: K extends 'geos'

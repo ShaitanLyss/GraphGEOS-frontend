@@ -53,7 +53,6 @@ body {
 	padding-left: 1em;
 }
 
-
 @keyframes slideInLeftToRight {
 	from {
 		transform: translateX(-100%);
@@ -71,17 +70,16 @@ body {
 	transition: background-color 0.1s ease-in-out;
 }
 .dark .minimap {
-	background-color: rgba(55,68,107, 0.65) !important;
+	background-color: rgba(55, 68, 107, 0.65) !important;
 }
 
 .minimap .mini-viewport {
-	transition: border-color 0.1s ease-in-out, background-color 0.1s ease-in-out;	
+	transition: border-color 0.1s ease-in-out, background-color 0.1s ease-in-out;
 }
 
-[data-theme]:not([data-theme="skeleton"]) .minimap .mini-viewport {
+[data-theme]:not([data-theme='skeleton']) .minimap .mini-viewport {
 	border-color: rgb(var(--color-tertiary-400) / 0.5) !important;
 	background-color: rgba(var(--color-tertiary-400) / 0.2) !important;
-
 }
 
 .dark .minimap .mini-viewport {
@@ -91,27 +89,36 @@ body {
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(+1px); }
-  50% { transform: translateY(-1px); }
+	0%,
+	100% {
+		transform: translateY(+1px);
+	}
+	50% {
+		transform: translateY(-1px);
+	}
 }
 
 .levitate {
-  animation: float 2s ease-in-out infinite;
+	animation: float 2s ease-in-out infinite;
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  50% {
-    transform: rotate(180deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+	from {
+		transform: rotate(0deg);
+	}
+	50% {
+		transform: rotate(180deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
 }
 
 .cool-spin {
-  animation: spin 3s infinite;
-  animation-timing-function: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+	animation: spin 3s infinite;
+	animation-timing-function: cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+.line-numbers {
+	user-select: none !important;
 }

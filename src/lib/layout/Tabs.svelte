@@ -32,7 +32,7 @@
 			tabs.set(key, { ...props, id: key });
 			tabsOrder = [...tabsOrder, key];
 			tabs = tabs;
-			$tabSet = key;
+			if (props.select ?? true) $tabSet = key;
 		},
 		deleteTab(key) {
 			// Update tabset
@@ -59,7 +59,7 @@
 			tabs = tabs;
 		},
 		getTabKeys() {
-			return Array.from(tabs.keys());
+			return [...tabsOrder];
 		}
 	};
 	const flipDuration = 100;

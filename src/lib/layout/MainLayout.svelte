@@ -4,7 +4,8 @@
 		GlobalPopups,
 		type RightSidebar,
 		makeGlobalPopupContext,
-		makeGlobalPopupsProps
+		makeGlobalPopupsProps,
+		type SaveHandler
 	} from '$lib/global';
 	import { AppShell } from '@skeletonlabs/skeleton';
 	import { writable, type Writable } from 'svelte/store';
@@ -15,6 +16,11 @@
 	let tooltipUseCount = 0;
 	const numGlobalPopups = 3;
 	let globalPopupUseCount = 0;
+	const saveContext: Writable<Map<string, SaveHandler>> = writable(new Map());
+	setContext('save', saveContext);
+	setContext('onSave', () => {
+		$saveContext.forEach((handler) => handler.save());
+	});
 	setContext('globalPopups', {
 		nextPopupKey: () => globalPopupUseCount++ % numGlobalPopups,
 		nextTooltipKey: () => tooltipUseCount++ % numGlobalTooltips,

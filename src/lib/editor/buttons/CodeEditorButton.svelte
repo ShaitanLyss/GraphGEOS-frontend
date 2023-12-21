@@ -2,20 +2,28 @@
 	import { faFileCode } from '@fortawesome/free-solid-svg-icons';
 	import EditorButton from './EditorButton.svelte';
 	import { _, getContext } from '$lib/global';
-	import type CodeEditor from '$lib/code-editor/CodeEditor.svelte';
-	const mainRightSideBar = getContext<'mainRightSideBar', CodeEditor>('mainRightSideBar');
+	import type { CodeEditorIntegration } from '$lib/editor';
+	import { onMount } from 'svelte';
+	const mainRightSideBar = getContext<'mainRightSideBar', CodeEditorIntegration>(
+		'mainRightSideBar'
+	);
+	const editorContext = getContext('editor');
 
 	async function toggleCodeEditor() {
-		const codeEditor = (await import('$lib/code-editor/CodeEditor.svelte')).default;
-		if ($mainRightSideBar.component === codeEditor) {
+		const { CodeEditorIntegration } = await import('$lib/editor');
+		if ($mainRightSideBar.component === CodeEditorIntegration) {
 			$mainRightSideBar = { component: undefined };
 			return;
 		}
 		$mainRightSideBar = {
-			component: codeEditor,
-			props: { width: '40vw', border: 'border-s-2 border-surface-100-800-token' }
+			component: CodeEditorIntegration,
+			props: { editorContext }
 		};
 	}
+
+	onMount(async () => {
+		await toggleCodeEditor();
+	});
 </script>
 
 <EditorButton

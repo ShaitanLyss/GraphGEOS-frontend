@@ -1,24 +1,61 @@
 <script lang="ts">
+	import { EditMacroNodeChannel } from '$lib/broadcast-channels';
 	import { Editor, EditorSharedOverlay } from '$lib/editor';
-	import { setContext, notifications, getContext, _ } from '$lib/global';
-	import type { NodeFactory } from '$rete';
-	import { newUniqueId } from '$utils';
-	import { modeCurrent, type ModalSettings, getModalStore } from '@skeletonlabs/skeleton';
-	import { onDestroy } from 'svelte';
+	import { setContext, notifications, getContext, _, ErrorWNotif } from '$lib/global';
+	import type { NodeEditorSaveData, NodeFactory } from '$rete';
+	import { isNodeEditorSaveData } from '$rete/utils';
+
+	import { addContextFunction, newUniqueId } from '$utils';
+	import {
+		modeCurrent,
+		type ModalSettings,
+		getModalStore,
+		localStorageStore
+	} from '@skeletonlabs/skeleton';
+	import { onDestroy, onMount } from 'svelte';
+	import type { Writable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 
+	const id = newUniqueId('editor-switcher');
 	let editors: Record<string, NodeFactory | undefined> = {};
 	let container: HTMLElement;
-	let activeEditor: NodeFactory | undefined;
+	const savedEditors: Writable<NodeEditorSaveData[]> = localStorageStore('saveData', []);
+	const activeSaveEditorsId: Writable<number | undefined> = localStorageStore(
+		'activeSaveEditorsId',
+		undefined
+	);
+	function saveEditors() {
+		const toSave: NodeEditorSaveData[] = [];
+		let toSaveActiveId: undefined | number = undefined;
+		const keys = $tabsContext?.getTabKeys();
+		if (!keys) throw new ErrorWNotif({ emessage: 'No tabs found', title: 'Save' });
+		for (const [i, key] of keys.entries()) {
+			if (key === activeId) toSaveActiveId = i;
+			const factory = editors[key];
+			if (!factory) throw new ErrorWNotif({ emessage: 'An error occured', title: 'Save' });
+
+			const editor = factory.getEditor();
+			console.log(`Saving ${editor.name}...`);
+			toSave.push(editor.toJSON());
+		}
+		$savedEditors = toSave;
+		$activeSaveEditorsId = toSaveActiveId;
+	}
 
 	setContext('editor', {
 		getEditorViewport: () => container,
-		getActiveFactory: () => activeEditor
+		getActiveFactory: () => {
+			if (!activeId) return undefined;
+			const factory = editors[activeId];
+			if (isNodeEditorSaveData(factory)) return undefined;
+			return factory;
+		}
 	});
-
-	setContext('onSave', () =>
-		notifications.show({ title: 'Saved', message: 'TODO', color: 'green' })
-	);
+	const saveContext = getContext('save');
+	$saveContext.set(id, {
+		save: saveEditors
+	});
+	$saveContext = $saveContext;
 
 	// Setup Tabs
 	const tabsContext = getContext('tabs');
@@ -46,16 +83,32 @@
 		};
 		modalStore.trigger(changeTabName);
 	}
+	let mounted = false;
+	onMount(() => {
+		for (const [i, savedEditor] of $savedEditors.entries()) {
+			const id = addNewEditor(savedEditor);
+			if (i === $activeSaveEditorsId) {
+				console.log('selecting saved editor ', i);
+				$tabsContext?.tabSet.set(id);
+			}
+		}
+		mounted = true;
+	});
 
-	function addNewEditor() {
+	/**
+	 * Returns id of new editor
+	 * @param savedData
+	 */
+	function addNewEditor(savedData?: NodeEditorSaveData): string {
 		const id = newUniqueId('node-editor');
 		editors[id] = undefined;
 		editors = editors;
 		$tabsContext?.addTab({
 			key: id,
 			props: {
+				select: savedData === undefined,
 				id,
-				name: $_('editor.default-name'),
+				name: savedData?.editorName ?? $_('editor.default-name'),
 				onClose: () => {
 					delete editors[id];
 					editors = editors;
@@ -66,6 +119,7 @@
 				}
 			}
 		});
+		return id;
 	}
 	$: $tabsContext?.setMainAddModel({
 		addModel: addNewEditor,
@@ -75,10 +129,8 @@
 	let activeId: string | undefined;
 	$: $tabsContext?.tabSet.subscribe((value) => {
 		activeId = value;
-
-		activeEditor = value ? editors[value] : undefined;
 	});
-	$: if ($tabsContext) {
+	$: if (mounted && $tabsContext) {
 		if (Object.keys(editors).length === 0) {
 			addNewEditor();
 		}
@@ -92,7 +144,14 @@
 	}
 	onDestroy(() => {
 		onDestroyCleanup();
+		$saveContext.delete(id);
 	});
+
+	const editMacroNodeChannel = new EditMacroNodeChannel();
+	editMacroNodeChannel.onmessage = async (data) => {
+		console.log('editMacroNodeChannel.onmessage', data);
+		addNewEditor(data.graph);
+	};
 </script>
 
 <div
@@ -107,11 +166,12 @@
 	{#if activeId && activeId in editors}
 		<EditorSharedOverlay />
 	{/if}
-	{#each Object.entries(editors) as [key] (key)}
+	{#each Object.entries(editors) as [key], i (key)}
 		<Editor
+			saveData={$savedEditors.at(i)}
 			bind:factory={editors[key]}
 			id={key}
-			name={$_('editor.default-name')}
+			name={$savedEditors.at(i)?.editorName ?? $_('editor.default-name')}
 			hidden={key !== activeId}
 		/>
 	{/each}

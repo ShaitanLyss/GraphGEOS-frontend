@@ -1,3 +1,5 @@
+import type { NodeEditorSaveData } from './NodeEditor';
+
 export * from './Input';
 export * from './Output';
 export * from './NodeEditor';

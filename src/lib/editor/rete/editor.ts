@@ -31,8 +31,11 @@ export async function setupEditor({
 	const area = new AreaPlugin<Schemes, AreaExtra>(container);
 	editor.use(area);
 
+	const selector = AreaExtensions.selector();
+	const accumulating = AreaExtensions.accumulateOnCtrl();
+
 	// Setup node factory
-	const nodeFactory = new NodeFactory({ editor, area, makutuClasses });
+	const nodeFactory = new NodeFactory({ editor, area, makutuClasses, selector });
 
 	// Setup react renderer
 	const megaSetup = new MegaSetup();
@@ -40,9 +43,8 @@ export async function setupEditor({
 
 	area.use(arrange);
 	AreaExtensions.showInputControl(area);
-
-	AreaExtensions.selectableNodes(area, AreaExtensions.selector(), {
-		accumulating: AreaExtensions.accumulateOnCtrl()
+	AreaExtensions.selectableNodes(area, selector, {
+		accumulating
 	});
 
 	let nodesToFocus: Node[] = [];

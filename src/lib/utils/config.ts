@@ -5,9 +5,11 @@ import { browser } from '$app/environment';
 
 export function getBackendAddress(path = ''): string {
 	if (!browser) {
+		// const {} = await import('$env/dynamic/private');
 		const backendAddr = process.env.BACKEND_ADDRESS;
 		if (!backendAddr) {
-			throw new Error('BACKEND_ADDRESS environment variable is not set');
+			console.error('BACKEND_ADDRESS environment variable is not set');
+			return 'http://127.0.0.1:8000' + path;
 		}
 		return backendAddr + path;
 	}

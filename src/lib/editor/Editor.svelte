@@ -1,5 +1,6 @@
 <script lang="ts">
-	import type { NodeEditor, NodeFactory, setupEditor } from '$rete';
+	import type { NodeEditor, NodeEditorSaveData, NodeFactory, setupEditor } from '$rete';
+
 	import type { EditorExample } from '$rete/example/types';
 	import { newUniqueId } from '$utils';
 	import { _ } from '$lib/global';
@@ -11,9 +12,11 @@
 	export let loadExample: EditorExample | undefined = undefined;
 	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
 	import { draw, fade } from 'svelte/transition';
+	import { isNodeEditorSaveData } from '$rete/utils';
 
 	export let editor: NodeEditor | undefined = undefined;
 	export let factory: NodeFactory | undefined = undefined;
+	export let saveData: NodeEditorSaveData | undefined = undefined;
 	let container: HTMLElement;
 	let editorData: Awaited<ReturnType<typeof setupEditor>>;
 	const dispatch = createEventDispatcher<{ destroy: { id: string } }>();
@@ -31,7 +34,7 @@
 	onMount(async () => {
 		await import('$rete/setup/appLaunch');
 		const { setupEditor } = await import('$rete');
-		editorData = await setupEditor({ container, makutuClasses: {}, loadExample });
+		editorData = await setupEditor({ container, makutuClasses: {}, loadExample, saveData });
 		editorData.editor.id = id;
 		editorData.editor.setName(name);
 		mounted = true;
@@ -45,6 +48,24 @@
 	});
 </script>
 
+{#if !mounted}
+	<div
+		class="absolute h-full w-full flex justify-center items-center"
+		transition:fade={{ duration: 200 }}
+	>
+		<!-- Loading.. -->
+		<div class="card relative w-52 h-32">
+			<div class="card-header">
+				<div class="placeholder animate-pulse w-20" />
+			</div>
+			<div class="absolute right-0 translate-x-1/2 placeholder w-6 h-6 animate-pulse" />
+			<div class="absolute left-0 bottom-4 -translate-x-3 flex gap-4">
+				<div class=" placeholder w-6 h-6 animate-pulse" />
+				<div class=" placeholder w-20 h-4 my-auto animate-pulse" />
+			</div>
+		</div>
+	</div>
+{/if}
 <div
 	bind:this={container}
 	class:opacity-0={!mounted || hidden}

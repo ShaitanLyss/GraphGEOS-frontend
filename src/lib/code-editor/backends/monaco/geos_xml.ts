@@ -22,6 +22,12 @@ export const conf: languages.LanguageConfiguration = {
 	comments: {
 		blockComment: ['<!--', '-->']
 	},
+	// folding: {
+	// 	markers: {
+	// 		start: new RegExp("^\\s*<!--\\s*#region\\b.*-->"),
+	// 		end: new RegExp("^\\s*<!--\\s*#endregion\\b.*-->")
+	// 	}
+	// },
 	brackets: [['<', '>']],
 	autoClosingPairs: [
 		{ open: '<', close: '>' },
