@@ -25,6 +25,7 @@
 	import type { AreaExtra } from '$rete/node/AreaExtra';
 	import { XmlNode } from '$rete/node/XML/XmlNode';
 	import type { GeosSchema } from '$lib/geos';
+	import { get } from 'svelte/store';
 
 	export let editorContext: EditorContext;
 	let codeEditorPromise: Promise<ICodeEditor>;
@@ -157,16 +158,21 @@
 			});
 		}
 
-		for (const node of tmp_editor.getNodes()) {
+		for (const [i, node] of tmp_editor.getNodes().entries()) {
 			await editor.addNode(node);
 			const tmp_nodeView = tmp_area.nodeViews.get(node.id) as NodeView;
 			node.setFactory(factory);
 			const nodeView = factory.getArea()?.nodeViews.get(node.id);
-
+			factory.selectableNodes?.select(node.id, i !== 0);
 			if (nodeView)
 				await nodeView.translate(tmp_nodeView.position.x + leftBound, tmp_nodeView.position.y);
 			await factory.getArea()?.update('node', node.id);
 		}
+		notifications.show({
+			title: get(_)('graph-editor.notification.title'),
+			message: get(_)('code-editor-integration.push-to-graph.selected-node-dragging.message'),
+			autoClose: 7000
+		});
 
 		for (const conn of tmp_editor.getConnections()) {
 			await editor.addConnection(conn);

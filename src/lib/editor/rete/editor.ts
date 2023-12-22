@@ -43,9 +43,10 @@ export async function setupEditor({
 
 	area.use(arrange);
 	AreaExtensions.showInputControl(area);
-	AreaExtensions.selectableNodes(area, selector, {
+	const selectableNodes = AreaExtensions.selectableNodes(area, selector, {
 		accumulating
 	});
+	nodeFactory.selectableNodes = selectableNodes;
 
 	let nodesToFocus: Node[] = [];
 	let isExample = false;

@@ -201,6 +201,16 @@
           }
         }
       }
+    },
+    "push-to-graph": {
+      "selected-node-dragging": {
+        "message": "Added nodes have been selected. They can be dragged using CTRL + Left mouse button."
+      }
+    }
+  },
+  "graph-editor": {
+    "notification": {
+      "title": "Graph editor"
     }
   }
 }

@@ -198,6 +198,16 @@
           }
         }
       }
+    },
+    "push-to-graph": {
+      "selected-node-dragging": {
+        "message": "Les nœuds ajoutés ont été sélectionnés. Ils peuvent être déplacés à l'aide de CTRL + Bouton gauche de la souris."
+      }
+    }
+  },
+  "graph-editor": {
+    "notification": {
+      "title": "Éditeur de graphes"
     }
   }
 }

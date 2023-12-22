@@ -176,6 +176,7 @@ export class NodeFactory {
 	public readonly dataflowEngine = createDataflowEngine();
 	private readonly controlflowEngine = createControlflowEngine();
 	public readonly selector?: AreaExtensions.Selector<SelectorEntity>;
+	public selectableNodes?: ReturnType<typeof AreaExtensions.selectableNodes>;
 	constructor({
 		editor,
 		area,
