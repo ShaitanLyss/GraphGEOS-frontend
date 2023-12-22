@@ -49,13 +49,17 @@
 </script>
 
 <div
-	class="{border} transition-colors"
+	class="{border} transition-colors overflow"
 	style="width: {width}; height: {height};"
 	transition:slide={{ axis: 'x', duration: 200 }}
 >
 	{#await codeEditorPromise}
 		<div class="w-full flex justify-center p-2">Loading...</div>
 	{:then}
-		<div class="h-full w-full" use:codeEditorAction transition:fade={{ duration: 50 }} />
+		<div
+			class="h-full w-full overflow-x-scroll"
+			use:codeEditorAction
+			transition:fade={{ duration: 100 }}
+		/>
 	{/await}
 </div>

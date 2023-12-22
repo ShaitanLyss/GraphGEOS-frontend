@@ -2,13 +2,12 @@
 	import { ErrorWNotif } from '$lib/global';
 	import type { AddModel, AddModelProps, SetMainAddModel, TabContext, TabProps } from '$lib/layout';
 	import { faTimes } from '@fortawesome/free-solid-svg-icons';
-	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
+	import { Tab, TabGroup, localStorageStore } from '@skeletonlabs/skeleton';
 	import Fa from 'svelte-fa';
 	import { flip } from 'svelte/animate';
 	import { writable, type Writable } from 'svelte/store';
 	import { fade, fly } from 'svelte/transition';
 	import { type DragOptions, draggable, type DragEventData } from '@neodrag/svelte';
-	import { dndzone, type DndEvent } from 'svelte-dnd-action';
 	import type { Action } from 'svelte/action';
 
 	let tabs: Map<string, TabProps> = new Map();
@@ -117,6 +116,9 @@
 		console.log('setting tabset');
 		$tabSet = tabs.keys().next().value;
 	}
+	// const tabSetIndex  = localStorageStore('tabSetIndex', -1);
+	const tabSetIndex = writable(-1);
+	// $: if ($tabSet) $tabSetIndex = tabsOrder.indexOf($tabSet ?? '');
 	type Point = { x: number; y: number };
 	let addButtonSet: string | undefined = undefined;
 	let addButton: HTMLElement | undefined = undefined;
@@ -248,6 +250,16 @@
 			}
 		};
 	};
+	let multipleTabsAddMode = true;
+	let onGoingDownTimeout = false;
+	$: if (tabs.size == 0) multipleTabsAddMode = true;
+	$: if (tabs.size > 0 && multipleTabsAddMode && !onGoingDownTimeout) {
+		onGoingDownTimeout = true;
+		setTimeout(() => {
+			multipleTabsAddMode = false;
+			onGoingDownTimeout = false;
+		}, 100);
+	}
 </script>
 
 <div out:fly={{ x: '-100%', duration: 400 }}>
@@ -259,6 +271,7 @@
 			data-comment-on:finalize={handleDndFinalize}
 		> -->
 		<!-- Drag Tab Clone -->
+
 		{#if dragCloneProps}
 			<div class="absolute group variant-soft-surface transition" bind:this={dragClone}>
 				<Tab group={null} value={undefined} name={'drag-clone'}>
@@ -266,13 +279,12 @@
 				</Tab>
 			</div>
 		{/if}
-
 		{#each tabsOrder as key, i (key)}
 			<div
 				id={key}
 				class="h-full relative group"
 				class:pointer-events-none={dragCloneProps !== undefined}
-				in:fly={{ y: '100%' }}
+				in:fly={{ y: '100%', delay: multipleTabsAddMode ? i * 30 : 0 }}
 				tabindex={i}
 				role="button"
 				animate:flip={{ duration: flipDuration }}
@@ -317,7 +329,7 @@
 				bind:this={addButton}
 			>
 				<Tab
-					on:click={mainAddModel.addModel}
+					on:click={() => mainAddModel?.addModel()}
 					bind:group={addButtonSet}
 					name="addTab"
 					value={'mainAdd'}>+</Tab

@@ -193,7 +193,7 @@
         "notification": {
           "title": "Téléchargement",
           "nothing-selected": {
-            "message": "Il n'y a rien de sélectionné qui puisse être téléchargé.<br/>Les éléments téléchargeables sont les noeuds XML et le code XML."
+            "message": "Il n'y a rien de sélectionné qui puisse être téléchargé.\nLes éléments téléchargeables sont les noeuds XML et le code XML."
           }
         }
       }

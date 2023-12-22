@@ -13,6 +13,7 @@
 	import { structures } from 'rete-structures';
 	import { parseXml, type ParsedXmlNodes, mergeParsedXml, buildXml, formatXml } from '$utils/xml';
 	import { fade } from 'svelte/transition';
+	import { onMount } from 'svelte';
 
 	export let editorContext: EditorContext;
 	let codeEditorPromise: Promise<ICodeEditor>;
@@ -117,11 +118,6 @@
 				autoClose: 6000,
 				title: $_('code-editor-integration.button.download.notification.title'),
 				color: 'orange',
-				dangerouslySetInnerHTML: {
-					__html: $_(
-						'code-editor-integration.button.download.notification.nothing-selected.message'
-					)
-				},
 				message: $_('code-editor-integration.button.download.notification.nothing-selected.message')
 			});
 	}

@@ -40,6 +40,7 @@
 		editorData = await setupEditor({ container, makutuClasses: {}, loadExample, saveData });
 		editorData.editor.id = id;
 		editorData.editor.setName(name);
+		saveData = undefined;
 		mounted = true;
 	});
 

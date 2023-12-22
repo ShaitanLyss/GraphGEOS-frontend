@@ -20,13 +20,21 @@
 	let editors: Record<string, NodeFactory | undefined> = {};
 	let container: HTMLElement;
 	const savedEditors: Writable<NodeEditorSaveData[]> = localStorageStore('saveData', []);
-	const activeSaveEditorsId: Writable<number | undefined> = localStorageStore(
+	let firstLoading = true;
+	let savesToLoad: (NodeEditorSaveData | undefined)[] = [];
+	$: if (firstLoading && $savedEditors) {
+		savesToLoad = $savedEditors;
+		firstLoading = false;
+		console.log(savesToLoad);
+	}
+
+	const activeSaveEditorsId: Writable<number | null> = localStorageStore(
 		'activeSaveEditorsId',
-		undefined
+		null
 	);
 	function saveEditors() {
 		const toSave: NodeEditorSaveData[] = [];
-		let toSaveActiveId: undefined | number = undefined;
+		let toSaveActiveId: null | number = null;
 		const keys = $tabsContext?.getTabKeys();
 		if (!keys) throw new ErrorWNotif({ emessage: 'No tabs found', title: 'Save' });
 		for (const [i, key] of keys.entries()) {
@@ -52,10 +60,6 @@
 		}
 	});
 	const saveContext = getContext('save');
-	$saveContext.set(id, {
-		save: saveEditors
-	});
-	$saveContext = $saveContext;
 
 	// Setup Tabs
 	const tabsContext = getContext('tabs');
@@ -90,8 +94,16 @@
 			if (i === $activeSaveEditorsId) {
 				console.log('selecting saved editor ', i);
 				$tabsContext?.tabSet.set(id);
+				activeId = id;
 			}
 		}
+		setTimeout(() => {
+			$saveContext.set(id, {
+				save: saveEditors
+			});
+			$saveContext = $saveContext;
+		}, 500);
+
 		mounted = true;
 	});
 
@@ -168,10 +180,10 @@
 	{/if}
 	{#each Object.entries(editors) as [key], i (key)}
 		<Editor
-			saveData={$savedEditors.at(i)}
+			bind:saveData={savesToLoad[i]}
 			bind:factory={editors[key]}
 			id={key}
-			name={$savedEditors.at(i)?.editorName ?? $_('editor.default-name')}
+			name={savesToLoad[i]?.editorName ?? $_('editor.default-name')}
 			hidden={key !== activeId}
 		/>
 	{/each}

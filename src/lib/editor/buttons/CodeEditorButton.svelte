@@ -5,12 +5,14 @@
 	import type { CodeEditorIntegration } from '$lib/editor';
 	import { onMount } from 'svelte';
 	import { localStorageStore } from '@skeletonlabs/skeleton';
+	import { writable } from 'svelte/store';
 	const mainRightSideBar = getContext<'mainRightSideBar', CodeEditorIntegration>(
 		'mainRightSideBar'
 	);
 	const editorContext = getContext('editor');
 
-	const codeEditorActive = localStorageStore('codeEditorActive', false);
+	// const codeEditorActive = localStorageStore('codeEditorActive', false);
+	const codeEditorActive = writable(false);
 
 	async function toggleCodeEditor() {
 		const { CodeEditorIntegration } = await import('$lib/editor');
