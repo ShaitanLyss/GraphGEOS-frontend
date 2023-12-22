@@ -1,6 +1,6 @@
 import type { publicConfig } from '$lib/config';
 import type { EditorContext } from '$lib/editor';
-import type { GeosDataContext } from '$lib/geos';
+import type { GeosDataContext, GeosSchema } from '$lib/geos';
 import type { TabContext } from '$lib/layout';
 import {
 	type ComponentProps,
@@ -17,9 +17,11 @@ import type { GlobalPopupsContext } from './popup';
 
 enum Context {
 	'editor' = 'Editor Context',
-	'onSave' = 'What to do when saving',
+	'onSave' = 'What to do when saving (depreciated)',
+	'save' = 'What do when saving',
 	'tabs' = 'Tabs Context',
 	'geos' = 'Geos Data',
+	'geos_v2' = 'Geos Data new context',
 	'publicConfig' = 'Public Configuration',
 	'toggleCodeEditor' = 'Toggle Code Editor',
 	'mainRightSideBar' = 'Main Right Side Bar',
@@ -31,17 +33,27 @@ export type RightSidebar<T extends SvelteComponent> = {
 	props?: ComponentProps<T>;
 };
 
+export type SaveHandler = {
+	save: () => void;
+};
+
+export type NewGeosContext = { geosSchema: GeosSchema };
+
 export type resolveContext<
 	K = keyof typeof Context,
 	Component extends SvelteComponent = SvelteComponent
 > = K extends 'editor'
 	? EditorContext
 	: K extends 'onSave'
-	? () => void
+	? (params?: { displaySuccess?: boolean }) => void
+	: K extends 'save'
+	? Writable<Map<string, SaveHandler>>
 	: K extends 'tabs'
 	? Writable<TabContext | undefined>
 	: K extends 'geos'
 	? GeosDataContext
+	: K extends 'geos_v2'
+	? NewGeosContext
 	: K extends 'publicConfig'
 	? typeof publicConfig
 	: K extends 'toggleCodeEditor'

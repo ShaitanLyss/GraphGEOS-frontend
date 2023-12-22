@@ -9,6 +9,7 @@
 	export let href: string;
 	export let tooltip: string;
 	const globalPopupContext = getContext('globalPopups');
+	const save = getContext('onSave');
 	$: isCurrentPage = $page.route.id === href || $page.url.pathname === href;
 </script>
 
@@ -17,6 +18,7 @@
 	class="px-3 py-4"
 	class:text-tertiary-800-100-token={isCurrentPage}
 	use:globalTooltip={{ globalPopupContext, content: tooltip, event: 'hover' }}
+	on:click={() => save({ displaySuccess: false })}
 >
 	<Fa {icon} size="sm" class={`${isCurrentPage ? 'cool-spin' : opacity}`} />
 </a>

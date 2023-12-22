@@ -1,5 +1,16 @@
 import { assert, describe, it } from 'vitest';
-import { formatXml, formatAttributes, parseXml, ParsedXmlNodes, formatComment } from '$utils/xml';
+import {
+	formatXml,
+	parseXml,
+	type ParsedXmlNodes,
+	formatComment,
+	mergeParsedXml,
+	getElementFromParsedXml,
+	findPossibleMergePositions
+} from '$utils/xml';
+import type { GeosTypesTree } from '$lib/backend-interaction';
+import type { resolveContext } from '$lib/global';
+import { writable, type Writable } from 'svelte/store';
 
 describe('parseXml', () => {
 	it('parses basic xml', () => {
@@ -36,8 +47,8 @@ describe('parseXml', () => {
 					}
 				],
 				':@': {
-					a: 1,
-					b: 2
+					a: '1',
+					b: '2'
 				}
 			}
 		];
@@ -71,38 +82,6 @@ describe('parseXml', () => {
 	});
 });
 
-// describe('formatAttributes', () => {
-//     it('formats attributes', () => {
-//         const attributes = {
-//             a: '1',
-//             b: '2'
-//         };
-//         const formatted = formatAttributes({ attributes });
-//         const expected = `\n  a="1"\n  b="2"`;
-//         assert.equal(formatted, expected);
-//     });
-//     it('formats attributes with indent', () => {
-//         const attributes = {
-//             a: '1',
-//             b: '2'
-//         };
-//         const indent = 4;
-//         const formatted = formatAttributes({ attributes, indent });
-//         const expected = `\n    a="1"\n    b="2"`;
-//         assert.equal(formatted, expected);
-//     });
-//     it('formats attributes with indent and newlines', () => {
-//         const attributes = {
-//             a: '1',
-//             b: '2'
-//         };
-//         const indent = 4;
-//         const formatted = formatAttributes({ attributes, indent });
-//         const expected = `\n    a="1"\n    b="2"`;
-//         assert.equal(formatted, expected);
-//     });
-// })
-
 describe('formatComment', () => {
 	it('formats comment', () => {
 		const comment = 'test comment';
@@ -124,11 +103,143 @@ describe('formatComment', () => {
 	});
 });
 
+const typesPaths: Record<string, string[]> = {
+	Z: [],
+	a: ['Z'],
+	a1: ['Z', 'a'],
+	a12: ['Z', 'a', 'a1'],
+	a2: ['Z', 'a'],
+	b: ['Z'],
+	b1: ['Z', 'b']
+};
+
+describe('getElementFromParsedXml', () => {
+	it('gets element from parsed xml', () => {
+		const xml: ParsedXmlNodes = [
+			{
+				Z: [{ a: [{ a1: [{ a12: [] }] }] }, { b: [{ b1: [] }] }]
+			}
+		];
+		const element = getElementFromParsedXml(xml[0]);
+		const expected = 'Z';
+		assert.equal(element, expected);
+	});
+	it('throws if no element found', () => {
+		const xml: ParsedXmlNodes = [
+			{
+				':@': { a: [{ a1: [{ a12: [] }] }] }
+			}
+		];
+		assert.throws(() => getElementFromParsedXml(xml[0]));
+	});
+});
+
+const cursorTag = 'curssoooor';
+
+describe('findPossibleMergePositions', () => {
+	it('finds possible merge positions', () => {
+		const baseXml: ParsedXmlNodes = [
+			{
+				Z: [{ a: [{ a1: [{ a12: [] }] }] }, { b: [{ b1: [] }] }]
+			}
+		];
+		const expected: ReturnType<typeof findPossibleMergePositions> = [
+			{ path: [{ pos: 0, key: 'Z' }], withCursor: false }
+		];
+		assert.deepEqual(
+			findPossibleMergePositions({ baseXml, element: 'b', typesPaths, cursorTag }),
+			expected
+		);
+	});
+
+	it('finds possible merge positions even if it is several layers deep', () => {
+		const baseXml: ParsedXmlNodes = [
+			{
+				Z: [{ a: [{ a1: [{ a12: [] }] }] }, { b: [{ b1: [] }] }]
+			}
+		];
+		const expected: ReturnType<typeof findPossibleMergePositions> = [
+			{
+				path: [
+					{ pos: 0, key: 'Z' },
+					{ pos: 0, key: 'a' },
+					{ pos: 0, key: 'a1' }
+				],
+				withCursor: false
+			}
+		];
+		assert.deepEqual(
+			findPossibleMergePositions({ baseXml, element: 'a12', typesPaths, cursorTag }),
+			expected
+		);
+	});
+	it('finds possible two possible merge positions and which one contains a cursor', () => {
+		const baseXml: ParsedXmlNodes = [
+			{
+				Z: [{ a: [{ a1: [{ a12: [] }] }] }, { b: [{ b1: [] }] }, { a: [], cursor: [] }]
+			}
+		];
+		const expected: ReturnType<typeof findPossibleMergePositions> = [
+			{
+				path: [
+					{ pos: 0, key: 'Z' },
+					{ pos: 0, key: 'a' },
+					{ pos: 0, key: 'a1' }
+				],
+				withCursor: false
+			},
+			{
+				path: [
+					{ pos: 0, key: 'Z' },
+					{ pos: 2, key: 'a' }
+				],
+				withCursor: true
+			}
+		];
+		assert.deepEqual(
+			findPossibleMergePositions({ baseXml, element: 'a12', typesPaths, cursorTag: 'cursor' }),
+			expected
+		);
+	});
+});
+
+describe('mergeParsedXml', () => {
+	it('merges parsed xml', () => {
+		const baseXml: ParsedXmlNodes = [
+			{
+				Z: [{ a: [{ a1: [{ a12: [], ':@': { name: 'a12' } }] }] }, { b: [{ b1: [] }] }]
+			}
+		];
+		const newXml: ParsedXmlNodes = [{ a1: [{ a12: [], ':@': { name: 'a12bis' } }] }];
+		const expected: ParsedXmlNodes = [
+			{
+				Z: [
+					{
+						a: [
+							{
+								a1: [
+									{ a12: [], ':@': { name: 'a12' } },
+									{ a12: [], ':@': { name: 'a12bis' } }
+								]
+							}
+						]
+					},
+					{ b: [{ b1: [] }] }
+				]
+			}
+		];
+		assert.deepEqual(
+			mergeParsedXml({ baseXml, newXml, geosContext: { typesPaths: writable(typesPaths) } }),
+			expected
+		);
+	});
+});
+
 describe('formatXML', () => {
 	it('formats XML', () => {
-		const xml = `<root><child>text</child></root>`;
+		const xml = `<root><child></child></root>`;
 		const formatted = formatXml({ xml, indent: 2 });
-		const expected = `\n<root>\n  <child>text</child>\n</root>`;
+		const expected = `<root>\n  <child />\n</root>\n`;
 		assert.equal(formatted, expected);
 	});
 	//     it("preserves comments", () => {

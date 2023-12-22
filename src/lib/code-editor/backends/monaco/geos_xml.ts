@@ -22,6 +22,12 @@ export const conf: languages.LanguageConfiguration = {
 	comments: {
 		blockComment: ['<!--', '-->']
 	},
+	// folding: {
+	// 	markers: {
+	// 		start: new RegExp("^\\s*<!--\\s*#region\\b.*-->"),
+	// 		end: new RegExp("^\\s*<!--\\s*#endregion\\b.*-->")
+	// 	}
+	// },
 	brackets: [['<', '>']],
 	autoClosingPairs: [
 		{ open: '<', close: '>' },
@@ -398,9 +404,9 @@ export function getGeosXmlCompletionItemProvider({
 					},
 					insertText: insertText,
 					sortText: (attr.required ? '0' : '1') + name,
-					detail: attr.description,
+					detail: attr.type,
 					preselect: false,
-					documentation: { value: `<em>${attr.type}</em>`, supportHtml: true }
+					documentation: { value: `${attr.description}`, supportHtml: true }
 				});
 			});
 

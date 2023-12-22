@@ -7,6 +7,11 @@ import { XMLData } from './XMLData';
 import type { InputControl } from '$rete/control/Control';
 import { assignControl } from '$rete/customization/utils';
 import { AddXmlAttributeControl } from './AddXmlAttributeControl';
+import { ErrorWNotif } from '$lib/global';
+import type { GeosSchema } from '$lib/geos';
+import type { NodeFactory } from '$rete';
+import 'regenerator-runtime/runtime';
+import wu from 'wu';
 
 export type XmlConfig = {
 	noName?: boolean;
@@ -32,11 +37,12 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 	optionalXmlAttributes: Set<string> = new Set();
 	xmlVectorProperties: Set<string> = new Set();
 	params: { xmlConfig: XmlConfig } = { ...this.params };
-	state: { attributeValues: Record<string, unknown>; usedOptionalAttrs: string[] } = {
-		...this.state,
-		attributeValues: {},
-		usedOptionalAttrs: []
-	};
+	state: { attributeValues: Record<string, unknown>; usedOptionalAttrs: string[]; name?: string } =
+		{
+			...this.state,
+			attributeValues: {},
+			usedOptionalAttrs: []
+		};
 
 	constructor(xmlNodeParams: XmlNodeParams) {
 		let { initialValues = {} } = xmlNodeParams;
@@ -67,7 +73,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 
 		if (xmlProperties)
 			xmlProperties.forEach(({ name, type, isArray, controlType, required, pattern }) => {
-				if (required) {
+				if (required || name in initialValues) {
 					this.addInAttribute({
 						name,
 						type,
@@ -107,6 +113,12 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		}
 	}
 
+	async getXml(): Promise<string> {
+		const inputs = await this.fetchInputs();
+		const data = this.data(inputs).value as XMLData;
+		return data.toXml();
+	}
+
 	addOptionalAttribute(name: string) {
 		const prop = this.params.xmlConfig.xmlProperties?.find((prop) => prop.name === name);
 		if (prop === undefined) throw new Error(`Property ${name} not found`);
@@ -118,7 +130,8 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 	}
 
 	override applyState(): void {
-		console.log(this.state);
+		if (this.state.name) this.name = this.state.name;
+		// console.log(this.state);
 		for (const name of this.state.usedOptionalAttrs) {
 			this.addOptionalAttribute(name);
 		}
@@ -126,6 +139,11 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		for (const [key, value] of Object.entries(attributeValues)) {
 			(this.inputs[key]?.control as InputControl)?.setValue(value);
 		}
+	}
+
+	setName(name: string) {
+		this.name = name;
+		this.state.name = name;
 	}
 
 	addInAttribute({
@@ -231,10 +249,10 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 
 	getProperties(inputs?: Record<string, unknown>): Record<string, unknown> {
 		const properties: Record<string, unknown> = {};
-		console.log(this.xmlProperties);
+		// console.log(this.xmlProperties);
 		const isArray = (key: string) => (this.inputs[key]?.socket as Socket).isArray;
 		for (const key of this.xmlProperties) {
-			console.log(key);
+			// console.log(key);
 			let data = this.getData(key, inputs) as
 				| Record<string, unknown>
 				| Array<Record<string, unknown>>;
@@ -253,7 +271,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 				}
 			}
 		}
-		console.log(properties);
+		// console.log(properties);
 		return properties;
 	}
 
@@ -278,4 +296,52 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		});
 		this.height += 37;
 	}
+}
+
+export function makeXmlNodeAction({
+	complexType
+}: {
+	complexType: ReturnType<GeosSchema['complexTypes']['get']>;
+}) {
+	if (!complexType) throw new ErrorWNotif('Complex type is not valid');
+	const name = complexType.name.match(/^(.*)Type$/)?.at(1);
+	if (!name) throw new Error(`Invalid complex type name: ${complexType.name}`);
+
+	const hasNameAttribute = complexType.attributes.has('name');
+	// if (hasNameAttribute) complexTypesWithName.push(name);
+	// complexTypes.push(name);
+
+	const xmlNodeAction: (factory: NodeFactory) => Node = (factory) =>
+		new XmlNode({
+			label: name,
+			factory: factory,
+
+			xmlConfig: {
+				noName: !hasNameAttribute,
+				childTypes: complexType.childTypes.map((childType) => {
+					const childName = childType.match(/^(.*)Type$/)?.at(1);
+					if (!childName) return childType;
+					return childName;
+				}),
+				xmlTag: name,
+				outData: {
+					name: name,
+					type: `xmlElement:${name}`,
+					socketLabel: name
+				},
+
+				xmlProperties: wu(complexType.attributes.values())
+					.map((attr) => {
+						return {
+							name: attr.name,
+							required: attr.required,
+							// pattern: attr.pattern,
+							type: attr.type,
+							controlType: 'text'
+						};
+					})
+					.toArray()
+			}
+		});
+	return xmlNodeAction;
 }

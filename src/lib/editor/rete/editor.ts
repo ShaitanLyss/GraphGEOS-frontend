@@ -23,16 +23,19 @@ export async function setupEditor({
 }) {
 	if (container === null) throw new Error('Container is null');
 	const editor = new NodeEditor();
-	const arrange = new AutoArrangePlugin<Schemes>();
 	const typedSocketsPlugin = new TypedSocketsPlugin<Schemes>();
 	editor.use(typedSocketsPlugin);
+	const arrange = new AutoArrangePlugin<Schemes>();
 	arrange.addPreset(ArrangePresets.classic.setup());
 
 	const area = new AreaPlugin<Schemes, AreaExtra>(container);
 	editor.use(area);
 
+	const selector = AreaExtensions.selector();
+	const accumulating = AreaExtensions.accumulateOnCtrl();
+
 	// Setup node factory
-	const nodeFactory = new NodeFactory({ editor, area, makutuClasses });
+	const nodeFactory = new NodeFactory({ editor, area, makutuClasses, selector });
 
 	// Setup react renderer
 	const megaSetup = new MegaSetup();
@@ -40,10 +43,10 @@ export async function setupEditor({
 
 	area.use(arrange);
 	AreaExtensions.showInputControl(area);
-
-	AreaExtensions.selectableNodes(area, AreaExtensions.selector(), {
-		accumulating: AreaExtensions.accumulateOnCtrl()
+	const selectableNodes = AreaExtensions.selectableNodes(area, selector, {
+		accumulating
 	});
+	nodeFactory.selectableNodes = selectableNodes;
 
 	let nodesToFocus: Node[] = [];
 	let isExample = false;

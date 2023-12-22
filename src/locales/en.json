@@ -105,7 +105,8 @@
       "message": {
         "ongoing": "Saving...",
         "success": "Saved! Storage use : {storageUse, number, ::percent}",
-        "failure": "Failed to save. An error occured : {error}"
+        "failure": "Some componenents failed to save. An error occured : {error}",
+        "success-no-storage-use": "Saved!"
       }
     },
     "error": {
@@ -127,7 +128,7 @@
   },
   "editor": {
     "button": {
-      "save": "Save all editors",
+      "save": "Save everything",
       "python-mode": {
         "tooltip": "Generate python workflow"
       },
@@ -144,7 +145,8 @@
         "tooltip": "Upload graph online"
       },
       "toggle-code-editor": {
-        "tooltip": "Open code editor"
+        "tooltip": "Toggle code editor",
+        "close": "Close code editor"
       }
     },
     "notification": {
@@ -187,6 +189,28 @@
           "tooltip": "Change theme"
         }
       }
+    }
+  },
+  "code-editor-integration": {
+    "button": {
+      "download": {
+        "notification": {
+          "title": "Download",
+          "nothing-selected": {
+            "message": "There is nothing selected that can be downloaded.\nYou can download XML nodes or XML code."
+          }
+        }
+      }
+    },
+    "push-to-graph": {
+      "selected-node-dragging": {
+        "message": "Added nodes have been selected. They can be dragged using CTRL + Left mouse button."
+      }
+    }
+  },
+  "graph-editor": {
+    "notification": {
+      "title": "Graph editor"
     }
   }
 }

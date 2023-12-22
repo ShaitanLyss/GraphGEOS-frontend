@@ -102,7 +102,8 @@
       "message": {
         "ongoing": "Sauvegarde en cours...",
         "success": "Sauvegardé ! Utilisation stockage : {storageUse, number, ::percent}",
-        "failure": "Échec de la sauvegarde. {error}."
+        "failure": "Échec de la sauvegarde. {error}.",
+        "success-no-storage-use": "Sauvegardé !"
       }
     },
     "error": {
@@ -124,7 +125,7 @@
   },
   "editor": {
     "button": {
-      "save": "Sauvegarder tous les graphes",
+      "save": "Tout sauvegarder",
       "python-mode": {
         "tooltip": "Générer un workflow python"
       },
@@ -141,7 +142,8 @@
         "tooltip": "Mettre en ligne le graphe"
       },
       "toggle-code-editor": {
-        "tooltip": "Ouvrir l'éditeur de code"
+        "tooltip": "Ouvrir / Fermer l'éditeur de code",
+        "close": "Fermer l'éditeur de code"
       }
     },
     "notification": {
@@ -184,6 +186,28 @@
           "tooltip": "Changer de thème"
         }
       }
+    }
+  },
+  "code-editor-integration": {
+    "button": {
+      "download": {
+        "notification": {
+          "title": "Téléchargement",
+          "nothing-selected": {
+            "message": "Il n'y a rien de sélectionné qui puisse être téléchargé.\nLes éléments téléchargeables sont les noeuds XML et le code XML."
+          }
+        }
+      }
+    },
+    "push-to-graph": {
+      "selected-node-dragging": {
+        "message": "Les nœuds ajoutés ont été sélectionnés. Ils peuvent être déplacés à l'aide de CTRL + Bouton gauche de la souris."
+      }
+    }
+  },
+  "graph-editor": {
+    "notification": {
+      "title": "Éditeur de graphes"
     }
   }
 }
