@@ -56,7 +56,7 @@
 		if (displaySuccess) {
 			const storageUse = getLocalStorageUsagePercent() ?? 0;
 			notifications.show({
-				autoClose: storageUse < 0.8 ? 800 : 2000,
+				autoClose: storageUse < 0.8 ? 1100 : 2000,
 				// withCloseButton: storageUse > 0.8,
 				title: $_('notification.save.title'),
 				message:
