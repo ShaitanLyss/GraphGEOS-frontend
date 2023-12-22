@@ -119,6 +119,15 @@ export default class MonacoCodeEditor implements ICodeEditor {
 			}
 		});
 	}
+	getSelectedText(): string {
+		if (!this.editor) throw new ErrorWNotif('Editor not created');
+		const editor = this.editor;
+		const selections = this.editor.getSelections();
+		if (selections === null) return '';
+		return selections
+			.map((selection) => editor.getModel()?.getValueInRange(selection) ?? '')
+			.join('\n');
+	}
 	setText(params: { text: string; cursorOffset?: number | null }): void {
 		if (params.cursorOffset === undefined) params.cursorOffset = null;
 		if (!this.model) throw new ErrorWNotif('Model not created');
@@ -133,7 +142,7 @@ export default class MonacoCodeEditor implements ICodeEditor {
 		this.monaco.editor.setTheme(light ? 'vs' : 'vs-dark');
 	}
 
-	public _setup(params: { container: HTMLElement }) {
+	public setup_(params: { container: HTMLElement }) {
 		// Your monaco instance is ready, let's display some code!
 		this.editor = this.monaco.editor.create(params.container, {
 			automaticLayout: true,

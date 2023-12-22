@@ -1,5 +1,12 @@
 import { assert, describe, it } from 'vitest';
-import { formatXml, formatAttributes, parseXml, ParsedXmlNodes, formatComment } from '$utils/xml';
+import {
+	formatXml,
+	parseXml,
+	type ParsedXmlNodes,
+	formatComment,
+	mergeParsedXml
+} from '$utils/xml';
+import type { GeosTypesTree } from '$lib/backend-interaction';
 
 describe('parseXml', () => {
 	it('parses basic xml', () => {
@@ -36,8 +43,8 @@ describe('parseXml', () => {
 					}
 				],
 				':@': {
-					a: 1,
-					b: 2
+					a: '1',
+					b: '2'
 				}
 			}
 		];
@@ -71,38 +78,6 @@ describe('parseXml', () => {
 	});
 });
 
-// describe('formatAttributes', () => {
-//     it('formats attributes', () => {
-//         const attributes = {
-//             a: '1',
-//             b: '2'
-//         };
-//         const formatted = formatAttributes({ attributes });
-//         const expected = `\n  a="1"\n  b="2"`;
-//         assert.equal(formatted, expected);
-//     });
-//     it('formats attributes with indent', () => {
-//         const attributes = {
-//             a: '1',
-//             b: '2'
-//         };
-//         const indent = 4;
-//         const formatted = formatAttributes({ attributes, indent });
-//         const expected = `\n    a="1"\n    b="2"`;
-//         assert.equal(formatted, expected);
-//     });
-//     it('formats attributes with indent and newlines', () => {
-//         const attributes = {
-//             a: '1',
-//             b: '2'
-//         };
-//         const indent = 4;
-//         const formatted = formatAttributes({ attributes, indent });
-//         const expected = `\n    a="1"\n    b="2"`;
-//         assert.equal(formatted, expected);
-//     });
-// })
-
 describe('formatComment', () => {
 	it('formats comment', () => {
 		const comment = 'test comment';
@@ -124,11 +99,40 @@ describe('formatComment', () => {
 	});
 });
 
+const typesTree: GeosTypesTree = {
+	Z: {
+		a: {
+			a1: {
+				a12: null
+			},
+			a2: null
+		},
+		b: {
+			b1: null
+		}
+	}
+};
+describe('mergeParsedXml', () => {
+	it('merges parsed xml', () => {
+		const baseXml: ParsedXmlNodes = [
+			{
+				Z: [{ a: [{ a1: [{ a12: [] }] }] }, { b: [{ b1: [] }] }]
+			}
+		];
+		const newXml: ParsedXmlNodes = [{ a1: [{ a12: [] }] }];
+		const expected: ParsedXmlNodes = [
+			{
+				Z: [{ a: [{ a1: [{ a12: [] }, { a12: [] }] }] }, { b: [{ b1: [] }] }]
+			}
+		];
+	});
+});
+
 describe('formatXML', () => {
 	it('formats XML', () => {
-		const xml = `<root><child>text</child></root>`;
+		const xml = `<root><child></child></root>`;
 		const formatted = formatXml({ xml, indent: 2 });
-		const expected = `\n<root>\n  <child>text</child>\n</root>`;
+		const expected = `<root>\n  <child />\n</root>\n`;
 		assert.equal(formatted, expected);
 	});
 	//     it("preserves comments", () => {

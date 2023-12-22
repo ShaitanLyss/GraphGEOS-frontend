@@ -9,7 +9,8 @@ export interface ICodeEditor {
 	setLightTheme(light: boolean): void;
 	getText(): { text: string; cursorOffset: number | null };
 	setText(params: { text: string; cursorOffset?: number | null }): void;
-	_setup(params: { container: HTMLElement }): void;
+	setup_(params: { container: HTMLElement }): void;
+	getSelectedText(): string;
 }
 
 export type codeEditorBackends = 'monaco';
@@ -53,7 +54,7 @@ export function makeCodeEditor(params: { backend: codeEditorBackends; geosSchema
 		codeEditorStore: editorStore,
 		codeEditorAction: (node) => {
 			codeEditorPromise.then((codeEditor) => {
-				codeEditor._setup({ container: node });
+				codeEditor.setup_({ container: node });
 				resolvePostSetupEditorPromise(codeEditor);
 				editorStore.set(codeEditor);
 			});

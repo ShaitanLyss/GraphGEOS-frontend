@@ -144,7 +144,8 @@
         "tooltip": "Upload graph online"
       },
       "toggle-code-editor": {
-        "tooltip": "Open code editor"
+        "tooltip": "Toggle code editor",
+        "close": "Close code editor"
       }
     },
     "notification": {
@@ -185,6 +186,18 @@
       "button": {
         "theme-switcher": {
           "tooltip": "Change theme"
+        }
+      }
+    }
+  },
+  "code-editor-integration": {
+    "button": {
+      "download": {
+        "notification": {
+          "title": "Download",
+          "nothing-selected": {
+            "message": "There is nothing selected that can be downloaded.<br/>You can download XML nodes or XML code."
+          }
         }
       }
     }

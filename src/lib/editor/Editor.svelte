@@ -21,6 +21,9 @@
 	let editorData: Awaited<ReturnType<typeof setupEditor>>;
 	const dispatch = createEventDispatcher<{ destroy: { id: string } }>();
 
+	let placeholderVisible = false;
+	setTimeout(() => (placeholderVisible = true), 500);
+
 	let firstShown = true;
 	$: if (!hidden && firstShown && editorData?.firstDisplay) {
 		firstShown = false;
@@ -48,7 +51,7 @@
 	});
 </script>
 
-{#if !mounted}
+{#if !mounted && !hidden && placeholderVisible}
 	<div
 		class="absolute h-full w-full flex justify-center items-center"
 		transition:fade={{ duration: 200 }}

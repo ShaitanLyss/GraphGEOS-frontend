@@ -141,7 +141,8 @@
         "tooltip": "Mettre en ligne le graphe"
       },
       "toggle-code-editor": {
-        "tooltip": "Ouvrir l'éditeur de code"
+        "tooltip": "Ouvrir / Fermer l'éditeur de code",
+        "close": "Fermer l'éditeur de code"
       }
     },
     "notification": {
@@ -182,6 +183,18 @@
       "button": {
         "theme-switcher": {
           "tooltip": "Changer de thème"
+        }
+      }
+    }
+  },
+  "code-editor-integration": {
+    "button": {
+      "download": {
+        "notification": {
+          "title": "Téléchargement",
+          "nothing-selected": {
+            "message": "Il n'y a rien de sélectionné qui puisse être téléchargé.<br/>Les éléments téléchargeables sont les noeuds XML et le code XML."
+          }
         }
       }
     }

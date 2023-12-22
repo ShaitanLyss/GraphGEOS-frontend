@@ -38,8 +38,6 @@ export function buildXml({
 	baseSpace?: string;
 	cursorTag?: string;
 }): string {
-	console.log('parsedXml', parsedXml);
-	console.log('buildXml:cursorTag', cursorTag);
 	const space = ' '.repeat(indent);
 	const res: { xml: string; newLine?: boolean }[] = [];
 	for (const element of parsedXml) {
@@ -63,7 +61,7 @@ export function buildXml({
 					break;
 				default:
 					tag = key;
-					const children = props as ParsedXmlNode[];
+					const children = props as ParsedXmlNodes;
 					childXml = buildXml({
 						parsedXml: children,
 						indent,
@@ -107,6 +105,7 @@ export function mergeParsedXml({
 	cursorTag?: string;
 	typesTree: GeosTypesTree;
 }): ParsedXmlNodes {
+	console.log('mergeParsedXml', { baseXml, newXml, typesTree, cursorTag });
 	return [];
 }
 
