@@ -8,6 +8,10 @@ import type { InputControl } from '$rete/control/Control';
 import { assignControl } from '$rete/customization/utils';
 import { AddXmlAttributeControl } from './AddXmlAttributeControl';
 import { ErrorWNotif } from '$lib/global';
+import type { GeosSchema } from '$lib/geos';
+import type { NodeFactory } from '$rete';
+import 'regenerator-runtime/runtime';
+import wu from 'wu';
 
 export type XmlConfig = {
 	noName?: boolean;
@@ -68,7 +72,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 
 		if (xmlProperties)
 			xmlProperties.forEach(({ name, type, isArray, controlType, required, pattern }) => {
-				if (required) {
+				if (required || name in initialValues) {
 					this.addInAttribute({
 						name,
 						type,
@@ -285,4 +289,52 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		});
 		this.height += 37;
 	}
+}
+
+export function makeXmlNodeAction({
+	complexType
+}: {
+	complexType: ReturnType<GeosSchema['complexTypes']['get']>;
+}) {
+	if (!complexType) throw new ErrorWNotif('Complex type is not valid');
+	const name = complexType.name.match(/^(.*)Type$/)?.at(1);
+	if (!name) throw new Error(`Invalid complex type name: ${complexType.name}`);
+
+	const hasNameAttribute = complexType.attributes.has('name');
+	// if (hasNameAttribute) complexTypesWithName.push(name);
+	// complexTypes.push(name);
+
+	const xmlNodeAction: (factory: NodeFactory) => Node = (factory) =>
+		new XmlNode({
+			label: name,
+			factory: factory,
+
+			xmlConfig: {
+				noName: !hasNameAttribute,
+				childTypes: complexType.childTypes.map((childType) => {
+					const childName = childType.match(/^(.*)Type$/)?.at(1);
+					if (!childName) return childType;
+					return childName;
+				}),
+				xmlTag: name,
+				outData: {
+					name: name,
+					type: `xmlElement:${name}`,
+					socketLabel: name
+				},
+
+				xmlProperties: wu(complexType.attributes.values())
+					.map((attr) => {
+						return {
+							name: attr.name,
+							required: attr.required,
+							// pattern: attr.pattern,
+							type: attr.type,
+							controlType: 'text'
+						};
+					})
+					.toArray()
+			}
+		});
+	return xmlNodeAction;
 }

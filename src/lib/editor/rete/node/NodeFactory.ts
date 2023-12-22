@@ -171,11 +171,11 @@ export class NodeFactory {
 	}
 	private area?: AreaPlugin<Schemes, AreaExtra>;
 	private editor: NodeEditor;
-	public readonly makutuClasses: MakutuClassRepository;
+	public readonly makutuClasses?: MakutuClassRepository;
 
 	public readonly dataflowEngine = createDataflowEngine();
 	private readonly controlflowEngine = createControlflowEngine();
-	public readonly selector: AreaExtensions.Selector<SelectorEntity>;
+	public readonly selector?: AreaExtensions.Selector<SelectorEntity>;
 	constructor({
 		editor,
 		area,
@@ -184,8 +184,8 @@ export class NodeFactory {
 	}: {
 		editor: NodeEditor;
 		area?: AreaPlugin<Schemes, AreaExtra>;
-		makutuClasses: MakutuClassRepository;
-		selector: AreaExtensions.Selector<SelectorEntity>;
+		makutuClasses?: MakutuClassRepository;
+		selector?: AreaExtensions.Selector<SelectorEntity>;
 	}) {
 		this.selector = selector;
 		this.area = area;

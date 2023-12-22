@@ -233,6 +233,10 @@ export class Node<
 		return this.factory.getEditor();
 	}
 
+	setFactory(nodeFactory: NodeFactory) {
+		this.factory = nodeFactory;
+	}
+
 	getArea() {
 		return this.factory.getArea();
 	}

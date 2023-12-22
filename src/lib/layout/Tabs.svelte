@@ -282,7 +282,7 @@
 		{#each tabsOrder as key, i (key)}
 			<div
 				id={key}
-				class="h-full relative group"
+				class="h-full relative group text-nowrap"
 				class:pointer-events-none={dragCloneProps !== undefined}
 				in:fly={{ y: '100%', delay: multipleTabsAddMode ? i * 0 : 0 }}
 				tabindex={i}

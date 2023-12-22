@@ -1,6 +1,6 @@
 import type { publicConfig } from '$lib/config';
 import type { EditorContext } from '$lib/editor';
-import type { GeosDataContext } from '$lib/geos';
+import type { GeosDataContext, GeosSchema } from '$lib/geos';
 import type { TabContext } from '$lib/layout';
 import {
 	type ComponentProps,
@@ -21,6 +21,7 @@ enum Context {
 	'save' = 'What do when saving',
 	'tabs' = 'Tabs Context',
 	'geos' = 'Geos Data',
+	'geos_v2' = 'Geos Data new context',
 	'publicConfig' = 'Public Configuration',
 	'toggleCodeEditor' = 'Toggle Code Editor',
 	'mainRightSideBar' = 'Main Right Side Bar',
@@ -36,6 +37,8 @@ export type SaveHandler = {
 	save: () => void;
 };
 
+export type NewGeosContext = { geosSchema: GeosSchema };
+
 export type resolveContext<
 	K = keyof typeof Context,
 	Component extends SvelteComponent = SvelteComponent
@@ -49,6 +52,8 @@ export type resolveContext<
 	? Writable<TabContext | undefined>
 	: K extends 'geos'
 	? GeosDataContext
+	: K extends 'geos_v2'
+	? NewGeosContext
 	: K extends 'publicConfig'
 	? typeof publicConfig
 	: K extends 'toggleCodeEditor'

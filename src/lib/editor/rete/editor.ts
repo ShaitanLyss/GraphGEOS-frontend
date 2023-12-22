@@ -23,9 +23,9 @@ export async function setupEditor({
 }) {
 	if (container === null) throw new Error('Container is null');
 	const editor = new NodeEditor();
-	const arrange = new AutoArrangePlugin<Schemes>();
 	const typedSocketsPlugin = new TypedSocketsPlugin<Schemes>();
 	editor.use(typedSocketsPlugin);
+	const arrange = new AutoArrangePlugin<Schemes>();
 	arrange.addPreset(ArrangePresets.classic.setup());
 
 	const area = new AreaPlugin<Schemes, AreaExtra>(container);
