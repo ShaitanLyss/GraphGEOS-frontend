@@ -158,7 +158,7 @@ export function getXmlAttributes(xml: {
 	[key: string]: ParsedXmlNodes | ParsedXmlNode[] | ParsedXmlAttribute | undefined;
 	':@'?: ParsedXmlAttribute | undefined;
 }): Record<string, string> {
-	return ':@' in xml ? xml[':@'] : [];
+	return ':@' in xml ? (xml[':@'] as Record<string, string>) : {};
 }
 
 function mergeRec(base: Record<string, ParsedXmlNodes>[], toAdd: Record<string, ParsedXmlNodes>[]) {
@@ -251,7 +251,7 @@ function formatComment(comment: string): string {
 	return `<!-- ${comment.trim()} -->`;
 }
 
-type ParsedXmlAttribute = Record<string, unknown>;
+type ParsedXmlAttribute = Record<string, string>;
 
 type ParsedXmlNode = {
 	'#text'?: string;
