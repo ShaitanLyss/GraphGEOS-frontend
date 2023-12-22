@@ -196,7 +196,7 @@
 				'href',
 				'data:text/plain;charset=utf-8,' + encodeURIComponent(selectedCode)
 			);
-			element.setAttribute('download', 'codeEditor.xml');
+			element.setAttribute('download', 'geos.xml');
 
 			element.style.display = 'none';
 			document.body.appendChild(element);

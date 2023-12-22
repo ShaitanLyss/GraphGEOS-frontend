@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { modeCurrent } from '@skeletonlabs/skeleton';
+	import { focusTrap, modeCurrent } from '@skeletonlabs/skeleton';
 	// import Ref from '../../../Ref.svelte';
 	// import type { ClassicScheme, SvelteArea2D } from '../types';
 	import { ClassicScheme, Ref, SvelteArea2D } from 'rete-svelte-plugin';
 	import { MacroNode } from '$rete/node/MacroNode';
 	import { faCubes } from '@fortawesome/free-solid-svg-icons';
-	import type { Node, NodeEditorSaveData } from '$rete';
+	import { XmlNode, type Node, type NodeEditorSaveData } from '$rete';
 	import Fa from 'svelte-fa';
 	import { EditMacroNodeChannel } from '$lib/broadcast-channels';
 	import { GetGraphStore } from '$houdini';
@@ -23,14 +23,16 @@
 
 	export let data: Node & NodeExtraData;
 	$: node = data;
+
 	$: macroNode = data instanceof MacroNode ? data : undefined;
 
 	const isMacroNode = data instanceof MacroNode;
+	const isNamedXmlNode = data instanceof XmlNode && data.name !== undefined;
 	// console.log('isMacroNode', isMacroNode);
 	export let emit: (props: SvelteArea2D<ClassicScheme>) => void;
 
 	$: width = Number.isFinite(data.width) ? `${data.width}px` : '';
-	$: height = Number.isFinite(data.height) ? `${data.height}px` : '';
+	$: height = Number.isFinite(data.height) ? `${data.height + (isNamedXmlNode ? 15 : 0)}px` : '';
 
 	$: inputs = sortByIndex(Object.entries(data.inputs));
 	$: controls = sortByIndex(Object.entries(data.controls));
@@ -51,6 +53,18 @@
 			graph: saveData
 		});
 	}
+	let editingName = false;
+	let nameInput: HTMLInputElement | undefined;
+	const disableEditing = (ev: KeyboardEvent) => {
+		if (ev.key === 'Escape') editingName = false;
+	};
+	$: if (nameInput) {
+		nameInput.focus();
+		nameInput.select();
+	}
+	$: if (editingName) {
+		document.addEventListener('keydown', disableEditing);
+	} else document.removeEventListener('keydown', disableEditing);
 </script>
 
 <div
@@ -62,7 +76,41 @@
 	class:node-light-background={$modeCurrent}
 >
 	<div class="flex justify-between items-center">
-		<div class="title" data-testid="title">{data.label}</div>
+		{#if node instanceof XmlNode && node.name !== undefined}
+			<div class="title flex flex-col w-full">
+				<small class="text-surface-50-900-token text-xs">{node.label}</small>
+				<div class="relative">
+					<button
+						class="cursor-text text-start"
+						data-testid="title"
+						on:pointerdown|stopPropagation
+						on:click|preventDefault={() => {
+							editingName = true;
+						}}
+					>
+						{node.name}
+					</button>
+					{#if editingName}
+						<input
+							bind:this={nameInput}
+							class="text-token absolute top-0 left-0 w-full"
+							type="text"
+							value={node.name}
+							on:blur={() => (editingName = false)}
+							on:keydown={(e) => {
+								if (e.key === 'Enter') editingName = false;
+							}}
+							on:input={(e) => {
+								node.name = e.target.value;
+								node.setName(e.target.value);
+							}}
+						/>
+					{/if}
+				</div>
+			</div>
+		{:else}
+			<div class="title" data-testid="title">{data.label}</div>
+		{/if}
 		{#if isMacroNode}
 			<div
 				class="p-2 text-surface-50-900-token"

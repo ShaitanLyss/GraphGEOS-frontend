@@ -37,11 +37,12 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 	optionalXmlAttributes: Set<string> = new Set();
 	xmlVectorProperties: Set<string> = new Set();
 	params: { xmlConfig: XmlConfig } = { ...this.params };
-	state: { attributeValues: Record<string, unknown>; usedOptionalAttrs: string[] } = {
-		...this.state,
-		attributeValues: {},
-		usedOptionalAttrs: []
-	};
+	state: { attributeValues: Record<string, unknown>; usedOptionalAttrs: string[]; name?: string } =
+		{
+			...this.state,
+			attributeValues: {},
+			usedOptionalAttrs: []
+		};
 
 	constructor(xmlNodeParams: XmlNodeParams) {
 		let { initialValues = {} } = xmlNodeParams;
@@ -129,6 +130,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 	}
 
 	override applyState(): void {
+		if (this.state.name) this.name = this.state.name;
 		// console.log(this.state);
 		for (const name of this.state.usedOptionalAttrs) {
 			this.addOptionalAttribute(name);
@@ -137,6 +139,11 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		for (const [key, value] of Object.entries(attributeValues)) {
 			(this.inputs[key]?.control as InputControl)?.setValue(value);
 		}
+	}
+
+	setName(name: string) {
+		this.name = name;
+		this.state.name = name;
 	}
 
 	addInAttribute({
