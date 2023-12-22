@@ -32,10 +32,13 @@
 		});
 	}
 
-	const { codeEditor, codeEditorAction, codeEditorPromise } = makeCodeEditor({
+	const res = makeCodeEditor({
 		backend: 'monaco',
 		geosSchema
 	});
+	const { codeEditorAction } = res;
+	export const codeEditor = res.codeEditor;
+	export const codeEditorPromise = res.codeEditorPromise;
 	codeEditor.createModel({
 		language: 'geos_xml',
 		value: `<?xml version="1.0"?>\n\n<Problem>\n  \n</Problem>`

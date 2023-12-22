@@ -7,6 +7,7 @@ import { XMLData } from './XMLData';
 import type { InputControl } from '$rete/control/Control';
 import { assignControl } from '$rete/customization/utils';
 import { AddXmlAttributeControl } from './AddXmlAttributeControl';
+import { ErrorWNotif } from '$lib/global';
 
 export type XmlConfig = {
 	noName?: boolean;
@@ -107,6 +108,12 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		}
 	}
 
+	async getXml(): Promise<string> {
+		const inputs = await this.fetchInputs();
+		const data = this.data(inputs).value as XMLData;
+		return data.toXml();
+	}
+
 	addOptionalAttribute(name: string) {
 		const prop = this.params.xmlConfig.xmlProperties?.find((prop) => prop.name === name);
 		if (prop === undefined) throw new Error(`Property ${name} not found`);
@@ -118,7 +125,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 	}
 
 	override applyState(): void {
-		console.log(this.state);
+		// console.log(this.state);
 		for (const name of this.state.usedOptionalAttrs) {
 			this.addOptionalAttribute(name);
 		}
@@ -231,10 +238,10 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 
 	getProperties(inputs?: Record<string, unknown>): Record<string, unknown> {
 		const properties: Record<string, unknown> = {};
-		console.log(this.xmlProperties);
+		// console.log(this.xmlProperties);
 		const isArray = (key: string) => (this.inputs[key]?.socket as Socket).isArray;
 		for (const key of this.xmlProperties) {
-			console.log(key);
+			// console.log(key);
 			let data = this.getData(key, inputs) as
 				| Record<string, unknown>
 				| Array<Record<string, unknown>>;
@@ -253,7 +260,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 				}
 			}
 		}
-		console.log(properties);
+		// console.log(properties);
 		return properties;
 	}
 

@@ -1,7 +1,9 @@
 import type { GeosXmlSchema$result, LoadingType } from '$houdini';
+import type { GeosTypesTree } from '$lib/backend-interaction';
 import type { Writable } from 'svelte/store';
 
 export type GeosDataContext = {
+	typesTree: Writable<GeosTypesTree | undefined>;
 	xmlSchema: Writable<GeosXmlSchema$result['geos']['xmlSchema'] | undefined>;
 };
 

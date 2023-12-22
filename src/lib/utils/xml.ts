@@ -1,3 +1,4 @@
+import type { GeosTypesTree } from '$lib/backend-interaction';
 import {
 	type X2jOptionsOptional,
 	XMLBuilder,
@@ -26,16 +27,19 @@ function parseXml(xml: string): ParsedXmlNodes {
 	return parsed;
 }
 
-function buildXml({
+export function buildXml({
 	parsedXml,
 	indent = 2,
-	baseSpace = ''
+	baseSpace = '',
+	cursorTag
 }: {
 	parsedXml: ParsedXmlNodes;
 	indent?: number;
 	baseSpace?: string;
+	cursorTag?: string;
 }): string {
 	console.log('parsedXml', parsedXml);
+	console.log('buildXml:cursorTag', cursorTag);
 	const space = ' '.repeat(indent);
 	const res: { xml: string; newLine?: boolean }[] = [];
 	for (const element of parsedXml) {
@@ -44,6 +48,8 @@ function buildXml({
 		let childXml = '';
 		for (const [key, props] of Object.entries(element)) {
 			switch (key) {
+				case cursorTag:
+					break;
 				case '#comment':
 					console.log(props);
 					res.push({ xml: `${baseSpace}<!--${props[0]['#text']}-->` });
@@ -88,6 +94,20 @@ function buildXml({
 	return wu(res)
 		.map(({ xml, newLine }) => (newLine ? xml + '\n' : xml))
 		.reduce((a, b) => a + (a ? '\n' : '') + b, '');
+}
+
+export function mergeParsedXml({
+	baseXml,
+	newXml,
+	typesTree,
+	cursorTag
+}: {
+	baseXml: ParsedXmlNodes;
+	newXml: ParsedXmlNodes;
+	cursorTag?: string;
+	typesTree: GeosTypesTree;
+}): ParsedXmlNodes {
+	return [];
 }
 
 function formatXml({ xml, indent = 2 }: { xml: string; indent?: number }): string {

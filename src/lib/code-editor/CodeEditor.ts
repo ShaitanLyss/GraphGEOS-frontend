@@ -7,42 +7,20 @@ export interface ICodeEditor {
 	destroy(): void;
 	createModel(params: { language?: string; value?: string }): void;
 	setLightTheme(light: boolean): void;
-}
-
-export abstract class CodeEditor implements ICodeEditor {
-	protected constructor() {}
-	setLightTheme(light: boolean): void {
-		throw new ErrorWNotif('Method not implemented.');
-	}
-	public static async create(params: {
-		container: HTMLElement;
-		geosSchema: GeosSchema;
-	}): Promise<CodeEditor> {
-		throw new ErrorWNotif('Not implemented');
-	}
-
-	public createModel(params: { language?: string; value?: string }) {
-		throw new ErrorWNotif('Not implemented');
-	}
-
-	public setup(params: { container: HTMLElement }) {
-		throw new ErrorWNotif('Not implemented');
-	}
-
-	public destroy() {
-		throw new ErrorWNotif('Not implemented');
-	}
+	getText(): { text: string; cursorOffset: number | null };
+	setText(params: { text: string; cursorOffset?: number | null }): void;
+	_setup(params: { container: HTMLElement }): void;
 }
 
 export type codeEditorBackends = 'monaco';
 
 export function makeCodeEditor(params: { backend: codeEditorBackends; geosSchema: GeosSchema }): {
 	codeEditor: ICodeEditor;
-	codeEditorStore: Writable<CodeEditor>;
-	codeEditorPromise: Promise<CodeEditor>;
+	codeEditorStore: Writable<ICodeEditor>;
+	codeEditorPromise: Promise<ICodeEditor>;
 	codeEditorAction: Action<HTMLDivElement>;
 } {
-	const editorStore = writable<CodeEditor>(undefined);
+	const editorStore = writable<ICodeEditor>(undefined);
 	const codeEditorPromise = createCodeEditor(params);
 	let resolvePostSetupEditorPromise: (value: ICodeEditor) => void;
 	const postSetupEditorPromise = new Promise<ICodeEditor>((resolve) => {
@@ -60,7 +38,11 @@ export function makeCodeEditor(params: { backend: codeEditorBackends; geosSchema
 						postSetupEditorPromise.then((codeEditor) => {
 							const typed_codeEditor = codeEditor as unknown as Record<string, unknown>;
 							if (typeof typed_codeEditor[prop] === 'function') {
-								(typed_codeEditor[prop] as CallableFunction)(...args);
+								const res = (typed_codeEditor[prop] as CallableFunction)(...args);
+								if (res)
+									console.warn(
+										"Proxy method call returned a value, it won't be available, make sure this is intended"
+									);
 							}
 						});
 					};
@@ -71,7 +53,7 @@ export function makeCodeEditor(params: { backend: codeEditorBackends; geosSchema
 		codeEditorStore: editorStore,
 		codeEditorAction: (node) => {
 			codeEditorPromise.then((codeEditor) => {
-				codeEditor.setup({ container: node });
+				codeEditor._setup({ container: node });
 				resolvePostSetupEditorPromise(codeEditor);
 				editorStore.set(codeEditor);
 			});
@@ -90,7 +72,7 @@ export function makeCodeEditor(params: { backend: codeEditorBackends; geosSchema
 export async function createCodeEditor(params: {
 	backend: codeEditorBackends;
 	geosSchema: GeosSchema;
-}): Promise<CodeEditor> {
+}): Promise<ICodeEditor> {
 	switch (params.backend) {
 		case 'monaco':
 			return await (

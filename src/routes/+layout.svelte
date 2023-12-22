@@ -22,6 +22,8 @@
 	import { initializeStores } from '@skeletonlabs/skeleton';
 	import type { GeosDataContext } from '$lib/geos';
 	import { writable } from 'svelte/store';
+	import { PendingValue } from '$houdini';
+	import type { GeosTypesTree } from '$lib/backend-interaction';
 
 	onMount(async () => {
 		// preload monaco
@@ -31,11 +33,15 @@
 	setContext('publicConfig', data.publicConfig);
 
 	const xmlSchema: GeosDataContext['xmlSchema'] = writable();
+	const typesTree: GeosDataContext['typesTree'] = writable();
 	setContext('geos', {
-		xmlSchema: xmlSchema
+		xmlSchema,
+		typesTree
 	});
 	$: ({ GraphEditorData } = data);
 	$: $xmlSchema = $GraphEditorData.data?.geos.xmlSchema;
+	$: if ($GraphEditorData.data?.geos.typesTree !== PendingValue)
+		$typesTree = $GraphEditorData.data?.geos.typesTree as GeosTypesTree;
 </script>
 
 <svelte:head>

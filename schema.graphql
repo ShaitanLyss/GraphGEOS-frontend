@@ -40,6 +40,7 @@ type GeosQuery {
   geosXsd: String!
   numXmlComplexTypes: Int!
   numXmlSimpleTypes: Int!
+  typesTree: TypesTree!
   xmlComplexTypes(names: [String!] = null): [XMLComplexType!]!
   xmlSchema: XMLSchema!
   xmlSimpleTypes(names: [String!] = null): [XMLSimpleType!]!
@@ -125,6 +126,11 @@ type SessionType {
   user: UserType!
   userId: UUID
 }
+
+"""
+A types tree represents a hierarchical structure of all types in the XML schema.
+"""
+scalar TypesTree
 
 scalar UUID
 

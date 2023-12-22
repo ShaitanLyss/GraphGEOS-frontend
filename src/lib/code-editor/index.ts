@@ -1,1 +1,2 @@
-export { default as CodeEditor } from './CodeEditor.svelte';
+export { default as CodeEditorComponent } from './CodeEditor.svelte';
+export type { ICodeEditor } from './CodeEditor';

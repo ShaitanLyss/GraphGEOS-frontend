@@ -1,18 +1,19 @@
 import type * as Monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import { CodeEditor } from '../../CodeEditor';
+import type { ICodeEditor } from '../../CodeEditor';
 // import formatXml from 'xml-formatter';
 import { conf, getGeosXmlCompletionItemProvider, language } from './geos_xml';
 import loader from '@monaco-editor/loader';
 import type { GeosSchema } from '$lib/geos';
 import { formatXml } from '$utils';
+import { ErrorWNotif } from '$lib/global';
 
-export default class MonacoCodeEditor extends CodeEditor {
+export default class MonacoCodeEditor implements ICodeEditor {
 	private monaco: typeof Monaco;
 	private editor?: Monaco.editor.IStandaloneCodeEditor;
 	private geosSchema: GeosSchema;
+	private model?: Monaco.editor.ITextModel;
 
 	private constructor(params: { monaco: typeof Monaco; geosSchema: GeosSchema }) {
-		super();
 		const { geosSchema } = params;
 		this.geosSchema = params.geosSchema;
 		this.monaco = params.monaco;
@@ -118,12 +119,21 @@ export default class MonacoCodeEditor extends CodeEditor {
 			}
 		});
 	}
+	setText(params: { text: string; cursorOffset?: number | null }): void {
+		if (params.cursorOffset === undefined) params.cursorOffset = null;
+		if (!this.model) throw new ErrorWNotif('Model not created');
+		this.model.setValue(params.text);
+		if (params.cursorOffset !== null) {
+			const position = this.model.getPositionAt(params.cursorOffset);
+			this.editor?.setPosition(position);
+		}
+	}
 
 	setLightTheme(light: boolean): void {
 		this.monaco.editor.setTheme(light ? 'vs' : 'vs-dark');
 	}
 
-	public setup(params: { container: HTMLElement }) {
+	public _setup(params: { container: HTMLElement }) {
 		// Your monaco instance is ready, let's display some code!
 		this.editor = this.monaco.editor.create(params.container, {
 			automaticLayout: true,
@@ -134,9 +144,10 @@ export default class MonacoCodeEditor extends CodeEditor {
 
 	public destroy() {
 		this.editor?.dispose();
+		this.model?.dispose();
 	}
 
-	public static override async create({ geosSchema }: { geosSchema: GeosSchema }) {
+	public static async create({ geosSchema }: { geosSchema: GeosSchema }) {
 		const monaco = await loader.init();
 		// const monaco = (await import('./monaco')).default;
 		return new MonacoCodeEditor({ monaco, geosSchema });
@@ -145,5 +156,23 @@ export default class MonacoCodeEditor extends CodeEditor {
 	public createModel(params: { value?: string; language?: string }) {
 		const model = this.monaco.editor.createModel(params.value ?? '', params.language);
 		this.editor?.setModel(model);
+		this.model = model;
+	}
+
+	public getText() {
+		const res: ReturnType<ICodeEditor['getText']> = { text: '', cursorOffset: null };
+		if (!this.model) throw new ErrorWNotif('Model not created');
+		res.text = this.model.getValue();
+		if (!this.editor) {
+			console.error('Editor not created');
+			return res;
+		}
+		const position = this.editor.getPosition();
+		if (!position) {
+			console.error('Position not found');
+			return res;
+		}
+		res.cursorOffset = this.model.getOffsetAt(position);
+		return res;
 	}
 }
