@@ -1,13 +1,29 @@
 <script lang="ts">
 	import { fade, slide } from 'svelte/transition';
 	import { makeCodeEditor } from './CodeEditor';
-	import { modeCurrent } from '@skeletonlabs/skeleton';
+	import { localStorageStore, modeCurrent } from '@skeletonlabs/skeleton';
 	import { getContext } from '$lib/global';
 	import type { GeosSchema } from '$lib/geos';
 	import { PendingValue } from '$houdini';
+	import { onDestroy } from 'svelte';
 
 	export let width = '100%';
 	export let height = '100%';
+
+	const text = localStorageStore(
+		'codeEditorText',
+		'<?xml version="1.0"?>\n\n<Problem>\n  \n</Problem>'
+	);
+	const saveContext = getContext('save');
+	$saveContext.set('codeEditor', {
+		save: () => {
+			codeEditorPromise.then((codeEditor) => text.set(codeEditor.getText().text));
+		}
+	});
+	onDestroy(() => {
+		$saveContext.delete('codeEditor');
+	});
+
 	const geosSchema: GeosSchema = {
 		complexTypes: new Map(),
 		simpleTypes: new Map()
@@ -39,9 +55,10 @@
 	const { codeEditorAction } = res;
 	export const codeEditor = res.codeEditor;
 	export const codeEditorPromise = res.codeEditorPromise;
+
 	codeEditor.createModel({
 		language: 'geos_xml',
-		value: `<?xml version="1.0"?>\n\n<Problem>\n  \n</Problem>`
+		value: $text
 	});
 	codeEditorPromise;
 	$: codeEditor.setLightTheme($modeCurrent);
