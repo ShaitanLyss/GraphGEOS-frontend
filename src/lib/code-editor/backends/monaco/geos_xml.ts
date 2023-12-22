@@ -404,9 +404,9 @@ export function getGeosXmlCompletionItemProvider({
 					},
 					insertText: insertText,
 					sortText: (attr.required ? '0' : '1') + name,
-					detail: attr.description,
+					detail: attr.type,
 					preselect: false,
-					documentation: { value: `<em>${attr.type}</em>`, supportHtml: true }
+					documentation: { value: `${attr.description}`, supportHtml: true }
 				});
 			});
 
