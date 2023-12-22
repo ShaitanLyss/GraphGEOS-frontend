@@ -15,6 +15,15 @@ let config = {
 				return val;
 			}
 		},
+		TypesPaths: {
+			type: 'Record<string, string[]>',
+			unmarshal(val) {
+				return val;
+			},
+			marshal(val) {
+				return val;
+			}
+		},
 		/* in your case, something like */
 		UUID: {
 			// <- The GraphQL Scalar

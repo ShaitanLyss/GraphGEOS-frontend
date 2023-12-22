@@ -1,6 +1,7 @@
 query GraphEditorData {
 	geos @loading {
 		typesTree @loading
+		typesPaths @loading
 		xmlSchema @loading {
 			simpleTypes @loading {
 				name @loading

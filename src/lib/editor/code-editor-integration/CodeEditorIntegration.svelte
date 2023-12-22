@@ -14,13 +14,14 @@
 	import { parseXml, type ParsedXmlNodes, mergeParsedXml, buildXml, formatXml } from '$utils/xml';
 	import { fade } from 'svelte/transition';
 	import { onMount } from 'svelte';
+	import CodeEditor from '$lib/code-editor/CodeEditor.svelte';
 
 	export let editorContext: EditorContext;
 	let codeEditorPromise: Promise<ICodeEditor>;
 
 	const cursorTag = 'cursorPositioooon';
 
-	const geosSchemaContext = getContext('geos');
+	const geosContext = getContext('geos');
 
 	async function pull() {
 		const codeEditor = await codeEditorPromise;
@@ -33,8 +34,6 @@
 			.filter((node) => node instanceof XmlNode)
 			.reduce<Set<XmlNode>>((acc, node) => acc.add(node as XmlNode), new Set());
 
-		const typesTree = get(geosSchemaContext.typesTree);
-		if (!typesTree) throw new ErrorWNotif('Failed to load types tree');
 		const { text, cursorOffset } = codeEditor.getText();
 		let preppedText = text;
 		if (cursorOffset !== null)
@@ -55,7 +54,7 @@
 			)
 			.map(async (node) => {
 				const xml = parseXml(await (node as XmlNode).getXml());
-				res = mergeParsedXml({ baseXml: res, newXml: xml, cursorTag, typesTree });
+				res = mergeParsedXml({ baseXml: res, newXml: xml, cursorTag, geosContext });
 			});
 		await Promise.all(xmlMergingPromises);
 
@@ -124,11 +123,13 @@
 </script>
 
 <div class="absolute h-full top-0 -translate-x-1/2 z-10 nope-pt-[2.64rem] pointer-events-none">
-	<div class="h-full flex flex-col gap-2 justify-center pointer-events-none" transition:fade>
-		<CodeEditorIntegrationButton icon={faArrowRight} flip={'horizontal'} on:click={push} />
-		<CodeEditorIntegrationButton icon={faArrowRight} on:click={pull} />
-		<CodeEditorIntegrationButton icon={faArrowDown} on:click={download} />
-	</div>
+	{#await codeEditorPromise then}
+		<div class="h-full flex flex-col gap-2 justify-center pointer-events-none">
+			<CodeEditorIntegrationButton icon={faArrowRight} flip={'horizontal'} on:click={push} />
+			<CodeEditorIntegrationButton icon={faArrowRight} on:click={pull} />
+			<CodeEditorIntegrationButton icon={faArrowDown} on:click={download} />
+		</div>
+	{/await}
 </div>
 <CodeEditorComponent
 	bind:codeEditorPromise

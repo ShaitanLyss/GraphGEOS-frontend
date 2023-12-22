@@ -34,7 +34,9 @@
 
 	const xmlSchema: GeosDataContext['xmlSchema'] = writable();
 	const typesTree: GeosDataContext['typesTree'] = writable();
+	const typesPaths: GeosDataContext['typesPaths'] = writable();
 	setContext('geos', {
+		typesPaths,
 		xmlSchema,
 		typesTree
 	});
@@ -42,6 +44,8 @@
 	$: $xmlSchema = $GraphEditorData.data?.geos.xmlSchema;
 	$: if ($GraphEditorData.data?.geos.typesTree !== PendingValue)
 		$typesTree = $GraphEditorData.data?.geos.typesTree as GeosTypesTree;
+	$: if ($GraphEditorData.data?.geos.typesPaths !== PendingValue)
+		$typesPaths = $GraphEditorData.data?.geos.typesPaths;
 </script>
 
 <svelte:head>

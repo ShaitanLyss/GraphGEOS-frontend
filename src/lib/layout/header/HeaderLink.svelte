@@ -18,7 +18,7 @@
 	class="px-3 py-4"
 	class:text-tertiary-800-100-token={isCurrentPage}
 	use:globalTooltip={{ globalPopupContext, content: tooltip, event: 'hover' }}
-	on:click={save}
+	on:click={() => save({ displaySuccess: false })}
 >
 	<Fa {icon} size="sm" class={`${isCurrentPage ? 'cool-spin' : opacity}`} />
 </a>

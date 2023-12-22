@@ -105,7 +105,8 @@
       "message": {
         "ongoing": "Saving...",
         "success": "Saved! Storage use : {storageUse, number, ::percent}",
-        "failure": "Failed to save. An error occured : {error}"
+        "failure": "Some componenents failed to save. An error occured : {error}",
+        "success-no-storage-use": "Saved!"
       }
     },
     "error": {
@@ -127,7 +128,7 @@
   },
   "editor": {
     "button": {
-      "save": "Save all editors",
+      "save": "Save everything",
       "python-mode": {
         "tooltip": "Generate python workflow"
       },

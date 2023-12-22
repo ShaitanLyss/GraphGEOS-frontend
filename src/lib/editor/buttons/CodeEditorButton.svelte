@@ -11,8 +11,8 @@
 	);
 	const editorContext = getContext('editor');
 
-	// const codeEditorActive = localStorageStore('codeEditorActive', false);
-	const codeEditorActive = writable(false);
+	const codeEditorActive = localStorageStore('codeEditorActive', false);
+	// const codeEditorActive = writable(false);
 
 	async function toggleCodeEditor() {
 		const { CodeEditorIntegration } = await import('$lib/editor');

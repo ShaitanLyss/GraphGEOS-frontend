@@ -42,7 +42,7 @@ export type resolveContext<
 > = K extends 'editor'
 	? EditorContext
 	: K extends 'onSave'
-	? () => void
+	? (params?: { displaySuccess?: boolean }) => void
 	: K extends 'save'
 	? Writable<Map<string, SaveHandler>>
 	: K extends 'tabs'

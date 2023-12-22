@@ -102,7 +102,8 @@
       "message": {
         "ongoing": "Sauvegarde en cours...",
         "success": "Sauvegardé ! Utilisation stockage : {storageUse, number, ::percent}",
-        "failure": "Échec de la sauvegarde. {error}."
+        "failure": "Échec de la sauvegarde. {error}.",
+        "success-no-storage-use": "Sauvegardé !"
       }
     },
     "error": {
@@ -124,7 +125,7 @@
   },
   "editor": {
     "button": {
-      "save": "Sauvegarder tous les graphes",
+      "save": "Tout sauvegarder",
       "python-mode": {
         "tooltip": "Générer un workflow python"
       },

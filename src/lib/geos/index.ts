@@ -4,6 +4,7 @@ import type { Writable } from 'svelte/store';
 
 export type GeosDataContext = {
 	typesTree: Writable<GeosTypesTree | undefined>;
+	typesPaths: Writable<Record<string, string[]> | undefined>;
 	xmlSchema: Writable<GeosXmlSchema$result['geos']['xmlSchema'] | undefined>;
 };
 

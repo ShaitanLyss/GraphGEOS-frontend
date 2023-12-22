@@ -284,7 +284,7 @@
 				id={key}
 				class="h-full relative group"
 				class:pointer-events-none={dragCloneProps !== undefined}
-				in:fly={{ y: '100%', delay: multipleTabsAddMode ? i * 30 : 0 }}
+				in:fly={{ y: '100%', delay: multipleTabsAddMode ? i * 0 : 0 }}
 				tabindex={i}
 				role="button"
 				animate:flip={{ duration: flipDuration }}

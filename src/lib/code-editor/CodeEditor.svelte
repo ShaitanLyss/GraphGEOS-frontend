@@ -78,5 +78,11 @@
 			use:codeEditorAction
 			transition:fade={{ duration: 100 }}
 		/>
+	{:catch}
+		<div class="absolute top-0 h-full flex flex-col justify-center align-middle">
+			<div class="card p-4 variant-filled-error mx-4 my-auto">
+				Failed to load editor, check your internet connectivity.
+			</div>
+		</div>
 	{/await}
 </div>
