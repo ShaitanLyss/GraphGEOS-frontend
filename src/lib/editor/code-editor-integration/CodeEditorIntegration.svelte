@@ -49,8 +49,8 @@
 
 		const { text, cursorOffset } = codeEditor.getText();
 		let preppedText = text;
-		if (cursorOffset !== null)
-			preppedText = text.slice(0, cursorOffset) + `<${cursorTag}/>` + text.slice(cursorOffset);
+		// if (cursorOffset !== null)
+		// 	preppedText = text.slice(0, cursorOffset) + `<${cursorTag}/>` + text.slice(cursorOffset);
 
 		const baseXml = parseXml(preppedText);
 		let res: ParsedXmlNodes = baseXml;
