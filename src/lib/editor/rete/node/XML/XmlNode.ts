@@ -54,16 +54,21 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 			label: xmlNodeParams.label,
 			noName: xmlConfig.noName
 		};
+
 		console.log('xmlNodeParams', xmlNodeParams);
 		const { outData, xmlProperties, childTypes = [] } = xmlConfig;
 		const { noName = false } = xmlConfig;
 		super({ ...xmlNodeParams, width: 220, height: 40 });
 
 		if (!noName) {
-			let name = xmlNodeParams.label;
-			name = name !== undefined ? name : '';
-			XmlNode.counts[name] = XmlNode.counts[name] ? XmlNode.counts[name] + BigInt(1) : BigInt(1);
-			this.name = camlelcaseize(name) + XmlNode.counts[name];
+			if ('name' in initialValues) this.name = initialValues['name'] as string;
+			else {
+				let name = xmlNodeParams.label;
+				name = name !== undefined ? name : '';
+				XmlNode.counts[name] = XmlNode.counts[name] ? XmlNode.counts[name] + BigInt(1) : BigInt(1);
+				this.name = camlelcaseize(name) + XmlNode.counts[name];
+			}
+			this.state.name = this.name;
 		}
 		this.xmlTag = xmlConfig.xmlTag;
 		// console.log(this.name);
