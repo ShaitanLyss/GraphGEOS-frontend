@@ -288,7 +288,14 @@ export function getGeosXmlCompletionItemProvider({
 				incomplete: false,
 				suggestions: []
 			};
-			const startQuoteMatch = model.findPreviousMatch('=\\s*"', position, true, false, null, true);
+			const startQuoteMatch = model.findPreviousMatch(
+				'=\\s*"[^"]*',
+				position,
+				true,
+				false,
+				null,
+				true
+			);
 			console.log('start quote', startQuoteMatch);
 			if (startQuoteMatch?.range.containsPosition(position)) {
 				return res;
