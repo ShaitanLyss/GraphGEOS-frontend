@@ -78,7 +78,7 @@
 	<div class="flex justify-between items-center">
 		{#if node instanceof XmlNode && node.name !== undefined}
 			<div class="title flex flex-col w-full">
-				<small class="text-surface-50-900-token text-xs">{node.label}</small>
+				<small class="text-white text-xs opacity-60">{node.label}</small>
 				<div class="relative">
 					<button
 						class="cursor-text text-start"
@@ -93,7 +93,7 @@
 					{#if editingName}
 						<input
 							bind:this={nameInput}
-							class="text-token absolute top-0 left-0 w-full"
+							class="text-token absolute top-0 left-0 w-full hover:bg-surface-50-900-token focus:bg-surface-50-900-token rounded-token dark:bg-surface-200-700-token no-border-token no-focus:border-primary-500 no-focus:ring-primary-500 transition-colors"
 							type="text"
 							value={node.name}
 							on:blur={() => (editingName = false)}
