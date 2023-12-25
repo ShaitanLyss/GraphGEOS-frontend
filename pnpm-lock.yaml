@@ -269,8 +269,8 @@ devDependencies:
     specifier: ^0.0.3
     version: 0.0.3
   svelte-dnd-action:
-    specifier: ^0.9.36
-    version: 0.9.36(svelte@4.2.8)
+    specifier: ^0.9.38
+    version: 0.9.38(svelte@4.2.8)
   svelte-fa:
     specifier: ^3.0.4
     version: 3.0.4
@@ -6979,8 +6979,8 @@ packages:
     resolution: {integrity: sha512-B7SLi7HGICpHI5oAx+NJRDsQChAIJ6wISwEUWN4CTU0h9WygKhcYwastnIoRkfdGE7tLfiKvEm+d102RRc8zwQ==}
     dev: true
 
-  /svelte-dnd-action@0.9.36(svelte@4.2.8):
-    resolution: {integrity: sha512-zbRPIuMeQ6Xa6WVMl7Z3yH2ZA/RoXcnMAL0ADr56nGjOqUj9pvqJXcQZwKl3itVYSeiHT8UnVuEjKBCkxKvUVQ==}
+  /svelte-dnd-action@0.9.38(svelte@4.2.8):
+    resolution: {integrity: sha512-L80YR+aknn54LmjPKFELYGDkZhed5ReBzH2xe61zFNGfQyoeXbFB1hs69QWgBIYufZPWUhAiVXIMhP7UQWs1dw==}
     peerDependencies:
       svelte: '>=3.23.0'
     dependencies:
