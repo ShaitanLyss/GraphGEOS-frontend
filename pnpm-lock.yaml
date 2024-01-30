@@ -287,8 +287,8 @@ devDependencies:
     specifier: ^0.4.3
     version: 0.4.3(svelte@4.2.8)
   svelte-preprocess-react:
-    specifier: ^0.15.0
-    version: 0.15.0(react-dom@18.2.0)(react@18.2.0)(svelte@4.2.8)
+    specifier: ^0.16.0
+    version: 0.16.0(react-dom@18.2.0)(react@18.2.0)(svelte@4.2.8)
   svelte-watch-resize:
     specifier: ^1.0.3
     version: 1.0.3
@@ -7071,12 +7071,13 @@ packages:
       svelte-parse-markup: 0.1.2(svelte@4.2.8)
     dev: true
 
-  /svelte-preprocess-react@0.15.0(react-dom@18.2.0)(react@18.2.0)(svelte@4.2.8):
-    resolution: {integrity: sha512-hDk8NAVXZnkQS0IiZ8Pf68Eb/2C5aVd8fpmqYPKueWXmyCGSclSSAjp4iEPgMpEw9BYn/RkeBkxjZ9Q6L47tNQ==}
+  /svelte-preprocess-react@0.16.0(react-dom@18.2.0)(react@18.2.0)(svelte@4.2.8):
+    resolution: {integrity: sha512-/NsiknGkeRvvQN/G5yjuW+NovYZyEwde+N8kODzxOy1P9QrOOgNU1AZulfi/uFLas6GsERnOB1BTmYtror+Mhw==}
+    requiresBuild: true
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
-      svelte: '>=3.0.0'
+      svelte: '>=4.0.0'
     dependencies:
       magic-string: 0.30.5
       react: 18.2.0
