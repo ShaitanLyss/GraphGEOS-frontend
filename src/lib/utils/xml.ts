@@ -99,12 +99,12 @@ export function buildXml({
 		.reduce((a, b) => a + (a ? '\n' : '') + b, '');
 }
 
-export function getElementFromParsedXml(xml: Record<string, unknown>): string {
+export function getElementFromParsedXml(xml: Record<string, unknown>): string | null {
 	for (const key in xml) {
 		if ([':@', '#text', '#comment'].includes(key)) continue;
 		return key;
 	}
-	throw new ErrorWNotif('No element found in parsed xml');
+	return null;
 }
 
 /**

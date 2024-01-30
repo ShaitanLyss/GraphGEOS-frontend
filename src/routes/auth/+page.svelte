@@ -4,8 +4,9 @@
 	import type { LayoutData } from '../$types';
 	let backendDed = false;
 	let checkingForDeadBackend = false;
-	export let data: LayoutData;
+	export let data: { session: Session | null };
 	const session = data.session;
+
 	import { getCookie } from 'typescript-cookie';
 	import { onMount, setContext } from 'svelte';
 	import { notifications } from '@mantine/notifications';
@@ -22,6 +23,7 @@
 	import { env } from '$env/dynamic/public';
 	import { getBackendAddress } from '$utils/config';
 	import { fade, fly } from 'svelte/transition';
+	import type { Session } from '$lib/backend-interaction';
 	console.log('public dynamic env', env);
 	let reload = false;
 	let login: () => Promise<void>;

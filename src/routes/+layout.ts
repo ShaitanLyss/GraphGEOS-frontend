@@ -10,6 +10,7 @@ export const load: LayoutLoad = async (event) => {
 		publicConfig: event.data.publicConfig,
 		...(await load_GraphEditorData({ event }))
 	};
+
 	// const sessionToken = localStorage.getItem('sessionToken')?.replaceAll('"', '');
 	// // console.log(window.location)
 	// // if (typeof sessionToken !== 'string' && window.location.pathname !== '/auth') {

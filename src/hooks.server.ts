@@ -12,8 +12,9 @@ import { publicConfig } from '$lib/config';
 
 const public_routes = [
 	// '/auth/**',
-	'/auth/**'
-	// "/"
+	'/auth/**',
+	'/code-editor',
+	'/'
 ];
 
 async function authorization({ event, resolve }) {
@@ -95,7 +96,7 @@ const lightmode: Handle = ({ event, resolve }) => {
 
 const moonAuth: Handle = async ({ event, resolve }) => {
 	const sessionToken = event.cookies.get('sessionToken');
-	// console.log("moonAuth", sessionToken)
+	console.log('moonAuth', sessionToken);
 	setSession(event, { token: sessionToken });
 	event.locals.getSession = async () => {
 		if (!sessionToken) {
@@ -127,10 +128,4 @@ const moonAuth: Handle = async ({ event, resolve }) => {
 	return resolve(event);
 };
 
-export const handle: Handle = sequence(
-	localization,
-	lightmode,
-	theme
-	// moonAuth,
-	// authorization
-);
+export const handle: Handle = sequence(localization, lightmode, theme, moonAuth, authorization);

@@ -13,6 +13,20 @@
 	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
 	import { draw, fade } from 'svelte/transition';
 	import { isNodeEditorSaveData } from '$rete/utils';
+	import type { UUID } from 'crypto';
+	import { GetGraphStore } from '$houdini';
+	import { translateNodeFromGlobal } from '$utils/html';
+	import type { ConnectionDropEvent } from '$rete/setup/ConnectionSetup';
+	import type { spawnMoonMenu as t_spawnMoonMenu } from '$lib/menu/context-menu/moonContextMenu';
+	import type { MacroNode as t_MacroNode } from '$rete/node/MacroNode';
+
+	let spawnMoonMenu: typeof t_spawnMoonMenu | undefined = undefined;
+	let MacroNode: typeof t_MacroNode | undefined = undefined;
+
+	onMount(async () => {
+		spawnMoonMenu = (await import('$lib/menu/context-menu/moonContextMenu')).spawnMoonMenu;
+		MacroNode = (await import('$rete/node/MacroNode')).MacroNode;
+	});
 
 	export let editor: NodeEditor | undefined = undefined;
 	export let factory: NodeFactory | undefined = undefined;
@@ -50,6 +64,30 @@
 		dispatch('destroy', { id: editor.id });
 		editorData.destroy();
 	});
+
+	async function onDrop(event: DragEvent) {
+		if (!factory) throw new Error('No factory');
+		if (!MacroNode) throw new Error('No MacroNode');
+		const graphId = event.dataTransfer?.getData('rete/macronode') as UUID;
+		if (!graphId) throw new Error('No graph id');
+		const graph = (await new GetGraphStore().fetch({ variables: { id: graphId } })).data?.graph;
+		if (!graph) throw new Error('Graph not found');
+		console.log('Dropped', graph.name);
+		const saveData: NodeEditorSaveData = JSON.parse(graph.data);
+		const node = await factory.addNode(MacroNode, { saveData: saveData, graphId });
+		if (!node) throw new Error('Node not created');
+		// Move node to drop position
+		translateNodeFromGlobal({ globalPos: { x: event.clientX, y: event.clientY }, node, factory });
+
+		// nodeView.translate(event.clientX - surfacePos.x, event.clientY - surfacePos.y);
+	}
+
+	function onConnectionDrop(event: ConnectionDropEvent) {
+		if (!spawnMoonMenu) throw new Error('No spawnMoonMenu');
+		console.log('connection drop on editor', event.socketData);
+
+		spawnMoonMenu({ connDropEvent: event, drop: () => this.drop() });
+	}
 </script>
 
 {#if !mounted && !hidden && placeholderVisible}
@@ -77,4 +115,12 @@
 		? 'opacity-0 pointer-events-none'
 		: ''}"
 	role="region"
+	on:connectiondrop={onConnectionDrop}
+	on:dragenter={(event) => {
+		if (event.dataTransfer?.types[0] === 'rete/macronode') event.preventDefault();
+	}}
+	on:dragover={(event) => {
+		if (event.dataTransfer?.types[0] === 'rete/macronode') event.preventDefault();
+	}}
+	on:drop|preventDefault={onDrop}
 />

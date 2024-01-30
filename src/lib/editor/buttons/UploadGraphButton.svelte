@@ -2,8 +2,19 @@
 	import { faCloud } from '@fortawesome/free-solid-svg-icons';
 	import EditorButton from './EditorButton.svelte';
 	import { _ } from '$lib/global';
-	let openUploadGraphModal = () => {
-		console.log('hey');
+	import { getModalStore, type ModalSettings } from '@skeletonlabs/skeleton';
+	import type { UploadGraphModalMeta } from '$lib/modals/types';
+	import type { ButtonExec } from '.';
+
+	const modalStore = getModalStore();
+
+	let openUploadGraphModal: ButtonExec = ({ editor }) => {
+		const modal: ModalSettings = {
+			type: 'component',
+			component: 'uploadGraphModal',
+			meta: { editor } as UploadGraphModalMeta
+		};
+		modalStore.trigger(modal);
 	};
 </script>
 

@@ -1,3 +1,20 @@
 import type { MakutuClasses$result } from '$houdini';
+import type { UUID } from 'crypto';
+import type { Url } from 'url';
 
 export type MakutuClassRepository = Record<string, MakutuClasses$result['makutuClasses'][number]>;
+
+export type User = {
+	id: UUID;
+	image?: string;
+	name: string;
+	email?: string;
+};
+
+export type Session = {
+	id: UUID;
+	expires: Date;
+	sessionToken: UUID;
+	userId: UUID;
+	user: User;
+};
