@@ -45,6 +45,7 @@
 	// $moonMenuHideDelayStore = 10000;
 
 	function hideMenu() {
+		search = '';
 		$moonMenuVisibleStore = false;
 		$moonMenuDropConnectionStore();
 	}
