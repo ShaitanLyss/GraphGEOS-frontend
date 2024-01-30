@@ -3,7 +3,7 @@
 
 	import type { EditorExample } from '$rete/example/types';
 	import { newUniqueId } from '$utils';
-	import { _ } from '$lib/global';
+	import { _, notifications } from '$lib/global';
 	export let position = 'absolute';
 	export let hidden = true;
 	export let name = $_('editor.default-name');
@@ -14,6 +14,7 @@
 	import { draw, fade } from 'svelte/transition';
 	import { isNodeEditorSaveData } from '$rete/utils';
 	import type { UUID } from 'crypto';
+	import type { Node } from '$rete';
 	import { GetGraphStore } from '$houdini';
 	import { translateNodeFromGlobal } from '$utils/html';
 	import type { ConnectionDropEvent } from '$rete/setup/ConnectionSetup';
@@ -22,10 +23,12 @@
 
 	let spawnMoonMenu: typeof t_spawnMoonMenu | undefined = undefined;
 	let MacroNode: typeof t_MacroNode | undefined = undefined;
+	let AreaExtensions: typeof import('rete-area-plugin').AreaExtensions | undefined = undefined;
 
 	onMount(async () => {
 		spawnMoonMenu = (await import('$lib/menu/context-menu/moonContextMenu')).spawnMoonMenu;
 		MacroNode = (await import('$rete/node/MacroNode')).MacroNode;
+		AreaExtensions = (await import('rete-area-plugin')).AreaExtensions;
 	});
 
 	export let editor: NodeEditor | undefined = undefined;
@@ -64,6 +67,65 @@
 		dispatch('destroy', { id: editor.id });
 		editorData.destroy();
 	});
+	let nodesToFocus: undefined | Node[] = undefined;
+	$: if (nodesToFocus) {
+		console.log('focusing', nodesToFocus);
+
+		setTimeout(() => {
+			if (!nodesToFocus || nodesToFocus.length == 0) return;
+			console.log('focusing', nodesToFocus);
+			const area = factory?.getArea();
+			if (!area) {
+				nodesToFocus = undefined;
+				return;
+			}
+
+			AreaExtensions?.zoomAt(area, nodesToFocus);
+			nodesToFocus = undefined;
+		}, 0);
+	}
+
+	function getVisibleNodes(): Node[] {
+		if (!factory) {
+			notifications.show({
+				title: 'Error',
+				message: 'No factory',
+				color: 'red',
+				icon: '<Fa icon={faCubesStacked} />'
+			});
+
+			return [];
+		}
+		const nodes = factory.getEditor().getNodes();
+		const area = factory.getArea();
+		if (!area) {
+			notifications.show({
+				title: 'Error',
+				message: 'No area',
+				color: 'red',
+				icon: '<Fa icon={faCubesStacked} />'
+			});
+
+			return [];
+		}
+		const visibleNodes = nodes.filter((node) => {
+			const nodeView = area.nodeViews.get(node.id);
+			const containerRect = container.getBoundingClientRect();
+			const elementRect = nodeView?.element.getBoundingClientRect();
+			// console.log(node);
+
+			// console.log('rect', elementRect);
+
+			return (
+				elementRect &&
+				elementRect.top < containerRect.bottom &&
+				elementRect.bottom > containerRect.top &&
+				elementRect.left < containerRect.right &&
+				elementRect.right > containerRect.left
+			);
+		});
+		return visibleNodes;
+	}
 
 	async function onDrop(event: DragEvent) {
 		if (!factory) throw new Error('No factory');
@@ -86,7 +148,7 @@
 		if (!spawnMoonMenu) throw new Error('No spawnMoonMenu');
 		console.log('connection drop on editor', event.socketData);
 
-		spawnMoonMenu({ connDropEvent: event, drop: () => this.drop() });
+		spawnMoonMenu({ connDropEvent: event });
 	}
 </script>
 

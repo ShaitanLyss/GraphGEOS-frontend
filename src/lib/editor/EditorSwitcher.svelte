@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { isBrowser } from '$houdini';
 	import { EditMacroNodeChannel } from '$lib/broadcast-channels';
 	import { Editor, EditorSharedOverlay } from '$lib/editor';
 	import { setContext, notifications, getContext, _, ErrorWNotif } from '$lib/global';

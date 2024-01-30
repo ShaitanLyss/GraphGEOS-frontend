@@ -64,7 +64,7 @@
 						? $_('notification.save.message.success-no-storage-use')
 						: $_('notification.save.message.success', {
 								values: { storageUse: getLocalStorageUsagePercent() }
-						  }),
+							}),
 				color: 'green'
 			});
 		}

@@ -6,6 +6,10 @@ export function capitalizeWords(str: string): string {
 	return str.split(' ').map(capitalize).join(' ');
 }
 
+export function isAlphaNumChar(str: string) {
+	return /^[a-z0-9]$/i.test(str);
+}
+
 const identity = (str: string) => str;
 export const words = capitalizeWords;
 

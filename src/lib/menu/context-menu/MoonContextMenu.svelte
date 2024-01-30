@@ -6,7 +6,7 @@
 		moonMenuDropConnectionStore,
 		moonMenuConnDropEvent,
 		moonMenuItemsStore,
-		MoonMenuItem
+		type MoonMenuItem
 	} from './moonContextMenu';
 
 	import intersection from 'lodash.intersection';
@@ -15,6 +15,8 @@
 	import { GetNameNode } from '$rete/node/XML/GetNameNode';
 	import { MakeArrayNode } from '$rete/node/data/MakeArrayNode';
 	import { StringNode } from '$rete/node/data/StringNode';
+	import { focusTrap } from '@skeletonlabs/skeleton';
+	import { isAlphaNumChar } from '$utils/string';
 
 	// setup width and height
 	let width = 0;
@@ -27,13 +29,14 @@
 		}
 	}
 
-	const menuSpawnPaddingY = 5;
+	const menuSpawnPaddingY = 61;
 	const menuSpawnPaddingX = 5;
 
 	$: flipMenuH = false && $moonMenuConnDropEvent?.socketData.side === 'input';
 	$: flipMenuV =
 		$moonMenuConnDropEvent && $moonMenuConnDropEvent.pos.y + height > window.innerHeight;
-	$: console.log(flipMenuH, flipMenuV);
+	// $: console.log(flipMenuH, flipMenuV);
+	$: console.log($moonMenuPositionStore);
 	$: x = $moonMenuPositionStore.x + (flipMenuH ? menuSpawnPaddingX : -menuSpawnPaddingX);
 	$: y = $moonMenuPositionStore.y + (flipMenuV ? menuSpawnPaddingY + 5 : -menuSpawnPaddingY);
 
@@ -100,10 +103,10 @@
 				node instanceof MakeArrayNode
 					? 'array'
 					: node instanceof GetNameNode
-					? 'name'
-					: node instanceof XmlNode
-					? 'value'
-					: 'data',
+						? 'name'
+						: node instanceof XmlNode
+							? 'value'
+							: 'data',
 				targetNode,
 				socketData.key
 			);
@@ -150,35 +153,91 @@
 			}
 		}
 	}
+	let search = '';
+	$: filteredItemsAfterSearch = filteredItems
+		.filter((item) => {
+			if (search === '') return true;
+			return item.label.toLowerCase().includes(search.toLowerCase());
+		})
+		.map((item) => {
+			return {
+				item,
+				score: item.label.toLowerCase().search(search.toLowerCase())
+			};
+		})
+		.toSorted((x1, x2) => x1.score - x2.score)
+		.map((item) => item.item);
+
+	let searchInput: HTMLInputElement | undefined;
+	let useFocusTrap = false;
+	const listener = (event: KeyboardEvent) => {
+		console.log(event.key);
+		if (event.key === 'Escape') {
+			hideMenu();
+			return;
+		}
+		if (
+			isAlphaNumChar(event.key) ||
+			event.key === 'Backspace' ||
+			event.key === ' ' ||
+			event.key === 'Delete'
+		) {
+			searchInput?.focus();
+			itemListDiv?.scrollTo({ top: 0 });
+			useFocusTrap = true;
+		}
+	};
+	$: if (!$moonMenuVisibleStore) {
+		document.removeEventListener('keydown', listener);
+		useFocusTrap = false;
+	}
+	$: if ($moonMenuVisibleStore) {
+		document.addEventListener('keydown', listener);
+	}
+
+	let itemListDiv: HTMLDivElement | undefined;
 </script>
 
 {#if $moonMenuVisibleStore}
 	<div
+		use:focusTrap={useFocusTrap}
 		bind:this={moonMenuElement}
 		role="menu"
 		tabindex="0"
-		class="absolute variant-soft-secondary z-10 max-h-1-3"
+		class="absolute variant-soft-secondary z-10 h-1/3 overflow-hidden"
 		style="position: absolute; left: {x}px; top: {y}px; transform: translate({flipMenuH
 			? -width
 			: 0}px, {flipMenuV ? -height : 0}px);"
 		on:mouseenter={() => (isMouseOver = true)}
 		on:mouseleave={() => (isMouseOver = false)}
 	>
-		<div class="searchbar" />
-		<div class="max-h-1-3 overflow-x-auto">
-			<div class="list">
-				<!-- svelte-ignore a11y-click-events-have-key-events -->
-				{#each filteredItems as item (item.label)}
-					<div
-						role="menuitem"
-						tabindex="0"
-						class="px-4 py-2 cursor-pointer hover:bg-soft-primary"
-						on:click={() => onItemClick(item)}
-					>
-						{item.label}
-					</div>
-				{/each}
-			</div>
+		<div class="searchbar">
+			<input
+				bind:this={searchInput}
+				type="text"
+				class="w-full p-2 input"
+				style="border-radius: 5px; !important"
+				placeholder="Search"
+				bind:value={search}
+			/>
+		</div>
+		<div class="list overflow-y-auto h-full" bind:this={itemListDiv}>
+			<!-- svelte-ignore a11y-click-events-have-key-events -->
+			{#each filteredItemsAfterSearch as item (item.label)}
+				<div
+					role="menuitem"
+					tabindex="0"
+					class="px-4 py-2 cursor-pointer hover:bg-soft-primary rounded-none"
+					on:click={() => onItemClick(item)}
+					on:keypress={(event) => {
+						if (event.key === 'Enter') {
+							onItemClick(item);
+						}
+					}}
+				>
+					{item.label}
+				</div>
+			{/each}
 		</div>
 	</div>
 {/if}
