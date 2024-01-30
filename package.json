@@ -55,7 +55,7 @@
 		"@typescript-eslint/parser": "^5.62.0",
 		"@zerodevx/svelte-toast": "^0.9.5",
 		"autoprefixer": "^10.4.16",
-		"broadcast-channel": "^5.5.1",
+		"broadcast-channel": "^7.0.0",
 		"build-esm": "^4.2.2",
 		"core-js": "^3.34.0",
 		"elkjs": "^0.8.2",
