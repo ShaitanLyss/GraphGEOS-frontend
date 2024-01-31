@@ -30,7 +30,7 @@
 						menuItems: items,
 						filter: {
 							label: query.trim(),
-							description: ' ' + query,
+							// description: ' ' + query,
 							menuPath: [' ' + query],
 							tags: [' ' + query]
 						},
