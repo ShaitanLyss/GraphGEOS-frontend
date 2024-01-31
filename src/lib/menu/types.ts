@@ -23,7 +23,7 @@ export interface INodeMenuItem extends IBaseMenuItem {
 	type: MenuItemType.Node;
 	getInTypes: () => string[];
 	getOutTypes: () => string[];
-	// getAddNode: () => ({ factory }: { factory: NodeFactory }) => Node;
+	getAddNode: () => ({ factory }: { factory: NodeFactory }) => Node;
 	getEditorType: () => EditorType;
 }
 
@@ -116,7 +116,7 @@ export type IMenuItem<T extends MenuItemType = MenuItemType.Base> = T extends Me
  */
 export function createNodeMenuItem(properties: StaticNodeMenuItem): INodeMenuItem {
 	const {
-		addNode = ({ factory }) => {},
+		addNode = properties.addNode,
 		editorType = EditorType.All,
 		description = 'create node',
 		inTypes = [],

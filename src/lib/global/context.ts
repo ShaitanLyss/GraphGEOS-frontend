@@ -14,6 +14,7 @@ import {
 import { ErrorWNotif } from './error';
 import type { Writable } from 'svelte/store';
 import type { GlobalPopupsContext } from './popup';
+import type { MoonMenuItem } from '$lib/menu/context-menu/moonContextMenu';
 
 enum Context {
 	'editor' = 'Editor Context',
@@ -25,7 +26,8 @@ enum Context {
 	'publicConfig' = 'Public Configuration',
 	'toggleCodeEditor' = 'Toggle Code Editor',
 	'mainRightSideBar' = 'Main Right Side Bar',
-	'globalPopups' = 'Global Popups Context'
+	'globalPopups' = 'Global Popups Context',
+	'moonMenuOnItemClick' = 'Moon Menu On Item Click'
 }
 
 export type RightSidebar<T extends SvelteComponent> = {
@@ -45,24 +47,26 @@ export type resolveContext<
 > = K extends 'editor'
 	? EditorContext
 	: K extends 'onSave'
-	? (params?: { displaySuccess?: boolean }) => void
-	: K extends 'save'
-	? Writable<Map<string, SaveHandler>>
-	: K extends 'tabs'
-	? Writable<TabContext | undefined>
-	: K extends 'geos'
-	? GeosDataContext
-	: K extends 'geos_v2'
-	? NewGeosContext
-	: K extends 'publicConfig'
-	? typeof publicConfig
-	: K extends 'toggleCodeEditor'
-	? () => void
-	: K extends 'mainRightSideBar'
-	? Writable<RightSidebar<Component>>
-	: K extends 'globalPopups'
-	? GlobalPopupsContext
-	: never;
+		? (params?: { displaySuccess?: boolean }) => void
+		: K extends 'save'
+			? Writable<Map<string, SaveHandler>>
+			: K extends 'tabs'
+				? Writable<TabContext | undefined>
+				: K extends 'geos'
+					? GeosDataContext
+					: K extends 'geos_v2'
+						? NewGeosContext
+						: K extends 'publicConfig'
+							? typeof publicConfig
+							: K extends 'toggleCodeEditor'
+								? () => void
+								: K extends 'mainRightSideBar'
+									? Writable<RightSidebar<Component>>
+									: K extends 'globalPopups'
+										? GlobalPopupsContext
+										: K extends 'moonMenuOnItemClick'
+											? (item: MoonMenuItem) => Promise<void>
+											: never;
 
 export function getContext<
 	K extends keyof typeof Context,

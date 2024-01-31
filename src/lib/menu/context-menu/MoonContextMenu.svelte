@@ -7,7 +7,8 @@
 		moonMenuConnDropEvent,
 		moonMenuItemsStore,
 		newMoonItemsStore,
-		type MoonMenuItem
+		type MoonMenuItem,
+		moonMenuFactoryStore
 	} from './moonContextMenu';
 
 	import intersection from 'lodash.intersection';
@@ -19,6 +20,8 @@
 	import { focusTrap } from '@skeletonlabs/skeleton';
 	import { isAlphaNumChar } from '$utils/string';
 	import Menu from '../Menu.svelte';
+	import { isNodeMenuItem, type IBaseMenuItem } from '../types';
+	import { setContext } from '$lib/global';
 
 	// setup width and height
 	let width = 0;
@@ -50,6 +53,7 @@
 		search = '';
 		$moonMenuVisibleStore = false;
 		$moonMenuDropConnectionStore();
+		$moonMenuConnDropEvent = null;
 	}
 
 	// Setup autohide
@@ -69,25 +73,29 @@
 
 	// Spawn node on item click
 	async function onItemClick(item: MoonMenuItem) {
-		if (!$moonMenuConnDropEvent) throw new Error('No connection drop event found');
-		const socketData = $moonMenuConnDropEvent.socketData;
-		const factory = $moonMenuConnDropEvent?.factory;
+		const factory = $moonMenuFactoryStore;
 		if (!factory) throw new Error('No factory found');
 		const area = factory.getArea();
 		if (!area) throw new Error('No area found');
 		const node = item.action(factory);
 		await factory.getEditor().addNode(node);
-		if ($moonMenuConnDropEvent)
-			translateNodeFromGlobal({ globalPos: $moonMenuConnDropEvent.pos, factory, node });
-		else {
-			console.error('No connection drop event found');
-		}
+
+		translateNodeFromGlobal({
+			globalPos: $moonMenuConnDropEvent ? $moonMenuConnDropEvent.pos : $moonMenuPositionStore,
+			factory,
+			node
+		});
 
 		// if (!(node instanceof XmlNode) && !(node instanceof GetNameNode) && !(node instanceof MakeArrayNode) && !(node instanceof StringNode)) {
 		// 	console.log(`Autoconnection non supporté vers ${node.label}`);
 		// 	hideMenu();
 		// 	return;
 		// }
+		if (!$moonMenuConnDropEvent) {
+			hideMenu();
+			return;
+		}
+		const socketData = $moonMenuConnDropEvent.socketData;
 		const editor = factory.getEditor();
 		console.log('socketDataSide', socketData.side);
 		if (socketData.side === 'output') {
@@ -123,10 +131,14 @@
 
 		// nodeView.translate()
 		// area.translate
+		$moonMenuConnDropEvent = null;
 		hideMenu();
 	}
 
+	setContext('moonMenuOnItemClick', onItemClick);
+
 	let filteredItems: MoonMenuItem[] = [];
+	let filteredNewMoonItems: IBaseMenuItem[] = [];
 
 	$: if ($moonMenuConnDropEvent) {
 		const socketData = $moonMenuConnDropEvent.socketData;
@@ -152,6 +164,28 @@
 				}
 				const res = intersection(
 					socketData.side === 'output' ? item.inChildrenTypes : [item.outType],
+					types
+				);
+				// console.log(item.inChildrenTypes, types)
+
+				// console.log("intersection", res)
+				return res.length > 0;
+			});
+
+			filteredNewMoonItems = $newMoonItemsStore.filter((item) => {
+				if (!isNodeMenuItem(item)) return false;
+				// if (item.label === 'GetName') {
+				// 	console.log(item.inChildrenTypes, types);
+				// }
+				if (
+					socketData.side === 'output'
+						? item.getInTypes().includes('*')
+						: item.getOutTypes().at(0) === '*'
+				) {
+					return true;
+				}
+				const res = intersection(
+					socketData.side === 'output' ? item.getInTypes() : [item.getOutTypes().at(0)],
 					types
 				);
 				// console.log(item.inChildrenTypes, types)
@@ -211,21 +245,25 @@
 	const useNewMoon = true;
 </script>
 
-{#if $moonMenuVisibleStore || true}
+{#if $moonMenuVisibleStore || false}
 	<div
 		use:focusTrap={useFocusTrap}
 		bind:this={moonMenuElement}
 		role="menu"
 		tabindex="0"
-		class="absolute variant-soft-secondary z-10 h-2/5 overflow-hidden text-sm w-80 pb-2"
-		style="position: absolute; left: {x}px; top: {y}px; transform: translate({flipMenuH
+		class="absolute text-token bg-surface-50 dark:bg-surface-800 z-10 h-2/5 overflow-hidden text-sm w-80 pb-0.5"
+		style="position: absolute; border-radius: 5px; left: {x}px; top: {y}px; transform: translate({flipMenuH
 			? -width
 			: 0}px, {flipMenuV ? -height : 0}px);"
 		on:mouseenter={() => (isMouseOver = true)}
 		on:mouseleave={() => (isMouseOver = false)}
 	>
 		{#if useNewMoon}
-			<Menu searchBar={true} menuItems={$newMoonItemsStore} type="tree" />
+			<Menu
+				searchBar={true}
+				menuItems={$moonMenuConnDropEvent ? filteredNewMoonItems : $newMoonItemsStore}
+				type="tree"
+			/>
 		{:else}
 			<div class="searchbar">
 				<input

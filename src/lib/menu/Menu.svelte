@@ -28,7 +28,12 @@
 				? items
 				: filterMenuItems({
 						menuItems: items,
-						filter: { label: query.trim(), description: query, menuPath: [query], tags: [query] },
+						filter: {
+							label: query.trim(),
+							description: ' ' + query,
+							menuPath: [' ' + query],
+							tags: [' ' + query]
+						},
 						verifyAll: false,
 						allowMissingKey: false
 					})
@@ -65,6 +70,7 @@
 			/>
 		</div>
 	{/if}
+	<!-- <div class="pe-0.5 h-full"> -->
 	<div class="overflow-y-auto h-full text-ellipsis overflow-x-hidden p-1">
 		{#if type === 'tree'}
 			<TreeView bind:this={treeView} width="" padding="p-1">
@@ -76,4 +82,5 @@
 			Menu type '{type}' not implemented
 		{/if}
 	</div>
+	<!-- </div> -->
 </div>

@@ -15,7 +15,8 @@ import {
 	type MoonMenuItem,
 	moonMenuVisibleStore,
 	moonMenuPositionStore,
-	newMoonItemsStore
+	newMoonItemsStore,
+	moonMenuFactoryStore
 } from '$lib/menu/context-menu/moonContextMenu';
 import { GetNameNode } from '$rete/node/XML/GetNameNode';
 import { MakeArrayNode } from '$rete/node/data/MakeArrayNode';
@@ -160,7 +161,19 @@ export class ContextMenuSetup extends Setup {
 					});
 				const typesPaths = geos.typesPaths;
 				if (typesPaths)
-					newMoonItems.push(createNodeMenuItem({ label: name, menuPath: get(typesPaths)[name] }));
+					newMoonItems.push(
+						createNodeMenuItem({
+							label: name,
+							menuPath: (get(typesPaths) as Record<string, string[]>)[name],
+							addNode: xmlNodeAction,
+							inTypes: complexType.childTypes.map((childType) => {
+								const childName = childType.match(/^(.*)Type$/)?.at(1);
+								if (!childName) return childType;
+								return childName;
+							}),
+							outTypes: [name]
+						})
+					);
 				moonItems.push({
 					label: name,
 					outType: name,
@@ -218,9 +231,9 @@ export class ContextMenuSetup extends Setup {
 					context.data.event.stopImmediatePropagation();
 					return context;
 				}
-				console.log(context.data);
 				context.data.event.preventDefault();
 				moonMenuVisibleStore.set(true);
+				moonMenuFactoryStore.set(__factory);
 				moonMenuPositionStore.set({ x: context.data.event.clientX, y: context.data.event.clientY });
 			}
 			return context;

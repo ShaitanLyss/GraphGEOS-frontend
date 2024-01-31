@@ -17,6 +17,7 @@ export const moonMenuHideDelayStore = writable<number>(100);
 export const moonMenuConnDropEvent = writable<ConnectionDropEvent | null>(null);
 export const moonMenuItemsStore = writable<MoonMenuItem[]>([]);
 export const newMoonItemsStore = writable<IBaseMenuItem[]>([]);
+export const moonMenuFactoryStore = writable<NodeFactory | null>(null);
 
 export function spawnMoonMenu({ connDropEvent }: { connDropEvent: ConnectionDropEvent }) {
 	moonMenuConnDropEvent.set(connDropEvent);

@@ -19,6 +19,7 @@
 	import { translateNodeFromGlobal } from '$utils/html';
 	import type { ConnectionDropEvent } from '$rete/setup/ConnectionSetup';
 	import type { spawnMoonMenu as t_spawnMoonMenu } from '$lib/menu/context-menu/moonContextMenu';
+	import { moonMenuFactoryStore } from '$lib/menu/context-menu/moonContextMenu';
 	import type { MacroNode as t_MacroNode } from '$rete/node/MacroNode';
 
 	let spawnMoonMenu: typeof t_spawnMoonMenu | undefined = undefined;
@@ -152,6 +153,7 @@
 
 	function onConnectionDrop(event: ConnectionDropEvent) {
 		if (!spawnMoonMenu) throw new Error('No spawnMoonMenu');
+		$moonMenuFactoryStore = factory;
 		console.log('connection drop on editor', event.socketData);
 
 		spawnMoonMenu({ connDropEvent: event });
