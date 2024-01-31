@@ -1,6 +1,7 @@
 import type { Node, NodeFactory } from '$rete';
 import type { ConnectionDropEvent } from '$rete/setup/ConnectionSetup';
 import { writable } from 'svelte/store';
+import type { IBaseMenuItem } from '../types';
 
 export interface MoonMenuItem {
 	label: string;
@@ -15,6 +16,7 @@ export const moonMenuDropConnectionStore = writable<() => void>(() => {}); // es
 export const moonMenuHideDelayStore = writable<number>(100);
 export const moonMenuConnDropEvent = writable<ConnectionDropEvent | null>(null);
 export const moonMenuItemsStore = writable<MoonMenuItem[]>([]);
+export const newMoonItemsStore = writable<IBaseMenuItem[]>([]);
 
 export function spawnMoonMenu({ connDropEvent }: { connDropEvent: ConnectionDropEvent }) {
 	moonMenuConnDropEvent.set(connDropEvent);

@@ -17,20 +17,33 @@
 	let query = '';
 	let menu: IHierachicalMenu;
 
+	$: updateFilteredItems(menuItems);
 	onMount(() => {
 		if (type === 'tree') treeView.expandAll();
 	});
 
-	function updateFilteredItems() {
+	function updateFilteredItems(items: typeof menuItems) {
 		filteredMenuItems =
 			query === ''
-				? menuItems
+				? items
 				: filterMenuItems({
-						menuItems,
-						filter: { label: query, description: query, menuPath: [query], tags: [query] },
+						menuItems: items,
+						filter: { label: query.trim(), description: query, menuPath: [query], tags: [query] },
 						verifyAll: false,
 						allowMissingKey: false
-				  });
+					})
+						.map((item) => {
+							return {
+								item,
+								score: item.getLabel().toLowerCase().search(query.trim().toLowerCase())
+							};
+						})
+						.toSorted((x1, x2) =>
+							x1.score != x2.score
+								? x1.score - x2.score
+								: x1.item.getLabel().localeCompare(x2.item.getLabel())
+						)
+						.map((item) => item.item);
 	}
 
 	$: {
@@ -39,25 +52,28 @@
 	}
 </script>
 
-<div class="flex flex-col">
+<div class="flex flex-col h-full">
 	{#if searchBar}
 		<div class="flex justify-center items-center">
 			<input
 				type="text"
-				class="w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+				class="w-full p-2 input"
 				placeholder="Search..."
+				style="border-radius: 5px;"
 				bind:value={query}
-				on:input={throttle(updateFilteredItems, 100)}
+				on:input={throttle(() => updateFilteredItems(menuItems), 100)}
 			/>
 		</div>
 	{/if}
-	{#if type === 'tree'}
-		<TreeView bind:this={treeView} width="">
-			<TreeViewMenuItems {menu} />
-		</TreeView>
-	{:else if type === 'popover'}
-		<PopoverMenuItems {menu} width="w-full" />
-	{:else}
-		Menu type '{type}' not implemented
-	{/if}
+	<div class="overflow-y-auto h-full text-ellipsis overflow-x-hidden p-1">
+		{#if type === 'tree'}
+			<TreeView bind:this={treeView} width="" padding="p-1">
+				<TreeViewMenuItems {menu} />
+			</TreeView>
+		{:else if type === 'popover'}
+			<PopoverMenuItems {menu} width="w-full" />
+		{:else}
+			Menu type '{type}' not implemented
+		{/if}
+	</div>
 </div>

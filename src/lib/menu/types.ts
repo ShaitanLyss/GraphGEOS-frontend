@@ -23,7 +23,7 @@ export interface INodeMenuItem extends IBaseMenuItem {
 	type: MenuItemType.Node;
 	getInTypes: () => string[];
 	getOutTypes: () => string[];
-	getAddNode: () => ({ factory }: { factory: NodeFactory }) => Node;
+	// getAddNode: () => ({ factory }: { factory: NodeFactory }) => Node;
 	getEditorType: () => EditorType;
 }
 
@@ -104,34 +104,34 @@ export function isActionMenuItem(menuItem: IMenuItem): menuItem is IActionMenuIt
 export type IMenuItem<T extends MenuItemType = MenuItemType.Base> = T extends MenuItemType.Base
 	? IBaseMenuItem
 	: T extends MenuItemType.Node
-	? INodeMenuItem
-	: T extends MenuItemType.Action
-	? IActionMenuItem
-	: never;
+		? INodeMenuItem
+		: T extends MenuItemType.Action
+			? IActionMenuItem
+			: never;
 
 /**
  * Returns a new INodeMenuItem
  * @param properties
  * @returns
  */
-// export function createNodeMenuItem(properties: StaticNodeMenuItem): INodeMenuItem {
-// 	const {
-// 		addNode = ({ factory }) => new Node({ factory, label: 'Node' }),
-// 		editorType = EditorType.All,
-// 		description = 'create node',
-// 		inTypes = [],
-// 		outTypes = [],
-// 		label = 'Node'
-// 	} = properties;
-// 	return {
-// 		...createMenuItem({ ...properties, label, description }),
-// 		type: MenuItemType.Node,
-// 		getInTypes: () => inTypes,
-// 		getOutTypes: () => outTypes,
-// 		getAddNode: () => addNode,
-// 		getEditorType: () => editorType
-// 	};
-// }
+export function createNodeMenuItem(properties: StaticNodeMenuItem): INodeMenuItem {
+	const {
+		addNode = ({ factory }) => {},
+		editorType = EditorType.All,
+		description = 'create node',
+		inTypes = [],
+		outTypes = [],
+		label = 'Node'
+	} = properties;
+	return {
+		...createMenuItem({ ...properties, label, description }),
+		type: MenuItemType.Node,
+		getInTypes: () => inTypes,
+		getOutTypes: () => outTypes,
+		getAddNode: () => addNode,
+		getEditorType: () => editorType
+	};
+}
 
 export function createActionMenuItem(properties: StaticActionMenuItem): IActionMenuItem {
 	const {

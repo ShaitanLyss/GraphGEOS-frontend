@@ -6,6 +6,7 @@
 		moonMenuDropConnectionStore,
 		moonMenuConnDropEvent,
 		moonMenuItemsStore,
+		newMoonItemsStore,
 		type MoonMenuItem
 	} from './moonContextMenu';
 
@@ -17,6 +18,7 @@
 	import { StringNode } from '$rete/node/data/StringNode';
 	import { focusTrap } from '@skeletonlabs/skeleton';
 	import { isAlphaNumChar } from '$utils/string';
+	import Menu from '../Menu.svelte';
 
 	// setup width and height
 	let width = 0;
@@ -30,7 +32,7 @@
 	}
 
 	const menuSpawnPaddingY = 61;
-	const menuSpawnPaddingX = 5;
+	const menuSpawnPaddingX = 15;
 
 	$: flipMenuH = false && $moonMenuConnDropEvent?.socketData.side === 'input';
 	$: flipMenuV =
@@ -206,48 +208,53 @@
 	}
 
 	let itemListDiv: HTMLDivElement | undefined;
+	const useNewMoon = true;
 </script>
 
-{#if $moonMenuVisibleStore}
+{#if $moonMenuVisibleStore || true}
 	<div
 		use:focusTrap={useFocusTrap}
 		bind:this={moonMenuElement}
 		role="menu"
 		tabindex="0"
-		class="absolute variant-soft-secondary z-10 h-1/3 overflow-hidden"
+		class="absolute variant-soft-secondary z-10 h-2/5 overflow-hidden text-sm w-80 pb-2"
 		style="position: absolute; left: {x}px; top: {y}px; transform: translate({flipMenuH
 			? -width
 			: 0}px, {flipMenuV ? -height : 0}px);"
 		on:mouseenter={() => (isMouseOver = true)}
 		on:mouseleave={() => (isMouseOver = false)}
 	>
-		<div class="searchbar">
-			<input
-				bind:this={searchInput}
-				type="text"
-				class="w-full p-2 input"
-				style="border-radius: 5px; !important"
-				placeholder="Search"
-				bind:value={search}
-			/>
-		</div>
-		<div class="list overflow-y-auto h-full" bind:this={itemListDiv}>
-			<!-- svelte-ignore a11y-click-events-have-key-events -->
-			{#each filteredItemsAfterSearch as item (item.label)}
-				<div
-					role="menuitem"
-					tabindex="0"
-					class="px-4 py-2 cursor-pointer hover:bg-soft-primary rounded-none"
-					on:click={() => onItemClick(item)}
-					on:keypress={(event) => {
-						if (event.key === 'Enter') {
-							onItemClick(item);
-						}
-					}}
-				>
-					{item.label}
-				</div>
-			{/each}
-		</div>
+		{#if useNewMoon}
+			<Menu searchBar={true} menuItems={$newMoonItemsStore} type="tree" />
+		{:else}
+			<div class="searchbar">
+				<input
+					bind:this={searchInput}
+					type="text"
+					class="w-full p-2 input"
+					style="border-radius: 5px; !important"
+					placeholder="Search"
+					bind:value={search}
+				/>
+			</div>
+			<div class="list overflow-y-auto h-full" bind:this={itemListDiv}>
+				<!-- svelte-ignore a11y-click-events-have-key-events -->
+				{#each filteredItemsAfterSearch as item (item.label)}
+					<div
+						role="menuitem"
+						tabindex="0"
+						class="px-4 py-2 cursor-pointer hover:bg-soft-primary rounded-none"
+						on:click={() => onItemClick(item)}
+						on:keypress={(event) => {
+							if (event.key === 'Enter') {
+								onItemClick(item);
+							}
+						}}
+					>
+						{item.label}
+					</div>
+				{/each}
+			</div>
+		{/if}
 	</div>
 {/if}

@@ -3,7 +3,7 @@
 
 	import type { EditorExample } from '$rete/example/types';
 	import { newUniqueId } from '$utils';
-	import { _, notifications } from '$lib/global';
+	import { _, getContext, notifications } from '$lib/global';
 	export let position = 'absolute';
 	export let hidden = true;
 	export let name = $_('editor.default-name');
@@ -24,7 +24,7 @@
 	let spawnMoonMenu: typeof t_spawnMoonMenu | undefined = undefined;
 	let MacroNode: typeof t_MacroNode | undefined = undefined;
 	let AreaExtensions: typeof import('rete-area-plugin').AreaExtensions | undefined = undefined;
-
+	const geosContext = getContext('geos');
 	onMount(async () => {
 		spawnMoonMenu = (await import('$lib/menu/context-menu/moonContextMenu')).spawnMoonMenu;
 		MacroNode = (await import('$rete/node/MacroNode')).MacroNode;
@@ -54,7 +54,13 @@
 	onMount(async () => {
 		await import('$rete/setup/appLaunch');
 		const { setupEditor } = await import('$rete');
-		editorData = await setupEditor({ container, makutuClasses: {}, loadExample, saveData });
+		editorData = await setupEditor({
+			container,
+			makutuClasses: {},
+			loadExample,
+			saveData,
+			geosContext
+		});
 		editorData.editor.id = id;
 		editorData.editor.setName(name);
 		saveData = undefined;

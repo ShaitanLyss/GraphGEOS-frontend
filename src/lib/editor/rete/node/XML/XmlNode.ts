@@ -55,7 +55,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 			noName: xmlConfig.noName
 		};
 
-		console.log('xmlNodeParams', xmlNodeParams);
+		// console.log('xmlNodeParams', xmlNodeParams);
 		const { outData, xmlProperties, childTypes = [] } = xmlConfig;
 		const { noName = false } = xmlConfig;
 		super({ ...xmlNodeParams, width: 220, height: 40 });
@@ -204,7 +204,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 								this.getDataflowEngine().reset(this.id);
 							}
 						}
-				  }
+					}
 		});
 		if (attrInputControl) {
 			// console.log('attrInputControl', attrInputControl);

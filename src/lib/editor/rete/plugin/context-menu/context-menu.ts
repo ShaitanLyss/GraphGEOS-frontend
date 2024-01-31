@@ -7,15 +7,24 @@ import { capitalize } from '$utils/string';
 import { Setup } from '../../setup/Setup';
 import type { NodeEditor } from '../../NodeEditor';
 import type { NodeFactory } from '../../node/NodeFactory';
-import { GeosXmlSchemaStore as GetXmlSchemaStore } from '$houdini';
+import { GeosXmlSchemaStore as GetXmlSchemaStore, PendingValue } from '$houdini';
 import { XmlNode } from '$rete/node/XML/XmlNode';
 import type { XmlAttributeDefinition } from '$rete/node/XML/types';
-import { moonMenuItemsStore, type MoonMenuItem } from '$lib/menu/context-menu/moonContextMenu';
+import {
+	moonMenuItemsStore,
+	type MoonMenuItem,
+	moonMenuVisibleStore,
+	moonMenuPositionStore,
+	newMoonItemsStore
+} from '$lib/menu/context-menu/moonContextMenu';
 import { GetNameNode } from '$rete/node/XML/GetNameNode';
 import { MakeArrayNode } from '$rete/node/data/MakeArrayNode';
 import { StringNode } from '$rete/node/data/StringNode';
 import { factory } from 'typescript';
 import { DownloadNode } from '$rete/node/io/DownloadNode';
+import { createNodeMenuItem, type IBaseMenuItem } from '$lib/menu/types';
+import type { GeosDataContext } from '$lib/geos';
+import { get } from 'svelte/store';
 
 type Entry = Map<string, Entry | (() => Node | Promise<Node>)>;
 function isClassConstructor(obj: unknown): boolean {
@@ -69,13 +78,14 @@ export class ContextMenuSetup extends Setup {
 	async setup(
 		editor: NodeEditor,
 		area: AreaPlugin<Schemes, AreaExtra>,
-		__factory: NodeFactory
+		__factory: NodeFactory,
+		geos: GeosDataContext
 	): Promise<void> {
 		const re = /[/\\]/i;
 
 		// console.log(nodeFiles);
 		const items = new Map<string, Entry>();
-
+		console.log('Setting up context menu');
 		const modules = import.meta.glob('../../node/**/*.ts');
 		for (const [path, module] of Object.entries(modules)) {
 			const objects = await module();
@@ -103,11 +113,14 @@ export class ContextMenuSetup extends Setup {
 		}
 
 		const xmlSchema = (await new GetXmlSchemaStore().fetch()).data?.geos.xmlSchema;
+
 		if (xmlSchema) {
+			const newMoonItems: IBaseMenuItem[] = [];
 			const moonItems: MoonMenuItem[] = [];
 			const complexTypesWithName: string[] = [];
 			const complexTypes: string[] = [];
 			for (const complexType of xmlSchema.complexTypes) {
+				if (complexType === PendingValue) continue;
 				const name = complexType.name.match(/^(.*)Type$/)?.at(1);
 				if (!name) throw new Error(`Invalid complex type name: ${complexType.name}`);
 
@@ -145,7 +158,9 @@ export class ContextMenuSetup extends Setup {
 							})
 						}
 					});
-
+				const typesPaths = geos.typesPaths;
+				if (typesPaths)
+					newMoonItems.push(createNodeMenuItem({ label: name, menuPath: get(typesPaths)[name] }));
 				moonItems.push({
 					label: name,
 					outType: name,
@@ -189,12 +204,28 @@ export class ContextMenuSetup extends Setup {
 				downloadSchemaItem,
 				...moonItems
 			]);
+			newMoonItemsStore.set([...newMoonItems]);
 		}
 
 		const contextMenu = new ContextMenuPlugin<Schemes>({
 			items: Presets.classic.setup(getMenuArray(items))
 		});
 
-		area.use(contextMenu);
+		area.addPipe((context) => {
+			if (context.type === 'contextmenu') {
+				if (context.data.context !== 'root') {
+					context.data.event.preventDefault();
+					context.data.event.stopImmediatePropagation();
+					return context;
+				}
+				console.log(context.data);
+				context.data.event.preventDefault();
+				moonMenuVisibleStore.set(true);
+				moonMenuPositionStore.set({ x: context.data.event.clientX, y: context.data.event.clientY });
+			}
+			return context;
+		});
+
+		// area.use(contextMenu);
 	}
 }
