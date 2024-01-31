@@ -87,30 +87,36 @@
 		// 	return;
 		// }
 		const editor = factory.getEditor();
-
+		console.log('socketDataSide', socketData.side);
 		if (socketData.side === 'output') {
 			const sourceNode = editor.getNode(socketData.nodeId);
-			await editor.addNewConnection(
-				sourceNode,
-				socketData.key,
-				node,
-				node instanceof MakeArrayNode ? 'data-0' : node instanceof GetNameNode ? 'xml' : 'children'
-			);
+			let target =
+				node instanceof MakeArrayNode ? 'data-0' : node instanceof GetNameNode ? 'xml' : 'children';
+			const newNodeInputs = Object.keys(node.inputs);
+
+			if (newNodeInputs.length == 1) {
+				target = newNodeInputs[0];
+			}
+			await editor.addNewConnection(sourceNode, socketData.key, node, target);
 		} else {
 			const targetNode = editor.getNode(socketData.nodeId);
 
-			await editor.addNewConnection(
-				node,
+			let origin =
 				node instanceof MakeArrayNode
 					? 'array'
 					: node instanceof GetNameNode
 						? 'name'
 						: node instanceof XmlNode
 							? 'value'
-							: 'data',
-				targetNode,
-				socketData.key
-			);
+							: 'data';
+
+			const newNodeOutputs = Object.keys(node.outputs);
+
+			if (newNodeOutputs.length == 1) {
+				origin = newNodeOutputs[0];
+			}
+
+			await editor.addNewConnection(node, origin, targetNode, socketData.key);
 		}
 
 		// nodeView.translate()
@@ -126,9 +132,13 @@
 
 		const baseType = socket.type.split(':')[0];
 		const types = socket.type.split(':')[1]?.split('|') || [baseType];
+		if (socket.isArray) {
+			types.push('array');
+		}
 		if (!baseType) {
 			hideMenu();
 		} else {
+			console.log('Filtering items, socketData', socketData);
 			filteredItems = $moonMenuItemsStore.filter((item) => {
 				// if (item.label === 'GetName') {
 				// 	console.log(item.inChildrenTypes, types);
@@ -138,7 +148,6 @@
 				) {
 					return true;
 				}
-
 				const res = intersection(
 					socketData.side === 'output' ? item.inChildrenTypes : [item.outType],
 					types

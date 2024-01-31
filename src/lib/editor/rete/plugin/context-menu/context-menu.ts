@@ -14,6 +14,8 @@ import { moonMenuItemsStore, type MoonMenuItem } from '$lib/menu/context-menu/mo
 import { GetNameNode } from '$rete/node/XML/GetNameNode';
 import { MakeArrayNode } from '$rete/node/data/MakeArrayNode';
 import { StringNode } from '$rete/node/data/StringNode';
+import { factory } from 'typescript';
+import { DownloadNode } from '$rete/node/io/DownloadNode';
 
 type Entry = Map<string, Entry | (() => Node | Promise<Node>)>;
 function isClassConstructor(obj: unknown): boolean {
@@ -164,9 +166,9 @@ export class ContextMenuSetup extends Setup {
 			};
 			const makeArrayNodeItem: MoonMenuItem = {
 				action: (factory) => new MakeArrayNode({ factory }),
-				inChildrenTypes: ['*'],
+				inChildrenTypes: [],
 				label: 'Make Array',
-				outType: '*'
+				outType: 'array'
 			};
 			const stringNodeItem: MoonMenuItem = {
 				action: (factory) => new StringNode({ factory }),
@@ -174,7 +176,19 @@ export class ContextMenuSetup extends Setup {
 				label: 'String',
 				outType: 'string'
 			};
-			moonMenuItemsStore.set([stringNodeItem, getNameNodeItem, makeArrayNodeItem, ...moonItems]);
+			const downloadSchemaItem: MoonMenuItem = {
+				action: (factory) => new DownloadNode({ factory }),
+				inChildrenTypes: ['Problem'],
+				label: 'Download',
+				outType: ''
+			};
+			moonMenuItemsStore.set([
+				stringNodeItem,
+				getNameNodeItem,
+				makeArrayNodeItem,
+				downloadSchemaItem,
+				...moonItems
+			]);
 		}
 
 		const contextMenu = new ContextMenuPlugin<Schemes>({
