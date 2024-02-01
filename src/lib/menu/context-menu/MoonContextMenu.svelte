@@ -42,7 +42,6 @@
 	$: flipMenuV =
 		$moonMenuConnDropEvent && $moonMenuConnDropEvent.pos.y + height > window.innerHeight;
 	// $: console.log(flipMenuH, flipMenuV);
-	$: console.log($moonMenuPositionStore);
 	$: x = $moonMenuPositionStore.x + (flipMenuH ? menuSpawnPaddingX : -menuSpawnPaddingX);
 	$: y = $moonMenuPositionStore.y + (flipMenuV ? menuSpawnPaddingY + 5 : -menuSpawnPaddingY);
 

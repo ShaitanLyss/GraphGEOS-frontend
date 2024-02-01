@@ -10,6 +10,7 @@
 	import Fa from 'svelte-fa';
 	import { EditMacroNodeChannel } from '$lib/broadcast-channels';
 	import { GetGraphStore } from '$houdini';
+	import { fade } from 'svelte/transition';
 	type NodeExtraData = { width?: number; height?: number };
 
 	function sortByIndex<K, I extends undefined | { index?: number }>(entries: [K, I][]) {
@@ -22,10 +23,11 @@
 	}
 
 	export let data: Node & NodeExtraData;
+
 	$: node = data;
 
+	const firstNameGiven = data instanceof XmlNode ? data.name : undefined;
 	$: macroNode = data instanceof MacroNode ? data : undefined;
-
 	const isMacroNode = data instanceof MacroNode;
 	const isNamedXmlNode = data instanceof XmlNode && data.name !== undefined;
 	// console.log('isMacroNode', isMacroNode);
@@ -65,10 +67,20 @@
 	$: if (editingName) {
 		document.addEventListener('keydown', disableEditing);
 	} else document.removeEventListener('keydown', disableEditing);
+
+	let startDragPos: { x: number; y: number } | undefined;
+	let dragDistance: number | undefined = undefined;
+	const dragThreshold = 2;
+	$: if (editingName === false && isNamedXmlNode && data.name.trim() === '') {
+		data.name = firstNameGiven;
+	}
 </script>
 
 <div
-	class="rounded-container-token node {data.selected ? 'selected' : ''}"
+	class="rounded-container-token node {data.selected &&
+	(dragDistance === undefined || dragDistance > dragThreshold)
+		? 'selected'
+		: ''}"
 	style:width
 	style:height
 	data-testid="node"
@@ -81,17 +93,36 @@
 				<small class="text-white text-xs opacity-60">{node.label}</small>
 				<div class="relative">
 					<button
-						class="cursor-text text-start"
+						class="cursor-text text-start transition-opacity"
+						class:opacity-0={editingName}
 						data-testid="title"
-						on:pointerdown|stopPropagation
-						on:click|preventDefault={() => {
+						on:pointerdown={(event) => {
+							startDragPos = { x: event.clientX, y: event.clientY };
+							dragDistance = 0;
+						}}
+						on:pointermove={(event) => {
+							if (!startDragPos) return;
+							dragDistance = Math.sqrt(
+								Math.pow(event.clientX - startDragPos.x, 2) +
+									Math.pow(event.clientY - startDragPos.y, 2)
+							);
+						}}
+						on:pointerup={(event) => {
+							startDragPos = undefined;
+							if (dragDistance && dragDistance > dragThreshold) {
+								dragDistance = undefined;
+								return;
+							}
+							dragDistance = undefined;
 							editingName = true;
+							node.getFactory().selectableNodes?.unselect(node.id);
 						}}
 					>
 						{node.name}
 					</button>
 					{#if editingName}
 						<input
+							transition:fade={{ duration: 100 }}
 							bind:this={nameInput}
 							class="text-token absolute top-0 left-0 w-full hover:bg-surface-50-900-token focus:bg-surface-50-900-token rounded-token dark:bg-surface-200-700-token no-border-token no-focus:border-primary-500 no-focus:ring-primary-500 transition-colors"
 							type="text"
@@ -101,8 +132,9 @@
 								if (e.key === 'Enter') editingName = false;
 							}}
 							on:input={(e) => {
-								node.name = e.target.value;
-								node.setName(e.target.value);
+								const val = e.target.value;
+								node.name = val;
+								node.setName(val);
 							}}
 						/>
 					{/if}

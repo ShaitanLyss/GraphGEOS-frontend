@@ -31,6 +31,7 @@ import { get } from 'svelte/store';
 import wu from 'wu';
 import { ErrorWNotif } from '$lib/global';
 import type { SelectorEntity } from 'rete-area-plugin/_types/extensions/selectable';
+import { t } from 'svelte-i18n';
 
 type Entry = Map<string, Entry | (() => Node | Promise<Node>)>;
 function isClassConstructor(obj: unknown): boolean {
@@ -244,21 +245,30 @@ export class ContextMenuSetup extends Setup {
 		area.addPipe((context) => {
 			if ((['pointermove', 'render', 'rendered'] as (typeof context.type)[]).includes(context.type))
 				return context;
-			console.log(context);
-			console.log('selected', this.selectedNodes);
 			const selector = __factory.selector;
 			if (!selector) throw new ErrorWNotif("Selector doesn't exist");
-			if (context.type === 'pointerup' || context.type === 'pointerdown') {
+			if (context.type === 'pointerdown') {
 				const event = context.data.event;
+				const nodeDiv =
+					event.target instanceof HTMLElement
+						? event.target.classList.contains('node')
+							? event.target
+							: event.target.closest('.node')
+						: null;
 				if (
 					event.target instanceof HTMLElement &&
 					event.button === 2 &&
 					(event.target.classList.contains('node') || event.target.closest('.node')) !== null
 				) {
+					const entries = Array(...area.nodeViews.entries());
+
+					const nodeId = entries.find((t) => t[1].element === nodeDiv?.parentElement)?.[0];
+					if (!nodeId) return context;
+					__factory.selectableNodes?.select(nodeId, true);
 					const selectedNodes = wu(selector.entities.values())
 						.filter((t) => editor.getNode(t.id) !== undefined)
 						.toArray();
-					console.log('remember selected', selectedNodes);
+					// console.log('remember selected', selectedNodes);
 					if (selectedNodes.length > 0) {
 						this.selectedNodes = selectedNodes;
 					}

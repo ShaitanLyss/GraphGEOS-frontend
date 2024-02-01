@@ -26,7 +26,6 @@
 	$: if (firstLoading && $savedEditors) {
 		savesToLoad = $savedEditors;
 		firstLoading = false;
-		console.log(savesToLoad);
 	}
 
 	const activeSaveEditorsId: Writable<number | null> = localStorageStore(
