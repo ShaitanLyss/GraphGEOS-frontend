@@ -38,7 +38,7 @@
 	export let saveData: NodeEditorSaveData | undefined = undefined;
 	let container: HTMLElement;
 	let editorData: Awaited<ReturnType<typeof setupEditor>>;
-	const dispatch = createEventDispatcher<{ destroy: { id: string } }>();
+	const dispatch = createEventDispatcher<{ destroy: { id: string }; pointerdown: MouseEvent }>();
 
 	let placeholderVisible = false;
 	setTimeout(() => (placeholderVisible = true), 500);
@@ -71,6 +71,12 @@
 		editorData.editor.setName(name);
 		saveData = undefined;
 		mounted = true;
+		editorData.factory.getArea()?.addPipe((ctx) => {
+			if (ctx.type === 'pointerdown') {
+				dispatch('pointerdown', ctx.data.event);
+			}
+			return ctx;
+		});
 	});
 
 	onDestroy(() => {

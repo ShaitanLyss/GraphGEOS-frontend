@@ -1,16 +1,12 @@
-import type { GeosTypesTree } from '$lib/backend-interaction';
 import { ErrorWNotif, type resolveContext } from '$lib/global';
 import {
 	type X2jOptionsOptional,
-	XMLBuilder,
 	XMLParser,
 	type XmlBuilderOptionsOptional
 } from 'fast-xml-parser';
 import 'regenerator-runtime/runtime';
 import { get } from 'svelte/store';
-import wu, { type WuIterable } from 'wu';
-import { Queue } from 'queue-typescript';
-import { XmlNode } from '$rete/node/XML/XmlNode';
+import wu from 'wu';
 import __ from 'lodash';
 
 const fxpSettings: X2jOptionsOptional & XmlBuilderOptionsOptional = {

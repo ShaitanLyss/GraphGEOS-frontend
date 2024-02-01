@@ -20,7 +20,7 @@
 </script>
 
 <div class="flex" style="height: 2.63em;">
-	<h1 class="h3 mx-auto my-auto pb-1.5 w-20 text-center">
+	<h1 class="h3 mx-auto my-auto pb-1.5 w-20 text-center select-none">
 		<span
 			class="bg-gradient-to-tr from-red-900 to-yellow-700 dark:from-red-500 dark:to-yellow-500 bg-clip-text text-transparent box-decoration-clone"
 		>

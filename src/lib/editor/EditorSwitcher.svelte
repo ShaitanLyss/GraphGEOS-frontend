@@ -16,6 +16,13 @@
 	import { onDestroy, onMount } from 'svelte';
 	import type { Writable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
+	import BoxSelection from './selection/BoxSelection.svelte';
+	import type { Area, AreaPlugin } from 'rete-area-plugin';
+	import type { Schemes } from '$rete/node/Schemes';
+	import { clientToSurfacePos } from '$utils/html';
+	import type { Point } from '$lib/types/Point';
+	import wu from 'wu';
+	import { browser } from '$app/environment';
 
 	const id = newUniqueId('editor-switcher');
 	let editors: Record<string, NodeFactory | undefined> = {};
@@ -23,6 +30,46 @@
 	const savedEditors: Writable<NodeEditorSaveData[]> = localStorageStore('saveData', []);
 	let firstLoading = true;
 	let savesToLoad: (NodeEditorSaveData | undefined)[] = [];
+
+	async function onKeyDown(event: KeyboardEvent) {
+		if (!activeId) return;
+		const factory = editors[activeId];
+		if (!factory) return;
+		const editor = factory.getEditor();
+		const selector = factory.selector;
+		if (!selector) return;
+		const area = factory.getArea();
+		if (!area) return;
+
+		if (event.key === 'a' && event.ctrlKey) {
+			const nodeViews = area.nodeViews;
+			for (const [nodeId, nodeView] of nodeViews.entries()) {
+				factory.selectableNodes?.select(nodeId, true);
+			}
+			event.preventDefault();
+			return;
+		}
+
+		if (event.key === 'Delete') {
+			console.log('Deleting selected nodes');
+			const selectedNodesIds = wu(selector.entities.keys())
+				.filter((id) => id.startsWith('node'))
+				.map((id) => id.slice(5))
+				.toArray();
+			for (const id of selectedNodesIds) {
+				const node = editor.getNode(id);
+				for (const conn of node.getConnections()) {
+					if (conn) await editor.removeConnection(conn.id);
+				}
+				await factory.getEditor().removeNode(id);
+			}
+		}
+	}
+
+	if (browser) {
+		document.addEventListener('keydown', onKeyDown);
+	}
+
 	$: if (firstLoading && $savedEditors) {
 		savesToLoad = $savedEditors;
 		firstLoading = false;
@@ -156,6 +203,9 @@
 	}
 	onDestroy(() => {
 		onDestroyCleanup();
+		if (browser) {
+			document.removeEventListener('keydown', onKeyDown);
+		}
 		$saveContext.delete(id);
 	});
 
@@ -164,10 +214,65 @@
 		console.log('editMacroNodeChannel.onmessage', data);
 		addNewEditor(data.graph);
 	};
+	let boxSelectionPointerDown: (event: MouseEvent) => void | undefined;
+
+	function handleBoxSelection(e: BoxSelection['$$events_def']['selection']) {
+		console.log('selection', e.detail);
+		if (!activeId) return;
+		const factory = editors[activeId];
+		if (!factory) return;
+
+		let { upperLeft, lowerRight, pointerEvent } = e.detail;
+		let [x, y] = clientToSurfacePos({ x: upperLeft.x, y: upperLeft.y, factory });
+		upperLeft = { x, y };
+		[x, y] = clientToSurfacePos({ x: lowerRight.x, y: lowerRight.y, factory });
+		lowerRight = { x, y };
+		const area = factory.getArea();
+		if (!area) return;
+		// keep fully contained nodes
+
+		nodesToSelect = wu(area.nodeViews.entries())
+			.filter(([nodeId, nodeView]) => {
+				const rect = nodeView.element.getBoundingClientRect();
+				return (
+					rect.left >= upperLeft.x &&
+					rect.right <= lowerRight.x &&
+					rect.top >= upperLeft.y &&
+					rect.bottom <= lowerRight.y
+				);
+			})
+			.map(([nodeId, _]) => {
+				factory.getEditor().getNode(nodeId).selected = true;
+				area.update('node', nodeId);
+				// factory.selectableNodes?.select(nodeId, false);
+				return nodeId;
+			})
+			.toArray();
+		factoryToSelectWith = factory;
+	}
+	let nodesToSelect: string[] = [];
+	let factoryToSelectWith: NodeFactory | undefined = undefined;
 </script>
+
+<BoxSelection
+	target={container}
+	bind:onPointerDown={boxSelectionPointerDown}
+	on:selection={handleBoxSelection}
+/>
 
 <div
 	bind:this={container}
+	on:pointerup={(e) => {
+		if (nodesToSelect.length > 0) {
+			const factory = factoryToSelectWith;
+			if (!factory) throw new ErrorWNotif('No factory for selection');
+			console.log('selecting', nodesToSelect);
+			setTimeout(() => {
+				for (const nodeId of nodesToSelect) factory.selectableNodes?.select(nodeId, true);
+				nodesToSelect = [];
+			}, 0);
+		}
+	}}
 	class="h-full w-full"
 	class:bg-surface-50-900-token={!$modeCurrent}
 	class:bg-white={$modeCurrent}
@@ -185,6 +290,9 @@
 			id={key}
 			name={savesToLoad[i]?.editorName ?? $_('editor.default-name')}
 			hidden={key !== activeId}
+			on:pointerdown={(e) => {
+				if (boxSelectionPointerDown) boxSelectionPointerDown(e.detail);
+			}}
 		/>
 	{/each}
 </div>
