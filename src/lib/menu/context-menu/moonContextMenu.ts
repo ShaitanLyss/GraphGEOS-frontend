@@ -18,10 +18,18 @@ export const moonMenuConnDropEvent = writable<ConnectionDropEvent | null>(null);
 export const moonMenuItemsStore = writable<MoonMenuItem[]>([]);
 export const newMoonItemsStore = writable<IBaseMenuItem[]>([]);
 export const moonMenuFactoryStore = writable<NodeFactory | null>(null);
+export const moonMenuSearchBarStore = writable<boolean>(false);
 
-export function spawnMoonMenu({ connDropEvent }: { connDropEvent: ConnectionDropEvent }) {
+export function spawnMoonMenu({
+	connDropEvent,
+	searchbar = true
+}: {
+	connDropEvent: ConnectionDropEvent;
+	searchbar?: boolean;
+}) {
 	moonMenuConnDropEvent.set(connDropEvent);
 	moonMenuDropConnectionStore.set(connDropEvent.drop);
 	moonMenuPositionStore.set(connDropEvent.pos);
 	moonMenuVisibleStore.set(true);
+	moonMenuSearchBarStore.set(searchbar);
 }

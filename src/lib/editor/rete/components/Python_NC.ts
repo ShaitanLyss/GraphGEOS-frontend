@@ -312,7 +312,7 @@ export class PythonNodeComponent extends NodeComponent {
 				? []
 				: await Promise.all(
 						node.pythonComponent.initCode.map((code) => node.pythonComponent.formatPythonVars(code))
-				  );
+					);
 		let resParserArguments: Map<string, ParseArgumentData> = node.pythonComponent.parseArguments;
 
 		// Pattern to match indendation and variables in code template
@@ -335,8 +335,8 @@ export class PythonNodeComponent extends NodeComponent {
 					)
 				).join('\n');
 			} else {
-				const outgoer = node.getOutgoer(key.replace('_', '-'));
-				const conn = node.outgoingExecConnections[key.replace('_', '-')];
+				const outgoer = node.getOutgoers(key.replace('_', '-'))?.at(0);
+				const conn = node.outgoingExecConnections[key.replace('_', '-')][0];
 				const targetInput = conn?.targetInput;
 				const childRes = await PythonNodeComponent.collectPythonData(
 					outgoer,

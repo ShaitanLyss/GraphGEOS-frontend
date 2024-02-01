@@ -16,7 +16,7 @@
 	});
 </script>
 
-<svelte:component this={MoonContextMenu} searchbar={true} />
+<svelte:component this={MoonContextMenu} />
 {#each Object.entries(popupContext.globalPopupsProps) as [target, globalPopupProps]}
 	<GlobalPopup {target} {globalPopupProps} />
 {/each}

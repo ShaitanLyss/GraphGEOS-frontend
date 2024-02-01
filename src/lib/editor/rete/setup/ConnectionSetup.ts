@@ -150,14 +150,16 @@ export class ConnectionSetup extends Setup {
 
 					const sourceNode = editor.getNode(source.nodeId);
 					const targetNode = editor.getNode(target.nodeId);
-					const conn =
+					const conns =
 						source.key in sourceNode.outgoingDataConnections
 							? sourceNode.outgoingDataConnections[source.key]
 							: source.key in sourceNode.outgoingExecConnections
-							? sourceNode.outgoingExecConnections[source.key]
-							: undefined;
-					if (conn) {
-						if (conn.target === target.nodeId && conn.targetInput === target.key) {
+								? sourceNode.outgoingExecConnections[source.key]
+								: undefined;
+					if (conns) {
+						if (
+							conns.some((conn) => conn.target === target.nodeId && conn.targetInput === target.key)
+						) {
 							console.log('Connection already exists');
 							return false;
 						}

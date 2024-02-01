@@ -212,5 +212,13 @@
     "notification": {
       "title": "Graph editor"
     }
+  },
+  "menu": {
+    "context-menu": {
+      "delete-selected-nodes": "Delete",
+      "searchbar": {
+        "placeholder": "Search..."
+      }
+    }
   }
 }

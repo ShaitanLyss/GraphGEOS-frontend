@@ -87,6 +87,9 @@
 	{#if !$isLocaleLoading}
 		<slot />
 	{/if}
+	<svelte:fragment slot="footer">
+		<svelte:component this={$page.data.footer} {...$page.data.footerProps} />
+	</svelte:fragment>
 </MainLayout>
 <Modals />
 <Popups />

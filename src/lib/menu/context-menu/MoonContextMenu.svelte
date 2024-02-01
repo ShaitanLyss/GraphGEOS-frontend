@@ -8,7 +8,8 @@
 		moonMenuItemsStore,
 		newMoonItemsStore,
 		type MoonMenuItem,
-		moonMenuFactoryStore
+		moonMenuFactoryStore,
+		moonMenuSearchBarStore
 	} from './moonContextMenu';
 
 	import intersection from 'lodash.intersection';
@@ -34,7 +35,7 @@
 		}
 	}
 
-	const menuSpawnPaddingY = 61;
+	$: menuSpawnPaddingY = $moonMenuSearchBarStore ? 58 : 15;
 	const menuSpawnPaddingX = 15;
 
 	$: flipMenuH = false && $moonMenuConnDropEvent?.socketData.side === 'input';
@@ -251,7 +252,7 @@
 		bind:this={moonMenuElement}
 		role="menu"
 		tabindex="0"
-		class="absolute text-token bg-surface-50 dark:bg-surface-800 z-10 h-2/5 overflow-hidden text-sm w-80 pb-0.5"
+		class="absolute text-token bg-surface-50 dark:bg-surface-800 z-50 h-2/5 overflow-hidden text-sm w-80 pb-0.5"
 		style="position: absolute; border-radius: 5px; left: {x}px; top: {y}px; transform: translate({flipMenuH
 			? -width
 			: 0}px, {flipMenuV ? -height : 0}px);"
@@ -260,7 +261,7 @@
 	>
 		{#if useNewMoon}
 			<Menu
-				searchBar={true}
+				searchBar={$moonMenuSearchBarStore}
 				menuItems={$moonMenuConnDropEvent ? filteredNewMoonItems : $newMoonItemsStore}
 				type="tree"
 			/>

@@ -111,4 +111,7 @@
 	<svelte:fragment>
 		<slot />
 	</svelte:fragment>
+	<svelte:fragment slot="footer">
+		<slot name="footer" />
+	</svelte:fragment>
 </AppShell>

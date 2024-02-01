@@ -13,6 +13,7 @@ import { PythonDataflowEngine } from '$rete/engine/PythonDataflowEngine';
 import type { MakutuClassRepository } from '$lib/backend-interaction/types';
 import { newUniqueId } from '$utils';
 import type { SelectorEntity } from 'rete-area-plugin/_types/extensions/selectable';
+import { ErrorWNotif } from '$lib/global';
 
 function createDataflowEngine() {
 	return new DataflowEngine<Schemes>(({ inputs, outputs }) => {
@@ -221,12 +222,26 @@ export class NodeFactory {
 					: targetNode.ingoingDataConnections;
 
 			if (context.type === 'connectioncreated') {
-				outgoingConnections[conn.sourceOutput] = conn;
-				ingoingConnections[conn.targetInput] = conn;
+				if (!(conn.sourceOutput in outgoingConnections))
+					outgoingConnections[conn.sourceOutput] = [];
+				if (!(conn.targetInput in ingoingConnections)) ingoingConnections[conn.targetInput] = [];
+				outgoingConnections[conn.sourceOutput].push(conn);
+				ingoingConnections[conn.targetInput].push(conn);
 			} else if (context.type === 'connectionremoved') {
 				if (targetNode.onRemoveIngoingConnection) targetNode.onRemoveIngoingConnection(conn);
-				delete outgoingConnections[conn.sourceOutput];
-				delete ingoingConnections[conn.targetInput];
+				const outgoingIndex = outgoingConnections[conn.sourceOutput].findIndex(
+					(c) => c.id == conn.id
+				);
+				if (outgoingIndex === -1) throw new ErrorWNotif("Couldn't find outgoing connection");
+				outgoingConnections[conn.sourceOutput].splice(outgoingIndex, 1);
+				if (outgoingConnections[conn.sourceOutput].length === 0)
+					delete outgoingConnections[conn.sourceOutput];
+
+				const ingoingIndex = ingoingConnections[conn.targetInput].findIndex((c) => c.id == conn.id);
+				if (ingoingIndex === -1) throw new ErrorWNotif("Couldn't find ingoing connection");
+				ingoingConnections[conn.targetInput].splice(ingoingIndex, 1);
+				if (ingoingConnections[conn.targetInput].length === 0)
+					delete ingoingConnections[conn.targetInput];
 			}
 
 			return context;

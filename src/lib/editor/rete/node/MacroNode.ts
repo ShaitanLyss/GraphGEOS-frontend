@@ -78,14 +78,16 @@ export class MacroNode extends Node {
 				const inputSocket = this.macroEditor.getNode(ctx.data.target).inputs[ctx.data.targetInput]
 					?.socket;
 				if (outputSocket?.isArray === true && inputSocket?.isArray === true) {
-					if (ctx.data.targetInput in inputSocket.node.ingoingDataConnections)
-						await this.macroEditor.removeConnection(
-							inputSocket.node.ingoingDataConnections[ctx.data.targetInput].id
-						);
+					if (ctx.data.targetInput in inputSocket.node.ingoingDataConnections) {
+						for (const conn of inputSocket.node.ingoingDataConnections[ctx.data.targetInput]) {
+							await this.macroEditor.removeConnection(conn.id);
+						}
+					}
 				}
 			}
 			return ctx;
 		});
+
 		let numSockets = 0;
 		for (const node of saveData.nodes) {
 			numSockets += node.selectedInputs.length + node.selectedOutputs.length;
@@ -165,7 +167,7 @@ export class MacroNode extends Node {
 										inputNode.setValue(val);
 									}
 								}
-						  }
+							}
 						: undefined
 				});
 				setHeight(this.height + (baseInputControl ? 65 : 37));
@@ -180,7 +182,7 @@ export class MacroNode extends Node {
 					const execNode = await this.macroFactory.addNode(OutExecNode, {
 						onExecute: async () => {
 							if (macroKey in this.outgoingExecConnections) {
-								const conn = this.outgoingExecConnections[macroKey];
+								const conn = this.outgoingExecConnections[macroKey][0];
 								if (!this.forward) throw new Error('Forward not set');
 								const promises = this.getWaitPromises(getLeavesFromOutput(this, macroKey));
 								this.factory.getControlFlowEngine().execute(conn.target, conn.targetInput);

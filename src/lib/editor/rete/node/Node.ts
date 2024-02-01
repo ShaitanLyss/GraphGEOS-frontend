@@ -105,10 +105,10 @@ export class Node<
 	outputs: { [key in keyof Outputs]?: Output<Exclude<Outputs[key], undefined>> | undefined } = {};
 	readonly pythonComponent: PythonNodeComponent;
 	readonly socketSelectionComponent: R_SocketSelection_NC;
-	readonly ingoingDataConnections: Record<string, Connection<Node, Node>> = {};
-	readonly ingoingExecConnections: Record<string, Connection<Node, Node>> = {};
-	readonly outgoingDataConnections: Record<string, Connection<Node, Node>> = {};
-	readonly outgoingExecConnections: Record<string, Connection<Node, Node>> = {};
+	readonly ingoingDataConnections: Record<string, Connection<Node, Node>[]> = {};
+	readonly ingoingExecConnections: Record<string, Connection<Node, Node>[]> = {};
+	readonly outgoingDataConnections: Record<string, Connection<Node, Node>[]> = {};
+	readonly outgoingExecConnections: Record<string, Connection<Node, Node>[]> = {};
 	onRemoveIngoingConnection?: (conn: Connection) => void;
 
 	initializePromise?: Promise<void>;
@@ -116,6 +116,15 @@ export class Node<
 
 	getFactory(): NodeFactory {
 		return this.factory;
+	}
+
+	getConnections(): Connection[] {
+		return [
+			...Object.values(this.ingoingDataConnections),
+			...Object.values(this.ingoingExecConnections),
+			...Object.values(this.outgoingDataConnections),
+			...Object.values(this.outgoingExecConnections)
+		].flat();
 	}
 
 	constructor(params: NodeParams) {
@@ -138,11 +147,11 @@ export class Node<
 		this.state = state;
 	}
 
-	getOutgoer(key: string): Node | null {
+	getOutgoers(key: string): Node[] | null {
 		if (key in this.outgoingExecConnections) {
-			return this.getEditor().getNode(this.outgoingExecConnections[key].target);
+			return this.outgoingExecConnections[key].map((conn) => this.getEditor().getNode(conn.target));
 		} else if (key in this.outgoingDataConnections) {
-			return this.getEditor().getNode(this.outgoingDataConnections[key].target);
+			return this.outgoingDataConnections[key].map((conn) => this.getEditor().getNode(conn.target));
 		}
 		return null;
 	}

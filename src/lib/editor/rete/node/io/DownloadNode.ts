@@ -22,7 +22,7 @@ export class DownloadNode extends Node {
 					'href',
 					'data:text/plain;charset=utf-8,' + encodeURIComponent(formatXml({ xml: data.toXml() }))
 				);
-				element.setAttribute('download', 'geosx.xml');
+				element.setAttribute('download', `${this.getEditor().name}.xml`);
 
 				element.style.display = 'none';
 				document.body.appendChild(element);

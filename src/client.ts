@@ -10,11 +10,11 @@ export default new HoudiniClient({
 	fetchParams({ session }) {
 		// console.log('houdiniClient : fetchParams : session', session);
 		let sessionToken;
-		if (browser && typeof localStorage !== undefined)
+		if (browser && typeof localStorage !== 'undefined')
 			sessionToken = localStorage.getItem('sessionToken')?.replaceAll('"', '');
 		else sessionToken = (session as unknown as { token: string })?.token;
 		// sessionToken = '05785ac6-25eb-4c1f-80a1-c6f6a96c8e45';
-		console.log('houdiniClient : sessionToken', sessionToken);
+		// console.log('houdiniClient : sessionToken', sessionToken);
 		return {
 			headers: {
 				Authorization: `Bearer ${sessionToken}`

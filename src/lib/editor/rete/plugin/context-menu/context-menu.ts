@@ -5,6 +5,7 @@ import type { AreaExtra } from '../../node/AreaExtra';
 import { Node } from '../../node/Node';
 import { capitalize } from '$utils/string';
 import { Setup } from '../../setup/Setup';
+import { _ } from '$lib/global';
 import type { NodeEditor } from '../../NodeEditor';
 import type { NodeFactory } from '../../node/NodeFactory';
 import { GeosXmlSchemaStore as GetXmlSchemaStore, PendingValue } from '$houdini';
@@ -16,16 +17,20 @@ import {
 	moonMenuVisibleStore,
 	moonMenuPositionStore,
 	newMoonItemsStore,
-	moonMenuFactoryStore
+	moonMenuFactoryStore,
+	moonMenuSearchBarStore
 } from '$lib/menu/context-menu/moonContextMenu';
 import { GetNameNode } from '$rete/node/XML/GetNameNode';
 import { MakeArrayNode } from '$rete/node/data/MakeArrayNode';
 import { StringNode } from '$rete/node/data/StringNode';
 import { factory } from 'typescript';
 import { DownloadNode } from '$rete/node/io/DownloadNode';
-import { createNodeMenuItem, type IBaseMenuItem } from '$lib/menu/types';
+import { createActionMenuItem, createNodeMenuItem, type IBaseMenuItem } from '$lib/menu/types';
 import type { GeosDataContext } from '$lib/geos';
 import { get } from 'svelte/store';
+import wu from 'wu';
+import { ErrorWNotif } from '$lib/global';
+import type { SelectorEntity } from 'rete-area-plugin/_types/extensions/selectable';
 
 type Entry = Map<string, Entry | (() => Node | Promise<Node>)>;
 function isClassConstructor(obj: unknown): boolean {
@@ -76,6 +81,7 @@ function getMenuArray(items: Map<string, Entry>) {
 }
 
 export class ContextMenuSetup extends Setup {
+	selectedNodes: SelectorEntity[] = [];
 	async setup(
 		editor: NodeEditor,
 		area: AreaPlugin<Schemes, AreaExtra>,
@@ -115,11 +121,12 @@ export class ContextMenuSetup extends Setup {
 
 		const xmlSchema = (await new GetXmlSchemaStore().fetch()).data?.geos.xmlSchema;
 
+		const newMoonItems: IBaseMenuItem[] = [];
 		if (xmlSchema) {
-			const newMoonItems: IBaseMenuItem[] = [];
 			const moonItems: MoonMenuItem[] = [];
 			const complexTypesWithName: string[] = [];
 			const complexTypes: string[] = [];
+
 			for (const complexType of xmlSchema.complexTypes) {
 				if (complexType === PendingValue) continue;
 				const name = complexType.name.match(/^(.*)Type$/)?.at(1);
@@ -217,6 +224,16 @@ export class ContextMenuSetup extends Setup {
 				downloadSchemaItem,
 				...moonItems
 			]);
+			newMoonItems.push(
+				createNodeMenuItem({
+					label: 'Download',
+					addNode: downloadSchemaItem.action,
+					inTypes: ['Problem'],
+					description: 'Download the problem as xml',
+					tags: ['download', 'xml']
+				})
+			);
+
 			newMoonItemsStore.set([...newMoonItems]);
 		}
 
@@ -225,13 +242,64 @@ export class ContextMenuSetup extends Setup {
 		});
 
 		area.addPipe((context) => {
+			if ((['pointermove', 'render', 'rendered'] as (typeof context.type)[]).includes(context.type))
+				return context;
+			console.log(context);
+			console.log('selected', this.selectedNodes);
+			const selector = __factory.selector;
+			if (!selector) throw new ErrorWNotif("Selector doesn't exist");
+			if (context.type === 'pointerup' || context.type === 'pointerdown') {
+				const event = context.data.event;
+				if (
+					event.target instanceof HTMLElement &&
+					event.button === 2 &&
+					(event.target.classList.contains('node') || event.target.closest('.node')) !== null
+				) {
+					const selectedNodes = wu(selector.entities.values())
+						.filter((t) => editor.getNode(t.id) !== undefined)
+						.toArray();
+					console.log('remember selected', selectedNodes);
+					if (selectedNodes.length > 0) {
+						this.selectedNodes = selectedNodes;
+					}
+				}
+			}
 			if (context.type === 'contextmenu') {
 				if (context.data.context !== 'root') {
+					if (!(context.data.context instanceof Node)) return context;
+					moonMenuVisibleStore.set(true);
+					moonMenuSearchBarStore.set(false);
+					newMoonItemsStore.set([
+						createActionMenuItem({
+							label: get(_)('menu.context-menu.delete-selected-nodes'),
+							executeAction: async () => {
+								const selector = __factory.selector;
+								console.log('to delete', this.selectedNodes);
+								for (const selectedNode of this.selectedNodes) {
+									const node = editor.getNode(selectedNode.id);
+									if (!node) continue;
+									console.log('connections', node.getConnections());
+									for (const conn of node.getConnections()) {
+										if (editor.getConnection(conn.id)) await editor.removeConnection(conn.id);
+									}
+									await editor.removeNode(node.id);
+								}
+								this.selectedNodes = [];
+							}
+						})
+					]);
+					moonMenuPositionStore.set({
+						x: context.data.event.clientX,
+						y: context.data.event.clientY
+					});
+					moonMenuFactoryStore.set(__factory);
 					context.data.event.preventDefault();
 					context.data.event.stopImmediatePropagation();
-					return context;
+					return;
 				}
 				context.data.event.preventDefault();
+				moonMenuSearchBarStore.set(true);
+				newMoonItemsStore.set(newMoonItems);
 				moonMenuVisibleStore.set(true);
 				moonMenuFactoryStore.set(__factory);
 				moonMenuPositionStore.set({ x: context.data.event.clientX, y: context.data.event.clientY });

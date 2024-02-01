@@ -19,8 +19,9 @@
 	import { translateNodeFromGlobal } from '$utils/html';
 	import type { ConnectionDropEvent } from '$rete/setup/ConnectionSetup';
 	import type { spawnMoonMenu as t_spawnMoonMenu } from '$lib/menu/context-menu/moonContextMenu';
-	import { moonMenuFactoryStore } from '$lib/menu/context-menu/moonContextMenu';
+	import { moonMenuFactoryStore, newMoonItemsStore } from '$lib/menu/context-menu/moonContextMenu';
 	import type { MacroNode as t_MacroNode } from '$rete/node/MacroNode';
+	import type { IBaseMenuItem } from '$lib/menu';
 
 	let spawnMoonMenu: typeof t_spawnMoonMenu | undefined = undefined;
 	let MacroNode: typeof t_MacroNode | undefined = undefined;
@@ -52,6 +53,10 @@
 	$: editor = editorData?.editor;
 	$: factory = editorData?.factory;
 	let mounted = false;
+	let newMoonItems: IBaseMenuItem[] = [];
+	$: if ($newMoonItemsStore?.length > 0 && newMoonItems.length == 0) {
+		newMoonItems = $newMoonItemsStore;
+	}
 	onMount(async () => {
 		await import('$rete/setup/appLaunch');
 		const { setupEditor } = await import('$rete');
@@ -133,7 +138,6 @@
 		});
 		return visibleNodes;
 	}
-
 	async function onDrop(event: DragEvent) {
 		if (!factory) throw new Error('No factory');
 		if (!MacroNode) throw new Error('No MacroNode');
@@ -153,9 +157,9 @@
 
 	function onConnectionDrop(event: ConnectionDropEvent) {
 		if (!spawnMoonMenu) throw new Error('No spawnMoonMenu');
-		$moonMenuFactoryStore = factory;
+		$moonMenuFactoryStore = factory ?? null;
 		console.log('connection drop on editor', event.socketData);
-
+		$newMoonItemsStore = newMoonItems;
 		spawnMoonMenu({ connDropEvent: event });
 	}
 </script>

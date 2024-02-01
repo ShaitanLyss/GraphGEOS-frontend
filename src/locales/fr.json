@@ -209,5 +209,13 @@
     "notification": {
       "title": "Éditeur de graphes"
     }
+  },
+  "menu": {
+    "context-menu": {
+      "delete-selected-nodes": "Supprimer",
+      "searchbar": {
+        "placeholder": "Chercher..."
+      }
+    }
   }
 }

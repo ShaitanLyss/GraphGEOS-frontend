@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { TreeView, TreeViewItem } from '@skeletonlabs/skeleton';
+	import { TreeView } from '@skeletonlabs/skeleton';
 	import { filterMenuItems, type IHierachicalMenu, collectMenuView } from './utils';
 	import TreeViewMenuItems from './TreeViewMenuItems.svelte';
 	import { onMount } from 'svelte';
+	import { _ } from '$lib/global';
 	import type { IMenuItem, MenuType } from './types';
 	import throttle from 'lodash.throttle';
-	import { Popover } from '@mantine/core';
 	import PopoverMenuItems from './PopoverMenuItems.svelte';
 
 	export let searchBar = true;
@@ -62,8 +62,8 @@
 		<div class="flex justify-center items-center">
 			<input
 				type="text"
-				class="w-full p-2 input"
-				placeholder="Search..."
+				class="w-full p-2 input text-sm"
+				placeholder={$_('menu.context-menu.searchbar.placeholder')}
 				style="border-radius: 5px;"
 				bind:value={query}
 				on:input={throttle(() => updateFilteredItems(menuItems), 100)}

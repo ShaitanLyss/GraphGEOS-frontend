@@ -1,6 +1,6 @@
 {
-	"name": "front-svelte",
-	"version": "0.0.1",
+	"name": "GraphGEOS",
+	"version": "0.8.0",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
