@@ -31,8 +31,8 @@
 						filter: {
 							label: query.trim(),
 							// description: ' ' + query,
-							menuPath: [' ' + query],
-							tags: [' ' + query]
+							menuPath: [query],
+							tags: [query]
 						},
 						verifyAll: false,
 						allowMissingKey: false
