@@ -13,9 +13,9 @@
 	onMount(() => {
 		mounted = true;
 	});
-
+	let promise: ReturnType<RemoteFileExplorerStore['fetch']> | null = null;
 	async function go() {
-		const { data } = await new RemoteFileExplorerStore().fetch({
+		promise = new RemoteFileExplorerStore().fetch({
 			variables: {
 				explorerInput: {
 					host: $host,
@@ -25,7 +25,7 @@
 				}
 			}
 		});
-
+		const { data } = await promise;
 		if (data) {
 			console.log(data.remoteExplorer.files);
 			files = data.remoteExplorer.files;
@@ -43,11 +43,26 @@
 			<input type="text" name="path" placeholder="Path" bind:value={$path} />
 		</div>
 		<button type="button" class="btn variant-filled" on:click={(e) => go()}>Go</button>
-		<h3 class="h3">Result</h3>
-		<ul>
-			{#each files as file}
-				<li class="flex gap-1"><span>{file.name}</span>{file.isDir ? 'DIR' : ''}</li>
-			{/each}
-		</ul>
+		{#if promise}
+			{#await promise}
+				<p>Loading...</p>
+			{:then res}
+				<ul>
+					{#if res.errors}
+						<h3 class="h3">Error</h3>
+						{#each res.errors as error}
+							<li>{error.message}</li>
+						{/each}
+					{:else}
+						<h3 class="h3">Result</h3>
+						{#each files as file}
+							<li class="flex gap-1"><span>{file.name}</span>{file.isDir ? 'DIR' : ''}</li>
+						{/each}
+					{/if}
+				</ul>
+			{:catch error}
+				<p>{error.message}</p>
+			{/await}
+		{/if}
 	</div>
 {/if}
