@@ -25,6 +25,7 @@
 	const saveContext: Writable<Map<string, SaveHandler>> = writable(new Map());
 
 	setContext('save', saveContext);
+
 	const onSave: resolveContext<'onSave'> = ({ displaySuccess = true } = {}) => {
 		if (displaySuccess)
 			notifications.show({

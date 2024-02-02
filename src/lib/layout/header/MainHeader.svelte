@@ -14,9 +14,16 @@
 	import Fa from 'svelte-fa';
 
 	import HeaderLink from './HeaderLink.svelte';
+	import { onMount } from 'svelte';
+	import { fade } from 'svelte/transition';
 
 	export let titleButtonUrl = '/';
 	export let tabsContext: TabContext;
+
+	let mounted = false;
+	onMount(() => {
+		mounted = true;
+	});
 </script>
 
 <div class="flex" style="height: 2.63em;">
@@ -73,11 +80,14 @@
 					<LightSwitch />
 				</div>
 			</div>
-			<div
-				class="absolute inset-0 transition-opacity group-hover:opacity-0 opacity-50 pe-4 flex justify-end items-center pointer-events-none"
-			>
-				<Fa icon={faEllipsisH} size="2x" />
-			</div>
+			{#if mounted}
+				<div
+					transition:fade
+					class="absolute inset-0 transition-opacity group-hover:opacity-0 opacity-50 pe-4 flex justify-end items-center pointer-events-none"
+				>
+					<Fa icon={faEllipsisH} size="2x" />
+				</div>
+			{/if}
 		</div>
 	</div>
 </div>
