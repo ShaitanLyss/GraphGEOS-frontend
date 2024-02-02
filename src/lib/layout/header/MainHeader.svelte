@@ -46,13 +46,20 @@
 						href="/"
 						icon={faCircleNodes}
 						tooltip={$_('header.link.graph-editor.tooltip')}
+						shortcut="g"
 					/>
 					<HeaderLink
 						href="/code-editor"
 						icon={faFileCode}
 						tooltip={$_('header.link.code-editor.tooltip')}
+						shortcut="c"
 					/>
-					<HeaderLink href="/auth" icon={faUser} tooltip={$_('header.link.auth.tooltip')} />
+					<HeaderLink
+						href="/auth"
+						icon={faUser}
+						tooltip={$_('header.link.auth.tooltip')}
+						shortcut="a"
+					/>
 				</div>
 				<span class="divider-vertical border-surface-400-500-token h-4 my-auto" />
 				<div class="flex gap-3 items-center ms-3">

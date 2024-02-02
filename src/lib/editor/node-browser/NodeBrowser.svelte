@@ -8,6 +8,8 @@
 	import GraphSearchPanel from './GraphSearchPanel.svelte';
 	import { fade, slide } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
+	import { browser } from '$app/environment';
+	import { onDestroy } from 'svelte';
 
 	let currentTile: string | undefined = undefined;
 	let drawerMode = false;
@@ -17,6 +19,47 @@
 			currentTile = undefined;
 			return;
 		}
+	}
+
+	function onKeyDown(e: KeyboardEvent) {
+		// Check if the event target is an input, textarea, or has contenteditable attribute
+		const ignoreElements = ['INPUT', 'TEXTAREA'];
+		if (ignoreElements.includes(e.target?.tagName) || e.target.contentEditable === 'true') {
+			return;
+		}
+
+		if (e.key === 'f' && e.ctrlKey === false && e.altKey === false && e.shiftKey === false) {
+			if (currentTile === 'favorites') {
+				currentTile = undefined;
+				return;
+			}
+			currentTile = 'favorites';
+			return;
+		}
+
+		if (e.key === 'u' && e.ctrlKey === false && e.altKey === false && e.shiftKey === false) {
+			if (currentTile === 'user') {
+				currentTile = undefined;
+				return;
+			}
+			currentTile = 'user';
+			return;
+		}
+
+		if (e.key === 's' && e.ctrlKey === false && e.altKey === false && e.shiftKey === false) {
+			if (currentTile === 'shared') {
+				currentTile = undefined;
+				return;
+			}
+			currentTile = 'shared';
+			return;
+		}
+	}
+	if (browser) {
+		document.addEventListener('keydown', onKeyDown);
+		onDestroy(() => {
+			document.removeEventListener('keydown', onKeyDown);
+		});
 	}
 </script>
 

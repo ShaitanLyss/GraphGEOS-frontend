@@ -3,9 +3,10 @@
 	import EditorButton from './EditorButton.svelte';
 	import { _, getContext } from '$lib/global';
 	import type { CodeEditorIntegration } from '$lib/editor';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { localStorageStore } from '@skeletonlabs/skeleton';
 	import { writable } from 'svelte/store';
+	import { browser } from '$app/environment';
 	const mainRightSideBar = getContext<'mainRightSideBar', CodeEditorIntegration>(
 		'mainRightSideBar'
 	);
@@ -25,6 +26,22 @@
 			props: { editorContext }
 		};
 	}
+	function onKeyDown(e: KeyboardEvent) {
+		// Check if the event target is an input, textarea, or has contenteditable attribute
+		const ignoreElements = ['INPUT', 'TEXTAREA'];
+		if (ignoreElements.includes(e.target?.tagName) || e.target.contentEditable === 'true') {
+			return;
+		}
+		if (e.key === 'c' && e.ctrlKey === false && e.altKey === false && e.shiftKey === false) {
+			toggleCodeEditor();
+		}
+	}
+	if (browser) {
+		document.addEventListener('keydown', onKeyDown);
+	}
+	onDestroy(() => {
+		document.removeEventListener('keydown', onKeyDown);
+	});
 
 	onMount(async () => {
 		if ($codeEditorActive) await toggleCodeEditor();

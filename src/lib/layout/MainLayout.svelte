@@ -16,6 +16,7 @@
 	import type { SvelteComponent } from 'svelte';
 	import { browser } from '$app/environment';
 	import { getLocalStorageUsagePercent } from '$utils/localStorage';
+	import { redirect } from '@sveltejs/kit';
 
 	const numGlobalTooltips = 3;
 	let tooltipUseCount = 0;

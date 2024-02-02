@@ -3,16 +3,43 @@
 	import { faPython } from '@fortawesome/free-brands-svg-icons';
 	import EditorButton from './EditorButton.svelte';
 	import { notifications } from '@mantine/notifications';
-	import { _ } from '$lib/global';
+	import { ErrorWNotif, _, getContext } from '$lib/global';
 	import type { Root } from 'rete';
 	import type { Area2D } from 'rete-area-plugin';
 	import type { AreaExtra } from '$rete/node/AreaExtra';
 	import type { Schemes } from '$rete/node/Schemes';
 	import { browser } from '$app/environment';
+	import { onDestroy } from 'svelte';
 
 	let factory: NodeFactory;
 	let editorViewport: HTMLElement;
 	let active = false;
+
+	const editorContext = getContext('editor');
+
+	function onKeyDown(e: KeyboardEvent) {
+		// Check if the event target is an input, textarea, or has contenteditable attribute
+		const ignoreElements = ['INPUT', 'TEXTAREA'];
+		if (ignoreElements.includes(e.target?.tagName) || e.target.contentEditable === 'true') {
+			return;
+		}
+
+		if (e.key === 'p' && e.ctrlKey === false && e.altKey === false && e.shiftKey === false) {
+			const factory = editorContext.getActiveFactory();
+			if (!factory) throw new ErrorWNotif('No active factory supplied');
+			const editorViewport = editorContext.getEditorViewport();
+			if (!editorViewport) throw new ErrorWNotif('No editor viewport supplied');
+
+			setData({ factory, editorViewport });
+			togglePythonMode();
+		}
+	}
+	if (browser) {
+		document.addEventListener('keydown', onKeyDown);
+	}
+	onDestroy(() => {
+		document.removeEventListener('keydown', onKeyDown);
+	});
 
 	// $: window.factory = factory;
 

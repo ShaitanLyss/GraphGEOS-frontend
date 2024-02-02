@@ -134,6 +134,47 @@
 		};
 		modalStore.trigger(changeTabName);
 	}
+	if (browser) {
+		const onKeyDown = (e: KeyboardEvent) => {
+			// Check if the event target is an input, textarea, or has contenteditable attribute
+			if (activeId === undefined) return;
+
+			const ignoreElements = ['INPUT', 'TEXTAREA'];
+			if (ignoreElements.includes(e.target?.tagName) || e.target.contentEditable === 'true') {
+				return;
+			}
+
+			if (e.key === 'R' && e.ctrlKey === false && e.altKey === false && e.shiftKey === true) {
+				e.preventDefault();
+				openChangeTabNameModal(activeId);
+				return;
+			}
+
+			if (e.key === 'Escape') {
+				if (activeId === undefined) return;
+				const factory = editors[activeId];
+				if (!factory) return;
+				const editor = factory.getEditor();
+				const selector = factory.selector;
+				if (!selector) return;
+				const area = factory.getArea();
+				if (!area) return;
+				const selectedNodesIds = wu(selector.entities.keys())
+					.filter((id) => id.startsWith('node'))
+					.map((id) => id.slice(5))
+					.toArray();
+				if (selectedNodesIds.length === 0) return;
+				e.preventDefault();
+				selector.unselectAll();
+			}
+		};
+
+		document.addEventListener('keydown', onKeyDown);
+		onDestroy(() => {
+			document.removeEventListener('keydown', onKeyDown);
+		});
+	}
+
 	let mounted = false;
 	onMount(() => {
 		for (const [i, savedEditor] of $savedEditors.entries()) {

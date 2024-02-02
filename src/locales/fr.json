@@ -125,9 +125,9 @@
   },
   "editor": {
     "button": {
-      "save": "Tout sauvegarder",
+      "save": "Tout sauvegarder (CTRL+S)",
       "python-mode": {
-        "tooltip": "Générer un workflow python"
+        "tooltip": "Générer un workflow python (P)"
       },
       "toggle-geos": "Montrer / Cacher le panneau geos",
       "downloadGraph": {
@@ -142,7 +142,7 @@
         "tooltip": "Mettre en ligne le graphe"
       },
       "toggle-code-editor": {
-        "tooltip": "Ouvrir / Fermer l'éditeur de code",
+        "tooltip": "Ouvrir / Fermer l'éditeur de code (C)",
         "close": "Fermer l'éditeur de code"
       }
     },
@@ -169,13 +169,13 @@
   "header": {
     "link": {
       "auth": {
-        "tooltip": "Authentification"
+        "tooltip": "Authentification (Alt+A)"
       },
       "code-editor": {
-        "tooltip": "Éditeur de code"
+        "tooltip": "Éditeur de code (Alt+C)"
       },
       "graph-editor": {
-        "tooltip": "Éditeur de graphe"
+        "tooltip": "Éditeur de graphe (Alt+G)"
       }
     }
   },
