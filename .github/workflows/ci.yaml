@@ -21,21 +21,15 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - 
-        name: Get version from package.json
-        id: package_version
-        run: echo "::set-output name=version::$(jq -r '.version' package.json)"
+      - name: Extract version and set it to TAG env var
+        run: |
+          echo "TAG=$(jq -r '.version' package.json)" >> $GITHUB_ENV
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: "{{defaultContext}}"
+          # context: "{{defaultContext}}"
           push: true
-          tags: moonlyss/geos-ui-frontend:${{ steps.package_version.outputs.version }}
-      -
-        name: Build and push Backend Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: "{{defaultContext}}"
-          push: true
-          tags: moonlyss/geos-ui-frontend:latest
+          tags: |
+            moonlyss/geos-ui-frontend:latest
+            moonlyss/geos-ui-frontend:${{ env.TAG }}
