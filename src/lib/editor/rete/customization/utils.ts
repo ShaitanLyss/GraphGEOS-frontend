@@ -56,7 +56,7 @@ export function assignColor(s: Socket): string {
 
 export function assignControl(socketType: SocketType): InputControlTypes | undefined {
 	const controlMap: { [key in SocketType]?: InputControlTypes } = {
-		path: 'file',
+		path: 'remote-file',
 		string: 'text',
 		number: 'number',
 		boolean: 'checkbox',

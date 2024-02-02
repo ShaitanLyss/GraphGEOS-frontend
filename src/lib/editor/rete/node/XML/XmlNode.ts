@@ -55,7 +55,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 			noName: xmlConfig.noName
 		};
 
-		// console.log('xmlNodeParams', xmlNodeParams);
+		console.log('xmlNodeParams', xmlNodeParams);
 		const { outData, xmlProperties, childTypes = [] } = xmlConfig;
 		const { noName = false } = xmlConfig;
 		super({ ...xmlNodeParams, width: 220, height: 40 });
@@ -166,6 +166,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 
 		const xmlTypePattern = /([^\W_]+)(?:_([^\W_]+))?/gm;
 		const [, xmlType, xmlSubType] = xmlTypePattern.exec(type) || [];
+		console.log('xmlType', xmlType, xmlSubType);
 		if (assignControl(xmlType as SocketType) !== undefined) {
 			type = xmlType as SocketType;
 			controlType = assignControl(xmlType as SocketType);

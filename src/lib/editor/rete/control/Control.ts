@@ -9,22 +9,23 @@ export type InputControlTypes =
 	| 'textarea'
 	| 'vector'
 	| 'unknown'
-	| 'file';
+	| 'file'
+	| 'remote-file';
 export type InputControlValueType<T extends InputControlTypes> = T extends 'text'
 	? string
 	: T extends 'number'
-	? number
-	: T extends 'file'
-	? string
-	: T extends 'checkbox'
-	? boolean
-	: T extends 'textarea'
-	? string
-	: T extends unknown
-	? unknown
-	: T extends 'vector'
-	? { x: number; y: number; z: number }
-	: never;
+		? number
+		: T extends 'file' | 'remote-file'
+			? string
+			: T extends 'checkbox'
+				? boolean
+				: T extends 'textarea'
+					? string
+					: T extends unknown
+						? unknown
+						: T extends 'vector'
+							? { x: number; y: number; z: number }
+							: never;
 
 export type InputControlOptions<N> = {
 	readonly?: boolean;
@@ -43,7 +44,10 @@ export class InputControl<
 	value?: N;
 	readonly: boolean;
 
-	constructor(public type: T, public options?: InputControlOptions<N>) {
+	constructor(
+		public type: T,
+		public options?: InputControlOptions<N>
+	) {
 		super();
 
 		this.id = getUID();

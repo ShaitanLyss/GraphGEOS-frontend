@@ -157,6 +157,7 @@ export class ContextMenuSetup extends Setup {
 							},
 
 							xmlProperties: complexType.attributes.map<XmlAttributeDefinition>((attr) => {
+								console.log(attr);
 								return {
 									name: attr.name,
 									required: attr.required,

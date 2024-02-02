@@ -36,6 +36,12 @@ union BuiltinClassTypeMakutuClassType = BuiltinClassType | MakutuClassType
 """Date with time (isoformat)"""
 scalar DateTime
 
+type File {
+  isDir: Boolean!
+  name: String!
+  path: String!
+}
+
 type GeosQuery {
   geosXsd: String!
   numXmlComplexTypes: Int!
@@ -109,9 +115,21 @@ type Query {
   graphs: [GraphType!]!
   makutuClass(name: String!): MakutuClassType!
   makutuClasses: [MakutuClassType!]!
+  remoteExplorer: RemoteExplorer!
   session(sessionToken: String!): SessionType!
   user(email: String = null, id: UUID = null, provider: ProviderInput = null): UserType
   users: [UserType!]!
+}
+
+type RemoteExplorer {
+  files(remoteExplorerInput: RemoteExplorerInput!): [File!]!
+}
+
+input RemoteExplorerInput {
+  host: String!
+  password: String!
+  path: String!
+  username: String!
 }
 
 input SessionCreateInput {

@@ -64,8 +64,7 @@
 		<!-- <span class="">{options?.label}</span> -->
 		<span class="text-white">{options?.label}</span>
 	</label>
-{/if}
-{#if type == 'number'}
+{:else if type == 'number'}
 	<label class="label">
 		<span class="text-white"> {options?.label ? options?.label : ''}</span>
 		<input
@@ -80,8 +79,7 @@
 			on:pointerdown|stopPropagation={() => false}
 		/>
 	</label>
-{/if}
-{#if type == 'text'}
+{:else if type == 'text'}
 	<label class="label">
 		<!-- {options?.label ? options?.label : ''} -->
 		<span class="text-white"> {options?.label ? options?.label : ''}</span>
@@ -97,8 +95,7 @@
 			on:pointerdown|stopPropagation={() => false}
 		/>
 	</label>
-{/if}
-{#if type == 'textarea'}
+{:else if type == 'textarea'}
 	<label class="label">
 		<!-- {options?.label} -->
 		<span class="text-white"> {options?.label ? options?.label : ''}</span>
@@ -113,8 +110,7 @@
 			on:pointerdown|stopPropagation={() => false}
 		/>
 	</label>
-{/if}
-{#if type == 'vector'}
+{:else if type == 'vector'}
 	<div class="label">
 		<span class="text-white text-sm">{options?.label ? options?.label : ''}</span>
 		<div class="flex">
@@ -165,8 +161,7 @@
 			/>
 		</div>
 	</div>
-{/if}
-{#if type === 'file'}
+{:else if type == 'file'}
 	<label class="label">
 		<!-- {options?.label ? options?.label : ''} -->
 		<span class="text-white"> {options?.label ? options?.label : ''}</span>
@@ -182,4 +177,28 @@
 			on:pointerdown|stopPropagation={() => false}
 		/>
 	</label>
+{:else if type === 'remote-file'}
+	<div class="flex gap-1">
+		<input
+			on:pointerdown|stopPropagation
+			readonly
+			type="text"
+			class="input"
+			placeholder="Select file"
+			{value}
+		/>
+		<button
+			on:pointerdown|stopPropagation
+			class="btn btn-sm variant-filled"
+			on:click={() => console.log('clicked')}>^</button
+		>
+	</div>
+	<!-- <FileButton
+		{value}
+		{readonly}
+		{options}
+		on:change={onFileChange}
+	/> -->
+{:else}
+	Unsupported control type&nbsp: '{type}'
 {/if}
