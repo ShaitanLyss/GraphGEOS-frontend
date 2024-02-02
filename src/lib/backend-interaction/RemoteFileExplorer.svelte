@@ -14,7 +14,9 @@
 		mounted = true;
 	});
 	let promise: ReturnType<RemoteFileExplorerStore['fetch']> | null = null;
+	let isFetching = false;
 	async function go() {
+		isFetching = true;
 		promise = new RemoteFileExplorerStore().fetch({
 			variables: {
 				explorerInput: {
@@ -26,6 +28,7 @@
 			}
 		});
 		const { data } = await promise;
+		isFetching = false;
 		if (data) {
 			console.log(data.remoteExplorer.files);
 			files = data.remoteExplorer.files;
@@ -42,7 +45,9 @@
 			<input type="password" name="password" placeholder="Password" bind:value={password} />
 			<input type="text" name="path" placeholder="Path" bind:value={$path} />
 		</div>
-		<button type="button" class="btn variant-filled" on:click={(e) => go()}>Go</button>
+		<button type="button" class="btn variant-filled" disabled={isFetching} on:click={(e) => go()}
+			>Go</button
+		>
 		{#if promise}
 			{#await promise}
 				<p>Loading...</p>
