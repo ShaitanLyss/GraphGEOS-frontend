@@ -26,7 +26,29 @@
 	}
 </script>
 
+<!-- <svg class="absolute w-full h-full " id="lasso">
+	<polygon class="stroke-secondary-500 dark:stroke-secondary-400
+	dfill-secondary-400 ddark:fill-secondary-500" points={`${a.x},${a.y} ${b.x},${a.y} ${b.x},${b.y} ${a.x},${b.y}`} />
+	" points={`${a.x},${a.y} ${b.x},${a.y} ${b.x},${b.y} ${a.x},${b.y}`} />
+</svg> -->
 <div
 	bind:this={box}
 	class="absolute marquee-border border-2 border-secondary-500 border-dashed rounded w-full h-32"
 ></div>
+
+<!-- <style>
+	@keyframes dash {
+		100% {
+			stroke-dashoffset: 15;
+		}
+	}
+	#lasso polygon {
+		/* stroke: #6c7fe9ad; */
+		stroke-dasharray: 10 5;
+		stroke-width: 2;
+		fill: rgba(144, 161, 255, 0.21);
+		-webkit-animation: dash 1s linear infinite;
+		animation: dash 1s linear infinite;
+		z-index: 5;
+	}
+</style> -->

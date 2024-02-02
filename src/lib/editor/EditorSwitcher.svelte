@@ -264,10 +264,10 @@
 		if (!factory) return;
 
 		let { upperLeft, lowerRight, pointerEvent } = e.detail;
-		let [x, y] = clientToSurfacePos({ x: upperLeft.x, y: upperLeft.y, factory });
-		upperLeft = { x, y };
-		[x, y] = clientToSurfacePos({ x: lowerRight.x, y: lowerRight.y, factory });
-		lowerRight = { x, y };
+		// let [x, y] = clientToSurfacePos({ x: upperLeft.x, y: upperLeft.y, factory });
+		// upperLeft = { x, y };
+		// [x, y] = clientToSurfacePos({ x: lowerRight.x, y: lowerRight.y, factory });
+		// lowerRight = { x, y };
 		const area = factory.getArea();
 		if (!area) return;
 		// keep fully contained nodes
