@@ -7,6 +7,7 @@
 	import { localStorageStore } from '@skeletonlabs/skeleton';
 	import { writable } from 'svelte/store';
 	import { browser } from '$app/environment';
+	import { moonMenuVisibleStore } from '$lib/menu/context-menu/moonContextMenu';
 	const mainRightSideBar = getContext<'mainRightSideBar', CodeEditorIntegration>(
 		'mainRightSideBar'
 	);
@@ -27,6 +28,7 @@
 		};
 	}
 	function onKeyDown(e: KeyboardEvent) {
+		if ($moonMenuVisibleStore) return;
 		// Check if the event target is an input, textarea, or has contenteditable attribute
 		const ignoreElements = ['INPUT', 'TEXTAREA'];
 		if (ignoreElements.includes(e.target?.tagName) || e.target.contentEditable === 'true') {

@@ -217,7 +217,7 @@
 	let searchInput: HTMLInputElement | undefined;
 	let useFocusTrap = false;
 	const listener = (event: KeyboardEvent) => {
-		console.log(event.key);
+		event.stopImmediatePropagation();
 		if (event.key === 'Escape') {
 			hideMenu();
 			return;

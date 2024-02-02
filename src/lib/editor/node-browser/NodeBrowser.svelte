@@ -2,7 +2,7 @@
 	import { faFilter, faStar, faUser, faGlobe, faSearch } from '@fortawesome/free-solid-svg-icons';
 	// import { faStar, faUser } from '@fortawesome/free-regular-svg-icons';
 	import { AppRail, AppRailTile } from '@skeletonlabs/skeleton';
-
+	import { moonMenuVisibleStore } from '$lib/menu/context-menu/moonContextMenu';
 	import Fa from 'svelte-fa';
 	import { isLoading, _ } from 'svelte-i18n';
 	import GraphSearchPanel from './GraphSearchPanel.svelte';
@@ -22,6 +22,7 @@
 	}
 
 	function onKeyDown(e: KeyboardEvent) {
+		if ($moonMenuVisibleStore) return;
 		// Check if the event target is an input, textarea, or has contenteditable attribute
 		const ignoreElements = ['INPUT', 'TEXTAREA'];
 		if (ignoreElements.includes(e.target?.tagName) || e.target.contentEditable === 'true') {

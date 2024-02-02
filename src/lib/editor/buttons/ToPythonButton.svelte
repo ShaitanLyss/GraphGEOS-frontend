@@ -10,6 +10,7 @@
 	import type { Schemes } from '$rete/node/Schemes';
 	import { browser } from '$app/environment';
 	import { onDestroy } from 'svelte';
+	import { moonMenuVisibleStore } from '$lib/menu/context-menu/moonContextMenu';
 
 	let factory: NodeFactory;
 	let editorViewport: HTMLElement;
@@ -18,6 +19,7 @@
 	const editorContext = getContext('editor');
 
 	function onKeyDown(e: KeyboardEvent) {
+		if ($moonMenuVisibleStore) return;
 		// Check if the event target is an input, textarea, or has contenteditable attribute
 		const ignoreElements = ['INPUT', 'TEXTAREA'];
 		if (ignoreElements.includes(e.target?.tagName) || e.target.contentEditable === 'true') {

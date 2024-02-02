@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import { moonMenuVisibleStore } from '$lib/menu/context-menu/moonContextMenu';
 	export let target: HTMLElement;
 	import BoxMarquee from '$lib/primitives/BoxMarquee.svelte';
 	import type { Point } from '$lib/types/Point';
@@ -55,6 +56,7 @@
 	};
 
 	const onKeyDown = (event: KeyboardEvent) => {
+		if ($moonMenuVisibleStore) return;
 		if (event.key !== 'b') return;
 		dispatch('startselection');
 		const rect = target.getBoundingClientRect();
