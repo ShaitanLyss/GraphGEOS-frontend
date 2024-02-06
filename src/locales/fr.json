@@ -217,5 +217,25 @@
         "placeholder": "Chercher..."
       }
     }
+  },
+  "remote-explorer": {
+    "searchbar": {
+      "placeholder": "Chercher"
+    },
+    "title": "Explorateur distant",
+    "auth-modal": {
+      "user": {
+        "title": "Utilisateur",
+        "placeholder": "Utilisateur linux"
+      },
+      "password": {
+        "title": "Mot de passe"
+      }
+    },
+    "auth-btn": {
+      "label": {
+        "connect": "Se connecter"
+      }
+    }
   }
 }

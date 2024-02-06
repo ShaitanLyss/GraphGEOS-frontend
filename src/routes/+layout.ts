@@ -7,8 +7,7 @@ export const ssr = true;
 export const load: LayoutLoad = async (event) => {
 	await loadLocale();
 	return {
-		publicConfig: event.data.publicConfig,
-		...(await load_GraphEditorData({ event }))
+		publicConfig: event.data.publicConfig
 	};
 
 	// const sessionToken = localStorage.getItem('sessionToken')?.replaceAll('"', '');

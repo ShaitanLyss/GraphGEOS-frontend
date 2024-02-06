@@ -14,7 +14,9 @@ const public_routes = [
 	// '/auth/**',
 	'/auth/**',
 	'/code-editor',
-	'/'
+	'/',
+	'/remote-explorer/**',
+	'/test/**'
 ];
 
 async function authorization({ event, resolve }) {

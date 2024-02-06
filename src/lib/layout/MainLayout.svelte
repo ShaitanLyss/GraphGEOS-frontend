@@ -96,7 +96,7 @@
 </script>
 
 <GlobalPopups />
-<AppShell slotPageContent="relative">
+<AppShell slotPageContent="relative" regionPage="overflow-hidden">
 	<svelte:fragment slot="header">
 		<MainHeader bind:tabsContext={$tabsContext} />
 	</svelte:fragment>

@@ -129,7 +129,7 @@ input RemoteExplorerInput {
   host: String!
   password: String!
   path: String!
-  username: String!
+  user: String!
 }
 
 input SessionCreateInput {
