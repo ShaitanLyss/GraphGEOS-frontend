@@ -1,24 +1,16 @@
 <script lang="ts">
-	import {
-		RemoteExplorerStore,
-		type RemoteExplorer$result,
-		type RemoteFileExplorer$result,
-		PendingValue
-	} from '$houdini';
 	import { capitalizeWords, capitalize } from '$utils';
 	import { _, setCookie } from '$lib/global';
-	import * as pathlib from 'path';
-	import {
-		AppShell,
-		localStorageStore,
-		ListBox,
-		ListBoxItem,
-		getModalStore
-	} from '@skeletonlabs/skeleton';
+	import { getModalStore } from '@skeletonlabs/skeleton';
 	import { Fa } from 'svelte-fa';
 	import { faFile, faFileAlt, faFolder } from '@fortawesome/free-regular-svg-icons';
 	import { faUser } from '@fortawesome/free-solid-svg-icons';
-	import { fade } from 'svelte/transition';
+	import type { PageData } from './$houdini';
+	import { page, navigating } from '$app/stores';
+	import { goto as base_goto, invalidateAll } from '$app/navigation';
+	import { createEventDispatcher } from 'svelte';
+	import { importPublicKey, encryptData } from '$utils/crypto';
+
 	export let host = $page.params.host;
 	export let user = $page.params.user;
 	export let path = '/' + $page.params.path;
@@ -27,11 +19,6 @@
 	export let hrefRoute = '/remote-explorer/';
 	export let isLoading = false;
 	$: if (navigating) isLoading = $navigating !== null;
-	import type { PageData } from './$houdini';
-	import { page, navigating } from '$app/stores';
-	import { goto as base_goto, invalidateAll } from '$app/navigation';
-	import { createEventDispatcher } from 'svelte';
-
 	export let goto: (url: string) => Promise<void> = base_goto;
 
 	const dispatch = createEventDispatcher<{
@@ -72,7 +59,16 @@
 
 	export let files: { name: string; path: string; isDir: boolean }[] = [];
 	let searchQuery = '';
-
+	console.log('public', data.publicKey);
+	function arrayBufferToBase64(buffer: ArrayBuffer) {
+		let binary = '';
+		const bytes = new Uint8Array(buffer);
+		const len = bytes.byteLength;
+		for (let i = 0; i < len; i++) {
+			binary += String.fromCharCode(bytes[i]);
+		}
+		return window.btoa(binary);
+	}
 	$: if (remoteExplorerData && remoteExplorerData.data) {
 		files = remoteExplorerData.data.remoteExplorer.files
 			.filter(
@@ -127,12 +123,20 @@
 		modalStore.trigger({
 			type: 'prompt',
 			title: $_('remote-explorer.auth-modal.password.title'),
-			valueAttr: { required: true, name: 'linux-password' },
+			valueAttr: { required: true, name: 'linux-password', autocomplete: 'off', type: 'password' },
 			async response(r: string | false) {
 				if (typeof r === 'string') {
+					const vector = crypto.getRandomValues(new Uint8Array(16));
+					const publicKey = await importPublicKey(data.publicKey);
+					console.log('publicKey', publicKey);
+
+					const encrypted_linux_password = arrayBufferToBase64(
+						await encryptData(vector, publicKey, r)
+					);
+					console.log(encrypted_linux_password);
 					await fetch('/remote-explorer/password', {
 						method: 'POST',
-						body: JSON.stringify({ encrypted_linux_password: r })
+						body: JSON.stringify({ encrypted_linux_password })
 					});
 					goto(hrefRoute + user + '/' + host + path);
 					// invalidateAll();

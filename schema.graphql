@@ -27,6 +27,8 @@ type AccountType {
   userId: UUID!
 }
 
+scalar Base64
+
 type BuiltinClassType {
   name: String!
 }
@@ -116,6 +118,7 @@ type Query {
   makutuClass(name: String!): MakutuClassType!
   makutuClasses: [MakutuClassType!]!
   remoteExplorer: RemoteExplorer!
+  security: Security!
   session(sessionToken: String!): SessionType!
   user(email: String = null, id: UUID = null, provider: ProviderInput = null): UserType
   users: [UserType!]!
@@ -126,10 +129,15 @@ type RemoteExplorer {
 }
 
 input RemoteExplorerInput {
+  encryptedPassword: Base64!
   host: String!
-  password: String!
   path: String!
   user: String!
+}
+
+type Security {
+  encrypt(data: String!): Base64!
+  publicKey: Base64!
 }
 
 input SessionCreateInput {

@@ -6,6 +6,15 @@ let config = {
 		'houdini-svelte': {}
 	},
 	scalars: {
+		Base64: {
+			type: 'string',
+			unmarshal(val) {
+				return val;
+			},
+			marshal(val) {
+				return val;
+			}
+		},
 		TypesTree: {
 			type: 'GeosTypesTree',
 			unmarshal(val) {
