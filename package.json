@@ -79,7 +79,7 @@
 		"lodash.throttle": "^4.1.1",
 		"monaco-editor": "^0.45.0",
 		"postcss": "^8.4.33",
-		"postcss-load-config": "^5.0.2",
+		"postcss-load-config": "^5.0.3",
 		"prettier": "^3.2.5",
 		"prettier-plugin-svelte": "^3.1.2",
 		"queue-typescript": "^1.0.1",
