@@ -6,7 +6,7 @@
 	import { getCookie } from 'typescript-cookie';
 	import type { NodeEditor } from '$rete/NodeEditor';
 	import type { Writable } from 'svelte/store';
-	import { _ } from '$lib/global';
+	import { _, getContext } from '$lib/global';
 	import { capitalize, words } from '$utils/string';
 	import { onMount } from 'svelte';
 	import { getBackendAddress } from '$utils/config';
@@ -28,7 +28,9 @@
 
 	let formElement: HTMLFormElement;
 
-	const session: SessionAndUser$result['session'] | undefined = $page.data.session;
+	// const session: SessionAndUser$result['session'] | undefined = $page.data.session;
+
+	const session = getContext('session');
 
 	const formStore: Writable<Record<string, string>> = localStorageStore('uploadGraphForm', {});
 	const meta: UploadGraphModalMeta = $modalStore[0].meta;
@@ -43,7 +45,7 @@
 		console.log(response);
 		return response;
 	})();
-	console.log('upload graph : session : user ID', session?.userId);
+	console.log('upload graph : session : user ID', session?.user.id);
 
 	const handleSubmit = async (event: Event) => {
 		event.preventDefault();
@@ -114,6 +116,8 @@
 			} else {
 				if (!Object.prototype.hasOwnProperty.call(data, 'is_public')) {
 					data['is_public'] = false;
+				} else {
+					data['is_public'] = data['is_public'] === 'on';
 				}
 				const createStore = new UploadGraphModalCreateStore();
 				const gqlResponse = await createStore.mutate({
