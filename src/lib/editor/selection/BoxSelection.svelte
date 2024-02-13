@@ -55,9 +55,13 @@
 		}
 	};
 
-	const onKeyDown = (event: KeyboardEvent) => {
+	const onKeyDown = (e: KeyboardEvent) => {
 		if ($moonMenuVisibleStore) return;
-		if (event.key !== 'b') return;
+		const ignoreElements = ['INPUT', 'TEXTAREA'];
+		if (ignoreElements.includes(e.target?.tagName) || e.target.contentEditable === 'true') {
+			return;
+		}
+		if (e.key.toLowerCase() !== 'b') return;
 		dispatch('startselection');
 		const rect = target.getBoundingClientRect();
 		a = {
