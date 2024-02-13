@@ -118,7 +118,7 @@
 				const createStore = new UploadGraphModalCreateStore();
 				const gqlResponse = await createStore.mutate({
 					graph: {
-						editorData: data.data,
+						editorData: JSON.parse(data.data as string),
 						title: editorName,
 						authorId: userId,
 						public: data.is_public as boolean,
