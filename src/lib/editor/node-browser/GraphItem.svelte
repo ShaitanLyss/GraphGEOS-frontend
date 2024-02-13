@@ -10,6 +10,7 @@
 	import type { GraphSearchPanel$result } from '$houdini';
 	import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 	import { createEventDispatcher } from 'svelte';
+	import { fade } from 'svelte/transition';
 	export let graph: GraphSearchPanel$result['graphV2']['graphs'][0];
 	const editMacroNodeChannel = new EditMacroNodeChannel();
 
@@ -75,6 +76,7 @@
 	draggable="true"
 	on:dblclick={ondblclick}
 	on:dragstart={onDragStart}
+	transition:fade
 	class="group relative card card-hover overflow-hidden variant-filled-surface w-52 text-xs select-none"
 >
 	<!-- <header>
