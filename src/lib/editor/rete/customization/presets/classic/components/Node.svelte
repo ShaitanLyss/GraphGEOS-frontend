@@ -113,7 +113,12 @@
 								dragDistance = undefined;
 								return;
 							}
+
 							dragDistance = undefined;
+							if (event.button !== 0) {
+								event.target.blur();
+								return;
+							}
 							editingName = true;
 							node.getFactory().selectableNodes?.unselect(node.id);
 						}}
