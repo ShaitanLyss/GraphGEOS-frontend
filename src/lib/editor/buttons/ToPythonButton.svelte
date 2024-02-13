@@ -26,7 +26,12 @@
 			return;
 		}
 
-		if (e.key === 'p' && e.ctrlKey === false && e.altKey === false && e.shiftKey === false) {
+		if (
+			e.key.toLowerCase() === 'p' &&
+			e.ctrlKey === false &&
+			e.altKey === false &&
+			e.shiftKey === false
+		) {
 			const factory = editorContext.getActiveFactory();
 			if (!factory) throw new ErrorWNotif('No active factory supplied');
 			const editorViewport = editorContext.getEditorViewport();

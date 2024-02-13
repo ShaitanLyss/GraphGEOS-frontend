@@ -59,7 +59,6 @@
 
 	export let files: { name: string; path: string; isDir: boolean }[] = [];
 	let searchQuery = '';
-	console.log('public', data.publicKey);
 	function arrayBufferToBase64(buffer: ArrayBuffer) {
 		let binary = '';
 		const bytes = new Uint8Array(buffer);
@@ -128,7 +127,6 @@
 				if (typeof r === 'string') {
 					const vector = crypto.getRandomValues(new Uint8Array(16));
 					const publicKey = await importPublicKey(data.publicKey);
-					console.log('publicKey', publicKey);
 
 					const encrypted_linux_password = arrayBufferToBase64(
 						await encryptData(vector, publicKey, r)

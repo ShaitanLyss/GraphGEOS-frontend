@@ -10,6 +10,9 @@
 	import { flip } from 'svelte/animate';
 	import { browser } from '$app/environment';
 	import { onDestroy } from 'svelte';
+	import { getContext } from '$lib/global';
+
+	const session = getContext('session');
 
 	let currentTile: string | undefined = undefined;
 	let drawerMode = false;
@@ -29,29 +32,47 @@
 			return;
 		}
 
-		if (e.key === 'f' && e.ctrlKey === false && e.altKey === false && e.shiftKey === false) {
+		if (
+			e.key.toLowerCase() === 'f' &&
+			e.ctrlKey === false &&
+			e.altKey === false &&
+			e.shiftKey === false
+		) {
 			if (currentTile === 'favorites') {
 				currentTile = undefined;
 				return;
 			}
+			e.preventDefault();
 			currentTile = 'favorites';
 			return;
 		}
 
-		if (e.key === 'u' && e.ctrlKey === false && e.altKey === false && e.shiftKey === false) {
+		if (
+			e.key.toLowerCase() === 'u' &&
+			e.ctrlKey === false &&
+			e.altKey === false &&
+			e.shiftKey === false
+		) {
 			if (currentTile === 'user') {
 				currentTile = undefined;
 				return;
 			}
+			e.preventDefault();
 			currentTile = 'user';
 			return;
 		}
 
-		if (e.key === 's' && e.ctrlKey === false && e.altKey === false && e.shiftKey === false) {
+		if (
+			e.key.toLowerCase() === 's' &&
+			e.ctrlKey === false &&
+			e.altKey === false &&
+			e.shiftKey === false
+		) {
 			if (currentTile === 'shared') {
 				currentTile = undefined;
 				return;
 			}
+			e.preventDefault();
 			currentTile = 'shared';
 			return;
 		}
@@ -62,6 +83,7 @@
 			document.removeEventListener('keydown', onKeyDown);
 		});
 	}
+	console.log(session);
 </script>
 
 <div class="flex h-full" in:fade out:fade={{ duration: 200 }}>
@@ -103,17 +125,18 @@
 			<span>{$_('browser.tab.shared')}</span>
 		</AppRailTile>
 	</AppRail>
+
 	{#if currentTile}
 		<div
 			class="max-h-full overflow-y-auto overflow-x-clip"
 			transition:slide={{ axis: 'x', duration: 200 }}
 		>
 			{#if currentTile === 'favorites'}
-				<GraphSearchPanel />
+				<GraphSearchPanel userId={session?.user.id} favorite={true} />
 			{:else if currentTile === 'user'}
-				<GraphSearchPanel />
+				<GraphSearchPanel authorId={session?.user.id} />
 			{:else if currentTile === 'shared'}
-				<GraphSearchPanel />
+				<GraphSearchPanel userId={session?.user.id} publicGraphs={true} />
 			{/if}
 		</div>
 	{/if}

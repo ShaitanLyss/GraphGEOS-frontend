@@ -15,9 +15,11 @@ import { ErrorWNotif } from './error';
 import type { Writable } from 'svelte/store';
 import type { GlobalPopupsContext } from './popup';
 import type { MoonMenuItem } from '$lib/menu/context-menu/moonContextMenu';
+import type { Session } from '$lib/backend-interaction';
 
 enum Context {
 	'editor' = 'Editor Context',
+	'session' = 'Session',
 	'onSave' = 'What to do when saving (depreciated)',
 	'save' = 'What do when saving',
 	'tabs' = 'Tabs Context',
@@ -66,7 +68,9 @@ export type resolveContext<
 										? GlobalPopupsContext
 										: K extends 'moonMenuOnItemClick'
 											? (item: MoonMenuItem) => Promise<void>
-											: never;
+											: K extends 'session'
+												? Session | null
+												: never;
 
 export function getContext<
 	K extends keyof typeof Context,

@@ -6,11 +6,9 @@ export const load: PageServerLoad = async (event) => {
 		cookies,
 		params: { host, path, user }
 	} = event;
-	const publicKey = (await new PublicKeyStore().fetch({ event })).data?.security.publicKey;
-	if (publicKey === undefined) {
-		throw new Error('Public key not found');
-	}
-	const remoteExplorerData = await new RemoteExplorerStore().fetch({
+	const publicKeyPromise = new PublicKeyStore().fetch({ event });
+
+	const remoteExplorerDataPromise = new RemoteExplorerStore().fetch({
 		event,
 		variables: {
 			explorerInput: {
@@ -21,6 +19,13 @@ export const load: PageServerLoad = async (event) => {
 			}
 		}
 	});
+
+	const res = await Promise.all([remoteExplorerDataPromise, publicKeyPromise]);
+	const remoteExplorerData = res[0];
+	const publicKey = res[1].data?.security.publicKey;
+	if (publicKey === undefined) {
+		throw new Error('Public key not found');
+	}
 
 	return {
 		publicKey,

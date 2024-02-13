@@ -1,24 +1,57 @@
 <script lang="ts">
 	import { faSearch } from '@fortawesome/free-solid-svg-icons';
-	import { _ } from '$lib/global';
+	import { _, getContext } from '$lib/global';
 	import Fa from 'svelte-fa';
 	import GraphItem from './GraphItem.svelte';
 	import { graphql, query } from '$houdini';
+	import type { GraphSearchPanelVariables } from './$houdini';
+	import { focusTrap } from '@skeletonlabs/skeleton';
+	import { tick } from 'svelte';
+
+	export let publicGraphs: boolean | null = null;
+	export let authorId: string | null = null;
+	export let favorite: boolean | null = null;
+	export let userId: string | null = authorId;
+	let q: string = '';
+
+	export const _GraphSearchPanelVariables: GraphSearchPanelVariables = ({ props }) => {
+		return {
+			params: {
+				userId,
+				favorite,
+				authorId,
+				public: publicGraphs,
+				query: q.trim() ? q.trim() : null,
+				searchAsYouType: !!q
+			}
+		};
+	};
 
 	const graphsAndAuthorName = graphql(`
-		query GraphsAndAuthorName @load {
-			graphs {
-				id
-				name
-				author {
+		query GraphSearchPanel($params: GetGraphsInput) @load @cache(policy: CacheAndNetwork) {
+			graphV2 {
+				graphs(getGraphsInput: $params) {
+					id
+					title
 					name
+					authorName
+					updatedAt
+					favorite
 				}
 			}
 		}
 	`);
+	async function reload() {
+		console.log(await graphsAndAuthorName.fetch({ variables: _GraphSearchPanelVariables({}) }));
+	}
+	async function onQueryChange() {
+		console.log('q :', q);
+		await reload();
+	}
 </script>
 
 <div
+	use:focusTrap={false}
 	class="px-4 pb-32 bg-surface-200-700-token h-full flex flex-col items-center graph-search-pannel"
 >
 	<!-- Searchbar -->
@@ -28,6 +61,13 @@
 				type="text"
 				class="input flex-grow w-full h-8 px-2 rounded-full"
 				placeholder="Search"
+				bind:value={q}
+				on:keydown={(e) => {
+					if (e.key === 'Escape') {
+						e.target.blur();
+					}
+				}}
+				on:input={() => onQueryChange()}
 			/>
 			<div
 				class="flex flex-row items-center justify-center w-8 h-8 ms-2 rounded-full variant-ringed-surface px-2.5 text-surface-600-300-token"
@@ -38,8 +78,8 @@
 	</div>
 	{#if $graphsAndAuthorName.data}
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
-			{#each $graphsAndAuthorName.data.graphs as graph (graph.id)}
-				<GraphItem graphName={graph.name} authorName={graph.author.name} graphId={graph.id} />
+			{#each $graphsAndAuthorName.data.graphV2.graphs as graph (graph.id)}
+				<GraphItem {graph} on:graphUpdate={() => reload()} />
 			{/each}
 		</div>
 	{/if}

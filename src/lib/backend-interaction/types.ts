@@ -15,6 +15,5 @@ export type Session = {
 	id: UUID;
 	expires: Date;
 	sessionToken: UUID;
-	userId: UUID;
 	user: User;
 };

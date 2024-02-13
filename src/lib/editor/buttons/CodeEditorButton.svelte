@@ -34,7 +34,12 @@
 		if (ignoreElements.includes(e.target?.tagName) || e.target.contentEditable === 'true') {
 			return;
 		}
-		if (e.key === 'c' && e.ctrlKey === false && e.altKey === false && e.shiftKey === false) {
+		if (
+			e.key.toLowerCase() === 'c' &&
+			e.ctrlKey === false &&
+			e.altKey === false &&
+			e.shiftKey === false
+		) {
 			toggleCodeEditor();
 		}
 	}

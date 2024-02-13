@@ -8,13 +8,15 @@
 	import '../app.pcss';
 	import Lightmode from '$lib/global/Lightmode.svelte';
 	import { isLocaleLoading, Localization, setContext, type resolveContext } from '$lib/global';
-	import type { LayoutData } from './$types';
-	export let data: LayoutData;
+	import type { LayoutData, LayoutServerData } from './$types';
+	export let data: LayoutServerData;
+
 	import type { GeosDataContext, GeosSchema } from '$lib/geos';
 	import { writable } from 'svelte/store';
 
 	initializeStores();
 	setContext('publicConfig', data.publicConfig);
+	setContext('session', data.session);
 	const xmlSchema: GeosDataContext['xmlSchema'] = writable();
 	const typesTree: GeosDataContext['typesTree'] = writable();
 	const typesPaths: GeosDataContext['typesPaths'] = writable();

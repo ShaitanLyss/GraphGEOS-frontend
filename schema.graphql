@@ -1,13 +1,13 @@
 input AccountCreateInput {
-  access_token: String = null
-  expires_at: Int = null
-  id_token: String = null
-  provider: String = null
-  providerAccountId: String = null
-  refresh_token: String = null
-  scope: String = null
+  access_token: String
+  expires_at: Int
+  id_token: String
+  provider: String
+  providerAccountId: String
+  refresh_token: String
+  scope: String
   session_state: String = null
-  token_type: String = null
+  token_type: String
   type: String!
   userId: UUID!
 }
@@ -35,8 +35,29 @@ type BuiltinClassType {
 
 union BuiltinClassTypeMakutuClassType = BuiltinClassType | MakutuClassType
 
+input CreateGraphESInput {
+  authorId: String = null
+  authorName: String = null
+  description: String = null
+  editorData: JSON = null
+  favorite: Boolean = null
+  geosVersion: String = null
+  id: String = null
+  inputTypes: [String!] = null
+  name: String = null
+  outputTypes: [String!] = null
+  public: Boolean = null
+  tags: [String!] = null
+  title: String = null
+}
+
 """Date with time (isoformat)"""
 scalar DateTime
+
+"""
+The result of an elasticsearch create or update operation. One of 'created', 'updated', or 'noop'
+"""
+scalar ESCreateUpdateResultType
 
 type File {
   isDir: Boolean!
@@ -55,8 +76,60 @@ type GeosQuery {
   xmlSimpleTypes(names: [String!] = null): [XMLSimpleType!]!
 }
 
+input GetGraphsInput {
+  authorId: String = null
+  favorite: Boolean = null
+  public: Boolean = null
+  query: String = null
+  searchAsYouType: Boolean = false
+  size: Int = 100
+  skip: Int = null
+  userId: String = null
+}
+
+type GraphESType {
+  Score: Float!
+  authorId: String
+  authorName: String
+  createdAt: DateTime!
+  description: String
+  editorData: JSON
+  favorite: Boolean
+  favoriteOf: [String!]!
+  geosVersion: String
+  id: String
+  inputTypes: [String!]
+  name: String
+  outputTypes: [String!]
+  public: Boolean
+  tags: [String!]
+  title: String
+  updatedAt: DateTime!
+}
+
 type GraphMutation {
+  """Create a graph."""
+  createGraph(graph: CreateGraphESInput!): GraphMutationResult!
+
+  """Set the favorite status of a graph."""
+  setFavorite(setFavoriteInput: GraphSetFavoriteInput!): GraphMutationResult!
   updateGraph(graphUpdateInput: GraphUpdateInput!): GraphType!
+}
+
+type GraphMutationResult {
+  id: String!
+  result: ESCreateUpdateResultType!
+  version: Int!
+}
+
+type GraphQueryV2 {
+  graphs(getGraphsInput: GetGraphsInput = null): [GraphESType!]!
+}
+
+input GraphSetFavoriteInput {
+  favorite: Boolean!
+  graphId: String!
+  userId: String!
 }
 
 type GraphType {
@@ -76,6 +149,9 @@ input GraphUpdateInput {
   isPublic: Boolean = null
   name: String = null
 }
+
+"""The `JSON` scalar type represents JSON values as specified by ECMA-404"""
+scalar JSON
 
 type MakutuClassType {
   extends: [String!]!
@@ -114,6 +190,7 @@ input ProviderInput {
 type Query {
   geos: GeosQuery!
   graph(authorId: UUID = null, id: UUID = null, name: String = null): GraphType
+  graphV2: GraphQueryV2!
   graphs: [GraphType!]!
   makutuClass(name: String!): MakutuClassType!
   makutuClasses: [MakutuClassType!]!
@@ -142,8 +219,8 @@ type Security {
 
 input SessionCreateInput {
   expires: DateTime = null
-  sessionToken: UUID = null
-  userId: UUID = null
+  sessionToken: UUID
+  userId: UUID
 }
 
 type SessionType {

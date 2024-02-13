@@ -1,23 +1,29 @@
 <script lang="ts">
 	import { EditMacroNodeChannel } from '$lib/broadcast-channels';
 	import type { NodeEditorSaveData } from '$rete/NodeEditor';
-	import { faUser } from '@fortawesome/free-solid-svg-icons';
+	import { faStar as faStarSolid, faUser } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
-	import { _ } from '$lib/global';
+	import { ErrorWNotif, _, getContext } from '$lib/global';
 	import { draggable } from '@neodrag/svelte';
 	import type { DragData } from '../types';
 	import { locale } from 'svelte-i18n';
-	export let graphName: string | undefined = undefined;
-	export let authorName: string | null | undefined = undefined;
-	export let graphId: string;
+	import type { GraphSearchPanel$result } from '$houdini';
+	import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
+	import { createEventDispatcher } from 'svelte';
+	export let graph: GraphSearchPanel$result['graphV2']['graphs'][0];
 	const editMacroNodeChannel = new EditMacroNodeChannel();
 
+	const session = getContext('session');
+
 	async function ondblclick(event: MouseEvent) {
+		if (!graph.id) {
+			throw new ErrorWNotif('Graph id not found');
+		}
 		event.stopPropagation();
-		console.log('dblclick', graphName);
+		console.log('dblclick', graph.name);
 		const { GetGraphStore } = await import('$houdini');
 		const graphStore = new GetGraphStore();
-		const responseData = (await graphStore.fetch({ variables: { id: graphId } })).data?.graph.data;
+		const responseData = (await graphStore.fetch({ variables: { id: graph.id } })).data?.graph.data;
 		if (responseData === undefined) {
 			throw new Error('Graph not found');
 		}
@@ -29,10 +35,38 @@
 	}
 
 	function onDragStart(event: DragEvent) {
-		console.log('dragstart', graphName);
-		event.dataTransfer?.setData('rete/macronode', graphId);
+		if (!graph.id) {
+			throw new ErrorWNotif('Graph id not found');
+		}
+		console.log('dragstart', graph.name);
+		event.dataTransfer?.setData('rete/macronode', graph.id);
 		return event;
 	}
+
+	let toggleFavBtn: HTMLButtonElement;
+
+	async function toggleFav() {
+		const userId = session?.user?.id;
+		if (!userId) {
+			throw new ErrorWNotif("You're not logged in");
+		}
+		if (!graph.id) {
+			throw new ErrorWNotif('Graph id not found');
+		}
+		const { GraphSetFavoriteStore } = await import('$houdini');
+		const graphSetFavoriteStore = new GraphSetFavoriteStore();
+
+		const response = await graphSetFavoriteStore.mutate({
+			params: { graphId: graph.id, userId, favorite: !graph.favorite }
+		});
+		if (response.errors) {
+			throw new ErrorWNotif(response.errors[0].message);
+		}
+		graph.favorite = !graph.favorite;
+		graph = graph;
+		// dispatch('graphUpdate', {});
+	}
+	// const dispatch = createEventDispatcher<{graphUpdate: {}}>();
 </script>
 
 <div
@@ -41,7 +75,7 @@
 	draggable="true"
 	on:dblclick={ondblclick}
 	on:dragstart={onDragStart}
-	class="card card-hover overflow-hidden variant-filled-surface w-52 text-xs select-none"
+	class="group relative card card-hover overflow-hidden variant-filled-surface w-52 text-xs select-none"
 >
 	<!-- <header>
 		<img
@@ -51,10 +85,22 @@
 			alt="Post"
 		/>
 	</header> -->
-	<div class="p-4 space-y-4">
+	<button
+		type="button"
+		class="absolute top-2 right-2 z-20"
+		bind:this={toggleFavBtn}
+		on:dblclick|stopPropagation
+		on:click|stopPropagation={() => toggleFav()}
+	>
+		<Fa
+			icon={graph.favorite ? faStarSolid : faStarRegular}
+			class={`group-hover:visible ${graph.favorite ? '' : 'invisible'}`}
+		/>
+	</button>
+	<div class="p-4 space-y-4 flex">
 		<!-- <h6 class="h6"><div class="placeholder w-24 h-2" /></h6> -->
 		<!-- <h3 class="h3"><div class="placeholder w-32" /></h3> -->
-		<h3 class="h5">{graphName}</h3>
+		<h3 class="h5">{graph.name}</h3>
 	</div>
 
 	<hr class="opacity-50" />
@@ -65,13 +111,15 @@
 				class="font-bold h-4 overflow-hidden text-ellipsis whitespace-nowrap"
 				style="width: 5.3rem;"
 			>
-				{$_('card.graphItem.by_author', { values: { name: authorName } })}
+				{$_('card.graphItem.by_author', { values: { name: graph.authorName } })}
 			</h6>
-			<small
-				>{$_('card.graphItem.on_date', {
-					values: { date: new Date().toLocaleDateString($locale) }
-				})}</small
-			>
+			{#if graph.updatedAt}
+				<small
+					>{$_('card.graphItem.on_date', {
+						values: { date: new Date(graph.updatedAt).toLocaleDateString($locale) }
+					})}</small
+				>
+			{/if}
 		</div>
 	</footer>
 </div>
