@@ -12,7 +12,12 @@
 	import { getBackendAddress } from '$utils/config';
 	import type { UploadGraphModalMeta } from './types';
 
-	import { GetGraphStore, type SessionAndUser$result, UpdateGraphStore } from '$houdini';
+	import {
+		GetGraphStore,
+		type SessionAndUser$result,
+		UpdateGraphStore,
+		UploadGraphModalCreateStore
+	} from '$houdini';
 
 	import GraphForm from '$lib/forms/GraphForm.svelte';
 	import type { UUID } from 'crypto';
@@ -29,7 +34,7 @@
 	const meta: UploadGraphModalMeta = $modalStore[0].meta;
 	$: editor = meta.editor;
 	$: editorName = editor.name;
-	$: userId = session?.userId as UUID;
+	$: userId = session?.user.id as UUID;
 	$: userName = session?.user.name as string;
 	$: graphPromise = (async () => {
 		const response = await new GetGraphStore().fetch({
@@ -110,6 +115,17 @@
 				if (!Object.prototype.hasOwnProperty.call(data, 'is_public')) {
 					data['is_public'] = false;
 				}
+				const createStore = new UploadGraphModalCreateStore();
+				const gqlResponse = await createStore.mutate({
+					graph: {
+						editorData: data.data,
+						name: editorName,
+						authorId: userId,
+						public: data.is_public as boolean,
+						description: data.description as string
+					}
+				});
+				console.log('create graph response', gqlResponse);
 				const response = await fetch(
 					getBackendAddress(`/api/v1/users/${$page.data.session?.user.id}/graphs/`),
 					{
@@ -120,10 +136,9 @@
 						body: JSON.stringify(data)
 					}
 				);
-				if (!response.ok) {
+				if (gqlResponse.errors) {
 					requestSuccess = false;
-					const { detail } = await response.json();
-					console.log(detail);
+					console.log('Error creating graph', gqlResponse.errors);
 				}
 			}
 
