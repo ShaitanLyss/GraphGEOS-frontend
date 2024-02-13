@@ -119,10 +119,11 @@
 				const gqlResponse = await createStore.mutate({
 					graph: {
 						editorData: data.data,
-						name: editorName,
+						title: editorName,
 						authorId: userId,
 						public: data.is_public as boolean,
-						description: data.description as string
+						description: data.description as string,
+						authorName: session?.user.name
 					}
 				});
 				console.log('create graph response', gqlResponse);
