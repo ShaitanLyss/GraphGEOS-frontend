@@ -7,6 +7,7 @@
 	import type { GraphSearchPanelVariables } from './$houdini';
 	import { focusTrap } from '@skeletonlabs/skeleton';
 	import { tick } from 'svelte';
+	import { flip } from 'svelte/animate';
 
 	export let publicGraphs: boolean | null = null;
 	export let authorId: string | null = null;
@@ -29,7 +30,7 @@
 
 	const graphsAndAuthorName = graphql(`
 		query GraphSearchPanel($params: GetGraphsInput) @load @cache(policy: CacheAndNetwork) {
-			graphV2 {
+			graph {
 				graphs(getGraphsInput: $params) {
 					id
 					title
@@ -78,8 +79,10 @@
 	</div>
 	{#if $graphsAndAuthorName.data}
 		<div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
-			{#each $graphsAndAuthorName.data.graphV2.graphs as graph (graph.id)}
-				<GraphItem {graph} on:graphUpdate={() => reload()} />
+			{#each $graphsAndAuthorName.data.graph.graphs as graph (graph.id)}
+				<div animate:flip={{ duration: 200 }}>
+					<GraphItem {graph} on:graphUpdate={() => reload()} />
+				</div>
 			{/each}
 		</div>
 	{/if}

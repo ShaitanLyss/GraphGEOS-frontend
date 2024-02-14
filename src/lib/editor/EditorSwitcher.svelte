@@ -199,14 +199,15 @@
 	 * Returns id of new editor
 	 * @param savedData
 	 */
-	function addNewEditor(savedData?: NodeEditorSaveData): string {
+	function addNewEditor(savedData?: NodeEditorSaveData, select?: boolean): string {
 		const id = newUniqueId('node-editor');
+		savesToLoad[Object.keys(editors).length] = savedData;
 		editors[id] = undefined;
 		editors = editors;
 		$tabsContext?.addTab({
 			key: id,
 			props: {
-				select: savedData === undefined,
+				select: savedData === undefined || select === true,
 				id,
 				name: savedData?.editorName ?? $_('editor.default-name'),
 				onClose: () => {
@@ -253,7 +254,7 @@
 	const editMacroNodeChannel = new EditMacroNodeChannel();
 	editMacroNodeChannel.onmessage = async (data) => {
 		console.log('editMacroNodeChannel.onmessage', data);
-		addNewEditor(data.graph);
+		addNewEditor(data.graph, true);
 	};
 	let boxSelectionPointerDown: (event: MouseEvent) => void | undefined;
 
