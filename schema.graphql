@@ -88,7 +88,7 @@ input GetGraphsInput {
 }
 
 type GraphESType {
-  Score: Float!
+  Score: Float
   authorId: String
   authorName: String
   createdAt: DateTime!
@@ -107,13 +107,24 @@ type GraphESType {
   updatedAt: DateTime!
 }
 
+type GraphFromAuthorAndNameResult {
+  exists: Boolean!
+  graph: GraphESType
+  id: String
+}
+
 type GraphMutation {
   """Create a graph."""
   createGraph(graph: CreateGraphESInput!): GraphMutationResult!
 
+  """Delete a graph."""
+  deleteGraph(id: String!): GraphMutationResult!
+
   """Set the favorite status of a graph."""
   setFavorite(setFavoriteInput: GraphSetFavoriteInput!): GraphMutationResult!
-  updateGraph(graphUpdateInput: GraphUpdateInput!): GraphType!
+
+  """Update a graph."""
+  updateGraph(graphUpdateInput: UpdateGraphInput!): GraphMutationResult!
 }
 
 type GraphMutationResult {
@@ -123,6 +134,8 @@ type GraphMutationResult {
 }
 
 type GraphQueryV2 {
+  graph(id: String!): GraphESType!
+  graphWithAuthordAndNameExists(authorId: String!, graphName: String!): GraphFromAuthorAndNameResult!
   graphs(getGraphsInput: GetGraphsInput = null): [GraphESType!]!
 }
 
@@ -140,14 +153,6 @@ type GraphType {
   id: UUID!
   isPublic: Boolean!
   name: String!
-}
-
-input GraphUpdateInput {
-  data: String = null
-  description: String = null
-  id: UUID!
-  isPublic: Boolean = null
-  name: String = null
 }
 
 """The `JSON` scalar type represents JSON values as specified by ECMA-404"""
@@ -189,9 +194,7 @@ input ProviderInput {
 
 type Query {
   geos: GeosQuery!
-  graph(authorId: UUID = null, id: UUID = null, name: String = null): GraphType
-  graphV2: GraphQueryV2!
-  graphs: [GraphType!]!
+  graph: GraphQueryV2!
   makutuClass(name: String!): MakutuClassType!
   makutuClasses: [MakutuClassType!]!
   remoteExplorer: RemoteExplorer!
@@ -240,6 +243,22 @@ A types tree represents a hierarchical structure of all types in the XML schema.
 scalar TypesTree
 
 scalar UUID
+
+input UpdateGraphInput {
+  authorId: String = null
+  authorName: String = null
+  description: String = null
+  editorData: JSON = null
+  geosVersion: String = null
+  id: String!
+  inputTypes: [String!] = null
+  keepNullKeys: [String!] = []
+  name: String = null
+  outputTypes: [String!] = null
+  public: Boolean = null
+  tags: [String!] = null
+  title: String = null
+}
 
 input UserCreateInput {
   email: String = null

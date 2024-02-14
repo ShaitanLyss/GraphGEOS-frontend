@@ -6,6 +6,12 @@ let config = {
 		'houdini-svelte': {}
 	},
 	scalars: {
+		ESCreateUpdateResultType: {
+			type: '"created" | "updated" | "deleted"'
+		},
+		JSON: {
+			type: 'unknown'
+		},
 		Base64: {
 			type: 'string',
 			unmarshal(val) {

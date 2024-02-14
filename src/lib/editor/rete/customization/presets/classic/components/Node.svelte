@@ -3,7 +3,7 @@
 	import { focusTrap, modeCurrent } from '@skeletonlabs/skeleton';
 	// import Ref from '../../../Ref.svelte';
 	// import type { ClassicScheme, SvelteArea2D } from '../types';
-	import { ClassicScheme, Ref, SvelteArea2D } from 'rete-svelte-plugin';
+	import { type ClassicScheme, Ref, type SvelteArea2D } from 'rete-svelte-plugin';
 	import { MacroNode } from '$rete/node/MacroNode';
 	import { faCubes } from '@fortawesome/free-solid-svg-icons';
 	import { XmlNode, type Node, type NodeEditorSaveData } from '$rete';
@@ -48,9 +48,9 @@
 		if (macroNode === undefined) return;
 		console.log('Double click on macro node');
 		const graph = (await new GetGraphStore().fetch({ variables: { id: macroNode.graphId } })).data
-			?.graph;
+			?.graph.graph;
 		if (graph === undefined) throw new Error('Graph not found');
-		const saveData: NodeEditorSaveData = JSON.parse(graph.data);
+		const saveData = graph.editorData as NodeEditorSaveData;
 		new EditMacroNodeChannel().postMessage({
 			graph: saveData
 		});

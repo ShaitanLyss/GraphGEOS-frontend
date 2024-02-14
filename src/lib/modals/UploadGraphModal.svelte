@@ -6,7 +6,7 @@
 	import { getCookie } from 'typescript-cookie';
 	import type { NodeEditor } from '$rete/NodeEditor';
 	import type { Writable } from 'svelte/store';
-	import { _, getContext } from '$lib/global';
+	import { ErrorWNotif, _, getContext } from '$lib/global';
 	import { capitalize, words } from '$utils/string';
 	import { onMount } from 'svelte';
 	import { getBackendAddress } from '$utils/config';
@@ -16,7 +16,8 @@
 		GetGraphStore,
 		type SessionAndUser$result,
 		UpdateGraphStore,
-		UploadGraphModalCreateStore
+		UploadGraphModalCreateStore,
+		GraphFromAuthorAndNameStore
 	} from '$houdini';
 
 	import GraphForm from '$lib/forms/GraphForm.svelte';
@@ -39,8 +40,8 @@
 	$: userId = session?.user.id as UUID;
 	$: userName = session?.user.name as string;
 	$: graphPromise = (async () => {
-		const response = await new GetGraphStore().fetch({
-			variables: { authorId: userId, name: editorName }
+		const response = await new GraphFromAuthorAndNameStore().fetch({
+			variables: { authorId: userId, graphName: editorName }
 		});
 		console.log(response);
 		return response;
@@ -58,8 +59,10 @@
 			});
 
 		const formValidity = formElement.checkValidity();
-		const graph = (await graphPromise).data?.graph;
-
+		const graphExistsRes = (await graphPromise).data?.graph.graphWithAuthordAndNameExists;
+		if (!graphExistsRes) {
+			throw new ErrorWNotif('Error checking if graph exists');
+		}
 		formElement.querySelectorAll(':valid:not([type="checkbox"])').forEach((element) => {
 			element.classList.remove('input-error');
 			element.classList.add('input-success');
@@ -101,14 +104,19 @@
 
 		try {
 			let requestSuccess = true;
-			if (graph) {
-				const isPublic = Object.prototype.hasOwnProperty.call(data, 'is_public');
+			if (graphExistsRes.exists === true) {
+				if (!Object.prototype.hasOwnProperty.call(data, 'is_public')) {
+					data['is_public'] = false;
+				} else {
+					data['is_public'] = data['is_public'] === 'on';
+				}
+
 				const response = await new UpdateGraphStore().mutate({
 					updateGraphInput: {
-						id: graph.id,
+						id: graphExistsRes.id as string,
 						description: data.description as string,
-						isPublic: isPublic,
-						data: data.data as string
+						public: data['is_public'] as boolean,
+						editorData: JSON.parse(data.data as string)
 					}
 				});
 				console.log('update graph response', response);
@@ -180,7 +188,7 @@
 			{#await graphPromise}
 				<div class="w-32 placeholder placeholde animate-pulse" />
 			{:then graph}
-				{#if graph.data?.graph}
+				{#if graph.data?.graph.graphWithAuthordAndNameExists.exists}
 					<aside class="alert variant-filled-tertiary">
 						<!-- Icon -->
 						<Fa icon={faQuestionCircle} />
@@ -190,7 +198,12 @@
 						</div>
 					</aside>
 				{/if}
-				<GraphForm {editor} {userName} graph={graph.data?.graph} bind:formElement />
+				<GraphForm
+					{editor}
+					{userName}
+					graph={graph.data?.graph.graphWithAuthordAndNameExists.graph}
+					bind:formElement
+				/>
 			{:catch error}
 				error
 			{/await}
@@ -207,7 +220,9 @@
 							handleSubmit(new Event('submit'));
 						}}
 						>{capitalize(
-							graph.errors ? $_('button.upload') : $_('form.graph.button.update')
+							graph.data?.graph.graphWithAuthordAndNameExists.exists === false
+								? $_('button.upload')
+								: $_('form.graph.button.update')
 						)}</button
 					>
 				{:catch error}

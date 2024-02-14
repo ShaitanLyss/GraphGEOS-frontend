@@ -12,7 +12,7 @@
 	let descrTextarea: HTMLTextAreaElement;
 	export let editor: NodeEditor;
 	export let userName: string;
-	export let graph: GetGraph$result['graph'] | undefined;
+	export let graph: GetGraph$result['graph']['graph'] | undefined;
 	const formStore: Writable<Record<string, unknown>> = localStorageStore('uploadGraphForm', {});
 	$: if (graph) {
 		console.log(graph);

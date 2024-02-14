@@ -11,8 +11,10 @@
 	import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 	import { createEventDispatcher } from 'svelte';
 	import { fade } from 'svelte/transition';
-	export let graph: GraphSearchPanel$result['graphV2']['graphs'][0];
+	export let graph: GraphSearchPanel$result['graph']['graphs'][0];
 	const editMacroNodeChannel = new EditMacroNodeChannel();
+
+	console.log(graph.updatedAt);
 
 	const session = getContext('session');
 
@@ -24,11 +26,12 @@
 		console.log('dblclick', graph.name);
 		const { GetGraphStore } = await import('$houdini');
 		const graphStore = new GetGraphStore();
-		const responseData = (await graphStore.fetch({ variables: { id: graph.id } })).data?.graph.data;
+		const responseData = (await graphStore.fetch({ variables: { id: graph.id } })).data?.graph.graph
+			.editorData;
 		if (responseData === undefined) {
 			throw new Error('Graph not found');
 		}
-		const graphData = JSON.parse(responseData) as NodeEditorSaveData;
+		const graphData = responseData as NodeEditorSaveData;
 		console.log('fetched: graph: ', graphData);
 
 		console.log('broadcast: edit:', graphData.editorName);

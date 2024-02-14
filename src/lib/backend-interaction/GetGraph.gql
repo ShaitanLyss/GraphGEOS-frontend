@@ -1,9 +1,11 @@
-query GetGraph($id: UUID, $name: String, $authorId: UUID) {
-	graph(id: $id, name: $name, authorId: $authorId) {
-		id
-		name
-		description
-		isPublic
-		data
+query GetGraph($id: String!) @cache(policy: NetworkOnly) {
+	graph {
+		graph(id: $id) {
+			id
+			name
+			description
+			public
+			editorData
+		}
 	}
 }

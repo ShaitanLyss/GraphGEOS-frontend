@@ -149,10 +149,11 @@
 		if (!MacroNode) throw new Error('No MacroNode');
 		const graphId = event.dataTransfer?.getData('rete/macronode') as UUID;
 		if (!graphId) throw new Error('No graph id');
-		const graph = (await new GetGraphStore().fetch({ variables: { id: graphId } })).data?.graph;
+		const graph = (await new GetGraphStore().fetch({ variables: { id: graphId } })).data?.graph
+			.graph;
 		if (!graph) throw new Error('Graph not found');
 		console.log('Dropped', graph.name);
-		const saveData: NodeEditorSaveData = JSON.parse(graph.data);
+		const saveData = graph.editorData as NodeEditorSaveData;
 		const node = await factory.addNode(MacroNode, { saveData: saveData, graphId });
 		if (!node) throw new Error('Node not created');
 		// Move node to drop position
