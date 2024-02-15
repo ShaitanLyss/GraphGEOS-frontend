@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ExecSocket } from 'rete/socket/ExecSocket';
+	import type { ExecSocket } from '$rete/socket/ExecSocket';
 
 	export let data: ExecSocket;
 </script>

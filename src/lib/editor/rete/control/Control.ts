@@ -75,10 +75,15 @@ export class InputControl<
 				case 'vector':
 					initial = { x: 0, y: 0, z: 0 };
 					break;
+				case 'remote-file':
+					initial = '';
+					break;
 			}
+			if (this.options?.change) this.options.change(initial);
 		}
 
 		this.value = initial;
+		console.log('control value', this.value);
 		// if (options && initial !== undefined && options.debouncedOnChange) {
 
 		// 	options.debouncedOnChange(initial)

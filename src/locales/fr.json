@@ -29,7 +29,8 @@
   "button": {
     "cancel": "Annuler",
     "confirm": "Confirmer",
-    "upload": "Mettre en ligne"
+    "upload": "Mettre en ligne",
+    "rename": "Renommer"
   },
   "form": {
     "input": {
@@ -236,6 +237,12 @@
       "label": {
         "connect": "Se connecter"
       }
+    }
+  },
+  "variable-item": {
+    "rename-prompt": {
+      "placeholder": "Nom de la variable",
+      "title": "Renommer la variable"
     }
   }
 }

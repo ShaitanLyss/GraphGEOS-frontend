@@ -2,16 +2,18 @@
 	import type { InputControl, InputControlTypes } from '$rete/control/Control';
 	import { FileButton } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
-	export let data: InputControl<unknown>;
+	export let data: InputControl<InputControlTypes>;
 	let isReady = false;
-	let type: InputControlTypes = data.type;
-	let readonly = data.readonly;
-	let value = data.value;
+	let type: InputControlTypes;
+	$: type = data.type;
+	$: readonly = data.readonly;
+	$: value = data.value;
 	let debouncedValue = value;
 	let debouncedTimer: NodeJS.Timeout | undefined;
-	let options = data.options;
-	const pattern = options?.pattern;
+	$: options = data.options;
+	$: pattern = options?.pattern;
 	let isFirstSet = true;
+	export let width = 'w-full';
 	let fileList: FileList | undefined;
 
 	// Debounce value
@@ -50,11 +52,12 @@
 </script>
 
 {#if type == 'checkbox'}
-	<label class="label">
+	<label title="boolean" class="label {width} cursor-pointer flex justify-center">
 		<input
 			on:pointerdown|stopPropagation={() => false}
 			type="checkbox"
 			class="checkbox"
+			title="boolean"
 			{value}
 			checked={value}
 			readOnly={readonly}
@@ -62,14 +65,20 @@
 			label={options?.label}
 		/>
 		<!-- <span class="">{options?.label}</span> -->
-		<span class="text-white">{options?.label}</span>
+		{#if options?.label}
+			<span class="text-white">{options?.label}</span>
+		{/if}
 	</label>
 {:else if type == 'number'}
 	<label class="label">
-		<span class="text-white"> {options?.label ? options?.label : ''}</span>
+		{#if options?.label}
+			<span class="text-white"> {options?.label ? options?.label : ''}</span>
+		{/if}
 		<input
+			placeholder="number"
+			title="number"
 			type="number"
-			class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-full rounded-token bg-surface-200-700-token
+			class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token {width} rounded-token bg-surface-200-700-token
 				
 			 text-surface-900-50-token border-token
 			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
@@ -82,10 +91,12 @@
 {:else if type == 'text'}
 	<label class="label">
 		<!-- {options?.label ? options?.label : ''} -->
-		<span class="text-white"> {options?.label ? options?.label : ''}</span>
+		{#if options?.label}<span class="text-white"> {options?.label ? options?.label : ''}</span>{/if}
 		<input
 			type="text"
-			class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-full rounded-token bg-surface-200-700-token
+			placeholder="string"
+			title="string"
+			class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token {width} rounded-token bg-surface-200-700-token
 				
 			 text-surface-900-50-token border-token
 			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
@@ -98,9 +109,9 @@
 {:else if type == 'textarea'}
 	<label class="label">
 		<!-- {options?.label} -->
-		<span class="text-white"> {options?.label ? options?.label : ''}</span>
+		{#if options?.label}<span class="text-white"> {options?.label ? options?.label : ''}</span>{/if}
 		<textarea
-			class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-full rounded-md bg-surface-200-700-token
+			class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token {width} rounded-md bg-surface-200-700-token
 			 text-surface-900-50-token border-token
 			 focus:border-primary-500 focus:ring-primary-500 transition-colors
 			 "
@@ -112,48 +123,56 @@
 	</label>
 {:else if type == 'vector'}
 	<div class="label">
-		<span class="text-white text-sm">{options?.label ? options?.label : ''}</span>
-		<div class="flex">
+		{#if options?.label}
+			<span class="text-white text-sm">{options?.label ? options?.label : ''}</span>
+		{/if}
+		<div class="vector flex {width}">
 			<input
 				type="number"
-				class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-full bg-surface-200-700-token
-				rounded-tl-token rounded-bl-token
+				class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-1/3 bg-surface-200-700-token
+				rounded-tl-token rounded-bl-token text-end
 			 text-surface-900-50-token border-token
 			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
 				name="x"
+				placeholder="x"
+				title="x"
 				value={value.x}
 				readOnly={readonly}
 				on:input={(e) => {
-					onChange({ ...value, x: Number(e.currentTarget.value) });
+					onChange({ ...value, x: e.currentTarget.value });
 					// data.setValue(val);
 				}}
 				on:pointerdown|stopPropagation={() => false}
 			/>
 			<input
 				name="y"
+				placeholder="y"
+				title="y"
 				type="number"
-				class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-full bg-surface-200-700-token
-			 text-surface-900-50-token border-token
+				class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-1/3 bg-surface-200-700-token
+			 text-surface-900-50-token border-token text-end
 			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
 				value={value.y}
 				{readonly}
 				on:input={(e) => {
-					onChange({ ...value, y: Number(e.currentTarget.value) });
+					onChange({ ...value, y: e.currentTarget.value });
 					// data.setValue(val);
 				}}
 				on:pointerdown|stopPropagation={() => false}
 			/>
 			<input
 				type="number"
-				class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-full bg-surface-200-700-token
-				rounded-tr-token rounded-br-token
+				placeholder="z"
+				title="z"
+				class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-1/3 bg-surface-200-700-token
+				rounded-tr-token rounded-br-token text-end
 			 text-surface-900-50-token border-token
 			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
 				name="z"
 				value={value.z}
 				{readonly}
 				on:input={(e) => {
-					const val = { ...value, z: Number(e.currentTarget.value) };
+					const val = { ...value, z: e.currentTarget.value };
 					onChange(val);
 					// data.setValue(val);
 				}}
@@ -164,10 +183,10 @@
 {:else if type == 'file'}
 	<label class="label">
 		<!-- {options?.label ? options?.label : ''} -->
-		<span class="text-white"> {options?.label ? options?.label : ''}</span>
+		{#if options?.label}<span class="text-white"> {options?.label ? options?.label : ''}</span>{/if}
 		<input
 			type="text"
-			class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-full rounded-token bg-surface-200-700-token
+			class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token {width} rounded-token bg-surface-200-700-token
 				
 			 text-surface-900-50-token border-token
 			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
@@ -183,8 +202,9 @@
 			on:pointerdown|stopPropagation
 			readonly
 			type="text"
+			title="remote file"
 			class="input"
-			placeholder="Select file"
+			placeholder="Select file or folder"
 			{value}
 		/>
 		<button
@@ -202,3 +222,18 @@
 {:else}
 	Unsupported control type&nbsp: '{type}'
 {/if}
+
+<style>
+	.vector input[type='number']::-webkit-inner-spin-button,
+	.vector input[type='number']::-webkit-outer-spin-button {
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		margin: 0;
+	}
+
+	.vector input[type='number'] {
+		-moz-appearance: textfield;
+		appearance: textfield;
+	}
+</style>

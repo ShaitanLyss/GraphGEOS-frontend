@@ -2,6 +2,7 @@ import type { Node, NodeFactory } from '$rete';
 import type { ConnectionDropEvent } from '$rete/setup/ConnectionSetup';
 import { writable } from 'svelte/store';
 import type { IBaseMenuItem } from '../types';
+import type { Point } from '$lib/types/Point';
 
 export interface MoonMenuItem {
 	label: string;
@@ -22,14 +23,24 @@ export const moonMenuSearchBarStore = writable<boolean>(false);
 
 export function spawnMoonMenu({
 	connDropEvent,
-	searchbar = true
+	searchbar = false,
+	pos,
+	items = []
 }: {
-	connDropEvent: ConnectionDropEvent;
+	connDropEvent?: ConnectionDropEvent;
 	searchbar?: boolean;
+	pos?: Point;
+	items?: IBaseMenuItem[];
 }) {
-	moonMenuConnDropEvent.set(connDropEvent);
-	moonMenuDropConnectionStore.set(connDropEvent.drop);
-	moonMenuPositionStore.set(connDropEvent.pos);
+	moonMenuConnDropEvent.set(connDropEvent ?? null);
+	if (connDropEvent) {
+		moonMenuDropConnectionStore.set(connDropEvent?.drop);
+		moonMenuPositionStore.set(connDropEvent.pos);
+	}
+	if (pos) {
+		moonMenuPositionStore.set(pos);
+	}
 	moonMenuVisibleStore.set(true);
 	moonMenuSearchBarStore.set(searchbar);
+	newMoonItemsStore.set(items);
 }

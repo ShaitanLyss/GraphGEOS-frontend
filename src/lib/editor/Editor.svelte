@@ -147,17 +147,29 @@
 	async function onDrop(event: DragEvent) {
 		if (!factory) throw new Error('No factory');
 		if (!MacroNode) throw new Error('No MacroNode');
-		const graphId = event.dataTransfer?.getData('rete/macronode') as UUID;
-		if (!graphId) throw new Error('No graph id');
-		const graph = (await new GetGraphStore().fetch({ variables: { id: graphId } })).data?.graph
-			.graph;
-		if (!graph) throw new Error('Graph not found');
-		console.log('Dropped', graph.name);
-		const saveData = graph.editorData as NodeEditorSaveData;
-		const node = await factory.addNode(MacroNode, { saveData: saveData, graphId });
-		if (!node) throw new Error('Node not created');
-		// Move node to drop position
-		translateNodeFromGlobal({ globalPos: { x: event.clientX, y: event.clientY }, node, factory });
+		const type = event.dataTransfer?.types[0];
+
+		if (type === 'rete/macronode') {
+			const graphId = event.dataTransfer?.getData('rete/macronode') as UUID;
+			if (!graphId) throw new Error('No graph id');
+			const graph = (await new GetGraphStore().fetch({ variables: { id: graphId } })).data?.graph
+				.graph;
+			if (!graph) throw new Error('Graph not found');
+			console.log('Dropped', graph.name);
+			const saveData = graph.editorData as NodeEditorSaveData;
+			const node = await factory.addNode(MacroNode, { saveData: saveData, graphId });
+			if (!node) throw new Error('Node not created');
+			// Move node to drop position
+			translateNodeFromGlobal({ globalPos: { x: event.clientX, y: event.clientY }, node, factory });
+		}
+
+		if (type === 'application/graph-variable') {
+			console.log('ctrl', event.ctrlKey, 'alt', event.altKey);
+			const variable = JSON.parse(
+				event.dataTransfer?.getData('application/graph-variable') ?? '{}'
+			);
+			console.log('Dropped variable', variable);
+		}
 
 		// nodeView.translate(event.clientX - surfacePos.x, event.clientY - surfacePos.y);
 	}
@@ -198,10 +210,14 @@
 	role="region"
 	on:connectiondrop={onConnectionDrop}
 	on:dragenter={(event) => {
-		if (event.dataTransfer?.types[0] === 'rete/macronode') event.preventDefault();
+		if (!event.dataTransfer) return;
+		if (['rete/macronode', 'application/graph-variable'].includes(event.dataTransfer?.types[0]))
+			event.preventDefault();
 	}}
 	on:dragover={(event) => {
-		if (event.dataTransfer?.types[0] === 'rete/macronode') event.preventDefault();
+		if (!event.dataTransfer) return;
+		if (['rete/macronode', 'application/graph-variable'].includes(event.dataTransfer?.types[0]))
+			event.preventDefault();
 	}}
 	on:drop|preventDefault={onDrop}
 />

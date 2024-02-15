@@ -37,12 +37,13 @@
 		on:click={(event) => {
 			if (event.isTrusted) handleItem(item);
 		}}
+		regionSummary="select-none"
 	>
 		{item.getLabel()}
 	</TreeViewItem>
 {/each}
 {#each submenus as submenu, index (index)}
-	<TreeViewItem>
+	<TreeViewItem regionSummary="select-none">
 		{submenu.getLabel()}
 		<svelte:fragment slot="children">
 			<svelte:self menu={submenu} />

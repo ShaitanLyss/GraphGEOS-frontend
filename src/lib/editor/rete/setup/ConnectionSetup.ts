@@ -103,7 +103,9 @@ class MyConnectionPlugin extends ConnectionPlugin<Schemes, AreaExtra> {
 				throw new Error(`Socket not found for node ${node.id} and key ${pickedSocketData.key}`);
 
 			this.lastClickedSocket = true;
-			socket.selected = !socket?.selected;
+			event.preventDefault();
+			event.stopPropagation();
+			socket.toggleSelection();
 			node.updateElement();
 			return;
 		}
