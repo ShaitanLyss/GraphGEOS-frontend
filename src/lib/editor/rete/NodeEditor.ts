@@ -2,14 +2,19 @@ import { NodeEditor as BaseNodeEditor } from 'rete';
 import type { Schemes } from './node/Schemes';
 import { Connection, Node, type NodeSaveData } from './node/Node';
 import { newUniqueId } from '$utils';
+import type { Variable } from '../overlay/variables-list';
+import { get, writable, type Writable } from 'svelte/store';
 
 export type NodeEditorSaveData = {
 	nodes: NodeSaveData[];
 	connections: Connection<Node, Node>[];
 	editorName: string;
+	variables: Record<string, Variable>;
 };
 
 export class NodeEditor extends BaseNodeEditor<Schemes> {
+	variables: Writable<Record<string, Variable>> = writable({});
+
 	setName(name: string, triggerListeners = true) {
 		this.name = name;
 		if (triggerListeners) this.onChangeNameListeners.forEach((listener) => listener(name));
@@ -41,7 +46,8 @@ export class NodeEditor extends BaseNodeEditor<Schemes> {
 		return {
 			nodes: this.getNodes().map((node) => node.toJSON()),
 			connections: this.getConnections(),
-			editorName: this.name
+			editorName: this.name,
+			variables: get(this.variables)
 		};
 	}
 }

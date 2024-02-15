@@ -3,29 +3,31 @@
 
 	import { faAngleDown, faPlus } from '@fortawesome/free-solid-svg-icons';
 	import { localStorageStore, modeCurrent } from '@skeletonlabs/skeleton';
-	import { _ } from '$lib/global';
+	import { _, getContext } from '$lib/global';
 	import Fa from 'svelte-fa';
 	import { browser } from '$app/environment';
 	import { onMount, tick } from 'svelte';
 	import { fade } from 'svelte/transition';
 	import { flip } from 'svelte/animate';
 	import { VariableItem, type Variable } from '.';
-	import type { Writable } from 'svelte/store';
+	import { get, type Writable } from 'svelte/store';
 	import type { SocketType } from '$rete/plugin/typed-sockets';
 	import type { Action } from 'svelte/action';
 	import { newUniqueId } from '$utils';
 
 	const collapsed = localStorageStore('variablesListCollapsed', false);
 
-	let variables: Record<string, Variable> = {};
-	let localId = newUniqueId('variable');
-	variables[localId] = { name: 'variable1', value: 'value1', type: 'string', localId };
-	localId = newUniqueId('variable');
-	variables[localId] = { name: 'variable2', value: 2, type: 'number', localId };
-	localId = newUniqueId('variable');
-	variables[localId] = { name: 'variable3', value: true, type: 'boolean', localId };
-	localId = newUniqueId('variable');
-	variables[localId] = { name: 'variable4', value: { x: 1, y: 2, z: 6 }, type: 'vector', localId };
+	const { activeEditor } = getContext('editor');
+
+	$: variables = $activeEditor?.variables;
+	// let localId = newUniqueId('variable');
+	// variables[localId] = { name: 'variable1', value: 'value1', type: 'string', localId };
+	// localId = newUniqueId('variable');
+	// variables[localId] = { name: 'variable2', value: 2, type: 'number', localId };
+	// localId = newUniqueId('variable');
+	// variables[localId] = { name: 'variable3', value: true, type: 'boolean', localId };
+	// localId = newUniqueId('variable');
+	// variables[localId] = { name: 'variable4', value: { x: 1, y: 2, z: 6 }, type: 'vector', localId };
 
 	// Tricks to make the collapse smoother
 	let timeout: string | number | NodeJS.Timeout | undefined;
@@ -56,7 +58,7 @@
 	let mounted = false;
 	let mouseDown = false;
 	let mainDiv: HTMLDivElement | undefined;
-	let nVarsCreated = Object.keys(variables).length;
+	$: nVarsCreated = Object.keys($variables ?? {}).length;
 
 	onMount(() => {
 		mounted = true;
@@ -110,11 +112,12 @@
 	});
 
 	function createVariable() {
+		if (!$variables) return;
 		console.log('create');
 		$collapsed = false;
 		const localId = newUniqueId('variable');
 		nVarsCreated += 1;
-		variables[localId] = {
+		$variables[localId] = {
 			name: `variable${nVarsCreated}`,
 			value: undefined,
 			type: $defaultType,
@@ -130,15 +133,16 @@
 	};
 
 	function deleteVariable(variableId: string): void {
+		if (!$variables) return;
 		currentFlipDuration = flipDuration;
-		delete variables[variableId];
+		delete $variables[variableId];
 		variables = variables;
 	}
 	const flipDuration = 150;
 	let currentFlipDuration = flipDuration;
 </script>
 
-{#if mounted}
+{#if mounted && $variables}
 	<div
 		bind:this={mainDiv}
 		transition:fade={{ duration: 200 }}
@@ -194,7 +198,7 @@
 				style="height: 9.6rem;"
 			>
 				<ul class="space-y-2 py-2">
-					{#each Object.keys(variables) as localId (localId)}
+					{#each Object.keys($variables) as localId (localId)}
 						<li
 							animate:flip={{ duration: currentFlipDuration }}
 							in:fade
@@ -202,7 +206,7 @@
 							use:scroll
 						>
 							<VariableItem
-								bind:variable={variables[localId]}
+								bind:variable={$variables[localId]}
 								on:delete={() => deleteVariable(localId)}
 								on:changetype={(e) => {
 									console.log('set default variable type', e.detail.type);

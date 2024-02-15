@@ -180,7 +180,7 @@
 		if (!spawnMoonMenu) throw new Error('No spawnMoonMenu');
 		$moonMenuFactoryStore = factory ?? null;
 		console.log('connection drop on editor', event.socketData);
-		spawnMoonMenu({ connDropEvent: event, items: newMoonItems });
+		spawnMoonMenu({ connDropEvent: event, items: newMoonItems, searchbar: true });
 	}
 </script>
 

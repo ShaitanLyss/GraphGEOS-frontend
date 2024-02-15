@@ -10,7 +10,7 @@
 		ErrorWNotif,
 		keyboardShortcut
 	} from '$lib/global';
-	import type { NodeEditorSaveData, NodeFactory } from '$rete';
+	import type { NodeEditor, NodeEditorSaveData, NodeFactory } from '$rete';
 	import { isNodeEditorSaveData } from '$rete/utils';
 
 	import { addContextFunction, newUniqueId } from '$utils';
@@ -21,7 +21,7 @@
 		localStorageStore
 	} from '@skeletonlabs/skeleton';
 	import { onDestroy, onMount } from 'svelte';
-	import type { Writable } from 'svelte/store';
+	import { writable, type Writable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
 	import BoxSelection from './selection/BoxSelection.svelte';
 	import type { Area, AreaPlugin } from 'rete-area-plugin';
@@ -103,8 +103,9 @@
 		$savedEditors = toSave;
 		$activeSaveEditorsId = toSaveActiveId;
 	}
-
+	const activeEditor = writable<NodeEditor | undefined>(undefined);
 	setContext('editor', {
+		activeEditor,
 		getEditorViewport: () => container,
 		getActiveFactory: () => {
 			if (!activeId) return undefined;
@@ -113,6 +114,11 @@
 			return factory;
 		}
 	});
+	$: if (activeId && activeId in editors) {
+		$activeEditor = editors[activeId]?.getEditor();
+	} else {
+		$activeEditor = undefined;
+	}
 	const saveContext = getContext('save');
 
 	// Setup Tabs
@@ -145,6 +151,8 @@
 		const onKeyDown = (e: KeyboardEvent) => {
 			// Check if the event target is an input, textarea, or has contenteditable attribute
 			if (activeId === undefined) return;
+
+			if (!(e.target instanceof HTMLElement)) return;
 
 			const ignoreElements = ['INPUT', 'TEXTAREA'];
 			if (ignoreElements.includes(e.target?.tagName) || e.target.contentEditable === 'true') {
