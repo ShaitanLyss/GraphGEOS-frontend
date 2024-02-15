@@ -1,4 +1,3 @@
-<!-- eslint-disable no-undef -->
 <script lang="ts">
 	/* eslint-disable no-undef */
 
