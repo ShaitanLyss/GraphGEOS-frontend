@@ -7,6 +7,7 @@ export type XMLAttrType = `xmlAttr:${attrName}`;
 export type XMLElementType = `xmlElement:${tag}`;
 export type SocketType =
 	// | string
+	| 'integer'
 	| 'exec'
 	| 'constitutive'
 	| 'elementRegion'

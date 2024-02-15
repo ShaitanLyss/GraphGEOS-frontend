@@ -10,19 +10,22 @@ import { MegaSetup } from './setup/MegaSetup';
 import { NodeFactory } from './node/NodeFactory';
 import type { MakutuClassRepository } from '$lib/backend-interaction/types';
 import type { GeosDataContext } from '$lib/geos';
+import type { NewGeosContext } from '$lib/global';
 
 export async function setupEditor({
 	container,
 	makutuClasses,
 	loadExample,
 	saveData,
-	geosContext
+	geosContext,
+	geosContextV2
 }: {
 	container: HTMLElement;
 	makutuClasses: MakutuClassRepository;
 	loadExample?: EditorExample;
 	saveData?: NodeEditorSaveData;
 	geosContext: GeosDataContext;
+	geosContextV2: NewGeosContext;
 }) {
 	if (container === null) throw new Error('Container is null');
 	const editor = new NodeEditor();
@@ -38,11 +41,11 @@ export async function setupEditor({
 	const accumulating = AreaExtensions.accumulateOnCtrl();
 
 	// Setup node factory
-	const nodeFactory = new NodeFactory({ editor, area, makutuClasses, selector });
+	const nodeFactory = new NodeFactory({ editor, area, makutuClasses, selector, arrange });
 
 	// Setup react renderer
 	const megaSetup = new MegaSetup();
-	megaSetup.setup(editor, area, nodeFactory, geosContext);
+	megaSetup.setup(editor, area, nodeFactory, geosContext, geosContextV2);
 
 	area.use(arrange);
 	AreaExtensions.showInputControl(area);

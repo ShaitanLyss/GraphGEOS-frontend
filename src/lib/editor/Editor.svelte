@@ -3,7 +3,7 @@
 
 	import type { EditorExample } from '$rete/example/types';
 	import { newUniqueId } from '$utils';
-	import { _, getContext, notifications } from '$lib/global';
+	import { _, getContext, keyboardShortcut, notifications } from '$lib/global';
 	export let position = 'absolute';
 	export let hidden = true;
 	export let name = $_('editor.default-name');
@@ -27,6 +27,7 @@
 	let MacroNode: typeof t_MacroNode | undefined = undefined;
 	let AreaExtensions: typeof import('rete-area-plugin').AreaExtensions | undefined = undefined;
 	const geosContext = getContext('geos');
+	const geosContextV2 = getContext('geos_v2');
 	onMount(async () => {
 		spawnMoonMenu = (await import('$lib/menu/context-menu/moonContextMenu')).spawnMoonMenu;
 		MacroNode = (await import('$rete/node/MacroNode')).MacroNode;
@@ -65,7 +66,8 @@
 			makutuClasses: {},
 			loadExample,
 			saveData,
-			geosContext
+			geosContext,
+			geosContextV2
 		});
 		editorData.editor.id = id;
 		editorData.editor.setName(name);
@@ -178,8 +180,7 @@
 		if (!spawnMoonMenu) throw new Error('No spawnMoonMenu');
 		$moonMenuFactoryStore = factory ?? null;
 		console.log('connection drop on editor', event.socketData);
-		$newMoonItemsStore = newMoonItems;
-		spawnMoonMenu({ connDropEvent: event });
+		spawnMoonMenu({ connDropEvent: event, items: newMoonItems });
 	}
 </script>
 

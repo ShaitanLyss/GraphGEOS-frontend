@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Action } from 'svelte/action';
 	import {
+		ArrangeLayoutButton,
 		CodeEditorButton,
 		DownloadGraphButton,
 		LoadGraphFromFileButton,
@@ -33,7 +34,8 @@
 	<div class="flex gap-4">
 		<SaveGraphButton />
 		<LoadGraphFromFileButton />
-		<ToPythonButton />
+		<!-- <ToPythonButton /> -->
+		<ArrangeLayoutButton />
 	</div>
 	<div class="flex gap-4">
 		<DownloadGraphButton />

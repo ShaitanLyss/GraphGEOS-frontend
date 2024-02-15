@@ -1,17 +1,18 @@
-import type { GeosXmlSchema$result, LoadingType } from '$houdini';
+import type { GeosXmlSchema$result, GraphEditorData$result, LoadingType } from '$houdini';
 import type { GeosTypesTree } from '$lib/backend-interaction';
 import type { Writable } from 'svelte/store';
 
 export type GeosDataContext = {
 	typesTree: Writable<GeosTypesTree | undefined>;
 	typesPaths: Writable<Record<string, string[]> | undefined>;
-	xmlSchema: Writable<GeosXmlSchema$result['geos']['xmlSchema'] | undefined>;
+	xmlSchema: Writable<GraphEditorData$result['geos']['xmlSchema'] | undefined>;
 };
 
 export type GeosSchema = {
 	simpleTypes: Map<
 		string,
 		{
+			enum: string[] | null;
 			name: string;
 			pattern: string;
 		}

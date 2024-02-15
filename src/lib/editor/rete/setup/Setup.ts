@@ -4,12 +4,14 @@ import type { Schemes } from '../node/Schemes';
 import type { AreaExtra } from '../node/AreaExtra';
 import type { NodeFactory } from '../node/NodeFactory';
 import type { GeosDataContext } from '$lib/geos';
+import type { NewGeosContext } from '$lib/global';
 
 export abstract class Setup {
 	abstract setup(
 		editor: NodeEditor,
 		area: AreaPlugin<Schemes, AreaExtra>,
 		factory: NodeFactory,
-		geos: GeosDataContext
+		geos: GeosDataContext,
+		geosContextV2: NewGeosContext
 	): void;
 }

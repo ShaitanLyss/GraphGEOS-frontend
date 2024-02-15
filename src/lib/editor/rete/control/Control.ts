@@ -3,6 +3,8 @@ import { ClassicPreset, getUID } from 'rete';
 export class Control extends ClassicPreset.Control {}
 
 export type InputControlTypes =
+	| 'integer'
+	| 'select'
 	| 'text'
 	| 'number'
 	| 'checkbox'
@@ -15,21 +17,24 @@ export type InputControlValueType<T extends InputControlTypes> = T extends 'text
 	? string
 	: T extends 'number'
 		? number
-		: T extends 'file' | 'remote-file'
-			? string
-			: T extends 'checkbox'
-				? boolean
-				: T extends 'textarea'
-					? string
-					: T extends unknown
-						? unknown
-						: T extends 'vector'
-							? { x: number; y: number; z: number }
-							: never;
+		: T extends 'integer'
+			? number
+			: T extends 'file' | 'remote-file'
+				? string
+				: T extends 'checkbox'
+					? boolean
+					: T extends 'textarea'
+						? string
+						: T extends unknown
+							? unknown
+							: T extends 'vector'
+								? { x: number; y: number; z: number }
+								: never;
 
 export type InputControlOptions<N> = {
 	readonly?: boolean;
 	initial?: N;
+	options?: string[] | null;
 	change?: (value: N) => void;
 	debouncedOnChange?: (value: N) => void;
 	onHeightChange?: (height: number, info: unknown) => void;
@@ -72,11 +77,17 @@ export class InputControl<
 				case 'textarea':
 					initial = '';
 					break;
+				case 'integer':
+					initial = 0;
+					break;
 				case 'vector':
 					initial = { x: 0, y: 0, z: 0 };
 					break;
 				case 'remote-file':
 					initial = '';
+					break;
+				case 'select':
+					initial = options?.options ? options.options[0] : '';
 					break;
 			}
 			if (this.options?.change) this.options.change(initial);

@@ -5,7 +5,7 @@ import type { AreaExtra } from '../../node/AreaExtra';
 import { Node } from '../../node/Node';
 import { capitalize } from '$utils/string';
 import { Setup } from '../../setup/Setup';
-import { _ } from '$lib/global';
+import { _, type NewGeosContext } from '$lib/global';
 import type { NodeEditor } from '../../NodeEditor';
 import type { NodeFactory } from '../../node/NodeFactory';
 import { GeosXmlSchemaStore as GetXmlSchemaStore, PendingValue } from '$houdini';
@@ -87,7 +87,8 @@ export class ContextMenuSetup extends Setup {
 		editor: NodeEditor,
 		area: AreaPlugin<Schemes, AreaExtra>,
 		__factory: NodeFactory,
-		geos: GeosDataContext
+		geos: GeosDataContext,
+		geosContextV2: NewGeosContext
 	): Promise<void> {
 		const re = /[/\\]/i;
 
@@ -135,8 +136,8 @@ export class ContextMenuSetup extends Setup {
 
 				const hasNameAttribute = complexType.attributes.some((attr) => attr.name === 'name');
 				if (hasNameAttribute) complexTypesWithName.push(name);
-				complexTypes.push(name);
 
+				complexTypes.push(name);
 				const xmlNodeAction: (factory: NodeFactory) => Node = (factory) =>
 					new XmlNode({
 						label: name,
@@ -158,10 +159,15 @@ export class ContextMenuSetup extends Setup {
 
 							xmlProperties: complexType.attributes.map<XmlAttributeDefinition>((attr) => {
 								console.log(attr);
+
+								const simpleType = geosContextV2.geosSchema.simpleTypes.get(attr.type);
+								if (!simpleType) console.warn(`Simple type ${attr.type} not found`);
+
 								return {
 									name: attr.name,
 									required: attr.required,
-									pattern: attr.pattern,
+									options: simpleType?.enum ?? null,
+									pattern: simpleType?.pattern,
 									type: attr.type,
 									controlType: 'text'
 								};

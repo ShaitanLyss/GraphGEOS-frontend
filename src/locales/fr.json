@@ -145,7 +145,8 @@
       "toggle-code-editor": {
         "tooltip": "Ouvrir / Fermer l'éditeur de code (C)",
         "close": "Fermer l'éditeur de code"
-      }
+      },
+      "layout": "Arrangement automatique"
     },
     "notification": {
       "title": "Éditeur"

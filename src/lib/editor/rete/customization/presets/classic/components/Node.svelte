@@ -160,93 +160,95 @@
 			</div>
 		{/if}
 	</div>
-	<!-- Outputs -->
-	{#each outputs as [key, output]}
-		<div class="output" data-testid={'output-' + key}>
-			<div class="output-title" data-testid="output-title">
-				{output.label || ''}
-			</div>
-			<Ref
-				class="output-socket"
-				data-testid="output-socket"
-				init={(element) =>
-					emit({
-						type: 'render',
-						data: {
-							type: 'socket',
-							side: 'output',
-							key,
-							nodeId: data.id,
-							element,
-							payload: output.socket
-						}
-					})}
-				unmount={(ref) => emit({ type: 'unmount', data: { element: ref } })}
-			/>
-		</div>
-	{/each}
-
-	<!-- Controls -->
-	{#each controls as [key, control]}
-		<Ref
-			class="control"
-			data-testid={'control-' + key}
-			init={(element) =>
-				emit({
-					type: 'render',
-					data: {
-						type: 'control',
-						element,
-						payload: control
-					}
-				})}
-			unmount={(ref) => emit({ type: 'unmount', data: { element: ref } })}
-		/>
-	{/each}
-
-	<!-- Inputs -->
-	{#each inputs as [key, input]}
-		<div class="rete-input" data-testid={'input-' + key}>
-			<Ref
-				class="input-socket"
-				data-testid="input-socket"
-				init={(element) =>
-					emit({
-						type: 'render',
-						data: {
-							type: 'socket',
-							side: 'input',
-							key,
-							nodeId: data.id,
-							element,
-							payload: input.socket
-						}
-					})}
-				unmount={(ref) => emit({ type: 'unmount', data: { element: ref } })}
-			/>
-			{#if !input.control || !input.showControl}
-				<div class="input-title" data-testid="input-title">
-					{input.label || ''}
+	<div class="space-y-0.5">
+		<!-- Outputs -->
+		{#each outputs as [key, output]}
+			<div class="output" data-testid={'output-' + key}>
+				<div class="output-title" data-testid="output-title">
+					{output.label || ''}
 				</div>
-			{/if}
-			{#if input.control && input.showControl}
 				<Ref
-					class="input-control"
-					data-testid="input-control"
+					class="output-socket"
+					data-testid="output-socket"
 					init={(element) =>
 						emit({
 							type: 'render',
 							data: {
-								type: 'control',
+								type: 'socket',
+								side: 'output',
+								key,
+								nodeId: data.id,
 								element,
-								payload: any(input).control
+								payload: output.socket
 							}
 						})}
 					unmount={(ref) => emit({ type: 'unmount', data: { element: ref } })}
 				/>
-			{/if}
-		</div>
-	{/each}
+			</div>
+		{/each}
+
+		<!-- Controls -->
+		{#each controls as [key, control]}
+			<Ref
+				class="control"
+				data-testid={'control-' + key}
+				init={(element) =>
+					emit({
+						type: 'render',
+						data: {
+							type: 'control',
+							element,
+							payload: control
+						}
+					})}
+				unmount={(ref) => emit({ type: 'unmount', data: { element: ref } })}
+			/>
+		{/each}
+
+		<!-- Inputs -->
+		{#each inputs as [key, input]}
+			<div class="rete-input text-md" data-testid={'input-' + key}>
+				<Ref
+					class="input-socket"
+					data-testid="input-socket"
+					init={(element) =>
+						emit({
+							type: 'render',
+							data: {
+								type: 'socket',
+								side: 'input',
+								key,
+								nodeId: data.id,
+								element,
+								payload: input.socket
+							}
+						})}
+					unmount={(ref) => emit({ type: 'unmount', data: { element: ref } })}
+				/>
+				{#if !input.control || !input.showControl}
+					<div class="input-title" data-testid="input-title">
+						{input.label || ''}
+					</div>
+				{/if}
+				{#if input.control && input.showControl}
+					<Ref
+						class="input-control"
+						data-testid="input-control"
+						init={(element) =>
+							emit({
+								type: 'render',
+								data: {
+									type: 'control',
+									element,
+									payload: any(input).control
+								}
+							})}
+						unmount={(ref) => emit({ type: 'unmount', data: { element: ref } })}
+					/>
+				{/if}
+			</div>
+		{/each}
+	</div>
 </div>
 
 <style lang="scss">

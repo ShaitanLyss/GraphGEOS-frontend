@@ -157,6 +157,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		isArray,
 		controlType,
 		required,
+		options,
 		pattern,
 		initialValues = {}
 	}: XmlAttributeDefinition & { initialValues?: Record<string, unknown> }) {
@@ -167,7 +168,9 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		const xmlTypePattern = /([^\W_]+)(?:_([^\W_]+))?/gm;
 		const [, xmlType, xmlSubType] = xmlTypePattern.exec(type) || [];
 		console.log('xmlType', xmlType, xmlSubType);
-		if (assignControl(xmlType as SocketType) !== undefined) {
+		if (options) {
+			controlType = 'select';
+		} else if (assignControl(xmlType as SocketType) !== undefined) {
 			type = xmlType as SocketType;
 			controlType = assignControl(xmlType as SocketType);
 		} else if (xmlType.startsWith('real') || xmlType.startsWith('integer')) {
@@ -196,6 +199,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 				: controlType && {
 						type: controlType,
 						options: {
+							options,
 							label: titlelize(name),
 							initial: initialValues[name],
 							pattern: pattern,

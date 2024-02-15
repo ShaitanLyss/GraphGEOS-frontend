@@ -6,6 +6,7 @@ import { $socketcolor } from './trash/vars';
 export const colorMap: { [key in SocketType]?: string } = {
 	string: '#d88cbb',
 	path: '#8B78E6',
+	integer: 'hsl(151.07deg 48.7% 45.1%)',
 	pythonObject: '#616796',
 	pythonProperty: '#949cd3',
 	number: '#d8b38c',
@@ -58,6 +59,7 @@ export function assignControl(socketType: SocketType): InputControlTypes | undef
 	const controlMap: { [key in SocketType]?: InputControlTypes } = {
 		path: 'remote-file',
 		string: 'text',
+		integer: 'integer',
 		number: 'number',
 		boolean: 'checkbox',
 		vector: 'vector'

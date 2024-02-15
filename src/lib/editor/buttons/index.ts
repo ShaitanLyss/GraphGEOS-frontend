@@ -8,6 +8,7 @@ import ToPythonButton from './ToPythonButton.svelte';
 import UploadGraphButton from './UploadGraphButton.svelte';
 import EditorButtons__SvelteComponent_ from './EditorButtons.svelte';
 import CodeEditorButton__SvelteComponent_ from './CodeEditorButton.svelte';
+export { default as ArrangeLayoutButton } from './ArrangeLayoutButton.svelte';
 
 export {
 	DownloadGraphButton,

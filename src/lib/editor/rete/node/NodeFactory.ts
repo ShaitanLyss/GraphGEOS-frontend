@@ -14,6 +14,7 @@ import type { MakutuClassRepository } from '$lib/backend-interaction/types';
 import { newUniqueId } from '$utils';
 import type { SelectorEntity } from 'rete-area-plugin/_types/extensions/selectable';
 import { ErrorWNotif } from '$lib/global';
+import type { AutoArrangePlugin } from 'rete-auto-arrange-plugin';
 
 function createDataflowEngine() {
 	return new DataflowEngine<Schemes>(({ inputs, outputs }) => {
@@ -178,19 +179,23 @@ export class NodeFactory {
 	private readonly controlflowEngine = createControlflowEngine();
 	public readonly selector?: AreaExtensions.Selector<SelectorEntity>;
 	public selectableNodes?: ReturnType<typeof AreaExtensions.selectableNodes>;
+	public readonly arrange: AutoArrangePlugin<Schemes>;
 	constructor({
 		editor,
 		area,
 		makutuClasses,
-		selector
+		selector,
+		arrange
 	}: {
 		editor: NodeEditor;
 		area?: AreaPlugin<Schemes, AreaExtra>;
 		makutuClasses?: MakutuClassRepository;
 		selector?: AreaExtensions.Selector<SelectorEntity>;
+		arrange: AutoArrangePlugin<Schemes>;
 	}) {
 		this.selector = selector;
 		this.area = area;
+		this.arrange = arrange;
 		this.makutuClasses = makutuClasses;
 		this.editor = editor;
 		editor.use(this.dataflowEngine);

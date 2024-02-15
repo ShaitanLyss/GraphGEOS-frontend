@@ -35,6 +35,10 @@
 		$typesPaths = $GraphEditorData.data?.geos.typesPaths;
 
 	$: if ($xmlSchema) {
+		$xmlSchema.simpleTypes.forEach((value) => {
+			if (value === PendingValue) return;
+			geosSchema.simpleTypes.set(value.name, value);
+		});
 		$xmlSchema.complexTypes.forEach((value) => {
 			if (value === PendingValue) return;
 			let { name, attributes, childTypes, link } = value;

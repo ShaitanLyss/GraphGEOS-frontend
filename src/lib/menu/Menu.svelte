@@ -3,10 +3,12 @@
 	import { filterMenuItems, type IHierachicalMenu, collectMenuView } from './utils';
 	import TreeViewMenuItems from './TreeViewMenuItems.svelte';
 	import { onMount } from 'svelte';
-	import { _ } from '$lib/global';
+	import { _, keyboardShortcut } from '$lib/global';
 	import type { IMenuItem, MenuType } from './types';
 	import throttle from 'lodash.throttle';
 	import PopoverMenuItems from './PopoverMenuItems.svelte';
+	import { writable, type Writable } from 'svelte/store';
+	import type { Action } from 'svelte/action';
 
 	export let searchBar = true;
 	export let menuItems: IMenuItem[];
@@ -55,9 +57,35 @@
 		menu = collectMenuView(filteredMenuItems);
 		if (treeView) treeView.expandAll();
 	}
+
+	let focusedItem: Writable<IMenuItem | undefined> = writable(undefined);
+	let focusedIndex: number | null = null;
+	$: {
+		if (filteredMenuItems.length === 0) focusedIndex = null;
+		else focusedIndex = 0;
+	}
+	$: console.log('menu: focused index', focusedIndex);
 </script>
 
-<div class="flex flex-col h-full">
+<div
+	class="flex flex-col h-full"
+	use:keyboardShortcut={{
+		key: 'arrowDown',
+		action: () => {
+			if (focusedIndex !== null) {
+				focusedIndex = (focusedIndex + 1) % filteredMenuItems.length;
+			}
+		}
+	}}
+	use:keyboardShortcut={{
+		key: 'arrowUp',
+		action: () => {
+			if (focusedIndex !== null) {
+				focusedIndex = (focusedIndex - 1 + filteredMenuItems.length) % filteredMenuItems.length;
+			}
+		}
+	}}
+>
 	{#if searchBar}
 		<div class="flex justify-center items-center">
 			<input
@@ -66,6 +94,25 @@
 				placeholder={$_('menu.context-menu.searchbar.placeholder')}
 				style="border-radius: 5px;"
 				bind:value={query}
+				use:keyboardShortcut={{
+					targetDocument: false,
+					key: 'arrowDown',
+					action: () => {
+						if (focusedIndex !== null) {
+							focusedIndex = (focusedIndex + 1) % filteredMenuItems.length;
+						}
+					}
+				}}
+				use:keyboardShortcut={{
+					targetDocument: false,
+					key: 'arrowUp',
+					action: () => {
+						if (focusedIndex !== null) {
+							focusedIndex =
+								(focusedIndex - 1 + filteredMenuItems.length) % filteredMenuItems.length;
+						}
+					}
+				}}
 				on:input={throttle(() => updateFilteredItems(menuItems), 100)}
 			/>
 		</div>

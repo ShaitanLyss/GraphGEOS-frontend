@@ -2,7 +2,14 @@
 	import { isBrowser } from '$houdini';
 	import { EditMacroNodeChannel } from '$lib/broadcast-channels';
 	import { Editor, EditorSharedOverlay } from '$lib/editor';
-	import { setContext, notifications, getContext, _, ErrorWNotif } from '$lib/global';
+	import {
+		setContext,
+		notifications,
+		getContext,
+		_,
+		ErrorWNotif,
+		keyboardShortcut
+	} from '$lib/global';
 	import type { NodeEditorSaveData, NodeFactory } from '$rete';
 	import { isNodeEditorSaveData } from '$rete/utils';
 

@@ -299,6 +299,7 @@ type XMLSchema {
 }
 
 type XMLSimpleType {
+  enum: [String!]
   name: String!
   pattern: String!
 }

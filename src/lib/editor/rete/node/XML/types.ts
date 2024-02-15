@@ -11,6 +11,7 @@ type PropertyNames<T> = {
 }[keyof T];
 
 export type XmlAttributeDefinition = {
+	options: string[] | null;
 	name: string;
 	type: string;
 	required: boolean;

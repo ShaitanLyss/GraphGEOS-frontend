@@ -10,6 +10,7 @@ import { ContextMenuSetup } from '../plugin/context-menu/context-menu';
 import { AreaSetup } from './AreaSetup';
 import { ConnectionSetup } from './ConnectionSetup';
 import type { GeosDataContext } from '$lib/geos';
+import type { NewGeosContext } from '$lib/global';
 
 export class MegaSetup extends Setup {
 	toSetup: Setup[] = [
@@ -24,10 +25,11 @@ export class MegaSetup extends Setup {
 		editor: NodeEditor,
 		area: AreaPlugin<Schemes, AreaExtra>,
 		factory: NodeFactory,
-		geos: GeosDataContext
+		geos: GeosDataContext,
+		geosContextV2: NewGeosContext
 	) {
 		for (const setup of this.toSetup) {
-			setup.setup(editor, area, factory, geos);
+			setup.setup(editor, area, factory, geos, geosContextV2);
 		}
 	}
 }

@@ -148,7 +148,8 @@
       "toggle-code-editor": {
         "tooltip": "Toggle code editor (C)",
         "close": "Close code editor"
-      }
+      },
+      "layout": "Auto layout"
     },
     "notification": {
       "title": "Editor"

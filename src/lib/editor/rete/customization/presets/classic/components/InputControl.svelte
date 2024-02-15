@@ -49,12 +49,76 @@
 		console.log(typeof val);
 		onChange(val);
 	}
+	export let inputTextSize = 'text-md';
+	console.log(data.options?.pattern);
 </script>
 
-{#if type == 'checkbox'}
+{#if type == 'select'}
+	<label class="label">
+		{#if options?.label}
+			<div class="truncate w-full">
+				<span title={options.label} class="text-ellipsis text-white">
+					{options?.label ? options?.label : ''}</span
+				>
+			</div>
+		{/if}
+		{#if options?.options}
+			<select
+				class="{inputTextSize} hover:bg-surface-50-900-token focus:bg-surface-50-900-token {width} rounded-token bg-surface-200-700-token
+				
+			 text-surface-900-50-token border-token
+			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
+				{value}
+				on:input={onChangeFromEvent}
+				on:pointerdown|stopPropagation={() => false}
+			>
+				{#each options?.options as option, i}
+					<option value={option}>{option}</option>
+				{/each}
+			</select>
+		{/if}
+	</label>
+	<!-- {:else if type == 'color'}
+	<label class="label">
+		{#if options?.label}
+			<span title={options.label} class="text-white"> {options?.label ? options?.label : ''}</span>
+		{/if}
+		<input
+			on:dblclick|stopPropagation
+			type="color"
+			class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token {width} rounded-token bg-surface-200-700-token
+				
+			 text-surface-900-50-token border-token
+			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
+			{value}
+			{readonly}
+			on:input={onChangeFromEvent}
+			on:pointerdown|stopPropagation={() => false}
+		/>
+	</label>
+{:else if type == 'date'}
+	<label class="label">
+		{#if options?.label}
+			<span title={options.label} class="text-white"> {options?.label ? options?.label : ''}</span>
+		{/if}
+		<input
+			on:dblclick|stopPropagation
+			type="date"
+			class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token {width} rounded-token bg-surface-200-700-token
+				
+			 text-surface-900-50-token border-token
+			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
+			{value}
+			{readonly}
+			on:input={onChangeFromEvent}
+			on:pointerdown|stopPropagation={() => false}
+		/>
+	</label> -->
+{:else if type == 'checkbox'}
 	<label title="boolean" class="label {width} cursor-pointer flex justify-center">
 		<input
 			on:pointerdown|stopPropagation={() => false}
+			on:dblclick|stopPropagation
 			type="checkbox"
 			class="checkbox"
 			title="boolean"
@@ -64,21 +128,59 @@
 			on:change={(e) => onChange(e.currentTarget.checked)}
 			label={options?.label}
 		/>
-		<!-- <span class="">{options?.label}</span> -->
+		<!-- <span title={options.label} class="">{options?.label}</span> -->
 		{#if options?.label}
-			<span class="text-white">{options?.label}</span>
+			<div class="truncate grow">
+				<span title={options.label} class="text-white">{options?.label}</span>
+			</div>
 		{/if}
+	</label>
+{:else if type === 'integer'}
+	<label class="label w-full">
+		{#if options?.label}
+			<div class="w-full truncate">
+				<span title={options.label} class="text-white">
+					{options?.label ? options?.label : ''}</span
+				>
+			</div>
+		{/if}
+		<input
+			placeholder="integer"
+			title="integer"
+			step="1"
+			type="number"
+			class="{inputTextSize} hover:bg-surface-50-900-token focus:bg-surface-50-900-token {width} rounded-token bg-surface-200-700-token
+				
+			 text-surface-900-50-token border-token
+			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
+			{value}
+			{readonly}
+			on:dblclick|stopPropagation
+			on:pointerdown|stopPropagation
+			on:keypress={(e) => {
+				if (e.key === '.' || e.key === ',') {
+					e.preventDefault();
+				}
+			}}
+			on:input={onChangeFromEvent}
+			on:pointerdown|stopPropagation={() => false}
+		/>
 	</label>
 {:else if type == 'number'}
 	<label class="label">
 		{#if options?.label}
-			<span class="text-white"> {options?.label ? options?.label : ''}</span>
+			<div class="truncate w-full">
+				<span title={options.label} class="text-white">
+					{options?.label ? options?.label : ''}</span
+				>
+			</div>
 		{/if}
 		<input
 			placeholder="number"
 			title="number"
+			step="1"
 			type="number"
-			class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token {width} rounded-token bg-surface-200-700-token
+			class="{inputTextSize} hover:bg-surface-50-900-token focus:bg-surface-50-900-token {width} rounded-token bg-surface-200-700-token
 				
 			 text-surface-900-50-token border-token
 			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
@@ -91,12 +193,19 @@
 {:else if type == 'text'}
 	<label class="label">
 		<!-- {options?.label ? options?.label : ''} -->
-		{#if options?.label}<span class="text-white"> {options?.label ? options?.label : ''}</span>{/if}
+		{#if options?.label}
+			<div class="truncate w-full">
+				<span title={options.label} class="text-white">
+					{options?.label ? options?.label : ''}</span
+				>
+			</div>
+		{/if}
 		<input
+			on:dblclick|stopPropagation
 			type="text"
 			placeholder="string"
 			title="string"
-			class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token {width} rounded-token bg-surface-200-700-token
+			class="{inputTextSize} hover:bg-surface-50-900-token focus:bg-surface-50-900-token {width} rounded-token bg-surface-200-700-token
 				
 			 text-surface-900-50-token border-token
 			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
@@ -109,9 +218,14 @@
 {:else if type == 'textarea'}
 	<label class="label">
 		<!-- {options?.label} -->
-		{#if options?.label}<span class="text-white"> {options?.label ? options?.label : ''}</span>{/if}
+		{#if options?.label}
+			<div class="truncate w-full">
+				<span title={options.label} class="text-white">
+					{options?.label ? options?.label : ''}</span
+				>
+			</div>{/if}
 		<textarea
-			class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token {width} rounded-md bg-surface-200-700-token
+			class="{inputTextSize} hover:bg-surface-50-900-token focus:bg-surface-50-900-token {width} rounded-md bg-surface-200-700-token
 			 text-surface-900-50-token border-token
 			 focus:border-primary-500 focus:ring-primary-500 transition-colors
 			 "
@@ -124,12 +238,17 @@
 {:else if type == 'vector'}
 	<div class="label">
 		{#if options?.label}
-			<span class="text-white text-sm">{options?.label ? options?.label : ''}</span>
+			<div class="truncate w-full">
+				<span title={options.label} class="text-white text-sm"
+					>{options?.label ? options?.label : ''}</span
+				>
+			</div>
 		{/if}
 		<div class="vector flex {width}">
 			<input
+				on:dblclick|stopPropagation
 				type="number"
-				class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-1/3 bg-surface-200-700-token
+				class="{inputTextSize} hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-1/3 bg-surface-200-700-token
 				rounded-tl-token rounded-bl-token text-end
 			 text-surface-900-50-token border-token
 			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
@@ -145,11 +264,12 @@
 				on:pointerdown|stopPropagation={() => false}
 			/>
 			<input
+				on:dblclick|stopPropagation
 				name="y"
 				placeholder="y"
 				title="y"
 				type="number"
-				class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-1/3 bg-surface-200-700-token
+				class="{inputTextSize} hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-1/3 bg-surface-200-700-token
 			 text-surface-900-50-token border-token text-end
 			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
 				value={value.y}
@@ -161,10 +281,11 @@
 				on:pointerdown|stopPropagation={() => false}
 			/>
 			<input
+				on:dblclick|stopPropagation
 				type="number"
 				placeholder="z"
 				title="z"
-				class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-1/3 bg-surface-200-700-token
+				class="{inputTextSize} hover:bg-surface-50-900-token focus:bg-surface-50-900-token w-1/3 bg-surface-200-700-token
 				rounded-tr-token rounded-br-token text-end
 			 text-surface-900-50-token border-token
 			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
@@ -183,10 +304,16 @@
 {:else if type == 'file'}
 	<label class="label">
 		<!-- {options?.label ? options?.label : ''} -->
-		{#if options?.label}<span class="text-white"> {options?.label ? options?.label : ''}</span>{/if}
+		{#if options?.label}
+			<div class="truncate w-full">
+				<span title={options.label} class="text-white">
+					{options?.label ? options?.label : ''}</span
+				>
+			</div>{/if}
 		<input
+			on:dblclick|stopPropagation
 			type="text"
-			class="hover:bg-surface-50-900-token focus:bg-surface-50-900-token {width} rounded-token bg-surface-200-700-token
+			class="{inputTextSize} hover:bg-surface-50-900-token focus:bg-surface-50-900-token {width} rounded-token bg-surface-200-700-token
 				
 			 text-surface-900-50-token border-token
 			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
@@ -199,11 +326,12 @@
 {:else if type === 'remote-file'}
 	<div class="flex gap-1">
 		<input
+			on:dblclick|stopPropagation
 			on:pointerdown|stopPropagation
 			readonly
 			type="text"
 			title="remote file"
-			class="input"
+			class="{inputTextSize} input"
 			placeholder="Select file or folder"
 			{value}
 		/>
