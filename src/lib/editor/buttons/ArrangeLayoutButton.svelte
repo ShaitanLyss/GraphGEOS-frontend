@@ -3,12 +3,39 @@
 	import { _, getContext, keyboardShortcut } from '$lib/global';
 	import { faGem } from '@fortawesome/free-solid-svg-icons';
 	import { AreaExtensions } from 'rete-area-plugin';
+	import wu from 'wu';
+	import { ArrangeAppliers } from 'rete-auto-arrange-plugin';
+	import type { Schemes } from '$rete/node/Schemes';
+	import type { AreaExtra } from '$rete/node/AreaExtra';
+	import { cubicInOut } from 'svelte/easing';
 
 	const exec: ButtonExec = async ({ factory }) => {
-		await factory.arrange.layout();
+		const selectedNodesIds = factory.getSelectedNodesIds();
+		if (selectedNodesIds) console.log('arranging nodes', selectedNodesIds);
 		const area = factory.getArea();
 		if (!area) return;
-		await AreaExtensions.zoomAt(area, factory.getEditor().getNodes());
+		let firstTick = true;
+		const applier = new ArrangeAppliers.TransitionApplier<Schemes, AreaExtra>({
+			onTick(t) {
+				if (firstTick) {
+					firstTick = true;
+					AreaExtensions.zoomAt(area, factory.getEditor().getNodes());
+				}
+			},
+			duration: 500,
+			timingFunction(t) {
+				if (t === 0) return 1;
+				else return cubicInOut(t);
+			},
+			needsLayout(id) {
+				console.warn(
+					"laying out a subset doesn't work, should try reaching out to the author of the plugin"
+				);
+				return !selectedNodesIds || selectedNodesIds.has(id);
+			}
+		});
+
+		await factory.arrange.layout({ applier });
 	};
 </script>
 

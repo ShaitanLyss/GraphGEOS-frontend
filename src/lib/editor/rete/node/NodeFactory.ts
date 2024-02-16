@@ -15,6 +15,7 @@ import { newUniqueId } from '$utils';
 import type { SelectorEntity } from 'rete-area-plugin/_types/extensions/selectable';
 import { ErrorWNotif } from '$lib/global';
 import type { AutoArrangePlugin } from 'rete-auto-arrange-plugin';
+import wu from 'wu';
 
 function createDataflowEngine() {
 	return new DataflowEngine<Schemes>(({ inputs, outputs }) => {
@@ -260,6 +261,25 @@ export class NodeFactory {
 
 	disable() {
 		Node.activeFactory = undefined;
+	}
+
+	getSelectedNodes(): Node[] | undefined {
+		if (!this.selector) return undefined;
+		const nodes = wu(this.selector.entities.values())
+			.filter(({ label }) => label === 'node')
+			.map(({ id }) => this.editor.getNode(id))
+			.toArray();
+		return nodes.length ? nodes : undefined;
+	}
+
+	getSelectedNodesIds(): Set<Node['id']> | undefined {
+		if (!this.selector) return undefined;
+		const ids = new Set<Node['id']>();
+		wu(this.selector.entities.values())
+			.filter(({ label }) => label === 'node')
+			.map(({ id }) => id)
+			.forEach((id) => ids.add(id));
+		return ids.size ? ids : undefined;
 	}
 
 	create<T extends Node>(type: new () => T): T {
