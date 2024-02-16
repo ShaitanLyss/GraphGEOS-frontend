@@ -46,6 +46,7 @@ export interface InDataParams<N> {
 	isRequired?: boolean;
 	isArray?: boolean;
 	type?: SocketType;
+	index?: number;
 }
 
 export interface NodeParams {
@@ -299,7 +300,8 @@ export class Node<
 		control = undefined,
 		isArray = false,
 		isRequired = false,
-		type = 'any'
+		type = 'any',
+		index = undefined
 	}: InDataParams<N>): Input {
 		const input = new Input(
 			new Socket({
@@ -311,7 +313,7 @@ export class Node<
 			}),
 			displayName,
 			isArray,
-			{ isRequired: isRequired }
+			{ isRequired: isRequired, index }
 		);
 		if (control) {
 			if (control.options) {

@@ -31,6 +31,7 @@
 	$: macroNode = data instanceof MacroNode ? data : undefined;
 	const isMacroNode = data instanceof MacroNode;
 	const isNamedXmlNode = data instanceof XmlNode && data.name !== undefined;
+	const isXmlnode = data instanceof XmlNode;
 	// console.log('isMacroNode', isMacroNode);
 	export let emit: (props: SvelteArea2D<ClassicScheme>) => void;
 

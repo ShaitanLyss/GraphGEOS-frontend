@@ -101,6 +101,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		// Add XML element inputs
 		if (childTypes.length > 0)
 			this.addXmlInData({
+				index: 1,
 				name: 'children',
 				isArray: true,
 				type: `xmlElement:${childTypes.join('|')}`
@@ -289,12 +290,14 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		name,
 		tag,
 		type = 'any',
-		isArray = false
+		isArray = false,
+		index
 	}: {
 		name: string;
 		tag?: string;
 		type?: SocketType;
 		isArray?: boolean;
+		index?: number;
 	}) {
 		this.xmlInputs[name] = { tag: tag };
 		this.addInData({
@@ -302,7 +305,8 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 			displayName: titlelize(name),
 			socketLabel: titlelize(name),
 			type: type,
-			isArray: isArray
+			isArray: isArray,
+			index
 		});
 		this.height += 37;
 	}
