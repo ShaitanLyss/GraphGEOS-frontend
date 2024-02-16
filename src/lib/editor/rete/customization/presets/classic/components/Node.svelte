@@ -11,6 +11,7 @@
 	import { EditMacroNodeChannel } from '$lib/broadcast-channels';
 	import { GetGraphStore } from '$houdini';
 	import { fade } from 'svelte/transition';
+	import { VariableNode } from '$rete/node/XML/VariableNode';
 	type NodeExtraData = { width?: number; height?: number };
 
 	function sortByIndex<K, I extends undefined | { index?: number }>(entries: [K, I][]) {
@@ -55,6 +56,7 @@
 			graph: saveData
 		});
 	}
+	const isVariable = data instanceof VariableNode;
 	let editingName = false;
 	let nameInput: HTMLInputElement | undefined;
 	const disableEditing = (ev: KeyboardEvent) => {
@@ -77,7 +79,9 @@
 </script>
 
 <div
-	class="rounded-container-token node {data.selected &&
+	class:rounded-token={isVariable}
+	class:rounted-container-token={!isVariable}
+	class="relative node {data.selected &&
 	(dragDistance === undefined || dragDistance > dragThreshold)
 		? 'selected'
 		: ''}"
@@ -87,66 +91,71 @@
 	class:bg-surface-500={!$modeCurrent}
 	class:node-light-background={$modeCurrent}
 >
-	<div class="flex justify-between items-center">
+	<div class="flex justify-{isVariable ? 'center' : ' between'} items-center">
 		{#if node instanceof XmlNode && node.name !== undefined}
 			<div class="title flex flex-col w-full">
-				<small class="text-white text-xs opacity-60">{node.label}</small>
-				<div class="relative">
-					<button
-						class="cursor-text text-start transition-opacity"
-						class:opacity-0={editingName}
-						data-testid="title"
-						on:pointerdown={(event) => {
-							startDragPos = { x: event.clientX, y: event.clientY };
-							dragDistance = 0;
-						}}
-						on:pointermove={(event) => {
-							if (!startDragPos) return;
-							dragDistance = Math.sqrt(
-								Math.pow(event.clientX - startDragPos.x, 2) +
-									Math.pow(event.clientY - startDragPos.y, 2)
-							);
-						}}
-						on:pointerup={(event) => {
-							startDragPos = undefined;
-							if (dragDistance && dragDistance > dragThreshold) {
-								dragDistance = undefined;
-								return;
-							}
-
-							dragDistance = undefined;
-							if (event.button !== 0) {
-								event.target.blur();
-								return;
-							}
-							editingName = true;
-							node.getFactory().selectableNodes?.unselect(node.id);
-						}}
+				<div class="w-full truncate">
+					<small class="text-white text-ellipsis text-xs opacity-60" title={node.label}
+						>{node.label}</small
 					>
-						{node.name}
-					</button>
-					{#if editingName}
-						<input
-							transition:fade={{ duration: 100 }}
-							bind:this={nameInput}
-							class="text-token absolute top-0 left-0 w-full hover:bg-surface-50-900-token focus:bg-surface-50-900-token rounded-token dark:bg-surface-200-700-token no-border-token no-focus:border-primary-500 no-focus:ring-primary-500 transition-colors"
-							type="text"
-							value={node.name}
-							on:blur={() => (editingName = false)}
-							on:keydown={(e) => {
-								if (e.key === 'Enter') editingName = false;
+					<div class="relative w-full truncate">
+						<button
+							class=" cursor-text text-start transition-opacity max-w-full truncate"
+							class:opacity-0={editingName}
+							data-testid="title"
+							title={node.name}
+							on:pointerdown={(event) => {
+								startDragPos = { x: event.clientX, y: event.clientY };
+								dragDistance = 0;
 							}}
-							on:input={(e) => {
-								const val = e.target.value;
-								node.name = val;
-								node.setName(val);
+							on:pointermove={(event) => {
+								if (!startDragPos) return;
+								dragDistance = Math.sqrt(
+									Math.pow(event.clientX - startDragPos.x, 2) +
+										Math.pow(event.clientY - startDragPos.y, 2)
+								);
 							}}
-						/>
-					{/if}
+							on:pointerup={(event) => {
+								startDragPos = undefined;
+								if (dragDistance && dragDistance > dragThreshold) {
+									dragDistance = undefined;
+									return;
+								}
+
+								dragDistance = undefined;
+								if (event.button !== 0) {
+									event.target.blur();
+									return;
+								}
+								editingName = true;
+								node.getFactory().selectableNodes?.unselect(node.id);
+							}}
+						>
+							{node.name}
+						</button>
+						{#if editingName}
+							<input
+								transition:fade={{ duration: 100 }}
+								bind:this={nameInput}
+								class="text-token absolute top-0 left-0 w-full hover:bg-surface-50-900-token focus:bg-surface-50-900-token rounded-token dark:bg-surface-200-700-token no-border-token no-focus:border-primary-500 no-focus:ring-primary-500 transition-colors"
+								type="text"
+								value={node.name}
+								on:blur={() => (editingName = false)}
+								on:keydown={(e) => {
+									if (e.key === 'Enter') editingName = false;
+								}}
+								on:input={(e) => {
+									const val = e.target.value;
+									node.name = val;
+									node.setName(val);
+								}}
+							/>
+						{/if}
+					</div>
 				</div>
 			</div>
 		{:else}
-			<div class="title" data-testid="title">{data.label}</div>
+			<div class="title truncate" title={data.label} data-testid="title">{data.label}</div>
 		{/if}
 		{#if isMacroNode}
 			<div
@@ -160,7 +169,7 @@
 			</div>
 		{/if}
 	</div>
-	<div class="space-y-0.5">
+	<div class="space-y-0.5 {isVariable ? 'absolute top-0 right-0' : ''}">
 		<!-- Outputs -->
 		{#each outputs as [key, output]}
 			<div class="output" data-testid={'output-' + key}>

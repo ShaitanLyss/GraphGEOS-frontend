@@ -22,6 +22,8 @@
 	import { moonMenuFactoryStore, newMoonItemsStore } from '$lib/menu/context-menu/moonContextMenu';
 	import type { MacroNode as t_MacroNode } from '$rete/node/MacroNode';
 	import type { IBaseMenuItem } from '$lib/menu';
+	import { VariableNode } from '$rete/node/XML/VariableNode';
+	import type { Variable } from './overlay/variables-list';
 
 	let spawnMoonMenu: typeof t_spawnMoonMenu | undefined = undefined;
 	let MacroNode: typeof t_MacroNode | undefined = undefined;
@@ -169,8 +171,12 @@
 			console.log('ctrl', event.ctrlKey, 'alt', event.altKey);
 			const variable = JSON.parse(
 				event.dataTransfer?.getData('application/graph-variable') ?? '{}'
-			);
+			) as Variable;
 			console.log('Dropped variable', variable);
+			const node = await factory.addNode(VariableNode, { variableId: variable.id });
+			if (!node) throw new Error('Node not created');
+			// Move node to drop position
+			translateNodeFromGlobal({ globalPos: { x: event.clientX, y: event.clientY }, node, factory });
 		}
 
 		// nodeView.translate(event.clientX - surfacePos.x, event.clientY - surfacePos.y);

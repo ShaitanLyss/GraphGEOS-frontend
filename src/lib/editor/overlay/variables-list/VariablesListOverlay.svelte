@@ -13,13 +13,23 @@
 	import { get, type Writable } from 'svelte/store';
 	import type { SocketType } from '$rete/plugin/typed-sockets';
 	import type { Action } from 'svelte/action';
-	import { newUniqueId } from '$utils';
+	import { newUniqueId, newUuid } from '$utils';
 
 	const collapsed = localStorageStore('variablesListCollapsed', false);
 
 	const { activeEditor } = getContext('editor');
 
-	$: variables = $activeEditor?.variables;
+	let variables: Writable<Record<string, Variable>> | undefined = undefined;
+	let setVarsUndefinedTimeout: NodeJS.Timeout | undefined;
+	$: {
+		if ($activeEditor?.variables) {
+			clearTimeout(setVarsUndefinedTimeout);
+			variables = $activeEditor.variables;
+		} else {
+			setVarsUndefinedTimeout = setTimeout(() => (variables = undefined), 50);
+		}
+	}
+
 	// let localId = newUniqueId('variable');
 	// variables[localId] = { name: 'variable1', value: 'value1', type: 'string', localId };
 	// localId = newUniqueId('variable');
@@ -60,6 +70,7 @@
 	let mainDiv: HTMLDivElement | undefined;
 	$: nVarsCreated = Object.keys($variables ?? {}).length;
 
+	$: console.log('vars', $variables);
 	onMount(() => {
 		mounted = true;
 
@@ -115,13 +126,13 @@
 		if (!$variables) return;
 		console.log('create');
 		$collapsed = false;
-		const localId = newUniqueId('variable');
+		const id = newUuid('variable');
 		nVarsCreated += 1;
-		$variables[localId] = {
+		$variables[id] = {
 			name: `variable${nVarsCreated}`,
 			value: undefined,
 			type: $defaultType,
-			localId
+			id
 		};
 		variables = variables;
 	}
@@ -198,7 +209,7 @@
 				style="height: 9.6rem;"
 			>
 				<ul class="space-y-2 py-2">
-					{#each Object.keys($variables) as localId (localId)}
+					{#each Object.keys($variables) as id (id)}
 						<li
 							animate:flip={{ duration: currentFlipDuration }}
 							in:fade
@@ -206,8 +217,8 @@
 							use:scroll
 						>
 							<VariableItem
-								bind:variable={$variables[localId]}
-								on:delete={() => deleteVariable(localId)}
+								bind:variable={$variables[id]}
+								on:delete={() => deleteVariable(id)}
 								on:changetype={(e) => {
 									console.log('set default variable type', e.detail.type);
 									$defaultType = e.detail.type;

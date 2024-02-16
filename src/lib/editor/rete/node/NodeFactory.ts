@@ -117,9 +117,6 @@ export class NodeFactory {
 	async loadGraph(editorSaveData: NodeEditorSaveData) {
 		console.log('loadGraph', editorSaveData.editorName);
 		await this.editor.clear();
-		for (const key in editorSaveData.variables) {
-			editorSaveData.variables[key].localId = newUniqueId('variable');
-		}
 		this.editor.variables.set(editorSaveData.variables);
 		this.editor.setName(editorSaveData.editorName);
 		const nodes = new Map<string, Node>();

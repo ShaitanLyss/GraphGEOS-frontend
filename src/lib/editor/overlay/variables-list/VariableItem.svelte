@@ -57,7 +57,7 @@
 			inputControl = new InputControl(controlType, {
 				initial: firstSet ? v.value : undefined,
 				change: (val) => {
-					console.log('change', v.localId, val);
+					console.log('change', v.id, val);
 					v = { ...v, value: val };
 				}
 			});
