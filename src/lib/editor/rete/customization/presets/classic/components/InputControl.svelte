@@ -115,25 +115,30 @@
 		/>
 	</label> -->
 {:else if type == 'checkbox'}
-	<label title="boolean" class="label {width} cursor-pointer flex justify-center">
-		<input
-			on:pointerdown|stopPropagation={() => false}
-			on:dblclick|stopPropagation
-			type="checkbox"
-			class="checkbox"
-			title="boolean"
-			{value}
-			checked={value}
-			readOnly={readonly}
-			on:change={(e) => onChange(e.currentTarget.checked)}
-			label={options?.label}
-		/>
+	<label
+		title="boolean"
+		class="label {width} h-full flex items-center cursor-pointer justify-start"
+	>
 		<!-- <span title={options.label} class="">{options?.label}</span> -->
-		{#if options?.label}
-			<div class="truncate grow">
-				<span title={options.label} class="text-white">{options?.label}</span>
-			</div>
-		{/if}
+		<div class="flex gap-2 w-full">
+			{#if options?.label}
+				<div class="truncate">
+					<span title={options.label} class="text-white">{options?.label}</span>
+				</div>
+			{/if}
+			<input
+				on:pointerdown|stopPropagation={() => false}
+				on:dblclick|stopPropagation
+				type="checkbox"
+				class="checkbox"
+				title="boolean"
+				{value}
+				checked={value}
+				readOnly={readonly}
+				on:change={(e) => onChange(e.currentTarget.checked)}
+				label={options?.label}
+			/>
+		</div>
 	</label>
 {:else if type === 'integer'}
 	<label class="label w-full">
