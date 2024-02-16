@@ -76,11 +76,20 @@
 		state: ({ state }) => (displayTypeSelection = state)
 	};
 
-	function openDeleteMenu({ pos }: { pos: Point }): void {
+	function openContextMenu({ pos }: { pos: Point }): void {
 		spawnMoonMenu({
 			pos,
 			searchbar: false,
 			items: [
+				createActionMenuItem({
+					label: v.exposed ? 'Unexpose' : 'Expose',
+					description: v.exposed ? 'Unexpose this variable' : 'Expose this variable',
+					executeAction: () => {
+						v.exposed = !v.exposed;
+						dispatch('change', { variable: v });
+					},
+					tags: ['expose', 'visibility']
+				}),
 				createActionMenuItem({
 					label: 'Delete',
 					description: 'Delete this variable',
@@ -141,9 +150,10 @@
 				if (!e.dataTransfer) return;
 				e.dataTransfer.setData('application/graph-variable', JSON.stringify(v));
 			}}
-			class="text-start text-ellipsis w-20 overflow-hidden pointer-events-auto hover:bg-surface-200-700-token rounded-token py-1 px-2"
+			class:outline-dashed={v.exposed}
+			class="outline-2 outline-primary-400 text-start text-ellipsis w-20 overflow-hidden pointer-events-auto hover:bg-surface-200-700-token rounded-token py-1 px-2"
 			on:contextmenu|preventDefault|stopPropagation={(e) =>
-				openDeleteMenu({ pos: { x: e.clientX, y: e.clientY } })}
+				openContextMenu({ pos: { x: e.clientX, y: e.clientY } })}
 			on:click={() => openRenamePrompt()}
 		>
 			{v.name}

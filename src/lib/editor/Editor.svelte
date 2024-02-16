@@ -2,7 +2,7 @@
 	import type { NodeEditor, NodeEditorSaveData, NodeFactory, setupEditor } from '$rete';
 
 	import type { EditorExample } from '$rete/example/types';
-	import { newUniqueId } from '$utils';
+	import { capitalize, newUniqueId } from '$utils';
 	import { _, getContext, keyboardShortcut, notifications } from '$lib/global';
 	export let position = 'absolute';
 	export let hidden = true;
@@ -21,9 +21,11 @@
 	import type { spawnMoonMenu as t_spawnMoonMenu } from '$lib/menu/context-menu/moonContextMenu';
 	import { moonMenuFactoryStore, newMoonItemsStore } from '$lib/menu/context-menu/moonContextMenu';
 	import type { MacroNode as t_MacroNode } from '$rete/node/MacroNode';
-	import type { IBaseMenuItem } from '$lib/menu';
+	import { createNodeMenuItem, type IBaseMenuItem, type INodeMenuItem } from '$lib/menu';
 	import { VariableNode } from '$rete/node/XML/VariableNode';
 	import type { Variable } from './overlay/variables-list';
+	import { get } from 'svelte/store';
+	import { EditorType } from '.';
 
 	let spawnMoonMenu: typeof t_spawnMoonMenu | undefined = undefined;
 	let MacroNode: typeof t_MacroNode | undefined = undefined;
@@ -164,7 +166,12 @@
 			const node = await factory.addNode(MacroNode, { saveData: saveData, graphId });
 			if (!node) throw new Error('Node not created');
 			// Move node to drop position
-			translateNodeFromGlobal({ globalPos: { x: event.clientX, y: event.clientY }, node, factory });
+			translateNodeFromGlobal({
+				center: false,
+				globalPos: { x: event.clientX, y: event.clientY },
+				node,
+				factory
+			});
 		}
 
 		if (type === 'application/graph-variable') {
@@ -189,9 +196,30 @@
 
 	function onConnectionDrop(event: ConnectionDropEvent) {
 		if (!spawnMoonMenu) throw new Error('No spawnMoonMenu');
+		if (!editor) throw new Error('No editor');
 		$moonMenuFactoryStore = factory ?? null;
 		console.log('connection drop on editor', event.socketData);
-		spawnMoonMenu({ connDropEvent: event, items: newMoonItems, searchbar: true });
+		const variables: INodeMenuItem[] = [];
+
+		for (const v of Object.values(get(editor.variables))) {
+			variables.push(
+				createNodeMenuItem({
+					label: v.name,
+					outTypes: [v.type],
+					menuPath: ['Variables'],
+					editorType: EditorType.XML,
+					addNode: () => {
+						if (!factory) throw new Error('No factory');
+						return new VariableNode({ factory, variableId: v.id });
+					}
+				})
+			);
+		}
+		spawnMoonMenu({
+			connDropEvent: event,
+			items: [...variables, ...newMoonItems],
+			searchbar: true
+		});
 	}
 </script>
 

@@ -24,7 +24,7 @@
 			const factory = $moonMenuFactoryStore;
 			if (!factory) throw new ErrorWNotif('No factory found');
 			// item.getAddNode()({factory});
-			await onItemClick({ action: item.getAddNode() });
+			await onItemClick({ action: item.getAddNode({}) });
 		} else if (isActionMenuItem(item)) {
 			item.executeAction();
 			$moonMenuVisibleStore = false;

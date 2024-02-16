@@ -7,6 +7,8 @@ import type { UUID } from 'crypto';
 import { DataflowEngine } from 'rete-engine';
 import type { Schemes } from './Schemes';
 import { getLeavesFromOutput } from './utils';
+import { assignControl } from '$rete/customization/utils';
+import { get } from 'svelte/store';
 
 class InputNode extends Node {
 	private value: unknown;
@@ -63,7 +65,7 @@ export class MacroNode extends Node {
 		saveData: NodeEditorSaveData;
 		graphId: UUID;
 	}) {
-		super({ factory, params: { saveData, graphId }, height: 70, width: 200 });
+		super({ factory, params: { saveData, graphId }, height: 60, width: 200 });
 		this.graphId = graphId;
 		this.macroEditor = new NodeEditor();
 		this.macroFactory = new NodeFactory({
@@ -132,6 +134,39 @@ export class MacroNode extends Node {
 		// const saveData: NodeEditorSaveData = JSON.parse(data);
 		this.label = saveData.editorName;
 		await this.macroFactory.loadGraph(saveData);
+
+		// Variables
+		const variables = get(this.macroEditor.variables);
+		for (const v of Object.values(variables)) {
+			if (!v.exposed) continue;
+			const controlType = assignControl(v.type);
+			if (!controlType) {
+				console.error('unhandled socket type', v.type, 'for variable', v.id, 'with value', v.value);
+				continue;
+			}
+			this.addInData({
+				name: v.id,
+				displayName: v.name,
+				initial: v.value,
+				control: {
+					type: controlType,
+					options: {
+						label: v.name,
+						initial: v.value,
+						change: (value) => {
+							this.macroEditor.variables.set({
+								...get(this.macroEditor.variables),
+								[v.id]: { ...v, value }
+							});
+						}
+					}
+				},
+				type: v.type,
+				socketLabel: v.type
+			});
+			this.height += 65;
+		}
+
 		for (const node of this.macroEditor.getNodes()) {
 			for (const [key, input] of Object.entries(node.socketSelectionComponent.selectedInputs())) {
 				const macroKey = key + '-' + node.id;

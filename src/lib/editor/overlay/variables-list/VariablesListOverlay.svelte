@@ -123,18 +123,21 @@
 	});
 
 	function createVariable() {
-		if (!$variables) return;
+		if (variables === undefined) return;
 		console.log('create');
 		$collapsed = false;
 		const id = newUuid('variable');
 		nVarsCreated += 1;
-		$variables[id] = {
-			name: `variable${nVarsCreated}`,
-			value: undefined,
-			type: $defaultType,
-			id
-		};
-		variables = variables;
+		variables.set({
+			...get(variables),
+			[id]: {
+				name: `variable${nVarsCreated}`,
+				exposed: false,
+				value: undefined,
+				type: $defaultType,
+				id
+			}
+		});
 	}
 	export let defaultType: Writable<SocketType> = localStorageStore('defaultVariableType', 'string');
 

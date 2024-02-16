@@ -19,6 +19,9 @@ export class VariableNode extends Node {
 				(this.outputs['value'] as Output).socket.type = variables[variableId].type;
 			} else this.label = 'Variable not found';
 			this.updateElement();
+			try {
+				this.factory.dataflowEngine.reset(this.id);
+			} catch (e) {}
 		});
 	}
 

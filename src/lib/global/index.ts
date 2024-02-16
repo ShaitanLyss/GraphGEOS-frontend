@@ -27,7 +27,7 @@ export const theme: Writable<string> = writable();
 export const keyboardShortcut: Action<
 	HTMLElement,
 	{
-		key: string;
+		key?: string;
 		ctrl?: boolean;
 		alt?: boolean;
 		shift?: boolean;
@@ -35,6 +35,7 @@ export const keyboardShortcut: Action<
 		action: () => unknown;
 	}
 > = (node, { key, ctrl = false, alt = false, shift = false, targetDocument = true, action }) => {
+	if (!key) return;
 	const target = targetDocument ? document : node;
 	const shortcut_pieces: string[] = [];
 	if (ctrl) shortcut_pieces.push('ctrl');
@@ -67,6 +68,7 @@ export const keyboardShortcut: Action<
 	target.addEventListener('keydown', listener);
 	return {
 		destroy: () => {
+			if (!key) return;
 			console.log('Removing keyboard shortcut', key, ctrl, alt, shift);
 			target.removeEventListener('keydown', listener);
 		}

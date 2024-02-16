@@ -8,6 +8,7 @@ import { Setup } from '../../setup/Setup';
 import { _, type NewGeosContext } from '$lib/global';
 import type { NodeEditor } from '../../NodeEditor';
 import type { NodeFactory } from '../../node/NodeFactory';
+
 import { GeosXmlSchemaStore as GetXmlSchemaStore, PendingValue } from '$houdini';
 import { XmlNode } from '$rete/node/XML/XmlNode';
 import type { XmlAttributeDefinition } from '$rete/node/XML/types';
@@ -18,20 +19,28 @@ import {
 	moonMenuPositionStore,
 	newMoonItemsStore,
 	moonMenuFactoryStore,
-	moonMenuSearchBarStore
+	moonMenuSearchBarStore,
+	spawnMoonMenu
 } from '$lib/menu/context-menu/moonContextMenu';
 import { GetNameNode } from '$rete/node/XML/GetNameNode';
 import { MakeArrayNode } from '$rete/node/data/MakeArrayNode';
 import { StringNode } from '$rete/node/data/StringNode';
 import { factory } from 'typescript';
 import { DownloadNode } from '$rete/node/io/DownloadNode';
-import { createActionMenuItem, createNodeMenuItem, type IBaseMenuItem } from '$lib/menu/types';
+import {
+	createActionMenuItem,
+	createNodeMenuItem,
+	type IBaseMenuItem,
+	type INodeMenuItem
+} from '$lib/menu/types';
 import type { GeosDataContext } from '$lib/geos';
 import { get } from 'svelte/store';
 import wu from 'wu';
 import { ErrorWNotif } from '$lib/global';
 import type { SelectorEntity } from 'rete-area-plugin/_types/extensions/selectable';
 import { t } from 'svelte-i18n';
+import { EditorType } from '$lib/editor';
+import { VariableNode } from '$rete/node/XML/VariableNode';
 
 type Entry = Map<string, Entry | (() => Node | Promise<Node>)>;
 function isClassConstructor(obj: unknown): boolean {
@@ -282,6 +291,7 @@ export class ContextMenuSetup extends Setup {
 				}
 			}
 			if (context.type === 'contextmenu') {
+				// Context menu on node
 				if (context.data.context !== 'root') {
 					if (!(context.data.context instanceof Node)) return context;
 					moonMenuVisibleStore.set(true);
@@ -314,12 +324,30 @@ export class ContextMenuSetup extends Setup {
 					context.data.event.stopImmediatePropagation();
 					return;
 				}
+				// Context menu on editor
 				context.data.event.preventDefault();
-				moonMenuSearchBarStore.set(true);
-				newMoonItemsStore.set(newMoonItems);
-				moonMenuVisibleStore.set(true);
+				const variables: INodeMenuItem[] = [];
+
+				for (const v of Object.values(get(editor.variables))) {
+					variables.push(
+						createNodeMenuItem({
+							label: v.name,
+							outTypes: [v.type],
+							menuPath: ['Variables'],
+							editorType: EditorType.XML,
+							addNode: ({ factory }) => {
+								return new VariableNode({ factory: __factory, variableId: v.id });
+							}
+						})
+					);
+				}
+
+				spawnMoonMenu({
+					items: [...variables, ...newMoonItems],
+					searchbar: true,
+					pos: { x: context.data.event.clientX, y: context.data.event.clientY }
+				});
 				moonMenuFactoryStore.set(__factory);
-				moonMenuPositionStore.set({ x: context.data.event.clientX, y: context.data.event.clientY });
 			}
 			return context;
 		});

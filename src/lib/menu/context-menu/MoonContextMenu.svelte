@@ -81,6 +81,7 @@
 		await factory.getEditor().addNode(node);
 
 		translateNodeFromGlobal({
+			center: !!$moonMenuConnDropEvent,
 			globalPos: $moonMenuConnDropEvent ? $moonMenuConnDropEvent.pos : $moonMenuPositionStore,
 			factory,
 			node
@@ -145,6 +146,7 @@
 		const socket = $moonMenuConnDropEvent.socketData.payload;
 
 		const baseType = socket.type.split(':')[0];
+		console.log('base type', baseType, socket.type, socketData);
 		const types = socket.type.split(':')[1]?.split('|') || [baseType];
 		if (socket.isArray) {
 			types.push('array');
@@ -184,6 +186,7 @@
 				) {
 					return true;
 				}
+
 				const res = intersection(
 					socketData.side === 'output' ? item.getInTypes() : [item.getOutTypes().at(0)],
 					types
@@ -194,7 +197,7 @@
 				return res.length > 0;
 			});
 
-			if (filteredItems.length === 0) {
+			if (filteredItems.length === 0 && filteredNewMoonItems.length === 0) {
 				hideMenu();
 			}
 		}
