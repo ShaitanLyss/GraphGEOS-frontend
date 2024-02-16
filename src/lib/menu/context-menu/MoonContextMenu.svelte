@@ -188,7 +188,7 @@
 				}
 
 				const res = intersection(
-					socketData.side === 'output' ? item.getInTypes() : [item.getOutTypes().at(0)],
+					socketData.side === 'output' ? item.getInTypes() : item.getOutTypes(),
 					types
 				);
 				// console.log(item.inChildrenTypes, types)

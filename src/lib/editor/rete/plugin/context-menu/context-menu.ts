@@ -41,6 +41,8 @@ import type { SelectorEntity } from 'rete-area-plugin/_types/extensions/selectab
 import { t } from 'svelte-i18n';
 import { EditorType } from '$lib/editor';
 import { VariableNode } from '$rete/node/XML/VariableNode';
+import type { Variable } from '$lib/editor/overlay/variables-list';
+import { newUuid } from '$utils';
 
 type Entry = Map<string, Entry | (() => Node | Promise<Node>)>;
 function isClassConstructor(obj: unknown): boolean {
@@ -133,6 +135,7 @@ export class ContextMenuSetup extends Setup {
 		const xmlSchema = (await new GetXmlSchemaStore().fetch()).data?.geos.xmlSchema;
 
 		const newMoonItems: IBaseMenuItem[] = [];
+
 		if (xmlSchema) {
 			const moonItems: MoonMenuItem[] = [];
 			const complexTypesWithName: string[] = [];

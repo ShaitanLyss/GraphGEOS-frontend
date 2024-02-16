@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { assignControl, colorMap } from '$rete/customization/utils';
-	import type { Variable } from '.';
+	import { possibleTypes, type Variable } from '.';
 	import cssVars from 'svelte-css-vars';
 	import Color from 'color';
 	import InputControlComponent from '$rete/customization/presets/classic/components/InputControl.svelte';
@@ -67,7 +67,7 @@
 	}
 
 	const id = newUniqueId('variable-item');
-	const possibleTypes: SocketType[] = ['string', 'number', 'boolean', 'vector', 'path'];
+
 	let displayTypeSelection = false;
 	const popupSettings: PopupSettings = {
 		event: 'click',

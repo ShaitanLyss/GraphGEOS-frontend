@@ -2,7 +2,7 @@
 	import type { NodeEditor, NodeEditorSaveData, NodeFactory, setupEditor } from '$rete';
 
 	import type { EditorExample } from '$rete/example/types';
-	import { capitalize, newUniqueId } from '$utils';
+	import { capitalize, newUniqueId, newUuid } from '$utils';
 	import { _, getContext, keyboardShortcut, notifications } from '$lib/global';
 	export let position = 'absolute';
 	export let hidden = true;
@@ -23,7 +23,7 @@
 	import type { MacroNode as t_MacroNode } from '$rete/node/MacroNode';
 	import { createNodeMenuItem, type IBaseMenuItem, type INodeMenuItem } from '$lib/menu';
 	import { VariableNode } from '$rete/node/XML/VariableNode';
-	import type { Variable } from './overlay/variables-list';
+	import { possibleTypes, type Variable } from './overlay/variables-list';
 	import { get } from 'svelte/store';
 	import { EditorType } from '.';
 
@@ -67,7 +67,9 @@
 		const { setupEditor } = await import('$rete');
 		editorData = await setupEditor({
 			container,
-			makutuClasses: {},
+			makutuClasses: {
+				/* empty TODO */
+			},
 			loadExample,
 			saveData,
 			geosContext,
@@ -201,6 +203,30 @@
 		console.log('connection drop on editor', event.socketData);
 		const variables: INodeMenuItem[] = [];
 
+		const promoteToVariable = createNodeMenuItem({
+			label: 'Promote to variable',
+			tags: ['variable'],
+			addNode: () => {
+				if (!factory) throw new Error('No factory');
+				const variable: Variable = {
+					exposed: false,
+					highlighted: false,
+					id: newUuid('variable'),
+					name: event.socketData.payload.name,
+					type: event.socketData.payload.type,
+					value: undefined
+				};
+				factory.getEditor().variables.set({
+					...get(factory.getEditor().variables),
+					[variable.id]: variable
+				});
+				return new VariableNode({ factory, variableId: variable.id });
+			},
+			description: 'Promote the selected socket to a variable',
+			editorType: EditorType.All,
+			outTypes: possibleTypes
+		});
+
 		for (const v of Object.values(get(editor.variables))) {
 			variables.push(
 				createNodeMenuItem({
@@ -217,7 +243,7 @@
 		}
 		spawnMoonMenu({
 			connDropEvent: event,
-			items: [...variables, ...newMoonItems],
+			items: [promoteToVariable, ...variables, ...newMoonItems],
 			searchbar: true
 		});
 	}

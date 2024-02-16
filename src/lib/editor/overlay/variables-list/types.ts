@@ -8,3 +8,12 @@ export type Variable = {
 	id: string;
 	highlighted: boolean;
 };
+
+export const possibleTypes: SocketType[] = [
+	'string',
+	'number',
+	'boolean',
+	'vector',
+	'path',
+	'integer'
+];
