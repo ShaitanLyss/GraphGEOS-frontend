@@ -208,13 +208,16 @@
 			tags: ['variable'],
 			addNode: () => {
 				if (!factory) throw new Error('No factory');
+				const editor = factory.getEditor();
+				const node = editor.getNode(event.socketData.nodeId);
+				const value = node.getData(event.socketData.key);
 				const variable: Variable = {
 					exposed: false,
 					highlighted: false,
 					id: newUuid('variable'),
 					name: event.socketData.payload.name,
 					type: event.socketData.payload.type,
-					value: undefined
+					value
 				};
 				factory.getEditor().variables.set({
 					...get(factory.getEditor().variables),
