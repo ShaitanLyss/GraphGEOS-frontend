@@ -150,7 +150,7 @@
 		if (!$variables) return;
 		currentFlipDuration = flipDuration;
 		delete $variables[variableId];
-		variables = variables;
+		$variables = $variables;
 	}
 	const flipDuration = 150;
 	let currentFlipDuration = flipDuration;

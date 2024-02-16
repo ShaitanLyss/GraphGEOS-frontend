@@ -13,11 +13,14 @@ export class VariableNode extends Node {
 		this.editor = factory.getEditor();
 		const variable = get(this.editor.variables)[variableId];
 		this.addOutData({ name: 'value', type: variable.type, socketLabel: variable.type });
-		this.editor.variables.subscribe((variables) => {
+		this.editor.variables.subscribe(async (variables) => {
 			if (variableId in variables) {
 				this.label = variables[variableId].name;
 				(this.outputs['value'] as Output).socket.type = variables[variableId].type;
-			} else this.label = 'Variable not found';
+			} else {
+				await this.editor.removeNode(this.id);
+				return;
+			}
 			this.updateElement();
 			try {
 				this.factory.dataflowEngine.reset(this.id);

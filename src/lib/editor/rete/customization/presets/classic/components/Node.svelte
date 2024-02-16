@@ -61,6 +61,8 @@
 	let highlight = false;
 	if (isVariable) {
 		data.getEditor().variables.subscribe((variables) => {
+			const variableNode = data as VariableNode;
+			if (!(variableNode.variableId in variables)) return;
 			highlight = variables[(data as VariableNode).variableId].highlighted;
 		});
 	}
