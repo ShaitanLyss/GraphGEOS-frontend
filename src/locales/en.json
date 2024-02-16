@@ -129,15 +129,15 @@
   },
   "editor": {
     "button": {
-      "save": "Save everything (CTRL+S)",
+      "save": "Save opened editors (CTRL+S)",
       "python-mode": {
         "tooltip": "Generate python workflow (P)"
       },
       "toggle-geos": "Toggle geos panel",
       "downloadGraph": {
-        "tooltip": "Download this graph"
+        "tooltip": "Save to a file"
       },
-      "load-graph-from-file": "Load a graph from file",
+      "load-graph-from-file": "Load from file",
       "error": {
         "no_active_factory": "No active editor found",
         "no_exec_function": "Missing feature"

@@ -126,15 +126,15 @@
   },
   "editor": {
     "button": {
-      "save": "Tout sauvegarder (CTRL+S)",
+      "save": "Sauvegarder les éditeurs ouverts (CTRL+S)",
       "python-mode": {
         "tooltip": "Générer un workflow python (P)"
       },
       "toggle-geos": "Montrer / Cacher le panneau geos",
       "downloadGraph": {
-        "tooltip": "Télécharger ce graphe"
+        "tooltip": "Sauvegarder vers un fichier"
       },
-      "load-graph-from-file": "Charger un graphe depuis un fichier",
+      "load-graph-from-file": "Charger un fichier",
       "error": {
         "no_active_factory": "Pas de graphe ouvert",
         "no_exec_function": "Fonctionnalité manquante"
