@@ -73,11 +73,7 @@
 	{#await codeEditorPromise}
 		<div class="w-full flex justify-center p-2">Loading...</div>
 	{:then}
-		<div
-			class="h-full w-full overflow-x-scroll"
-			use:codeEditorAction
-			transition:fade={{ duration: 100 }}
-		/>
+		<div class="h-full w-full" use:codeEditorAction transition:fade={{ duration: 100 }} />
 	{:catch}
 		<div class="absolute top-0 h-full flex flex-col justify-center align-middle">
 			<div class="card p-4 variant-filled-error mx-4 my-auto">
