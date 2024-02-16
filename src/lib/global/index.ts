@@ -34,7 +34,8 @@ export const keyboardShortcut: Action<
 		shift?: boolean;
 		targetDocument?: boolean;
 		isMenuShortcut?: boolean;
-		action: () => unknown;
+		preventDefault?: boolean;
+		action: (params: { node: HTMLElement; e: KeyboardEvent }) => unknown;
 	}
 > = (
 	node,
@@ -45,6 +46,7 @@ export const keyboardShortcut: Action<
 		shift = false,
 		isMenuShortcut = false,
 		targetDocument = true,
+		preventDefault = true,
 		action
 	}
 ) => {
@@ -74,10 +76,10 @@ export const keyboardShortcut: Action<
 			e.shiftKey !== shift
 		)
 			return;
-		e.preventDefault();
+		if (preventDefault) e.preventDefault();
 
 		console.log(`shortcut: ${shortcut_pieces.join('+')}`);
-		action();
+		action({ e, node });
 	};
 	target.addEventListener('keydown', listener);
 	return {

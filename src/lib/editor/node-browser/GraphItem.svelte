@@ -14,8 +14,6 @@
 	export let graph: GraphSearchPanel$result['graph']['graphs'][0];
 	const editMacroNodeChannel = new EditMacroNodeChannel();
 
-	console.log(graph.updatedAt);
-
 	const session = getContext('session');
 
 	async function ondblclick(event: MouseEvent) {
@@ -92,14 +90,14 @@
 	</header> -->
 	<button
 		type="button"
-		class="absolute top-2 right-2 z-20"
+		class="absolute top-2 right-2 z-20 group"
 		bind:this={toggleFavBtn}
 		on:dblclick|stopPropagation
 		on:click|stopPropagation={() => toggleFav()}
 	>
 		<Fa
 			icon={graph.favorite ? faStarSolid : faStarRegular}
-			class={`group-hover:visible ${graph.favorite ? '' : 'invisible'}`}
+			class={`group-focus:visible group-hover:visible ${graph.favorite ? '' : 'invisible'}`}
 		/>
 	</button>
 	<div class="p-4 space-y-4 flex">
@@ -118,8 +116,12 @@
 			>
 				{$_('card.graphItem.by_author', { values: { name: graph.authorName } })}
 			</h6>
-			{#if graph.updatedAt}
+			{#if graph.updatedAt && $locale}
 				<small
+					title={graph.updatedAt.toLocaleTimeString($locale, {
+						hour: '2-digit',
+						minute: '2-digit'
+					})}
 					>{$_('card.graphItem.on_date', {
 						values: { date: new Date(graph.updatedAt).toLocaleDateString($locale) }
 					})}</small
