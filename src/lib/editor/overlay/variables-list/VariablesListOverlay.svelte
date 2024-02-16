@@ -187,6 +187,7 @@
 					await tick();
 					await tick();
 					$collapsed = !$collapsed;
+					if (!(e.target instanceof HTMLElement)) return;
 					e.target.blur();
 				}}
 			>
