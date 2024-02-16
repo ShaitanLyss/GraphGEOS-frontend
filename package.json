@@ -1,6 +1,6 @@
 {
-	"name": "GraphGEOS",
-	"version": "0.8.2",
+	"name": "graph-geos",
+	"version": "0.9.0",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
