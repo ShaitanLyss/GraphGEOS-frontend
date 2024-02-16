@@ -6,11 +6,12 @@ export * from './sessionTokenStore';
 export * from './popup';
 
 import { browser } from '$app/environment';
-import { type Writable, writable } from 'svelte/store';
+import { type Writable, writable, get } from 'svelte/store';
 import LocaleSwitcher__SvelteComponent_ from './LocaleSwitcher.svelte';
 import ThemeSwitcher__SvelteComponent_ from './ThemeSwitcher.svelte';
 import { getCookie } from './cookies';
 import type { Action } from 'svelte/action';
+import { moonMenuVisibleStore } from '$lib/menu/context-menu/moonContextMenu';
 export { _, isLoading as isLocaleLoading, Localization } from './localization';
 export {
 	LocaleSwitcher__SvelteComponent_ as LocaleSwitcher,
@@ -32,9 +33,21 @@ export const keyboardShortcut: Action<
 		alt?: boolean;
 		shift?: boolean;
 		targetDocument?: boolean;
+		isMenuShortcut?: boolean;
 		action: () => unknown;
 	}
-> = (node, { key, ctrl = false, alt = false, shift = false, targetDocument = true, action }) => {
+> = (
+	node,
+	{
+		key,
+		ctrl = false,
+		alt = false,
+		shift = false,
+		isMenuShortcut = false,
+		targetDocument = true,
+		action
+	}
+) => {
 	if (!key) return;
 	const target = targetDocument ? document : node;
 	const shortcut_pieces: string[] = [];
@@ -44,6 +57,7 @@ export const keyboardShortcut: Action<
 	shortcut_pieces.push(key);
 	console.log('Adding keyboard shortcut ', shortcut_pieces.join('+'));
 	const listener = (e: KeyboardEvent) => {
+		if (!isMenuShortcut && get(moonMenuVisibleStore)) return;
 		const ignoreElements = ['INPUT', 'TEXTAREA'];
 		const target = e.target;
 		if (!(target instanceof HTMLElement)) return;

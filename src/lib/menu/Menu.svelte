@@ -71,6 +71,7 @@
 	class="flex flex-col h-full"
 	use:keyboardShortcut={{
 		key: 'arrowDown',
+		isMenuShortcut: true,
 		action: () => {
 			if (focusedIndex !== null) {
 				focusedIndex = (focusedIndex + 1) % filteredMenuItems.length;
@@ -79,6 +80,7 @@
 	}}
 	use:keyboardShortcut={{
 		key: 'arrowUp',
+		isMenuShortcut: true,
 		action: () => {
 			if (focusedIndex !== null) {
 				focusedIndex = (focusedIndex - 1 + filteredMenuItems.length) % filteredMenuItems.length;
@@ -97,6 +99,7 @@
 				use:keyboardShortcut={{
 					targetDocument: false,
 					key: 'arrowDown',
+					isMenuShortcut: true,
 					action: () => {
 						if (focusedIndex !== null) {
 							focusedIndex = (focusedIndex + 1) % filteredMenuItems.length;
@@ -106,6 +109,7 @@
 				use:keyboardShortcut={{
 					targetDocument: false,
 					key: 'arrowUp',
+					isMenuShortcut: true,
 					action: () => {
 						if (focusedIndex !== null) {
 							focusedIndex =
