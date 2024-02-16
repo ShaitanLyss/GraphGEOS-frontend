@@ -248,7 +248,7 @@ export class ContextMenuSetup extends Setup {
 				createNodeMenuItem({
 					label: 'Download',
 					addNode: downloadSchemaItem.action,
-					inTypes: ['Problem'],
+					inTypes: [...geosContextV2.geosSchema.complexTypes.keys()],
 					description: 'Download the problem as xml',
 					tags: ['download', 'xml']
 				})

@@ -7,7 +7,12 @@ import type { XMLData } from '../XML/XMLData';
 export class DownloadNode extends Node {
 	constructor({ factory }: { factory: NodeFactory }) {
 		super({ label: 'Download', factory, height: 160 });
-		this.addInData({ name: 'data', displayName: 'Data', socketLabel: 'Data', type: 'any' });
+		this.addInData({
+			name: 'data',
+			displayName: 'Data',
+			socketLabel: 'Data',
+			type: 'xmlElement:*'
+		});
 		this.addControl(
 			'downloadBtn',
 			new ButtonControl('Download', async () => {
@@ -22,7 +27,10 @@ export class DownloadNode extends Node {
 					'href',
 					'data:text/plain;charset=utf-8,' + encodeURIComponent(formatXml({ xml: data.toXml() }))
 				);
-				element.setAttribute('download', `${this.getEditor().name}.xml`);
+				element.setAttribute(
+					'download',
+					`${data.name ?? (data.tag === 'Problem' ? factory.getEditor().name : data.tag)}.xml`
+				);
 
 				element.style.display = 'none';
 				document.body.appendChild(element);
