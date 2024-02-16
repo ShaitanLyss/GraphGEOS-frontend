@@ -70,7 +70,6 @@
 	let mainDiv: HTMLDivElement | undefined;
 	$: nVarsCreated = Object.keys($variables ?? {}).length;
 
-	$: console.log('vars', $variables);
 	onMount(() => {
 		mounted = true;
 
@@ -161,12 +160,14 @@
 	<div
 		bind:this={mainDiv}
 		transition:fade={{ duration: 200 }}
+		class:w-40={$collapsed}
+		class:w-96={!$collapsed}
 		class:h-52={!$collapsed}
 		class:h-12={$collapsed}
 		class:bg-opacity-0={$collapsed}
 		class:transition-main-div={mounted}
 		class:light-bg-transparent={true}
-		class="w-96 h-52 transition-main-div transition m-7 rounded-container-token text-sm variant-ghost-surface"
+		class=" h-52 transition-main-div transition m-7 rounded-container-token text-sm variant-ghost-surface"
 	>
 		<div
 			class:rounded-container-token={$collapsed}
@@ -178,7 +179,7 @@
 				class:hover:brightness-200={!mouseDown}
 				class:dark:hover:brightness-75={!mouseDown}
 				class="grow ps-4 pe-3 py-4 flex items-center gap-2 text-surface-900-50-token pointer-events-auto"
-				on:click={async () => {
+				on:click={async (e) => {
 					if ($collapsed) {
 						mainDiv?.classList.add('variant-ghost-surface');
 					}
@@ -186,6 +187,7 @@
 					await tick();
 					await tick();
 					$collapsed = !$collapsed;
+					e.target.blur();
 				}}
 			>
 				<Fa icon={faAngleDown} size="sm" flip={$collapsed ? 'vertical' : undefined} />
@@ -208,7 +210,7 @@
 			<div
 				class:bg-surface-100={$modeCurrent}
 				class:bg-opacity-80={$modeCurrent}
-				class=" overflow-x-auto pointer-events-auto transition-main-div"
+				class=" overflow-y-auto overflow-x-clip pointer-events-auto transition-main-div"
 				class:!h-0={$collapsed}
 				style="height: 9.6rem;"
 			>
@@ -238,7 +240,7 @@
 
 <style>
 	.transition-main-div {
-		transition-property: height, background-opacity, background-color;
+		transition-property: height, background-opacity, background-color, width;
 		transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 		transition-duration: 150ms;
 	}

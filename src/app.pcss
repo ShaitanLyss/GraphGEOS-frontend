@@ -8,6 +8,11 @@ body {
 	@apply h-full overflow-hidden;
 }
 
+html.hide-minimap .minimap {
+	opacity: 0;
+	pointer-events: none;
+}
+
 html:not(.dark) .light-bg-transparent {
 	background-color: transparent;
 	border-bottom-width: 0;

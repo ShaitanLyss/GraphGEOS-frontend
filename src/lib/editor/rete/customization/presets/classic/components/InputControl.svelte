@@ -183,7 +183,7 @@
 		<input
 			placeholder="number"
 			title="number"
-			step="1"
+			step="0.1"
 			type="number"
 			class="{inputTextSize} hover:bg-surface-50-900-token focus:bg-surface-50-900-token {width} rounded-token bg-surface-200-700-token
 				

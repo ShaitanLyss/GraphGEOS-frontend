@@ -101,7 +101,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		// Add XML element inputs
 		if (childTypes.length > 0)
 			this.addXmlInData({
-				index: 1,
+				index: -1,
 				name: 'children',
 				isArray: true,
 				type: `xmlElement:${childTypes.join('|')}`

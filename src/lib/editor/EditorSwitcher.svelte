@@ -309,6 +309,14 @@
 	}
 	let nodesToSelect: string[] = [];
 	let factoryToSelectWith: NodeFactory | undefined = undefined;
+	const hideMinimap = localStorageStore('hideMinimap', false);
+	$: if (browser) {
+		if ($hideMinimap) {
+			document.documentElement.classList.add('hide-minimap');
+		} else {
+			document.documentElement.classList.remove('hide-minimap');
+		}
+	}
 </script>
 
 <BoxSelection
@@ -319,6 +327,12 @@
 
 <div
 	bind:this={container}
+	use:keyboardShortcut={{
+		key: 'm',
+		action() {
+			$hideMinimap = !$hideMinimap;
+		}
+	}}
 	on:pointerup={(e) => {
 		if (nodesToSelect.length > 0) {
 			const factory = factoryToSelectWith;
