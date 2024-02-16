@@ -224,7 +224,11 @@
 
 		<!-- Inputs -->
 		{#each inputs as [key, input]}
-			<div class="rete-input text-md justify-center" data-testid={'input-' + key}>
+			<div
+				class="rete-input text-md items-center flex"
+				data-testid={'input-' + key}
+				style={!input.socket.isArray ? 'height: 65px;' : ''}
+			>
 				<Ref
 					class="input-socket my-auto"
 					data-testid="input-socket"
@@ -251,7 +255,6 @@
 					<Ref
 						class="h-full flex items-center input-control"
 						data-testid="input-control"
-						style="height: 65px;"
 						init={(element) =>
 							emit({
 								type: 'render',
