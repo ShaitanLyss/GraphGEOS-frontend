@@ -63,8 +63,9 @@ export const keyboardShortcut: Action<
 		const ignoreElements = ['INPUT', 'TEXTAREA'];
 		const target = e.target;
 		if (!(target instanceof HTMLElement)) return;
+		const isTabInput = target.parentElement?.parentElement?.classList.contains('tab');
 		if (
-			(targetDocument && ignoreElements.includes(target?.tagName)) ||
+			(targetDocument && !isTabInput && ignoreElements.includes(target?.tagName)) ||
 			target.contentEditable === 'true'
 		) {
 			return;
