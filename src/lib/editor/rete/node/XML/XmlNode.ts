@@ -61,6 +61,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		super({ ...xmlNodeParams, width: 220, height: 40 });
 
 		if (!noName) {
+			this.height += 15;
 			if ('name' in initialValues) this.name = initialValues['name'] as string;
 			else {
 				let name = xmlNodeParams.label;

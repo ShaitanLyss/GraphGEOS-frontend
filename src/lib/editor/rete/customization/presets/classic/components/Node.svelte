@@ -36,7 +36,7 @@
 	export let emit: (props: SvelteArea2D<ClassicScheme>) => void;
 
 	$: width = Number.isFinite(data.width) ? `${data.width}px` : '';
-	$: height = Number.isFinite(data.height) ? `${data.height + (isNamedXmlNode ? 15 : 0)}px` : '';
+	$: height = Number.isFinite(data.height) ? `${data.height}px` : '';
 
 	$: inputs = sortByIndex(Object.entries(data.inputs));
 	$: controls = sortByIndex(Object.entries(data.controls));
