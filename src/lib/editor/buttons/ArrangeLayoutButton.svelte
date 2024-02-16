@@ -23,10 +23,7 @@
 				}
 			},
 			duration: 500,
-			timingFunction(t) {
-				if (t === 0) return 1;
-				else return cubicInOut(t);
-			},
+			timingFunction: cubicInOut,
 			needsLayout(id) {
 				console.warn(
 					"laying out a subset doesn't work, should try reaching out to the author of the plugin"
