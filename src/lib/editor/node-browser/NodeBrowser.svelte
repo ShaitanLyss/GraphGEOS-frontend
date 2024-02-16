@@ -10,7 +10,7 @@
 	import { flip } from 'svelte/animate';
 	import { browser } from '$app/environment';
 	import { onDestroy } from 'svelte';
-	import { getContext } from '$lib/global';
+	import { getContext, keyboardShortcut } from '$lib/global';
 
 	const session = getContext('session');
 
@@ -24,69 +24,26 @@
 		}
 	}
 
-	function onKeyDown(e: KeyboardEvent) {
-		if ($moonMenuVisibleStore) return;
-		// Check if the event target is an input, textarea, or has contenteditable attribute
-		const ignoreElements = ['INPUT', 'TEXTAREA'];
-		if (ignoreElements.includes(e.target?.tagName) || e.target.contentEditable === 'true') {
-			return;
-		}
-
-		if (
-			e.key.toLowerCase() === 'f' &&
-			e.ctrlKey === false &&
-			e.altKey === false &&
-			e.shiftKey === false
-		) {
-			if (currentTile === 'favorites') {
+	function getTileShortcutAction(tile: string): () => void {
+		return () => {
+			if (currentTile === tile) {
 				currentTile = undefined;
 				return;
 			}
-			e.preventDefault();
-			currentTile = 'favorites';
-			return;
-		}
-
-		if (
-			e.key.toLowerCase() === 'u' &&
-			e.ctrlKey === false &&
-			e.altKey === false &&
-			e.shiftKey === false
-		) {
-			if (currentTile === 'user') {
-				currentTile = undefined;
-				return;
-			}
-			e.preventDefault();
-			currentTile = 'user';
-			return;
-		}
-
-		if (
-			e.key.toLowerCase() === 's' &&
-			e.ctrlKey === false &&
-			e.altKey === false &&
-			e.shiftKey === false
-		) {
-			if (currentTile === 'shared') {
-				currentTile = undefined;
-				return;
-			}
-			e.preventDefault();
-			currentTile = 'shared';
-			return;
-		}
+			currentTile = tile;
+		};
 	}
-	if (browser) {
-		document.addEventListener('keydown', onKeyDown);
-		onDestroy(() => {
-			document.removeEventListener('keydown', onKeyDown);
-		});
-	}
-	console.log(session);
 </script>
 
-<div class="flex h-full" in:fade out:fade={{ duration: 200 }}>
+<div
+	class="flex h-full"
+	in:fade
+	out:fade={{ duration: 200 }}
+	use:keyboardShortcut={{ key: 'f', action: getTileShortcutAction('favorites') }}
+	use:keyboardShortcut={{ key: 'u', action: getTileShortcutAction('user') }}
+	use:keyboardShortcut={{ key: 's', action: getTileShortcutAction('shared') }}
+	use:keyboardShortcut={{ key: 'p', action: getTileShortcutAction('shared') }}
+>
 	<AppRail regionDefault="select-none">
 		<AppRailTile
 			bind:group={currentTile}

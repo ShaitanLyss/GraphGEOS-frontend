@@ -12,7 +12,7 @@
 	<div>B : Sélection boîte</div>
 	<div>DEL : Supprimer</div>
 	<div>Shift+R : Renommer graphe</div>
-	<div>F, U, S : Macro blocs</div>
+	<div>F, U, S, P : Macro blocs</div>
 	<div>V : Variables</div>
 	<div>M : Carte</div>
 </div>

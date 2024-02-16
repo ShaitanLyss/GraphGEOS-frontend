@@ -3,7 +3,7 @@
 
 	import { faAngleDown, faPlus } from '@fortawesome/free-solid-svg-icons';
 	import { localStorageStore, modeCurrent } from '@skeletonlabs/skeleton';
-	import { _, getContext } from '$lib/global';
+	import { _, getContext, keyboardShortcut } from '$lib/global';
 	import Fa from 'svelte-fa';
 	import { browser } from '$app/environment';
 	import { onMount, tick } from 'svelte';
@@ -87,29 +87,6 @@
 			}
 		});
 
-		// Collapse / Uncollapse shortcut
-		documentEventListeners.push({
-			event: 'keydown',
-			listener: (e) => {
-				const ignoreElements = ['INPUT', 'TEXTAREA'];
-				const target = e.target;
-				if (!(target instanceof HTMLElement)) return;
-				if (ignoreElements.includes(target?.tagName) || target.contentEditable === 'true') {
-					return;
-				}
-				if (
-					e.key.toLowerCase() !== 'v' ||
-					e.shiftKey === true ||
-					e.ctrlKey === true ||
-					e.altKey === true ||
-					e.metaKey === true
-				)
-					return;
-				e.preventDefault;
-				$collapsed = !$collapsed;
-			}
-		});
-
 		documentEventListeners.forEach(({ event, listener }) =>
 			document.addEventListener(event, listener as unknown as EventListener)
 		);
@@ -159,6 +136,7 @@
 {#if mounted && $variables}
 	<div
 		bind:this={mainDiv}
+		use:keyboardShortcut={{ key: 'v', action: () => ($collapsed = !$collapsed) }}
 		transition:fade={{ duration: 200 }}
 		class:w-40={$collapsed}
 		class:w-96={!$collapsed}
