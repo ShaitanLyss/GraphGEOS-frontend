@@ -224,7 +224,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 			}
 		}
 
-		this.height += isArray ? 37 : 67;
+		this.height += isArray ? 58 : 65.5;
 	}
 
 	override data(inputs?: Record<string, unknown>): { value: XMLData } {
