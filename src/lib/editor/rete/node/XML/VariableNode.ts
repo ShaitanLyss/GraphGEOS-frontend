@@ -5,7 +5,7 @@ import type { NodeFactory } from '../NodeFactory';
 
 export class VariableNode extends Node {
 	private editor: NodeEditor;
-	private variableId: string;
+	public readonly variableId: string;
 
 	constructor({ factory, variableId }: { factory: NodeFactory; variableId: string }) {
 		super({ factory, params: { variableId }, height: 40, width: 150 });

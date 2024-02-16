@@ -57,6 +57,12 @@
 		});
 	}
 	const isVariable = data instanceof VariableNode;
+	let highlight = false;
+	if (isVariable) {
+		data.getEditor().variables.subscribe((variables) => {
+			highlight = variables[(data as VariableNode).variableId].highlighted;
+		});
+	}
 	let editingName = false;
 	let nameInput: HTMLInputElement | undefined;
 	const disableEditing = (ev: KeyboardEvent) => {
@@ -89,6 +95,7 @@
 	style:height
 	data-testid="node"
 	class:bg-surface-500={!$modeCurrent}
+	class:brightness-125={highlight}
 	class:node-light-background={$modeCurrent}
 >
 	<div class="flex justify-{isVariable ? 'center' : ' between'} items-center">

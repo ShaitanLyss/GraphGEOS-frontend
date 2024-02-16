@@ -6,4 +6,5 @@ export type Variable = {
 	type: SocketType;
 	exposed: boolean;
 	id: string;
+	highlighted: boolean;
 };

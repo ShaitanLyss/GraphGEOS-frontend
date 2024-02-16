@@ -146,6 +146,8 @@
 			type="button"
 			title={v.name}
 			draggable="true"
+			on:mouseenter={() => (v = { ...v, highlighted: true })}
+			on:mouseleave={() => (v = { ...v, highlighted: false })}
 			on:dragstart={(e) => {
 				if (!e.dataTransfer) return;
 				e.dataTransfer.setData('application/graph-variable', JSON.stringify(v));

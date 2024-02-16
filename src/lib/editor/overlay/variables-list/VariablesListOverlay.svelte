@@ -15,7 +15,7 @@
 	import type { Action } from 'svelte/action';
 	import { newUniqueId, newUuid } from '$utils';
 
-	const collapsed = localStorageStore('variablesListCollapsed', false);
+	const collapsed = localStorageStore('variablesListCollapsed', true);
 
 	const { activeEditor } = getContext('editor');
 
@@ -41,7 +41,7 @@
 
 	// Tricks to make the collapse smoother
 	let timeout: string | number | NodeJS.Timeout | undefined;
-	$: if (browser) {
+	$: {
 		if ($collapsed) {
 			timeout = setTimeout(
 				() => {
@@ -135,6 +135,7 @@
 				exposed: false,
 				value: undefined,
 				type: $defaultType,
+				highlighted: false,
 				id
 			}
 		});

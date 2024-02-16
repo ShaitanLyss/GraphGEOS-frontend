@@ -43,11 +43,17 @@ export class NodeEditor extends BaseNodeEditor<Schemes> {
 	}
 
 	toJSON(): NodeEditorSaveData {
+		const variables = get(this.variables);
+
+		for (const v of Object.values(variables)) {
+			variables[v.id] = { ...v, highlighted: false };
+		}
+
 		return {
 			nodes: this.getNodes().map((node) => node.toJSON()),
 			connections: this.getConnections(),
 			editorName: this.name,
-			variables: get(this.variables)
+			variables
 		};
 	}
 }
