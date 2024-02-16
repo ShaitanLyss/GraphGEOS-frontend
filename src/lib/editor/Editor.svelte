@@ -176,7 +176,12 @@
 			const node = await factory.addNode(VariableNode, { variableId: variable.id });
 			if (!node) throw new Error('Node not created');
 			// Move node to drop position
-			translateNodeFromGlobal({ globalPos: { x: event.clientX, y: event.clientY }, node, factory });
+			translateNodeFromGlobal({
+				globalPos: { x: event.clientX, y: event.clientY },
+				center: true,
+				node,
+				factory
+			});
 		}
 
 		// nodeView.translate(event.clientX - surfacePos.x, event.clientY - surfacePos.y);

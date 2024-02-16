@@ -65,15 +65,24 @@ export function clientToSurfacePos({
 export function translateNodeFromGlobal({
 	globalPos,
 	node,
-	factory
+	factory,
+	center = false
 }: {
 	globalPos: { x: number; y: number };
 	node: Node;
 	factory: NodeFactory;
+	center?: boolean;
 }) {
 	const area = factory.getArea();
 	if (!area) throw new Error('No area');
 	const nodeView = area.nodeViews.get(node.id);
 	if (!nodeView) throw new Error('Node view not found');
-	nodeView.translate(...clientToSurfacePos({ x: globalPos.x, y: globalPos.y, factory: factory }));
+	const rect = nodeView.element.getBoundingClientRect();
+	nodeView.translate(
+		...clientToSurfacePos({
+			x: globalPos.x - (center ? rect.width / 2 : 0),
+			y: globalPos.y - (center ? rect.height / 2 : 0),
+			factory: factory
+		})
+	);
 }
