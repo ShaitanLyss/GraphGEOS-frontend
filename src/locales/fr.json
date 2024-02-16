@@ -146,7 +146,7 @@
         "tooltip": "Ouvrir / Fermer l'éditeur de code (C)",
         "close": "Fermer l'éditeur de code"
       },
-      "layout": "Arrangement automatique"
+      "layout": "Arrangement automatique (A)"
     },
     "notification": {
       "title": "Éditeur"

@@ -149,7 +149,7 @@
         "tooltip": "Toggle code editor (C)",
         "close": "Close code editor"
       },
-      "layout": "Auto layout"
+      "layout": "Auto layout (A)"
     },
     "notification": {
       "title": "Editor"
