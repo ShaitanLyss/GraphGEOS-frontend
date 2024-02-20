@@ -30,7 +30,9 @@
     "cancel": "Annuler",
     "confirm": "Confirmer",
     "upload": "Mettre en ligne",
-    "rename": "Renommer"
+    "rename": "Renommer",
+    "login": "Se connecter",
+    "logout": "Se déconnecter"
   },
   "form": {
     "input": {
@@ -168,7 +170,12 @@
   },
   "page": {
     "auth": {
-      "name": "Éditeur de code"
+      "name": "Éditeur de code",
+      "message": {
+        "not-logged-in": "Vous n'êtes pas connecté",
+        "logged-in-as": "Connecté en tant que"
+      },
+      "fake-login-explanation": "Actuellement, seules les connexions aux comptes personnels sont possibles. Si vous ne le souhaitez pas, vous pouvez utiliser le 'fake login' ci-dessous."
     }
   },
   "header": {

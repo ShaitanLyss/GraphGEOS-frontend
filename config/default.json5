@@ -12,6 +12,7 @@
 			presets: ['crimson', 'gold-nouveau', 'hamlindigo', 'modern', 'rocket', 'sahara', 'seafoam', 'skeleton', 'vintage', 'wintry'],
 			customs: []
 		},
+		fake_login: true,
 		default_theme: 'skeleton'
 	}
 }

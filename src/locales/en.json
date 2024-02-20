@@ -30,7 +30,9 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "upload": "Upload",
-    "rename": "Rename"
+    "rename": "Rename",
+    "login": "Login",
+    "logout": "Logout"
   },
   "form": {
     "input": {
@@ -171,7 +173,12 @@
   },
   "page": {
     "auth": {
-      "name": "Code Editor"
+      "name": "Code Editor",
+      "message": {
+        "not-logged-in": "You are not logged in",
+        "logged-in-as": "You are logged in as"
+      },
+      "fake-login-explanation": "Currently, only personnal accounts logins are possible. If you don't want to, you can use the fake login below."
     }
   },
   "header": {

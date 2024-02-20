@@ -21,6 +21,7 @@ export const publicConfig: {
 				'("crimson" | "gold-nouveau" | "hamlindigo" | "modern" | "rocket" | "sahara" | "seafoam" | "skeleton" | "vintage" | "wintry")[]',
 			customs: 'string[]'
 		},
-		default_theme: 'string'
+		default_theme: 'string',
+		fake_login: 'boolean'
 	}
 });

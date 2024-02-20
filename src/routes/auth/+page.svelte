@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { Avatar } from '@skeletonlabs/skeleton';
+	import { Avatar, getModalStore, localStorageStore } from '@skeletonlabs/skeleton';
 	import { page } from '$app/stores';
 	import type { LayoutData } from '../$types';
 	let backendDed = false;
 	let checkingForDeadBackend = false;
-	export let data: { session: Session | null };
+	export let data: { session: Session | null } & PageData;
 	const session = data.session;
 
 	import { getCookie } from 'typescript-cookie';
@@ -16,7 +16,7 @@
 	import { checkBackendHealth } from '$utils/backend';
 	import { isTauri } from '$utils/tauri';
 	import { initials } from '$utils/string';
-	import { sessionTokenStore } from '$lib/global';
+	import { _, sessionTokenStore } from '$lib/global';
 	import { removeCookie, setCookie } from 'typescript-cookie';
 	import Fa from 'svelte-fa';
 	import { faHome } from '@fortawesome/free-solid-svg-icons';
@@ -24,6 +24,7 @@
 	import { getBackendAddress } from '$utils/config';
 	import { fade, fly } from 'svelte/transition';
 	import type { Session } from '$lib/backend-interaction';
+	import type { PageData } from './$types';
 	console.log('public dynamic env', env);
 	let reload = false;
 	let login: () => Promise<void>;
@@ -83,10 +84,51 @@
 		};
 	}
 
+	const modalStore = getModalStore();
+	const igg = localStorageStore('igg', '');
+	function fakeLogin() {
+		modalStore.trigger({
+			type: 'prompt',
+			title: 'Enter your IGG',
+			buttonTextSubmit: $_('button.confirm'),
+			buttonTextCancel: $_('button.cancel'),
+			valueAttr: {
+				type: 'text',
+				pattern: '[jlJL]\\d{3,12}',
+				placeholder: 'IGG (ex: j12345678)',
+				name: 'igg'
+			},
+			value: $igg,
+			response(r) {
+				if (!r) return;
+				$igg = r;
+
+				modalStore.trigger({
+					type: 'prompt',
+					title: 'Enter your username',
+					buttonTextSubmit: $_('button.confirm'),
+					buttonTextCancel: $_('button.cancel'),
+					valueAttr: {
+						type: 'text',
+						placeholder: 'Username',
+						name: 'username'
+					},
+					response(r) {
+						if (!r) return;
+						window.location.href = getBackendAddress(
+							`/auth/fake-login?callbackUri=${window.location.href}&igg=${$igg}&username=${r}`
+						);
+					}
+				});
+			}
+		});
+	}
+
 	onMount(async () => {
 		await load();
 		ready = true;
 	});
+	console.log('data', data);
 </script>
 
 <svelte:head>
@@ -106,7 +148,7 @@
 		<div class="text-center space-y-6 card py-8 px-24 variant-soft-surface">
 			<h1 class="h1 pb-2">GEOS UI</h1>
 			{#if session}
-				<h2 class="h2">You are logged in as</h2>
+				<h2 class="h2">{$_('page.auth.message.logged-in-as')}</h2>
 				<div class="py-4">
 					<Avatar
 						src={session.user.image}
@@ -130,13 +172,25 @@
 						sessionTokenStore.set('');
 						removeCookie('sessionToken');
 						location.reload();
-					}}>Logout</button
+					}}>{$_('button.logout')}</button
 				>
 			{:else}
-				<h2 class="h2">You are not logged in</h2>
-				<button class="btn bg-gradient-to-br variant-gradient-secondary-tertiary" on:click={login}
-					>Login</button
+				<h2 class="h2">{$_('page.auth.message.not-logged-in')}</h2>
+				<button class=" btn bg-gradient-to-br variant-gradient-secondary-tertiary" on:click={login}
+					>{$_('button.login')}</button
 				>
+				{#if data.publicConfig.fake_login}
+					<p
+						class="mx-auto !mt-4 variant-filled-warning p-2 rounded-container-token"
+						style="max-width: 30rem;"
+					>
+						{$_('page.auth.fake-login-explanation')}
+					</p>
+					<button
+						class="btn bg-gradient-to-br variant-gradient-secondary-tertiary"
+						on:click={fakeLogin}>Fake Login</button
+					>
+				{/if}
 			{/if}
 		</div>
 	{/if}
