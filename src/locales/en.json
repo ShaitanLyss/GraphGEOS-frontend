@@ -59,6 +59,9 @@
     "graph": {
       "already_exist": {
         "message": "Graph already exists, it will be updated."
+      },
+      "upload": {
+        "you-must-be-logged-in": "You must be logged in to upload a macro block. You can login on the authentication page."
       }
     },
     "graph_upload": {

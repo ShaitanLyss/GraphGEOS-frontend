@@ -58,6 +58,9 @@
     "graph": {
       "already_exist": {
         "message": "Le graphe existe déjà, il sera mis à jour."
+      },
+      "upload": {
+        "you-must-be-logged-in": "Vous devez être connecté pour mettre un macro bloc en ligne. Vous pouvez le faire sur la page d'authentification."
       }
     },
     "graph_upload": {

@@ -179,57 +179,61 @@
 	};
 </script>
 
-{#if $modalStore}
-	<div class="card">
-		<header class="card-header text-2xl font-bold text-center">
-			<h2>{words($_('modal.title.graph.upload'))}</h2>
-			<!-- <button class="close" on:click={() => modalStore.set(null)}>×</button> -->
-		</header>
-		<section class="p-4 space-y-4 transition-all">
-			{#await graphPromise}
-				<div class="w-32 placeholder placeholde animate-pulse" />
-			{:then graph}
-				{#if graph.data?.graph.graphWithAuthordAndNameExists.exists}
-					<aside class="alert variant-filled-tertiary">
-						<!-- Icon -->
-						<Fa icon={faQuestionCircle} />
-						<!-- Message -->
-						<div class="alert-message">
-							<p>{capitalize($_('modal.graph.already_exist.message'))}</p>
-						</div>
-					</aside>
-				{/if}
-				<GraphForm
-					{editor}
-					{userName}
-					graph={graph.data?.graph.graphWithAuthordAndNameExists.graph}
-					bind:formElement
-				/>
-			{:catch error}
-				error
-			{/await}
-			<footer class="modal-footer flex justify-end space-x-2">
-				<button class="btn variant-ghost-surface" on:click={() => modalStore.close()}
-					>{$_('button.cancel')}</button
-				>
+{#if session}
+	{#if $modalStore}
+		<div class="card">
+			<header class="card-header text-2xl font-bold text-center">
+				<h2>{words($_('modal.title.graph.upload'))}</h2>
+				<!-- <button class="close" on:click={() => modalStore.set(null)}>×</button> -->
+			</header>
+			<section class="p-4 space-y-4 transition-all">
 				{#await graphPromise}
-					<div class="w-32 h-auto placeholder placeholde animate-pulse" />
+					<div class="w-32 placeholder placeholde animate-pulse" />
 				{:then graph}
-					<button
-						class="btn variant-filled"
-						on:click={() => {
-							handleSubmit(new Event('submit'));
-						}}
-						>{capitalize(
-							graph.data?.graph.graphWithAuthordAndNameExists.exists === false
-								? $_('button.upload')
-								: $_('form.graph.button.update')
-						)}</button
-					>
+					{#if graph.data?.graph.graphWithAuthordAndNameExists.exists}
+						<aside class="alert variant-filled-tertiary">
+							<!-- Icon -->
+							<Fa icon={faQuestionCircle} />
+							<!-- Message -->
+							<div class="alert-message">
+								<p>{capitalize($_('modal.graph.already_exist.message'))}</p>
+							</div>
+						</aside>
+					{/if}
+					<GraphForm
+						{editor}
+						{userName}
+						graph={graph.data?.graph.graphWithAuthordAndNameExists.graph}
+						bind:formElement
+					/>
 				{:catch error}
-					{error}
+					error
 				{/await}
-			</footer>
-		</section>
-	</div>
+				<footer class="modal-footer flex justify-end space-x-2">
+					<button class="btn variant-ghost-surface" on:click={() => modalStore.close()}
+						>{$_('button.cancel')}</button
+					>
+					{#await graphPromise}
+						<div class="w-32 h-auto placeholder placeholde animate-pulse" />
+					{:then graph}
+						<button
+							class="btn variant-filled"
+							on:click={() => {
+								handleSubmit(new Event('submit'));
+							}}
+							>{capitalize(
+								graph.data?.graph.graphWithAuthordAndNameExists.exists === false
+									? $_('button.upload')
+									: $_('form.graph.button.update')
+							)}</button
+						>
+					{:catch error}
+						{error}
+					{/await}
+				</footer>
+			</section>
+		</div>
+	{/if}
+{:else}
+	{$_('modal.graph.upload.you-must-be-logged-in')}
 {/if}
