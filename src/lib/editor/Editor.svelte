@@ -254,6 +254,12 @@
 			searchbar: true
 		});
 	}
+	function undo() {
+		factory?.history?.undo();
+	}
+	function redo() {
+		factory?.history?.redo();
+	}
 </script>
 
 {#if !mounted && !hidden && placeholderVisible}
@@ -281,6 +287,9 @@
 		? 'opacity-0 pointer-events-none'
 		: ''}"
 	role="region"
+	use:keyboardShortcut={{ key: 'z', ctrl: true, action: undo, active: !hidden }}
+	use:keyboardShortcut={{ key: 'z', ctrl: true, shift: true, action: redo, active: !hidden }}
+	use:keyboardShortcut={{ key: 'y', ctrl: true, action: redo, active: !hidden }}
 	on:connectiondrop={onConnectionDrop}
 	on:dragenter={(event) => {
 		if (!event.dataTransfer) return;

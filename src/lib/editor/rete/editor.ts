@@ -11,6 +11,7 @@ import { NodeFactory } from './node/NodeFactory';
 import type { MakutuClassRepository } from '$lib/backend-interaction/types';
 import type { GeosDataContext } from '$lib/geos';
 import type { NewGeosContext } from '$lib/global';
+import { HistoryPlugin, Presets as HistoryPresets, type HistoryActions } from 'rete-history-plugin';
 
 export async function setupEditor({
 	container,
@@ -40,8 +41,12 @@ export async function setupEditor({
 	const selector = AreaExtensions.selector();
 	const accumulating = AreaExtensions.accumulateOnCtrl();
 
+	const history = new HistoryPlugin<Schemes, HistoryActions<Schemes>>();
+	history.addPreset(HistoryPresets.classic.setup());
+	area.use(history);
+
 	// Setup node factory
-	const nodeFactory = new NodeFactory({ editor, area, makutuClasses, selector, arrange });
+	const nodeFactory = new NodeFactory({ editor, area, makutuClasses, selector, arrange, history });
 
 	// Setup react renderer
 	const megaSetup = new MegaSetup();

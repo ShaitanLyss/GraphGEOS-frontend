@@ -35,6 +35,7 @@ export const keyboardShortcut: Action<
 		targetDocument?: boolean;
 		isMenuShortcut?: boolean;
 		preventDefault?: boolean;
+		active?: boolean;
 		action: (params: { node: HTMLElement; e: KeyboardEvent }) => unknown;
 	}
 > = (
@@ -47,7 +48,8 @@ export const keyboardShortcut: Action<
 		isMenuShortcut = false,
 		targetDocument = true,
 		preventDefault = true,
-		action
+		action,
+		active = true
 	}
 ) => {
 	if (!key) return;
@@ -57,7 +59,7 @@ export const keyboardShortcut: Action<
 	if (alt) shortcut_pieces.push('alt');
 	if (shift) shortcut_pieces.push('shift');
 	shortcut_pieces.push(key);
-	console.log('Adding keyboard shortcut ', shortcut_pieces.join('+'));
+
 	const listener = (e: KeyboardEvent) => {
 		if (!isMenuShortcut && get(moonMenuVisibleStore)) return;
 		const ignoreElements = ['INPUT', 'TEXTAREA'];
@@ -82,12 +84,26 @@ export const keyboardShortcut: Action<
 		console.log(`shortcut: ${shortcut_pieces.join('+')}`);
 		action({ e, node });
 	};
-	target.addEventListener('keydown', listener);
+	if (active) {
+		console.log('Adding keyboard shortcut ', shortcut_pieces.join('+'));
+		target.addEventListener('keydown', listener);
+	}
 	return {
 		destroy: () => {
 			if (!key) return;
-			console.log('Removing keyboard shortcut', key, ctrl, alt, shift);
-			target.removeEventListener('keydown', listener);
+			if (active) {
+				console.log('Removing keyboard shortcut ', shortcut_pieces.join('+'));
+				target.removeEventListener('keydown', listener);
+			}
+		},
+		update: (params) => {
+			if (params.active === false) {
+				console.log('Removing keyboard shortcut', shortcut_pieces.join('+'));
+				target.removeEventListener('keydown', listener);
+			} else {
+				console.log('Adding keyboard shortcut', shortcut_pieces.join('+'));
+				target.addEventListener('keydown', listener);
+			}
 		}
 	};
 };

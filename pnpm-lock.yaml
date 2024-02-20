@@ -11,6 +11,21 @@ dependencies:
   config:
     specifier: ^3.3.11
     version: 3.3.11
+  d3-shape:
+    specifier: ^3.2.0
+    version: 3.2.0
+  rete-comment-plugin:
+    specifier: ^2.0.1
+    version: 2.0.1(rete-area-plugin@2.0.2)(rete@2.0.3)
+  rete-connection-path-plugin:
+    specifier: ^2.0.3
+    version: 2.0.3(d3-shape@3.2.0)(rete-area-plugin@2.0.2)(rete-render-utils@2.0.2)(rete@2.0.3)
+  rete-connection-reroute-plugin:
+    specifier: ^2.0.1
+    version: 2.0.1(rete-area-plugin@2.0.2)(rete-render-utils@2.0.2)(rete@2.0.3)
+  rete-history-plugin:
+    specifier: ^2.0.1
+    version: 2.0.1(rete-area-plugin@2.0.2)(rete@2.0.3)
   wu:
     specifier: ^2.1.0
     version: 2.1.0
@@ -1625,7 +1640,6 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.1
-    dev: true
 
   /@babel/template@7.23.9:
     resolution: {integrity: sha512-+xrD2BWLpvHKNmX2QbpdpsBaWnRxahMwJjO+KZk2JOElj5nSmKezyS1B4u+QbHMTX69t4ukm6hh9lsYQ7GHCKA==}
@@ -4153,6 +4167,18 @@ packages:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
     dev: true
 
+  /d3-path@3.1.0:
+    resolution: {integrity: sha512-p3KP5HCf/bvjBSSKuXid6Zqijx7wIfNW+J/maPs+iwR35at5JCbLUT0LzF1cnjbCHWhqzQTIN2Jpe8pRebIEFQ==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /d3-shape@3.2.0:
+    resolution: {integrity: sha512-SaLBuwGm3MOViRq2ABk3eLoxwZELpH6zhl3FbAoJ7Vm1gofKx6El1Ib5z23NUEhF9AsGl7y+dzLe5Cw2AArGTA==}
+    engines: {node: '>=12'}
+    dependencies:
+      d3-path: 3.1.0
+    dev: false
+
   /d@1.0.1:
     resolution: {integrity: sha512-m62ShEObQ39CfralilEQRjH6oAMtNCV1xJyEx5LpRYUVN+EviphDgUc/F3hnYbADmkiNs67Y+3ylmlG7Lnu+FA==}
     dependencies:
@@ -6576,7 +6602,6 @@ packages:
 
   /regenerator-runtime@0.14.1:
     resolution: {integrity: sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==}
-    dev: true
 
   /regenerator-transform@0.15.2:
     resolution: {integrity: sha512-hfMp2BoF0qOk3uc5V20ALGDS2ddjQaLrdl7xrGXvAIow7qeWRM2VA2HuCHkUKk9slq3VwEwLNK3DFBqDfPGYtg==}
@@ -6636,7 +6661,6 @@ packages:
     dependencies:
       '@babel/runtime': 7.23.9
       rete: 2.0.3
-    dev: true
 
   /rete-auto-arrange-plugin@2.0.1(elkjs@0.8.2)(rete-area-plugin@2.0.2)(rete@2.0.3)(web-worker@1.3.0):
     resolution: {integrity: sha512-vHxsrI+l3wxZzxPxG7hcgUbacXQfEc1ZEE28r08O1kEy0kUyNkJR5OeCiSizZ4VucsDmu21WUtFVa1rl5h+e1A==}
@@ -6653,6 +6677,32 @@ packages:
       web-worker: 1.3.0
     dev: true
 
+  /rete-comment-plugin@2.0.1(rete-area-plugin@2.0.2)(rete@2.0.3):
+    resolution: {integrity: sha512-zu22UpBeQRcaBaqBEQO6CEx/TvKiQhFQ1fWHrEMKcFkNIH7bfQwO1XvUZus7WMo/h+ZQB6NgeWAd++yix5OWxg==}
+    peerDependencies:
+      rete: ^2.0.1
+      rete-area-plugin: ^2.0.0
+    dependencies:
+      '@babel/runtime': 7.23.9
+      rete: 2.0.3
+      rete-area-plugin: 2.0.2(rete@2.0.3)
+    dev: false
+
+  /rete-connection-path-plugin@2.0.3(d3-shape@3.2.0)(rete-area-plugin@2.0.2)(rete-render-utils@2.0.2)(rete@2.0.3):
+    resolution: {integrity: sha512-YrRe5RYx7VURClvGxlSu51aeEED9DrT37S8V/261BKIcjNKUWS8vyLBZIR+Tr2Vwru1y88WzRlcht7hdhIM3BQ==}
+    peerDependencies:
+      d3-shape: ^3.0.0
+      rete: ^2.0.1
+      rete-area-plugin: ^2.0.0
+      rete-render-utils: ^2.0.0
+    dependencies:
+      '@babel/runtime': 7.23.9
+      d3-shape: 3.2.0
+      rete: 2.0.3
+      rete-area-plugin: 2.0.2(rete@2.0.3)
+      rete-render-utils: 2.0.2(rete-area-plugin@2.0.2)(rete@2.0.3)
+    dev: false
+
   /rete-connection-plugin@2.0.1(rete-area-plugin@2.0.2)(rete@2.0.3):
     resolution: {integrity: sha512-KE1IcjeOQtHgkByODtWS5hgRJDGhR3Z9sZyJAEd7YMgI6o+KUIflcNjbkvhJvPeIAv6WlEAh7ZkwdLhF9bkr4w==}
     peerDependencies:
@@ -6663,6 +6713,19 @@ packages:
       rete: 2.0.3
       rete-area-plugin: 2.0.2(rete@2.0.3)
     dev: true
+
+  /rete-connection-reroute-plugin@2.0.1(rete-area-plugin@2.0.2)(rete-render-utils@2.0.2)(rete@2.0.3):
+    resolution: {integrity: sha512-bsTElwa7TlyL3asRgey61VUPX1R/vT7g538wwUIoZTduVaJwCw75Nrw8tj+qqc3kc90z3drW3CBU/fuVeNsmmw==}
+    peerDependencies:
+      rete: ^2.0.1
+      rete-area-plugin: ^2.0.0
+      rete-render-utils: ^2.0.0
+    dependencies:
+      '@babel/runtime': 7.23.9
+      rete: 2.0.3
+      rete-area-plugin: 2.0.2(rete@2.0.3)
+      rete-render-utils: 2.0.2(rete-area-plugin@2.0.2)(rete@2.0.3)
+    dev: false
 
   /rete-context-menu-plugin@2.0.1(rete-area-plugin@2.0.2)(rete@2.0.3):
     resolution: {integrity: sha512-pbGJcRR/T+avKMh/YjwG1B8XDF9LVCcKjpV+iRvsKEeNfa6P7IbfgiZd2izYdP6532eRAb1pWRWKNTJKWMLxFA==}
@@ -6684,6 +6747,17 @@ packages:
       rete: 2.0.3
     dev: true
 
+  /rete-history-plugin@2.0.1(rete-area-plugin@2.0.2)(rete@2.0.3):
+    resolution: {integrity: sha512-Jguz2nXsKQxcTQepEcraHJY3i7xH/uJCoWmZKR2jIxYEmlIPJWen3sLq6AD+PTw09V1jPAKIEh+mIXawM/dT0Q==}
+    peerDependencies:
+      rete: ^2.0.1
+      rete-area-plugin: ^2.0.0
+    dependencies:
+      '@babel/runtime': 7.23.9
+      rete: 2.0.3
+      rete-area-plugin: 2.0.2(rete@2.0.3)
+    dev: false
+
   /rete-minimap-plugin@2.0.2(rete-area-plugin@2.0.2)(rete@2.0.3):
     resolution: {integrity: sha512-iG0qg2/cfGVQaE4ojxjRoCqD30bzdZuVqIGf9XFtxubrR1o1cEZEpdFyb08EHSq07NdR6RUwdj78r7v0Q1GDMA==}
     peerDependencies:
@@ -6704,7 +6778,6 @@ packages:
       '@babel/runtime': 7.23.9
       rete: 2.0.3
       rete-area-plugin: 2.0.2(rete@2.0.3)
-    dev: true
 
   /rete-structures@2.0.1(rete@2.0.3):
     resolution: {integrity: sha512-8S7zkoHLnDOz7T9L4qfwp6efdp790wk3sZBF2qsHLtHJIyAxC8lDNNngy7R2Eh762nadgfcn/ItHpLPmpXQGeQ==}
@@ -6736,7 +6809,6 @@ packages:
     requiresBuild: true
     dependencies:
       '@babel/runtime': 7.23.9
-    dev: true
 
   /reusify@1.0.4:
     resolution: {integrity: sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==}

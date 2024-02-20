@@ -15,6 +15,8 @@ export type NodeEditorSaveData = {
 export class NodeEditor extends BaseNodeEditor<Schemes> {
 	variables: Writable<Record<string, Variable>> = writable({});
 
+	// constructor() {
+	// }
 	setName(name: string, triggerListeners = true) {
 		this.name = name;
 		if (triggerListeners) this.onChangeNameListeners.forEach((listener) => listener(name));

@@ -17,7 +17,7 @@
 
 	const collapsed = localStorageStore('variablesListCollapsed', true);
 
-	const { activeEditor } = getContext('editor');
+	const { activeEditor, getActiveFactory } = getContext('editor');
 
 	let variables: Writable<Record<string, Variable>> | undefined = undefined;
 	let setVarsUndefinedTimeout: NodeJS.Timeout | undefined;
@@ -26,7 +26,7 @@
 			clearTimeout(setVarsUndefinedTimeout);
 			variables = $activeEditor.variables;
 		} else {
-			setVarsUndefinedTimeout = setTimeout(() => (variables = undefined), 50);
+			setVarsUndefinedTimeout = setTimeout(() => (variables = undefined), 100);
 		}
 	}
 
@@ -99,22 +99,34 @@
 	});
 
 	function createVariable() {
-		if (variables === undefined) return;
 		console.log('create');
 		$collapsed = false;
 		const id = newUuid('variable');
-		nVarsCreated += 1;
-		variables.set({
-			...get(variables),
-			[id]: {
-				name: `variable${nVarsCreated}`,
-				exposed: false,
-				value: undefined,
-				type: $defaultType,
-				highlighted: false,
-				id
+
+		const redo = () => {
+			nVarsCreated += 1;
+			if (variables === undefined) return;
+			variables.set({
+				...get(variables),
+				[id]: {
+					name: `variable${nVarsCreated}`,
+					exposed: false,
+					value: undefined,
+					type: $defaultType,
+					highlighted: false,
+					id
+				}
+			});
+		};
+
+		getActiveFactory()?.history?.add({
+			redo,
+			undo() {
+				deleteVariable(id);
+				nVarsCreated -= 1;
 			}
 		});
+		redo();
 	}
 	export let defaultType: Writable<SocketType> = localStorageStore('defaultVariableType', 'string');
 
@@ -204,7 +216,20 @@
 						>
 							<VariableItem
 								bind:variable={$variables[id]}
-								on:delete={() => deleteVariable(id)}
+								on:delete={() => {
+									if (!$variables) return;
+									const v = $variables[id];
+									getActiveFactory()?.history?.add({
+										redo: () => deleteVariable(id),
+										undo: () => {
+											$variables = {
+												...$variables,
+												[id]: v
+											};
+										}
+									});
+									deleteVariable(id);
+								}}
 								on:changetype={(e) => {
 									console.log('set default variable type', e.detail.type);
 									$defaultType = e.detail.type;

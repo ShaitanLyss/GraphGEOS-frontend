@@ -16,6 +16,8 @@ import type { SelectorEntity } from 'rete-area-plugin/_types/extensions/selectab
 import { ErrorWNotif } from '$lib/global';
 import type { AutoArrangePlugin } from 'rete-auto-arrange-plugin';
 import wu from 'wu';
+import type History from 'rete-history-plugin/_types/history';
+import type { HistoryPlugin } from 'rete-history-plugin';
 
 function createDataflowEngine() {
 	return new DataflowEngine<Schemes>(({ inputs, outputs }) => {
@@ -182,19 +184,17 @@ export class NodeFactory {
 	public readonly selector?: AreaExtensions.Selector<SelectorEntity>;
 	public selectableNodes?: ReturnType<typeof AreaExtensions.selectableNodes>;
 	public readonly arrange: AutoArrangePlugin<Schemes>;
-	constructor({
-		editor,
-		area,
-		makutuClasses,
-		selector,
-		arrange
-	}: {
+	public readonly history: HistoryPlugin<Schemes> | undefined;
+	constructor(params: {
 		editor: NodeEditor;
 		area?: AreaPlugin<Schemes, AreaExtra>;
 		makutuClasses?: MakutuClassRepository;
 		selector?: AreaExtensions.Selector<SelectorEntity>;
 		arrange: AutoArrangePlugin<Schemes>;
+		history?: HistoryPlugin<Schemes>;
 	}) {
+		const { editor, area, makutuClasses, selector, arrange } = params;
+		this.history = params.history;
 		this.selector = selector;
 		this.area = area;
 		this.arrange = arrange;

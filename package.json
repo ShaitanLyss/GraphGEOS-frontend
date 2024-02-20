@@ -125,6 +125,11 @@
 	"dependencies": {
 		"color": "^4.2.3",
 		"config": "^3.3.11",
+		"d3-shape": "^3.2.0",
+		"rete-comment-plugin": "^2.0.1",
+		"rete-connection-path-plugin": "^2.0.3",
+		"rete-connection-reroute-plugin": "^2.0.1",
+		"rete-history-plugin": "^2.0.1",
 		"wu": "^2.1.0"
 	}
 }

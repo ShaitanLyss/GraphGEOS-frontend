@@ -18,6 +18,9 @@ export class VariableNode extends Node {
 				this.label = variables[variableId].name;
 				(this.outputs['value'] as Output).socket.type = variables[variableId].type;
 			} else {
+				for (const conns of Object.values(this.outgoingDataConnections))
+					for (const conn of Object.values(conns)) await this.editor.removeConnection(conn.id);
+
 				await this.editor.removeNode(this.id);
 				return;
 			}

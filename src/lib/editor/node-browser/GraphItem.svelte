@@ -113,6 +113,7 @@
 			<h6
 				class="font-bold h-4 overflow-hidden text-ellipsis whitespace-nowrap"
 				style="width: 5.3rem;"
+				title={graph.authorName}
 			>
 				{$_('card.graphItem.by_author', { values: { name: graph.authorName } })}
 			</h6>
