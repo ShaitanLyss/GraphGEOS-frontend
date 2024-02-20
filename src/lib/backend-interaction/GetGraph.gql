@@ -2,6 +2,7 @@ query GetGraph($id: String!) @cache(policy: NetworkOnly) {
 	graph {
 		graph(id: $id) {
 			id
+			version
 			name
 			description
 			public

@@ -103,7 +103,7 @@ export class InputControl<
 
 	setValue(value?: N) {
 		this.value = value;
-
-		// if (this.options?.change && value) this.options.change(value);
+		console.log('set value');
+		if (this.options?.change && value !== undefined) this.options.change(value);
 	}
 }

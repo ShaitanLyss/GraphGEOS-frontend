@@ -1,7 +1,7 @@
 import newLocalUniqueId from 'locally-unique-id-generator';
 import { v4 as uuidv4 } from 'uuid';
 
-export function newUniqueId(baseName?: string) {
+export function newLocalId(baseName?: string) {
 	return `${baseName ?? 'unique-id'}-${newLocalUniqueId()}`;
 }
 

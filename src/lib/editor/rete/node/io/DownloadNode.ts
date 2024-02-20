@@ -18,6 +18,7 @@ export class DownloadNode extends Node {
 			new ButtonControl('Download', async () => {
 				const inputs = await this.fetchInputs();
 				const data = this.getData('data', inputs) as XMLData;
+				console.log('data to convert to xml', data);
 				console.log(formatXml({ xml: data.toXml() }));
 
 				// download to computer

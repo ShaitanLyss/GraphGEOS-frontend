@@ -23,6 +23,7 @@ import type { ComponentSupportInterface } from '$rete/components/ComponentSuppor
 import type { BaseComponent } from '$rete/components/BaseComponent';
 import { PythonNodeComponent } from '$rete/components/Python_NC';
 import { R_SocketSelection_NC } from '$rete/components/R_SocketSelection_NC';
+import { GraphVersionStore } from '$houdini';
 
 interface ControlParams<N> {
 	type: InputControlTypes;
@@ -117,6 +118,9 @@ export class Node<
 
 	getFactory(): NodeFactory {
 		return this.factory;
+	}
+	getState(): Record<string, unknown> {
+		return this.state;
 	}
 
 	getConnections(): Connection[] {

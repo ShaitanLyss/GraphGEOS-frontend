@@ -13,7 +13,7 @@
 	import { get, type Writable } from 'svelte/store';
 	import type { SocketType } from '$rete/plugin/typed-sockets';
 	import type { Action } from 'svelte/action';
-	import { newUniqueId, newUuid } from '$utils';
+	import { newLocalId, newUuid } from '$utils';
 
 	const collapsed = localStorageStore('variablesListCollapsed', true);
 
@@ -30,13 +30,13 @@
 		}
 	}
 
-	// let localId = newUniqueId('variable');
+	// let localId = newLocalId('variable');
 	// variables[localId] = { name: 'variable1', value: 'value1', type: 'string', localId };
-	// localId = newUniqueId('variable');
+	// localId = newLocalId('variable');
 	// variables[localId] = { name: 'variable2', value: 2, type: 'number', localId };
-	// localId = newUniqueId('variable');
+	// localId = newLocalId('variable');
 	// variables[localId] = { name: 'variable3', value: true, type: 'boolean', localId };
-	// localId = newUniqueId('variable');
+	// localId = newLocalId('variable');
 	// variables[localId] = { name: 'variable4', value: { x: 1, y: 2, z: 6 }, type: 'vector', localId };
 
 	// Tricks to make the collapse smoother
@@ -124,6 +124,7 @@
 	};
 
 	function deleteVariable(variableId: string): void {
+		console.log('delete variable', variableId);
 		if (!$variables) return;
 		currentFlipDuration = flipDuration;
 		delete $variables[variableId];

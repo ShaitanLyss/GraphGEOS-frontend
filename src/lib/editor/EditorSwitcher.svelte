@@ -13,7 +13,7 @@
 	import type { NodeEditor, NodeEditorSaveData, NodeFactory } from '$rete';
 	import { isNodeEditorSaveData } from '$rete/utils';
 
-	import { addContextFunction, newUniqueId } from '$utils';
+	import { addContextFunction, newLocalId } from '$utils';
 	import {
 		modeCurrent,
 		type ModalSettings,
@@ -31,7 +31,7 @@
 	import wu from 'wu';
 	import { browser } from '$app/environment';
 
-	const id = newUniqueId('editor-switcher');
+	const id = newLocalId('editor-switcher');
 	let editors: Record<string, NodeFactory | undefined> = {};
 	let container: HTMLElement;
 	const savedEditors: Writable<NodeEditorSaveData[]> = localStorageStore('saveData', []);
@@ -215,7 +215,7 @@
 	 * @param savedData
 	 */
 	function addNewEditor(savedData?: NodeEditorSaveData, select?: boolean): string {
-		const id = newUniqueId('node-editor');
+		const id = newLocalId('node-editor');
 		savesToLoad[Object.keys(editors).length] = savedData;
 		editors[id] = undefined;
 		editors = editors;

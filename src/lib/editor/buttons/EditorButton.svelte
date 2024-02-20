@@ -4,7 +4,7 @@
 	import Fa from 'svelte-fa';
 	import type { ButtonExec, ButtonExecNoNeedFactory } from '.';
 	import { ErrorWNotif, getContext } from '$lib/global';
-	import newUniqueId from 'locally-unique-id-generator';
+	import newLocalId from 'locally-unique-id-generator';
 	import { _ } from '$lib/global';
 	import { fade, scale } from 'svelte/transition';
 
@@ -18,7 +18,7 @@
 
 	const editorContext = getContext('editor');
 
-	const target = 'buttonTooltip-' + newUniqueId();
+	const target = 'buttonTooltip-' + newLocalId();
 	const popupHover: PopupSettings = {
 		event: 'hover',
 		target: target,

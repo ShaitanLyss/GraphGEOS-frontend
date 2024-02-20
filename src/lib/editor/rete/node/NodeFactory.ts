@@ -11,7 +11,7 @@ import { InputControl } from '$rete/control/Control';
 import { type Writable, writable } from 'svelte/store';
 import { PythonDataflowEngine } from '$rete/engine/PythonDataflowEngine';
 import type { MakutuClassRepository } from '$lib/backend-interaction/types';
-import { newUniqueId } from '$utils';
+import { newLocalId } from '$utils';
 import type { SelectorEntity } from 'rete-area-plugin/_types/extensions/selectable';
 import { ErrorWNotif } from '$lib/global';
 import type { AutoArrangePlugin } from 'rete-auto-arrange-plugin';
@@ -72,7 +72,7 @@ export class NodeFactory {
 	}
 	private state: Map<string, unknown> = new Map();
 
-	public id = newUniqueId('node-factory');
+	public id = newLocalId('node-factory');
 
 	useState<T = unknown>(
 		id: string,
@@ -131,7 +131,7 @@ export class NodeFactory {
 					if (node.afterInitialize) node.afterInitialize();
 				}
 
-				node.setState(nodeSaveData.state);
+				node.setState({ ...node.getState(), ...nodeSaveData.state });
 				node.applyState();
 				for (const key in nodeSaveData.inputControlValues) {
 					const inputControl = node.inputs[key]?.control;
@@ -270,6 +270,10 @@ export class NodeFactory {
 			.map(({ id }) => this.editor.getNode(id))
 			.toArray();
 		return nodes.length ? nodes : undefined;
+	}
+
+	getNode(id: string): Node | undefined {
+		return this.editor.getNode(id);
 	}
 
 	getSelectedNodesIds(): Set<Node['id']> | undefined {

@@ -2,12 +2,12 @@
 	import type { NodeEditor, NodeEditorSaveData, NodeFactory, setupEditor } from '$rete';
 
 	import type { EditorExample } from '$rete/example/types';
-	import { capitalize, newUniqueId, newUuid } from '$utils';
+	import { capitalize, newLocalId, newUuid } from '$utils';
 	import { _, getContext, keyboardShortcut, notifications } from '$lib/global';
 	export let position = 'absolute';
 	export let hidden = true;
 	export let name = $_('editor.default-name');
-	export let id = newUniqueId('node-editor');
+	export let id = newLocalId('node-editor');
 
 	export let loadExample: EditorExample | undefined = undefined;
 	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
@@ -165,7 +165,11 @@
 			if (!graph) throw new Error('Graph not found');
 			console.log('Dropped', graph.name);
 			const saveData = graph.editorData as NodeEditorSaveData;
-			const node = await factory.addNode(MacroNode, { saveData: saveData, graphId });
+			const node = await factory.addNode(MacroNode, {
+				saveData: saveData,
+				graphId,
+				graphVersion: graph.version
+			});
 			if (!node) throw new Error('Node not created');
 			// Move node to drop position
 			translateNodeFromGlobal({

@@ -191,7 +191,22 @@
 			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
 			{value}
 			{readonly}
+			on:blur={() => {
+				let candidate = value;
+
+				console.log('candidate', candidate);
+				if (typeof candidate !== 'string') return;
+
+				candidate = parseFloat(candidate);
+				if (isNaN(candidate)) {
+					onChange('');
+				} else {
+					onChange(candidate);
+					value = candidate;
+				}
+			}}
 			on:input={onChangeFromEvent}
+			on:dblclick|stopPropagation
 			on:pointerdown|stopPropagation={() => false}
 		/>
 	</label>

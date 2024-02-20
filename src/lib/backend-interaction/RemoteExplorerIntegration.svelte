@@ -50,9 +50,6 @@
 </script>
 
 <div class="w-full" class:cursor-wait={false}>
-	<div class="flex w-full justify-end items-center gap-2 p-4">
-		File count : {files.length}
-	</div>
 	{#if $page.state.remoteExplorerIntegration?.data}
 		<RemoteExplorer
 			on:fileselect={(e) => {

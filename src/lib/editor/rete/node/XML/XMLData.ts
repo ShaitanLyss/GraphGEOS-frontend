@@ -36,6 +36,7 @@ export class XMLData {
 		if (this.name) xml += ` name="${this.name}"`;
 
 		Object.entries(this.properties).forEach(([name, value]) => {
+			// console.log(`property: ${name} value: ${JSON.stringify(value)}`)
 			const val = arrayToXml(value);
 
 			xml += ` ${name}="${val}"`;

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { focusTrap, modeCurrent } from '@skeletonlabs/skeleton';
+	import { focusTrap, modeCurrent, popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	// import Ref from '../../../Ref.svelte';
 	// import type { ClassicScheme, SvelteArea2D } from '../types';
 	import { type ClassicScheme, Ref, type SvelteArea2D } from 'rete-svelte-plugin';
@@ -11,7 +11,11 @@
 	import { EditMacroNodeChannel } from '$lib/broadcast-channels';
 	import { GetGraphStore } from '$houdini';
 	import { fade } from 'svelte/transition';
+	import { newLocalId } from '$lib/utils';
 	import { VariableNode } from '$rete/node/XML/VariableNode';
+	import { faClock } from '@fortawesome/free-regular-svg-icons';
+	import { Popup } from '$lib/layout';
+
 	type NodeExtraData = { width?: number; height?: number };
 
 	function sortByIndex<K, I extends undefined | { index?: number }>(entries: [K, I][]) {
@@ -30,6 +34,19 @@
 	const firstNameGiven = data instanceof XmlNode ? data.name : undefined;
 	$: macroNode = data instanceof MacroNode ? data : undefined;
 	const isMacroNode = data instanceof MacroNode;
+
+	if (isMacroNode) {
+		const macroNode = data as MacroNode;
+		const checkOutdatedLoop = async () => {
+			console.log('Checking for outdated macro node...');
+			if (await macroNode.isOutdated()) {
+				outdated = true;
+			} else {
+				// setTimeout(checkOutdatedLoop, 10000)
+			}
+		};
+		checkOutdatedLoop();
+	}
 	const isNamedXmlNode = data instanceof XmlNode && data.name !== undefined;
 	const isXmlnode = data instanceof XmlNode;
 	// console.log('isMacroNode', isMacroNode);
@@ -44,6 +61,8 @@
 	function any<T>(arg: T): unknown {
 		return arg;
 	}
+
+	let outdated = false;
 
 	async function onDblClickNode() {
 		console.log('Double click on node');
@@ -85,6 +104,18 @@
 	$: if (editingName === false && isNamedXmlNode && data.name.trim() === '') {
 		data.name = firstNameGiven;
 	}
+
+	const outdatedPopupId = newLocalId('outdated-popup');
+	let showPopup = false;
+	const outdatedPopupSettings: PopupSettings = {
+		event: 'hover',
+		placement: 'top',
+		target: outdatedPopupId,
+		state(event) {
+			// if (event.state) showPopup = true;
+		}
+	};
+	let hidePopupTimeout: NodeJS.Timeout;
 </script>
 
 <div
@@ -101,6 +132,24 @@
 	class:brightness-125={highlight}
 	class:node-light-background={$modeCurrent}
 >
+	{#if outdated}
+		<Popup
+			target={outdatedPopupId}
+			background="bg-surface-100-800-token"
+			class="{showPopup ? 'visible !opacity-100' : ''} text-nowrap "
+		>
+			Outdated
+			<!-- <button type="button" class="btn variant-filled-secondary"> Refresh </button> -->
+		</Popup>
+		<button
+			type="button"
+			on:pointerdown|stopPropagation
+			class="absolute cursor-default -right-3 text-error-600-300-token -top-2 rounded-full bg-white dark:bg-surface-900 p-0.5 [&>*]:pointer-events-none"
+			use:popup={outdatedPopupSettings}
+		>
+			<Fa icon={faClock} size="lg" secondaryColor="white" secondaryOpacity="100" />
+		</button>
+	{/if}
 	<div class="flex justify-{isVariable ? 'center' : ' between'} items-center">
 		{#if node instanceof XmlNode && node.name !== undefined}
 			<div class="title flex flex-col w-full">

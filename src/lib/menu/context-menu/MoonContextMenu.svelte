@@ -81,7 +81,7 @@
 		await factory.getEditor().addNode(node);
 
 		translateNodeFromGlobal({
-			center: !!$moonMenuConnDropEvent,
+			center: !!$moonMenuConnDropEvent && $moonMenuConnDropEvent.socketData.side === 'input',
 			globalPos: $moonMenuConnDropEvent ? $moonMenuConnDropEvent.pos : $moonMenuPositionStore,
 			factory,
 			node

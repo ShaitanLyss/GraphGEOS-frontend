@@ -105,6 +105,7 @@ type GraphESType {
   tags: [String!]
   title: String
   updatedAt: DateTime!
+  version: Int!
 }
 
 type GraphFromAuthorAndNameResult {

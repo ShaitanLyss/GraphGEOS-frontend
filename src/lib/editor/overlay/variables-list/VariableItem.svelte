@@ -13,7 +13,7 @@
 		ListBoxItem,
 		getModalStore
 	} from '@skeletonlabs/skeleton';
-	import { newUniqueId, capitalize } from '$utils';
+	import { newLocalId, capitalize } from '$utils';
 	import { createEventDispatcher } from 'svelte';
 	import { spawnMoonMenu } from '$lib/menu/context-menu/moonContextMenu';
 	import type { Point } from '$lib/types/Point';
@@ -66,7 +66,7 @@
 		}
 	}
 
-	const id = newUniqueId('variable-item');
+	const id = newLocalId('variable-item');
 
 	let displayTypeSelection = false;
 	const popupSettings: PopupSettings = {

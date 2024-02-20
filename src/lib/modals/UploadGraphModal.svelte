@@ -110,6 +110,7 @@
 				} else {
 					data['is_public'] = data['is_public'] === 'on';
 				}
+				console.log();
 
 				const response = await new UpdateGraphStore().mutate({
 					updateGraphInput: {
