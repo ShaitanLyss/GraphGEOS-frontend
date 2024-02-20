@@ -86,6 +86,7 @@
 
 	const modalStore = getModalStore();
 	const igg = localStorageStore('igg', '');
+	const fakeLoginUsername = localStorageStore('fake-login-username', '');
 	function fakeLogin() {
 		modalStore.trigger({
 			type: 'prompt',
@@ -113,8 +114,10 @@
 						placeholder: 'Username',
 						name: 'username'
 					},
+					value: $fakeLoginUsername,
 					response(r) {
 						if (!r) return;
+						$fakeLoginUsername = r;
 						window.location.href = getBackendAddress(
 							`/auth/fake-login?callbackUri=${window.location.href}&igg=${$igg}&username=${r}`
 						);
