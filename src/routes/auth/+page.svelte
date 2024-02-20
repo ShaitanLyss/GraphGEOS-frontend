@@ -184,7 +184,7 @@
 				>
 				{#if data.publicConfig.fake_login}
 					<p
-						class="mx-auto !mt-4 variant-filled-warning p-2 rounded-container-token"
+						class="mx-auto !mt-6 variant-filled-warning p-2 rounded-container-token"
 						style="max-width: 30rem;"
 					>
 						{$_('page.auth.fake-login-explanation')}
