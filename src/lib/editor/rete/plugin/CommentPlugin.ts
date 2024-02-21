@@ -133,7 +133,10 @@ export class CommentPlugin<
 		console.log('editComment: ', this.factory.modalStore);
 		this.factory.modalStore?.trigger({
 			type: 'prompt',
-			title: get(_)('prompt.comment.edit.title'),
+			title:
+				comment.text.trim() === ''
+					? get(_)('prompt.comment.edit.title-when-empty')
+					: get(_)('prompt.comment.edit.title'),
 			valueAttr: {
 				placeholder: get(_)('prompt.comment.edit.placeholder')
 				// 'onfocus': 'this.select()'

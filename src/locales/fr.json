@@ -11,7 +11,8 @@
     "comment": {
       "edit": {
         "title": "Modifier le commentaire",
-        "placeholder": "Commentaire"
+        "placeholder": "Commentaire",
+        "title-when-empty": "Commentaire"
       }
     }
   },
