@@ -26,6 +26,7 @@
 	import { XmlNode } from '$rete/node/XML/XmlNode';
 	import type { GeosSchema } from '$lib/geos';
 	import { get } from 'svelte/store';
+	import type { XmlAttributeDefinition } from '$rete/node/XML/types';
 
 	export let editorContext: EditorContext;
 	let codeEditorPromise: Promise<ICodeEditor>;
@@ -35,6 +36,9 @@
 	const geosContext = getContext('geos');
 	const newGeosContext = getContext('geos_v2');
 
+	/**
+	 * Pulls the selected nodes from the graph editor to the code editor
+	 */
 	async function pull() {
 		const codeEditor = await codeEditorPromise;
 		const factory = editorContext.getActiveFactory();
@@ -73,6 +77,9 @@
 
 		codeEditor.setText({ text: buildXml({ parsedXml: res, cursorTag }) });
 	}
+	/**
+	 * Pushes the selected text from the code editor to the graph editor
+	 */
 	async function push() {
 		const { NodeEditor, NodeFactory } = await import('$rete');
 		const geosSchema = newGeosContext.geosSchema;
@@ -84,7 +91,7 @@
 		const codeEditor = await codeEditorPromise;
 		const selectedText = codeEditor.getSelectedText();
 		const full_xml = parseXml(selectedText);
-
+		console.debug('full xml', full_xml);
 		const tmp_editor = new NodeEditor();
 		const tmp_container = document.createElement('div');
 		const tmp_area = new AreaPlugin<Schemes, AreaExtra>(tmp_container);
@@ -108,7 +115,34 @@
 					continue;
 				}
 				const hasNameAttribute = complexType.attributes.has('name');
-				const xmlAttributes = getXmlAttributes(xmlNode as Record<string, ParsedXmlNodes>);
+				const xmlAttributes: Record<string, unknown> = getXmlAttributes(
+					xmlNode as Record<string, ParsedXmlNodes>
+				);
+
+				for (const [k, v] of Object.entries(xmlAttributes as Record<string, string>)) {
+					const attrType = complexType.attributes.get(k);
+
+					if (!attrType) {
+						console.warn('Attribute type not found', k, v);
+						continue;
+					}
+					if (attrType.type === 'R1Tensor') {
+						const a = v
+							.slice(1, -1)
+							.split(',')
+							.map((t) => t.trim());
+						console.log('R1Tensor', a, { x: a[0], y: a[1], z: a[2] });
+						xmlAttributes[k] = { x: a[0], y: a[1], z: a[2] };
+						continue;
+					}
+
+					const isArray = /^\s*?\{\s*?/.test(v);
+					if (!isArray) continue;
+					const candidate = JSON.parse(v.replaceAll('{', '[').replaceAll('}', ']'));
+					if (candidate === undefined) continue;
+
+					xmlAttributes[k] = candidate;
+				}
 				const node = await tmp_factory.addNode(XmlNode, {
 					label: name,
 					initialValues: xmlAttributes,
@@ -134,7 +168,7 @@
 									// pattern: attr.pattern,
 									type: attr.type,
 									controlType: 'text'
-								};
+								} as XmlAttributeDefinition;
 							})
 							.toArray()
 					}
@@ -168,11 +202,12 @@
 				await nodeView.translate(tmp_nodeView.position.x + leftBound, tmp_nodeView.position.y);
 			await factory.getArea()?.update('node', node.id);
 		}
-		notifications.show({
-			title: get(_)('graph-editor.notification.title'),
-			message: get(_)('code-editor-integration.push-to-graph.selected-node-dragging.message'),
-			autoClose: 7000
-		});
+		if (tmp_editor.getNodes().length > 0)
+			notifications.show({
+				title: get(_)('graph-editor.notification.title'),
+				message: get(_)('code-editor-integration.push-to-graph.selected-node-dragging.message'),
+				autoClose: 7000
+			});
 
 		for (const conn of tmp_editor.getConnections()) {
 			await editor.addConnection(conn);
