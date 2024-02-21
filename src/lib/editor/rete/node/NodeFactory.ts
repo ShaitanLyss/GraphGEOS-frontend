@@ -286,8 +286,9 @@ export class NodeFactory {
 		const nodes = this.getSelectedNodes();
 		if (!nodes) return;
 		this.comment.addFrame(
-			params.text ?? get(_)('graph-editor.comment.default-text'),
-			nodes.map((node) => node.id)
+			params.text,
+			nodes.map((node) => node.id),
+			{ editPrompt: true }
 		);
 	}
 

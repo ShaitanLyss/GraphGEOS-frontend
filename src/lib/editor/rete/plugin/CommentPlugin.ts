@@ -102,7 +102,12 @@ export class CommentPlugin<
 		return comment;
 	}
 
-	override addFrame(text?: string, links?: string[] | undefined, params?: { id?: string }): void {
+	override addFrame(
+		text?: string,
+		links?: string[] | undefined,
+		params: { id?: string; editPrompt?: boolean } = {}
+	): void {
+		const { editPrompt = false } = params;
 		console.debug('addFrame: ', text, links, params?.id);
 		const comment = this.makeComment({ text: text ?? '', id: params?.id });
 		const commentId = comment.id;
@@ -121,6 +126,7 @@ export class CommentPlugin<
 		comment.linkTo(links);
 		this.add(comment);
 		this.area.area.content.reorder(comment.element, this.area.area.content.holder.firstChild);
+		if (editPrompt) this.openEditPrompt(comment);
 	}
 
 	openEditPrompt(comment: Comment) {
