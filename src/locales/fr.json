@@ -32,7 +32,8 @@
     "upload": "Mettre en ligne",
     "rename": "Renommer",
     "login": "Se connecter",
-    "logout": "Se déconnecter"
+    "logout": "Se déconnecter",
+    "delete": "supprimer"
   },
   "form": {
     "input": {
@@ -227,6 +228,19 @@
       "delete-selected-nodes": "Supprimer",
       "searchbar": {
         "placeholder": "Chercher..."
+      }
+    },
+    "unexpose": "désexposer",
+    "expose": "exposer",
+    "variable": {
+      "unexpose": {
+        "descr": "Masquer cette variable depuis l'extérieur"
+      },
+      "expose": {
+        "descr": "Exposer cette variable pour la rendre éditable depuis l'extérieur"
+      },
+      "delete": {
+        "descr": "Supprimer cette variable et les noeuds associés"
       }
     }
   },

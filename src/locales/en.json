@@ -32,7 +32,8 @@
     "upload": "Upload",
     "rename": "Rename",
     "login": "Login",
-    "logout": "Logout"
+    "logout": "Logout",
+    "delete": "Delete"
   },
   "form": {
     "input": {
@@ -231,6 +232,19 @@
       "searchbar": {
         "placeholder": "Search..."
       }
+    },
+    "unexpose": "unexpose",
+    "expose": "expose",
+    "variable": {
+      "unexpose": {
+        "descr": "Unexpose this variable"
+      },
+      "expose": {
+        "descr": "Expose this variable to make it editable on a macro block"
+      },
+      "delete": {
+        "descr": "Delete this variable and the associated nodes"
+      }
     }
   },
   "remote-explorer": {
@@ -258,5 +272,6 @@
       "placeholder": "Variable name",
       "title": "Rename variable"
     }
-  }
+  },
+  "Unexpose this variable": "menu.variable.unexpose.descr"
 }

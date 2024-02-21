@@ -82,8 +82,10 @@
 			searchbar: false,
 			items: [
 				createActionMenuItem({
-					label: v.exposed ? 'Unexpose' : 'Expose',
-					description: v.exposed ? 'Unexpose this variable' : 'Expose this variable',
+					label: capitalize(v.exposed ? $_('menu.unexpose') : $_('menu.expose')),
+					description: v.exposed
+						? $_('menu.variable.unexpose.descr')
+						: $_('menu.variable.expose.descr'),
 					executeAction: () => {
 						v.exposed = !v.exposed;
 						dispatch('change', { variable: v });
@@ -91,8 +93,8 @@
 					tags: ['expose', 'visibility']
 				}),
 				createActionMenuItem({
-					label: 'Delete',
-					description: 'Delete this variable',
+					label: capitalize($_('button.delete')),
+					description: $_('menu.variable.delete.descr'),
 					executeAction: () => {
 						dispatch('delete', { variable: v });
 					},
