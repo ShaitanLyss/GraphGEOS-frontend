@@ -33,14 +33,16 @@
 </script>
 
 {#each menuItems as item, index (index)}
-	<TreeViewItem
-		on:click={(event) => {
-			if (event.isTrusted) handleItem(item);
-		}}
-		regionSummary="select-none"
-	>
-		{item.getLabel()}
-	</TreeViewItem>
+	<div title={item.getDescription()}>
+		<TreeViewItem
+			on:click={(event) => {
+				if (event.isTrusted) handleItem(item);
+			}}
+			regionSummary="select-none"
+		>
+			{item.getLabel()}
+		</TreeViewItem>
+	</div>
 {/each}
 {#each submenus as submenu, index (index)}
 	<TreeViewItem regionSummary="select-none">
