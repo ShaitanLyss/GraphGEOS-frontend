@@ -18,7 +18,7 @@ export type NodeEditorSaveData = {
 	connections: Connection<Node, Node>[];
 	editorName: string;
 	variables: Record<string, Variable>;
-	comments: CommentSaveData[];
+	comments?: CommentSaveData[];
 };
 
 export class NodeEditor extends BaseNodeEditor<Schemes> {

@@ -173,7 +173,7 @@ export class NodeFactory {
 			}
 		}
 
-		for (const commentSaveData of editorSaveData.comments) {
+		for (const commentSaveData of editorSaveData.comments ?? []) {
 			if (!this.comment) {
 				console.warn('No comment plugin');
 				return;
