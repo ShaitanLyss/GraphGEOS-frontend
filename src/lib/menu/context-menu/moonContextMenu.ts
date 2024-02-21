@@ -20,18 +20,17 @@ export const moonMenuItemsStore = writable<MoonMenuItem[]>([]);
 export const newMoonItemsStore = writable<IBaseMenuItem[]>([]);
 export const moonMenuFactoryStore = writable<NodeFactory | null>(null);
 export const moonMenuSearchBarStore = writable<boolean>(false);
+export const moonMenuOnCloseStore = writable<() => void>(() => {}); // eslint-disable-line @typescript-eslint/no-empty-function
 
-export function spawnMoonMenu({
-	connDropEvent,
-	searchbar = false,
-	pos,
-	items = []
-}: {
+export function spawnMoonMenu(params: {
 	connDropEvent?: ConnectionDropEvent;
 	searchbar?: boolean;
 	pos?: Point;
 	items?: IBaseMenuItem[];
+	onClose?: () => void;
 }) {
+	const { connDropEvent, searchbar = false, pos, items = [] } = params;
+	moonMenuOnCloseStore.set(params.onClose ?? (() => {})); // eslint-disable-line @typescript-eslint/no-empty-function
 	moonMenuConnDropEvent.set(connDropEvent ?? null);
 	if (connDropEvent) {
 		moonMenuDropConnectionStore.set(connDropEvent?.drop);

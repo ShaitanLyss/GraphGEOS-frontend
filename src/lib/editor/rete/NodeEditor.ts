@@ -4,15 +4,25 @@ import { Connection, Node, type NodeSaveData } from './node/Node';
 import { newLocalId } from '$utils';
 import type { Variable } from '../overlay/variables-list';
 import { get, writable, type Writable } from 'svelte/store';
+import { NodeFactory } from './node/NodeFactory';
+import wu from 'wu';
+
+export type CommentSaveData = {
+	id: string;
+	text: string;
+	links: string[];
+};
 
 export type NodeEditorSaveData = {
 	nodes: NodeSaveData[];
 	connections: Connection<Node, Node>[];
 	editorName: string;
 	variables: Record<string, Variable>;
+	comments: CommentSaveData[];
 };
 
 export class NodeEditor extends BaseNodeEditor<Schemes> {
+	public factory?: NodeFactory;
 	variables: Writable<Record<string, Variable>> = writable({});
 
 	// constructor() {
@@ -55,7 +65,18 @@ export class NodeEditor extends BaseNodeEditor<Schemes> {
 			nodes: this.getNodes().map((node) => node.toJSON()),
 			connections: this.getConnections(),
 			editorName: this.name,
-			variables
+			variables,
+			comments: this.factory?.comment
+				? wu(this.factory?.comment?.comments.values())
+						.map((t) => {
+							return {
+								id: t.id,
+								text: t.text,
+								links: t.links
+							};
+						})
+						.toArray()
+				: []
 		};
 	}
 }

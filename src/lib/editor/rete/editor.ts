@@ -12,24 +12,30 @@ import type { MakutuClassRepository } from '$lib/backend-interaction/types';
 import type { GeosDataContext } from '$lib/geos';
 import type { NewGeosContext } from '$lib/global';
 import { HistoryPlugin, Presets as HistoryPresets, type HistoryActions } from 'rete-history-plugin';
+import { CommentPlugin, CommentExtensions } from '$rete/plugin/CommentPlugin';
+import type { getModalStore } from '@skeletonlabs/skeleton';
 
-export async function setupEditor({
-	container,
-	makutuClasses,
-	loadExample,
-	saveData,
-	geosContext,
-	geosContextV2
-}: {
+export async function setupEditor(params: {
 	container: HTMLElement;
 	makutuClasses: MakutuClassRepository;
 	loadExample?: EditorExample;
 	saveData?: NodeEditorSaveData;
 	geosContext: GeosDataContext;
 	geosContextV2: NewGeosContext;
+	modalStore: ReturnType<typeof getModalStore>;
 }) {
+	const {
+		container,
+		makutuClasses,
+		loadExample,
+		saveData,
+		geosContext,
+		geosContextV2,
+		modalStore
+	} = params;
 	if (container === null) throw new Error('Container is null');
 	const editor = new NodeEditor();
+
 	const typedSocketsPlugin = new TypedSocketsPlugin<Schemes>();
 	editor.use(typedSocketsPlugin);
 	const arrange = new AutoArrangePlugin<Schemes>();
@@ -46,8 +52,22 @@ export async function setupEditor({
 	area.use(history);
 
 	// Setup node factory
-	const nodeFactory = new NodeFactory({ editor, area, makutuClasses, selector, arrange, history });
+	const nodeFactory = new NodeFactory({
+		editor,
+		area,
+		makutuClasses,
+		selector,
+		arrange,
+		history,
+		modalStore
+	});
 
+	// Setup comments
+	const comment = new CommentPlugin<Schemes, AreaExtra>({ factory: nodeFactory });
+	CommentExtensions.selectable<Schemes, AreaExtra>(comment, selector, accumulating);
+	area.use(comment);
+
+	nodeFactory.comment = comment;
 	// Setup react renderer
 	const megaSetup = new MegaSetup();
 	megaSetup.setup(editor, area, nodeFactory, geosContext, geosContextV2);

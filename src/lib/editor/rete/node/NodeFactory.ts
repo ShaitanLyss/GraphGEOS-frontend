@@ -8,7 +8,7 @@ import { structures } from 'rete-structures';
 import { Connection, Node } from './Node';
 import { ClassicPreset } from 'rete';
 import { InputControl } from '$rete/control/Control';
-import { type Writable, writable } from 'svelte/store';
+import { type Writable, writable, get } from 'svelte/store';
 import { PythonDataflowEngine } from '$rete/engine/PythonDataflowEngine';
 import type { MakutuClassRepository } from '$lib/backend-interaction/types';
 import { newLocalId } from '$utils';
@@ -18,6 +18,9 @@ import type { AutoArrangePlugin } from 'rete-auto-arrange-plugin';
 import wu from 'wu';
 import type History from 'rete-history-plugin/_types/history';
 import type { HistoryPlugin } from 'rete-history-plugin';
+import type { CommentPlugin } from '$rete/plugin/CommentPlugin';
+import { _ } from '$lib/global';
+import type { getModalStore } from '@skeletonlabs/skeleton';
 
 function createDataflowEngine() {
 	return new DataflowEngine<Schemes>(({ inputs, outputs }) => {
@@ -68,6 +71,8 @@ function createControlflowEngine() {
 type WithFactory<T extends Record<string, unknown>> = T & { factory: NodeFactory };
 type WithoutFactory<T> = Omit<T, 'factory'>;
 export class NodeFactory {
+	public readonly modalStore?: ReturnType<typeof getModalStore>;
+
 	private static classRegistry: Record<string, typeof Node> = {};
 	static registerClass(id: string, nodeClass: typeof Node) {
 		this.classRegistry[id] = nodeClass;
@@ -168,6 +173,17 @@ export class NodeFactory {
 			}
 		}
 
+		for (const commentSaveData of editorSaveData.comments) {
+			if (!this.comment) {
+				console.warn('No comment plugin');
+				return;
+			}
+			console.log('load comment ', commentSaveData.text);
+			this.comment.addFrame(commentSaveData.text, commentSaveData.links, {
+				id: commentSaveData.id
+			});
+		}
+
 		editorSaveData.connections.forEach(async (connectionSaveData) => {
 			await this.editor.addConnection(connectionSaveData);
 		});
@@ -185,6 +201,7 @@ export class NodeFactory {
 	public selectableNodes?: ReturnType<typeof AreaExtensions.selectableNodes>;
 	public readonly arrange: AutoArrangePlugin<Schemes>;
 	public readonly history: HistoryPlugin<Schemes> | undefined;
+	public comment: CommentPlugin<Schemes, AreaExtra> | undefined;
 	constructor(params: {
 		editor: NodeEditor;
 		area?: AreaPlugin<Schemes, AreaExtra>;
@@ -192,14 +209,19 @@ export class NodeFactory {
 		selector?: AreaExtensions.Selector<SelectorEntity>;
 		arrange: AutoArrangePlugin<Schemes>;
 		history?: HistoryPlugin<Schemes>;
+		modalStore?: ReturnType<typeof getModalStore>;
+		comment?: CommentPlugin<Schemes, AreaExtra>;
 	}) {
 		const { editor, area, makutuClasses, selector, arrange } = params;
+		this.modalStore = params.modalStore;
+		this.comment = params.comment;
 		this.history = params.history;
 		this.selector = selector;
 		this.area = area;
 		this.arrange = arrange;
 		this.makutuClasses = makutuClasses;
 		this.editor = editor;
+		this.editor.factory = this;
 		editor.use(this.dataflowEngine);
 		editor.use(this.controlflowEngine);
 		editor.use(this.pythonDataflowEngine);
@@ -253,6 +275,50 @@ export class NodeFactory {
 
 			return context;
 		});
+	}
+
+	commentSelectedNodes(params: { text?: string } = {}): void {
+		console.log('factory:commentSelectedNodes');
+		if (!this.comment) {
+			console.warn('No comment plugin');
+			return;
+		}
+		const nodes = this.getSelectedNodes();
+		if (!nodes) return;
+		this.comment.addFrame(
+			params.text ?? get(_)('graph-editor.comment.default-text'),
+			nodes.map((node) => node.id)
+		);
+	}
+
+	selectAll() {
+		if (!this.selectableNodes) {
+			console.warn('No selector');
+			return;
+		}
+		this.editor.getNodes().forEach((node) => {
+			this.selectableNodes?.select(node.id, true);
+		});
+	}
+
+	async deleteSelectedNodes(): Promise<void> {
+		const selector = this.selector;
+		const editor = this.getEditor();
+		const selectedNodes = this.getSelectedNodes() || [];
+		if (!selectedNodes) {
+			console.warn('No selected nodes to delete');
+			return;
+		}
+		console.log('to delete', selectedNodes);
+		for (const selectedNode of selectedNodes) {
+			const node = editor.getNode(selectedNode.id);
+			if (!node) continue;
+			console.log('connections', node.getConnections());
+			for (const conn of node.getConnections()) {
+				if (editor.getConnection(conn.id)) await editor.removeConnection(conn.id);
+			}
+			await editor.removeNode(node.id);
+		}
 	}
 
 	enable() {

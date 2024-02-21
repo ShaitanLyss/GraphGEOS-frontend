@@ -26,6 +26,7 @@
 	import { possibleTypes, type Variable } from './overlay/variables-list';
 	import { get } from 'svelte/store';
 	import { EditorType } from '.';
+	import { getModalStore } from '@skeletonlabs/skeleton';
 
 	let spawnMoonMenu: typeof t_spawnMoonMenu | undefined = undefined;
 	let MacroNode: typeof t_MacroNode | undefined = undefined;
@@ -62,6 +63,7 @@
 	$: if ($newMoonItemsStore?.length > 0 && newMoonItems.length == 0) {
 		newMoonItems = $newMoonItemsStore;
 	}
+	const modalStore = getModalStore();
 	onMount(async () => {
 		await import('$rete/setup/appLaunch');
 		const { setupEditor } = await import('$rete');
@@ -73,7 +75,8 @@
 			loadExample,
 			saveData,
 			geosContext,
-			geosContextV2
+			geosContextV2,
+			modalStore
 		});
 		editorData.editor.id = id;
 		editorData.editor.setName(name);

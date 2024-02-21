@@ -297,32 +297,7 @@ export class ContextMenuSetup extends Setup {
 				// Context menu on node
 				if (context.data.context !== 'root') {
 					if (!(context.data.context instanceof Node)) return context;
-					moonMenuVisibleStore.set(true);
-					moonMenuSearchBarStore.set(false);
-					newMoonItemsStore.set([
-						createActionMenuItem({
-							label: get(_)('menu.context-menu.delete-selected-nodes'),
-							executeAction: async () => {
-								const selector = __factory.selector;
-								console.log('to delete', this.selectedNodes);
-								for (const selectedNode of this.selectedNodes) {
-									const node = editor.getNode(selectedNode.id);
-									if (!node) continue;
-									console.log('connections', node.getConnections());
-									for (const conn of node.getConnections()) {
-										if (editor.getConnection(conn.id)) await editor.removeConnection(conn.id);
-									}
-									await editor.removeNode(node.id);
-								}
-								this.selectedNodes = [];
-							}
-						})
-					]);
-					moonMenuPositionStore.set({
-						x: context.data.event.clientX,
-						y: context.data.event.clientY
-					});
-					moonMenuFactoryStore.set(__factory);
+
 					context.data.event.preventDefault();
 					context.data.event.stopImmediatePropagation();
 					return;

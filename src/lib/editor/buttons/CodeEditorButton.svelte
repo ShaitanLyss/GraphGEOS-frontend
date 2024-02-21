@@ -34,7 +34,7 @@
 </script>
 
 <EditorButton
-	shortcut="c"
+	shortcut="shift+c"
 	icon={faFileCode}
 	tooltip={$_('editor.button.toggle-code-editor.tooltip')}
 	execNoNeedActiveFactory={() => {

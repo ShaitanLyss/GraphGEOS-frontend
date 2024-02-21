@@ -15,6 +15,9 @@
 	import { VariableNode } from '$rete/node/XML/VariableNode';
 	import { faClock } from '@fortawesome/free-regular-svg-icons';
 	import { Popup } from '$lib/layout';
+	import { spawnMoonMenu } from '$lib/menu/context-menu/moonContextMenu';
+	import { createActionMenuItem } from '$lib/menu';
+	import { _ } from '$lib/global';
 
 	type NodeExtraData = { width?: number; height?: number };
 
@@ -30,6 +33,7 @@
 	export let data: Node & NodeExtraData;
 
 	$: node = data;
+	$: factory = node.getFactory();
 
 	const firstNameGiven = data instanceof XmlNode ? data.name : undefined;
 	$: macroNode = data instanceof MacroNode ? data : undefined;
@@ -116,11 +120,54 @@
 		}
 	};
 	let hidePopupTimeout: NodeJS.Timeout;
+	let selectedNodes: Node[] = [];
+	function openContextMenu(e: MouseEvent) {
+		spawnMoonMenu({
+			searchbar: false,
+			pos: { x: e.clientX, y: e.clientY },
+			items: [
+				createActionMenuItem({
+					label: $_('menu.node.comment.label'),
+					description: $_('menu.node.comment.descr'),
+					executeAction: () => {
+						factory.commentSelectedNodes();
+					}
+				}),
+				// TODO: Implement duplicateSelectedNodes
+				// createActionMenuItem({
+				// 	label: $_('menu.node.duplicate.label'),
+				// 	description: $_('menu.node.duplicate.descr')
+				// }),
+				createActionMenuItem({
+					label: $_('menu.node.delete.label'),
+					description: $_('menu.node.delete.descr'),
+					executeAction: async () => {
+						await factory.deleteSelectedNodes();
+					}
+				})
+			],
+
+			onClose() {
+				if (isSelectedByRightClick) {
+					isSelectedByRightClick = false;
+					factory.selectableNodes?.unselect(data.id);
+					return;
+				}
+			}
+		});
+	}
+	let isSelectedByRightClick = false;
 </script>
 
 <div
 	class:rounded-token={isVariable}
-	class:rounted-container-token={!isVariable}
+	role="cell"
+	on:focus={(e) => {
+		if (!(e.target instanceof HTMLElement)) return;
+		e.target.blur();
+	}}
+	tabindex="-1"
+	class:rounded-container-token={!isVariable}
 	class="relative node {data.selected &&
 	(dragDistance === undefined || dragDistance > dragThreshold)
 		? 'selected'
@@ -131,6 +178,14 @@
 	class:bg-surface-500={!$modeCurrent}
 	class:brightness-125={highlight}
 	class:node-light-background={$modeCurrent}
+	on:contextmenu|preventDefault={openContextMenu}
+	on:pointerdown={(e) => {
+		if (e.button !== 2) return;
+		e.stopPropagation();
+		if (factory.getSelectedNodesIds()?.has(node.id)) return;
+		factory.selectableNodes?.select(node.id, true);
+		isSelectedByRightClick = true;
+	}}
 >
 	{#if outdated}
 		<Popup

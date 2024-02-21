@@ -7,6 +7,12 @@
       "name": {
         "graph": "Provide a new name for the graph."
       }
+    },
+    "comment": {
+      "edit": {
+        "title": "Edit comment",
+        "placeholder": "Comment"
+      }
     }
   },
   "new": {
@@ -33,7 +39,8 @@
     "rename": "Rename",
     "login": "Login",
     "logout": "Logout",
-    "delete": "Delete"
+    "delete": "Delete",
+    "submit": "Confirm"
   },
   "form": {
     "input": {
@@ -152,7 +159,7 @@
         "tooltip": "Upload graph online"
       },
       "toggle-code-editor": {
-        "tooltip": "Toggle code editor (C)",
+        "tooltip": "Toggle code editor (Shift+C)",
         "close": "Close code editor"
       },
       "layout": "Auto layout (A)"
@@ -224,6 +231,9 @@
   "graph-editor": {
     "notification": {
       "title": "Graph editor"
+    },
+    "comment": {
+      "default-text": "Comment"
     }
   },
   "menu": {
@@ -244,6 +254,30 @@
       },
       "delete": {
         "descr": "Delete this variable and the associated nodes"
+      }
+    },
+    "node": {
+      "delete": {
+        "descr": "Delete selected nodes",
+        "label": "Delete"
+      },
+      "comment": {
+        "label": "Comment",
+        "descr": "Comment selected nodes"
+      },
+      "duplicate": {
+        "label": "Duplicate",
+        "descr": "Duplicate selected nodes"
+      }
+    },
+    "comment": {
+      "delete": {
+        "label": "Delete",
+        "description": "Delete this comment"
+      },
+      "edit": {
+        "label": "Edit",
+        "description": "Edit this comment"
       }
     }
   },

@@ -36,46 +36,9 @@
 	let container: HTMLElement;
 	const savedEditors: Writable<NodeEditorSaveData[]> = localStorageStore('saveData', []);
 	let firstLoading = true;
+
+	$: activeFactory = activeId !== undefined ? editors[activeId] : undefined;
 	let savesToLoad: (NodeEditorSaveData | undefined)[] = [];
-
-	async function onKeyDown(event: KeyboardEvent) {
-		if (!activeId) return;
-		const factory = editors[activeId];
-		if (!factory) return;
-		const editor = factory.getEditor();
-		const selector = factory.selector;
-		if (!selector) return;
-		const area = factory.getArea();
-		if (!area) return;
-
-		if (event.key === 'a' && event.ctrlKey) {
-			const nodeViews = area.nodeViews;
-			for (const [nodeId, nodeView] of nodeViews.entries()) {
-				factory.selectableNodes?.select(nodeId, true);
-			}
-			event.preventDefault();
-			return;
-		}
-
-		if (event.key === 'Delete') {
-			console.log('Deleting selected nodes');
-			const selectedNodesIds = wu(selector.entities.keys())
-				.filter((id) => id.startsWith('node'))
-				.map((id) => id.slice(5))
-				.toArray();
-			for (const id of selectedNodesIds) {
-				const node = editor.getNode(id);
-				for (const conn of node.getConnections()) {
-					if (conn) await editor.removeConnection(conn.id);
-				}
-				await factory.getEditor().removeNode(id);
-			}
-		}
-	}
-
-	if (browser) {
-		document.addEventListener('keydown', onKeyDown);
-	}
 
 	$: if (firstLoading && $savedEditors) {
 		savesToLoad = $savedEditors;
@@ -260,9 +223,6 @@
 	}
 	onDestroy(() => {
 		onDestroyCleanup();
-		if (browser) {
-			document.removeEventListener('keydown', onKeyDown);
-		}
 		$saveContext.delete(id);
 	});
 
@@ -328,9 +288,28 @@
 <div
 	bind:this={container}
 	use:keyboardShortcut={{
+		key: 'a',
+		ctrl: true,
+		action() {
+			activeFactory?.selectAll();
+		}
+	}}
+	use:keyboardShortcut={{
+		key: 'delete',
+		action() {
+			activeFactory?.deleteSelectedNodes();
+		}
+	}}
+	use:keyboardShortcut={{
 		key: 'm',
 		action() {
 			$hideMinimap = !$hideMinimap;
+		}
+	}}
+	use:keyboardShortcut={{
+		key: 'c',
+		action() {
+			activeFactory?.commentSelectedNodes();
 		}
 	}}
 	on:pointerup={(e) => {

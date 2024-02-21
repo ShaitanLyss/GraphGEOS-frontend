@@ -10,6 +10,12 @@
 
 	import { keyboardShortcut } from '$lib/global';
 	export let shortcut: string | undefined = undefined;
+
+	$: shortcutComponents = shortcut?.split('+').map((t) => t.toLowerCase());
+	$: ctrl = shortcutComponents?.includes('ctrl');
+	$: shift = shortcutComponents?.includes('shift');
+	$: alt = shortcutComponents?.includes('alt');
+	$: key = shortcutComponents?.find((t) => !['ctrl', 'shift', 'alt'].includes(t));
 	export let icon: IconDefinition;
 	export let active = false;
 	export let tooltip = 'Missing tooltip';
@@ -58,7 +64,7 @@
 	<div class="arrow variant-filled-secondary" />
 </div>
 <button
-	use:keyboardShortcut={{ key: shortcut, action: onExec }}
+	use:keyboardShortcut={{ key, alt, ctrl, shift, action: onExec }}
 	use:popup={popupHover}
 	on:click={onExec}
 	class="btn-icon [&>*]:pointer-events-none {active

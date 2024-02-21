@@ -7,6 +7,12 @@
       "name": {
         "graph": "Donnez un nouveau nom au graphique."
       }
+    },
+    "comment": {
+      "edit": {
+        "title": "Modifier le commentaire",
+        "placeholder": "Commentaire"
+      }
     }
   },
   "new": {
@@ -149,7 +155,7 @@
         "tooltip": "Mettre en ligne le graphe"
       },
       "toggle-code-editor": {
-        "tooltip": "Ouvrir / Fermer l'éditeur de code (C)",
+        "tooltip": "Ouvrir / Fermer l'éditeur de code (Shift+C)",
         "close": "Fermer l'éditeur de code"
       },
       "layout": "Arrangement automatique (A)"
@@ -221,6 +227,9 @@
   "graph-editor": {
     "notification": {
       "title": "Éditeur de graphes"
+    },
+    "comment": {
+      "default-text": "Commentaire"
     }
   },
   "menu": {
@@ -241,6 +250,30 @@
       },
       "delete": {
         "descr": "Supprimer cette variable et les noeuds associés"
+      }
+    },
+    "node": {
+      "delete": {
+        "descr": "Supprimer les nœuds sélectionnés",
+        "label": "Supprimer"
+      },
+      "comment": {
+        "label": "Commenter",
+        "descr": "Commenter les nœuds sélectionnés"
+      },
+      "duplicate": {
+        "descr": "Dupliquer les nœuds sélectionnés",
+        "label": "Dupliquer"
+      }
+    },
+    "comment": {
+      "delete": {
+        "label": "Supprimer",
+        "description": "Supprimer ce commentaire"
+      },
+      "edit": {
+        "label": "Modifier",
+        "description": "Modifier ce commentaire"
       }
     }
   },

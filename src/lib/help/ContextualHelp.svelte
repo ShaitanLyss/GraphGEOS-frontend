@@ -10,7 +10,7 @@
 	<div>CTRL + A : Tout sélectionner</div>
 	<div>CTRL + Clic : Sélection / Mouvement groupé</div>
 	<div>B : Sélection boîte</div>
-	<div>DEL : Supprimer</div>
+	<div>C : Commenter</div>
 	<div>Shift+R : Renommer graphe</div>
 	<div>F, U, S, P : Macro blocs</div>
 	<div>V : Variables</div>

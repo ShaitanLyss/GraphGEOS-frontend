@@ -9,7 +9,8 @@
 		newMoonItemsStore,
 		type MoonMenuItem,
 		moonMenuFactoryStore,
-		moonMenuSearchBarStore
+		moonMenuSearchBarStore,
+		moonMenuOnCloseStore
 	} from './moonContextMenu';
 
 	import intersection from 'lodash.intersection';
@@ -54,6 +55,7 @@
 		$moonMenuVisibleStore = false;
 		$moonMenuDropConnectionStore();
 		$moonMenuConnDropEvent = null;
+		$moonMenuOnCloseStore();
 	}
 
 	// Setup autohide
