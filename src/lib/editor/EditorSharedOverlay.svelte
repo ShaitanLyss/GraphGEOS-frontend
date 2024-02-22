@@ -63,7 +63,7 @@
 		]);
 	}
 	let alwaysVisible = false;
-	$: colorBrightness = $modeCurrent ? '700' : '200';
+	$: colorBrightness = $modeCurrent ? '700' : '700';
 	let iconProps: ComponentProps<Fa>;
 	$: iconProps = {
 		icon: faRotateLeft,
