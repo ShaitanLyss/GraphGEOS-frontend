@@ -17,9 +17,12 @@
 <div
 	class="socket outline-4 outline outline-primary-400 border-white border-1 hover:border-4"
 	class:array={data.isArray}
+	role="button"
+	tabindex="0"
 	class:outline={data.selected}
 	title={data.type}
 	use:cssVars={socketVars}
+	on:contextmenu|stopPropagation|preventDefault
 />
 
 <style lang="scss" scoped>
