@@ -25,9 +25,10 @@
 			duration: 500,
 			timingFunction: cubicInOut,
 			needsLayout(id) {
-				console.warn(
-					"laying out a subset doesn't work, should try reaching out to the author of the plugin"
-				);
+				// if (factory.getSelectedNodesIds()?.size !== 0)
+				// 	console.warn(
+				// 		"laying out a subset doesn't work, should try reaching out to the author of the plugin"
+				// 	);
 				return !selectedNodesIds || selectedNodesIds.has(id);
 			}
 		});

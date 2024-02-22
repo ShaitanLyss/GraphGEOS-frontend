@@ -6,6 +6,7 @@
 
 <button
 	class="btn variant-filled"
+	on:dblclick|stopPropagation
 	on:pointerdown|stopPropagation={() => null}
 	on:click={data.onClick}
 >

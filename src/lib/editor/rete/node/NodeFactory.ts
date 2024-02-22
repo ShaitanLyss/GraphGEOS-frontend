@@ -5,7 +5,7 @@ import type { Schemes } from './Schemes';
 import { ControlFlowEngine, DataflowEngine } from 'rete-engine';
 import { ExecSocket } from '../socket/ExecSocket';
 import { structures } from 'rete-structures';
-import { Connection, Node } from './Node';
+import { Connection, Node, type NodeSaveData } from './Node';
 import { ClassicPreset } from 'rete';
 import { InputControl } from '$rete/control/Control';
 import { type Writable, writable, get } from 'svelte/store';
@@ -122,55 +122,56 @@ export class NodeFactory {
 
 	readonly pythonDataflowEngine: PythonDataflowEngine<Schemes> = createPythonDataflowEngine();
 
+	async loadNode(nodeSaveData: NodeSaveData): Promise<Node> {
+		const nodeClass = NodeFactory.classRegistry[nodeSaveData.type];
+		if (nodeClass) {
+			const node = new nodeClass({ ...nodeSaveData.params, factory: this });
+			node.id = nodeSaveData.id;
+			if (node.initializePromise) {
+				await node.initializePromise;
+				if (node.afterInitialize) node.afterInitialize();
+			}
+
+			node.setState({ ...node.getState(), ...nodeSaveData.state });
+			node.applyState();
+			for (const key in nodeSaveData.inputControlValues) {
+				const inputControl = node.inputs[key]?.control;
+				if (
+					inputControl instanceof ClassicPreset.InputControl ||
+					inputControl instanceof InputControl
+				) {
+					inputControl.setValue(nodeSaveData.inputControlValues[key]);
+				}
+			}
+
+			for (const key of nodeSaveData.selectedInputs) {
+				node.selectInput(key);
+			}
+
+			for (const key of nodeSaveData.selectedOutputs) {
+				node.selectOutput(key);
+			}
+
+			await this.editor.addNode(node);
+			if (nodeSaveData.position && this.area)
+				this.area.translate(nodeSaveData.id, {
+					x: nodeSaveData.position.x,
+					y: nodeSaveData.position.y
+				});
+			return node;
+		} else {
+			console.debug('Node class not found', nodeSaveData);
+			throw new Error(`Node class ${nodeSaveData.type} not found`);
+		}
+	}
+
 	async loadGraph(editorSaveData: NodeEditorSaveData) {
 		console.log('loadGraph', editorSaveData.editorName);
 		await this.editor.clear();
 		this.editor.variables.set(editorSaveData.variables);
 		this.editor.setName(editorSaveData.editorName);
-		const nodes = new Map<string, Node>();
 		for (const nodeSaveData of editorSaveData.nodes) {
-			const nodeClass = NodeFactory.classRegistry[nodeSaveData.type];
-			if (nodeClass) {
-				const node = new nodeClass({ ...nodeSaveData.params, factory: this });
-				node.id = nodeSaveData.id;
-				if (node.initializePromise) {
-					await node.initializePromise;
-					if (node.afterInitialize) node.afterInitialize();
-				}
-
-				node.setState({ ...node.getState(), ...nodeSaveData.state });
-				node.applyState();
-				for (const key in nodeSaveData.inputControlValues) {
-					const inputControl = node.inputs[key]?.control;
-					if (key == 'data-bob') console.log(inputControl);
-
-					if (
-						inputControl instanceof ClassicPreset.InputControl ||
-						inputControl instanceof InputControl
-					) {
-						inputControl.setValue(nodeSaveData.inputControlValues[key]);
-					}
-				}
-				nodes.set(nodeSaveData.id, node);
-
-				for (const key of nodeSaveData.selectedInputs) {
-					node.selectInput(key);
-				}
-
-				for (const key of nodeSaveData.selectedOutputs) {
-					node.selectOutput(key);
-				}
-
-				await this.editor.addNode(node);
-				if (nodeSaveData.position && this.area)
-					this.area.translate(nodeSaveData.id, {
-						x: nodeSaveData.position.x,
-						y: nodeSaveData.position.y
-					});
-			} else {
-				console.log('Node class not found', nodeSaveData.type);
-				throw new Error(`Node class ${nodeSaveData.type} not found`);
-			}
+			await this.loadNode(nodeSaveData);
 		}
 
 		for (const commentSaveData of editorSaveData.comments ?? []) {
@@ -199,7 +200,7 @@ export class NodeFactory {
 	private readonly controlflowEngine = createControlflowEngine();
 	public readonly selector?: AreaExtensions.Selector<SelectorEntity>;
 	public selectableNodes?: ReturnType<typeof AreaExtensions.selectableNodes>;
-	public readonly arrange: AutoArrangePlugin<Schemes>;
+	public readonly arrange?: AutoArrangePlugin<Schemes>;
 	public readonly history: HistoryPlugin<Schemes> | undefined;
 	public comment: CommentPlugin<Schemes, AreaExtra> | undefined;
 	constructor(params: {
@@ -207,7 +208,7 @@ export class NodeFactory {
 		area?: AreaPlugin<Schemes, AreaExtra>;
 		makutuClasses?: MakutuClassRepository;
 		selector?: AreaExtensions.Selector<SelectorEntity>;
-		arrange: AutoArrangePlugin<Schemes>;
+		arrange?: AutoArrangePlugin<Schemes>;
 		history?: HistoryPlugin<Schemes>;
 		modalStore?: ReturnType<typeof getModalStore>;
 		comment?: CommentPlugin<Schemes, AreaExtra>;

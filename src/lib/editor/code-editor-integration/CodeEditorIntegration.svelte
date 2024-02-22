@@ -20,13 +20,14 @@
 	} from '$utils/xml';
 	import { AutoArrangePlugin, Presets as ArrangePresets } from 'rete-auto-arrange-plugin';
 	import type { Schemes } from '$rete/node/Schemes';
-	import type { Node } from '$rete';
+	import type { Node, NodeSaveData } from '$rete';
 	import { Area, AreaExtensions, AreaPlugin, NodeView } from 'rete-area-plugin';
 	import type { AreaExtra } from '$rete/node/AreaExtra';
 	import { XmlNode } from '$rete/node/XML/XmlNode';
 	import type { GeosSchema } from '$lib/geos';
 	import { get } from 'svelte/store';
 	import type { XmlAttributeDefinition } from '$rete/node/XML/types';
+	import { MakeArrayNode } from '$rete/node/data/MakeArrayNode';
 
 	export let editorContext: EditorContext;
 	let codeEditorPromise: Promise<ICodeEditor>;
@@ -108,17 +109,19 @@
 
 		async function xmlToEditor(xml: ParsedXmlNodes, schema: GeosSchema, parent?: Node) {
 			for (const xmlNode of xml) {
-				const name = getElementFromParsedXml(xmlNode);
-				const complexType = schema.complexTypes.get(name);
+				const xmlTag = getElementFromParsedXml(xmlNode);
+
+				const complexType = schema.complexTypes.get(xmlTag ?? '');
 				if (!complexType) {
 					console.warn('Complex type not found');
 					continue;
 				}
+				if (!xmlTag) throw new ErrorWNotif('Missing xml tag in parsed xml node');
 				const hasNameAttribute = complexType.attributes.has('name');
 				const xmlAttributes: Record<string, unknown> = getXmlAttributes(
 					xmlNode as Record<string, ParsedXmlNodes>
 				);
-
+				const arrayAttrs = new Map<string, string[]>();
 				for (const [k, v] of Object.entries(xmlAttributes as Record<string, string>)) {
 					const attrType = complexType.attributes.get(k);
 
@@ -138,13 +141,25 @@
 
 					const isArray = /^\s*?\{\s*?/.test(v);
 					if (!isArray) continue;
-					const candidate = JSON.parse(v.replaceAll('{', '[').replaceAll('}', ']'));
+					const candidate = JSON.parse(
+						v
+							.replaceAll('{', '[')
+							.replaceAll('}', ']')
+							.replaceAll(/[a-zA-Z0-9.\-_/]+/g, (t) => {
+								console.log('t', t);
+								// if (t === '') return '';
+								// if (t === ',') return ',';
+								return `"${t}"`;
+							})
+					);
 					if (candidate === undefined) continue;
 
 					xmlAttributes[k] = candidate;
+					arrayAttrs.set(attrType.name, candidate);
 				}
+
 				const node = await tmp_factory.addNode(XmlNode, {
-					label: name,
+					label: xmlTag,
 					initialValues: xmlAttributes,
 					xmlConfig: {
 						noName: !hasNameAttribute,
@@ -153,11 +168,11 @@
 							if (!childName) return childType;
 							return childName;
 						}),
-						xmlTag: name,
+						xmlTag: xmlTag,
 						outData: {
-							name: name,
-							type: `xmlElement:${name}`,
-							socketLabel: name
+							name: xmlTag,
+							type: `xmlElement:${xmlTag}`,
+							socketLabel: xmlTag
 						},
 
 						xmlProperties: wu(complexType.attributes.values())
@@ -173,12 +188,38 @@
 							.toArray()
 					}
 				});
+
+				for (const [k, a] of arrayAttrs.entries()) {
+					const initialValues: Record<string, unknown> = {};
+					for (const [i, t] of a.entries()) {
+						const attrType = complexType.attributes.get(k);
+						if (!attrType) throw new ErrorWNotif("Couldn't find simple type for array attribute");
+						console.log('attrType', attrType);
+						initialValues[`data-${i}`] =
+							attrType.type.startsWith('real') &&
+							attrType.type.endsWith('array2d') &&
+							t.length === 3
+								? {
+										x: t[0],
+										y: t[1],
+										z: t[2]
+									}
+								: t;
+					}
+
+					const makeArrayNode = await tmp_factory.addNode(MakeArrayNode, {
+						initialValues,
+						numPins: a.length
+					});
+					const conn = await tmp_editor.addNewConnection(makeArrayNode, 'array', node, k);
+				}
+
 				if (parent) {
 					console.log('node', node, 'parent', parent);
 					const conn = await tmp_editor.addNewConnection(node, 'value', parent, 'children');
 					console.log('temp conn', conn);
 				}
-				await xmlToEditor((xmlNode as Record<string, ParsedXmlNodes>)[name], schema, node);
+				await xmlToEditor((xmlNode as Record<string, ParsedXmlNodes>)[xmlTag], schema, node);
 			}
 		}
 		console.log('Download: full_xml', full_xml);
@@ -191,11 +232,15 @@
 				leftBound = Math.min(leftBound, nodeView.position.x - nodeView.element.offsetWidth * 1.4);
 			});
 		}
+		const nodesSaveData: NodeSaveData[] = [];
+		for (const node of tmp_editor.getNodes()) {
+			nodesSaveData.push(node.toJSON());
+		}
 
-		for (const [i, node] of tmp_editor.getNodes().entries()) {
-			await editor.addNode(node);
+		for (const [i, nodeSaveData] of nodesSaveData.entries()) {
+			console.log(nodeSaveData);
+			const node = await factory.loadNode(nodeSaveData);
 			const tmp_nodeView = tmp_area.nodeViews.get(node.id) as NodeView;
-			node.setFactory(factory);
 			const nodeView = factory.getArea()?.nodeViews.get(node.id);
 			factory.selectableNodes?.select(node.id, i !== 0);
 			if (nodeView)

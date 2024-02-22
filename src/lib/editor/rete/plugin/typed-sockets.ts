@@ -27,6 +27,8 @@ export type SocketType =
 	| 'solver'
 	| 'xmlProblem'
 	| 'path'
+	| 'groupNameRef'
+	| 'groupNameRef_array'
 	| XMLAttrType
 	| XMLElementType;
 export function isConnectionInvalid(outputSocket: Socket, inputSocket: Socket) {

@@ -19,24 +19,22 @@ export class MakeArrayNode extends AddPinNode {
 	initialValues: Record<string, unknown>;
 	numConnections = 0;
 
-	constructor({
-		factory,
-		initialValues = {}
-	}: {
+	constructor(params: {
 		factory: NodeFactory;
-		initialValues?: Record<string, unknown>;
+		initialValues: Record<string, unknown>;
+		numPins?: number;
 	}) {
 		// super('Make Array', { factory, height: 160, width: 150 });
+
 		super({
 			label: 'Make Array',
-			factory,
-			height: 160,
+			factory: params.factory,
+			height: 130,
 			width: 150,
-			params: { initialValues },
-			numPins: 1
+			params,
+			numPins: params.numPins
 		});
-
-		this.initialValues = initialValues;
+		this.initialValues = params.initialValues;
 
 		this.addOutData({ name: 'array', isArray: true, type: this.state.type });
 		this.loadInitialValues();
@@ -49,16 +47,14 @@ export class MakeArrayNode extends AddPinNode {
 			if (!(context.data instanceof Connection)) return context;
 
 			const conn = context.data;
-
 			if (conn.target !== this.id && conn.source !== this.id) return context;
-
 			if (context.type === 'connectionremoved') {
 				this.numConnections--;
-				if (this.numConnections === 0) this.changeType('any');
+				// if (this.numConnections === 0) this.changeType('any');
 			} else if (context.type === 'connectioncreated') {
 				this.numConnections++;
 
-				if (this.state.type !== 'any') return context;
+				// if (this.state.type !== 'any') return context;
 
 				if (conn.target === this.id) {
 					const sourceNode = this.getEditor().getNode(conn.source);
@@ -76,17 +72,20 @@ export class MakeArrayNode extends AddPinNode {
 	}
 
 	loadInitialValues() {
+		console.log('inputs', this.inputs);
+		console.log('initialValues', this.initialValues);
 		for (const key in this.inputs) {
 			const input = this.inputs[key];
 			if (input) {
 				const control = input.control as InputControl<unknown>;
-				if (control && key in this.initialValues) control.setValue(this.initialValues[key]);
+				if (control && this.initialValues && key in this.initialValues)
+					control.setValue(this.initialValues[key]);
 			}
 		}
 	}
 	changeType(to: SocketType) {
-		if (this.state.type === to) return;
-
+		// if (this.state.type === to) return;
+		console.log('Changing type to ' + to);
 		this.state.type = to;
 		this.width = this.state.type === 'vector' ? 320 : 150;
 
@@ -104,7 +103,7 @@ export class MakeArrayNode extends AddPinNode {
 
 	changeInputType(input: ClassicPreset.Input<Socket>, to: SocketType) {
 		input.socket.type = to || 'any';
-		const controlType = assignControl(to);
+		const controlType = assignControl(to, 'text');
 		input.removeControl();
 		if (controlType)
 			input.addControl(
@@ -140,7 +139,7 @@ export class MakeArrayNode extends AddPinNode {
 			type: this.state.type || 'any',
 			socketLabel: `data-${index}`
 		});
-		this.height += 43;
+		this.height += 57;
 		this.changeInputType(this.inputs[`data-${index}`] as Input<Socket>, this.state.type);
 		this.loadInitialValues();
 
@@ -156,6 +155,6 @@ export class MakeArrayNode extends AddPinNode {
 	override applyState(): void {
 		super.applyState();
 		this.width = this.state.type === 'vector' ? 280 : 150;
-		this.changeInputType(this.inputs['data-0'] as Input<Socket>, this.state.type);
+		this.changeType(this.state.type);
 	}
 }

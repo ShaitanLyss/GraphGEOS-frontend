@@ -18,7 +18,7 @@ import {
 	type InputControlTypes,
 	type InputControlValueType
 } from '../control/Control';
-import type { NodeFactory } from './NodeFactory';
+import { NodeFactory } from './NodeFactory';
 import type { ComponentSupportInterface } from '$rete/components/ComponentSupportInterface';
 import type { BaseComponent } from '$rete/components/BaseComponent';
 import { PythonNodeComponent } from '$rete/components/Python_NC';
@@ -139,6 +139,9 @@ export class Node<
 		this.socketSelectionComponent = this.addComponentByClass(R_SocketSelection_NC);
 		this.state = {};
 		Node.nodeCounts++;
+		if (params.params && 'factory' in params.params) {
+			delete params.params['factory'];
+		}
 		this.params = params.params || {};
 		this.factory = factory;
 		if (factory === undefined) {
@@ -323,7 +326,7 @@ export class Node<
 			if (control.options) {
 				const debouncedOnChange = control.options.debouncedOnChange;
 				control.options.debouncedOnChange = (value: unknown) => {
-					if (debouncedOnChange) debouncedOnChange(value);
+					if (debouncedOnChange) debouncedOnChange(value as N);
 					this.getDataflowEngine().reset(this.id);
 				};
 			}

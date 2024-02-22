@@ -6,7 +6,7 @@
 	import { type ClassicScheme, Ref, type SvelteArea2D } from 'rete-svelte-plugin';
 	import { MacroNode } from '$rete/node/MacroNode';
 	import { faCubes } from '@fortawesome/free-solid-svg-icons';
-	import { XmlNode, type Node, type NodeEditorSaveData } from '$rete';
+	import { XmlNode, type Node, type NodeEditorSaveData, Input } from '$rete';
 	import Fa from 'svelte-fa';
 	import { EditMacroNodeChannel } from '$lib/broadcast-channels';
 	import { GetGraphStore } from '$houdini';
@@ -58,8 +58,8 @@
 
 	$: width = Number.isFinite(data.width) ? `${data.width}px` : '';
 	$: height = Number.isFinite(data.height) ? `${data.height}px` : '';
-
 	$: inputs = sortByIndex(Object.entries(data.inputs));
+
 	$: controls = sortByIndex(Object.entries(data.controls));
 	$: outputs = sortByIndex(Object.entries(data.outputs));
 	function any<T>(arg: T): unknown {
@@ -333,7 +333,11 @@
 			<div
 				class="rete-input text-md items-center flex"
 				data-testid={'input-' + key}
-				style={!input.socket.isArray ? 'height: 65px;' : ''}
+				style={input.control && !input.control.options?.label
+					? 'height: 55px'
+					: !input.socket.isArray
+						? 'height: 65px;'
+						: ''}
 			>
 				<Ref
 					class="input-socket my-auto"
