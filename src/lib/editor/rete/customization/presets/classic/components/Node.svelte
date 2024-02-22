@@ -363,7 +363,7 @@
 				{/if}
 				{#if input.control && input.showControl}
 					<Ref
-						class="h-full flex items-center input-control"
+						class="h-full !flex items-center input-control"
 						data-testid="input-control"
 						init={(element) =>
 							emit({

@@ -159,7 +159,13 @@
         "tooltip": "Ouvrir / Fermer l'éditeur de code (Shift+C)",
         "close": "Fermer l'éditeur de code"
       },
-      "layout": "Arrangement automatique (A)"
+      "layout": "Arrangement automatique (A)",
+      "redo": {
+        "tooltip": "Refaire"
+      },
+      "undo": {
+        "tooltip": "Annuler "
+      }
     },
     "notification": {
       "title": "Éditeur"

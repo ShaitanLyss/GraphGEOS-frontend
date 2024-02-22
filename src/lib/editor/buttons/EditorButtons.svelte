@@ -29,7 +29,7 @@
 <div
 	use:pointerEventsOnlyOnOverflow
 	class="flex
- w-full justify-between p-2 overflow-x-auto gap-4"
+ w-full justify-between overflow-x-auto gap-4"
 >
 	<div class="flex gap-4">
 		<SaveGraphButton />

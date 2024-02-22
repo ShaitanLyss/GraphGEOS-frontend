@@ -7,5 +7,5 @@ export {
 	EditorSharedOverlay__SvelteComponent_ as EditorSharedOverlay,
 	Editor__SvelteComponent_ as Editor
 };
-
+export * from './connection-path';
 export * from './types';

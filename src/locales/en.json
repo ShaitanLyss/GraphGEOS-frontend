@@ -163,7 +163,13 @@
         "tooltip": "Toggle code editor (Shift+C)",
         "close": "Close code editor"
       },
-      "layout": "Auto layout (A)"
+      "layout": "Auto layout (A)",
+      "undo": {
+        "tooltip": "Undo"
+      },
+      "redo": {
+        "tooltip": "Redo"
+      }
     },
     "notification": {
       "title": "Editor"

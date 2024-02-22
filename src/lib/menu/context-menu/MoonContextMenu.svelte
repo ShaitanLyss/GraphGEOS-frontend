@@ -186,7 +186,7 @@
 						? item.getInTypes().includes('*')
 						: item.getOutTypes().at(0) === '*'
 				) {
-					return true;
+					return socket.isArray === false;
 				}
 
 				const res = intersection(

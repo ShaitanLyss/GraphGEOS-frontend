@@ -11,7 +11,8 @@ import { NodeFactory } from './node/NodeFactory';
 import type { MakutuClassRepository } from '$lib/backend-interaction/types';
 import type { GeosDataContext } from '$lib/geos';
 import type { NewGeosContext } from '$lib/global';
-import { HistoryPlugin, Presets as HistoryPresets, type HistoryActions } from 'rete-history-plugin';
+import { Presets as HistoryPresets, type HistoryActions } from 'rete-history-plugin';
+import { HistoryPlugin } from '$rete/plugin/history';
 import { CommentPlugin, CommentExtensions } from '$rete/plugin/CommentPlugin';
 import type { getModalStore } from '@skeletonlabs/skeleton';
 
@@ -47,7 +48,7 @@ export async function setupEditor(params: {
 	const selector = AreaExtensions.selector();
 	const accumulating = AreaExtensions.accumulateOnCtrl();
 
-	const history = new HistoryPlugin<Schemes, HistoryActions<Schemes>>();
+	const history = new HistoryPlugin<Schemes>();
 	history.addPreset(HistoryPresets.classic.setup());
 	area.use(history);
 

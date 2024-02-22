@@ -66,8 +66,9 @@ export function assignControl(
 		number: 'number',
 		boolean: 'checkbox',
 		vector: 'vector',
-		any: 'text'
+		any: 'text',
+		groupNameRef: undefined
 	};
 
-	return controlMap[socketType] ?? default_;
+	return socketType in controlMap ? controlMap[socketType] : default_;
 }

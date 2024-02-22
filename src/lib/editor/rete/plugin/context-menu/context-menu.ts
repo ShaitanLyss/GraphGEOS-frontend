@@ -246,6 +246,22 @@ export class ContextMenuSetup extends Setup {
 			]);
 			newMoonItems.push(
 				createNodeMenuItem({
+					label: 'Get Name',
+					addNode: getNameNodeItem.action,
+					inTypes: complexTypesWithName,
+					outTypes: ['groupNameRef'],
+					description: 'Get the name of the GEOS element',
+					tags: ['name', 'get']
+				}),
+				createNodeMenuItem({
+					label: 'Make Array',
+					addNode: makeArrayNodeItem.action,
+					inTypes: ['*'],
+					outTypes: ['array'],
+					description: 'Make an array from the input',
+					tags: ['array', 'make']
+				}),
+				createNodeMenuItem({
 					label: 'Download',
 					addNode: downloadSchemaItem.action,
 					inTypes: [...geosContextV2.geosSchema.complexTypes.keys()],

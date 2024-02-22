@@ -16,7 +16,7 @@ export class GetNameNode extends Node<{ xml: Socket }, { name: Socket }> {
 			name: 'name',
 			displayName: 'Name',
 			socketLabel: 'Name',
-			type: 'string'
+			type: 'groupNameRef'
 		});
 	}
 

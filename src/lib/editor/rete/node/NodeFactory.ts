@@ -17,10 +17,13 @@ import { ErrorWNotif } from '$lib/global';
 import type { AutoArrangePlugin } from 'rete-auto-arrange-plugin';
 import wu from 'wu';
 import type History from 'rete-history-plugin/_types/history';
-import type { HistoryPlugin } from 'rete-history-plugin';
+
 import type { CommentPlugin } from '$rete/plugin/CommentPlugin';
 import { _ } from '$lib/global';
-import type { getModalStore } from '@skeletonlabs/skeleton';
+import { localStorageStore, type getModalStore } from '@skeletonlabs/skeleton';
+
+import { defaultConnectionPath, type ConnectionPathType } from '$lib/editor';
+import type { HistoryPlugin } from '$rete/plugin/history';
 
 function createDataflowEngine() {
 	return new DataflowEngine<Schemes>(({ inputs, outputs }) => {
@@ -71,6 +74,10 @@ function createControlflowEngine() {
 type WithFactory<T extends Record<string, unknown>> = T & { factory: NodeFactory };
 type WithoutFactory<T> = Omit<T, 'factory'>;
 export class NodeFactory {
+	public readonly connectionPathType: Writable<ConnectionPathType> = localStorageStore(
+		'connectionPathType',
+		defaultConnectionPath
+	);
 	public readonly modalStore?: ReturnType<typeof getModalStore>;
 
 	private static classRegistry: Record<string, typeof Node> = {};

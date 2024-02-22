@@ -141,6 +141,9 @@
 
 					const isArray = /^\s*?\{\s*?/.test(v);
 					if (!isArray) continue;
+
+					type XMLArray = string[];
+					type XMLNestedArrays = XMLArray[] | XMLArray;
 					const candidate = JSON.parse(
 						v
 							.replaceAll('{', '[')
@@ -151,11 +154,38 @@
 								// if (t === ',') return ',';
 								return `"${t}"`;
 							})
-					);
-					if (candidate === undefined) continue;
+					) as XMLNestedArrays | undefined;
 
-					xmlAttributes[k] = candidate;
-					arrayAttrs.set(attrType.name, candidate);
+					if (candidate === undefined) continue;
+					if (attrType.type.startsWith('real') && attrType.type.endsWith('array2d')) {
+						console.log('candidate', candidate);
+						xmlAttributes[k] = candidate.map((t) => {
+							if (typeof t === 'string')
+								throw new ErrorWNotif('Expected array for type real array2d');
+							return { x: t[0], y: t[1], z: t[2] };
+						});
+						arrayAttrs.set(attrType.name, xmlAttributes[k] as string[]);
+						continue;
+					}
+					// put nested arrays back to xml notation
+					// maybe later all kinds of nested arrays will be supported
+					// and this will become obsolete
+					function arraysToXmlNotation(a: string[] | string): string {
+						if (typeof a === 'string') return a; // removes " "
+						return (
+							'{ ' +
+							a
+								.map((t) => {
+									if (Array.isArray(t)) return arraysToXmlNotation(t);
+									return t; // removes " "
+								})
+								.join(', ') +
+							' }'
+						);
+					}
+					const array1d = candidate.map(arraysToXmlNotation);
+					xmlAttributes[k] = array1d;
+					arrayAttrs.set(attrType.name, array1d);
 				}
 
 				const node = await tmp_factory.addNode(XmlNode, {
@@ -195,16 +225,7 @@
 						const attrType = complexType.attributes.get(k);
 						if (!attrType) throw new ErrorWNotif("Couldn't find simple type for array attribute");
 						console.log('attrType', attrType);
-						initialValues[`data-${i}`] =
-							attrType.type.startsWith('real') &&
-							attrType.type.endsWith('array2d') &&
-							t.length === 3
-								? {
-										x: t[0],
-										y: t[1],
-										z: t[2]
-									}
-								: t;
+						initialValues[`data-${i}`] = t;
 					}
 
 					const makeArrayNode = await tmp_factory.addNode(MakeArrayNode, {

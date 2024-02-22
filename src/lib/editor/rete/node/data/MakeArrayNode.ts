@@ -29,10 +29,10 @@ export class MakeArrayNode extends AddPinNode {
 		super({
 			label: 'Make Array',
 			factory: params.factory,
-			height: 130,
+			height: 135,
 			width: 150,
 			params,
-			numPins: params.numPins
+			numPins: params.numPins ?? 1
 		});
 		this.initialValues = params.initialValues;
 

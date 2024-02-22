@@ -184,7 +184,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		} else if (xmlType === 'string') {
 			type = 'string';
 		} else {
-			`xmlAttr:${type}`;
+			type = xmlType;
 		}
 		isArray = (xmlSubType && xmlSubType.startsWith('array')) || isArray;
 
