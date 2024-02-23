@@ -395,6 +395,7 @@ export class NodeFactory {
 					break;
 				case 'node':
 					const node = editor.getNode(id);
+					if (!node) continue;
 					for (const conn of node.getConnections()) {
 						if (editor.getConnection(conn.id)) await editor.removeConnection(conn.id);
 					}
@@ -407,6 +408,7 @@ export class NodeFactory {
 					console.warn(`Delete: Unknown label ${label}`);
 			}
 		}
+		this.selector.unselectAll();
 		// this.history?.separate();
 	}
 
