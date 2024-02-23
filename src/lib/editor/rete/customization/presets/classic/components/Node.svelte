@@ -122,6 +122,10 @@
 	let hidePopupTimeout: NodeJS.Timeout;
 	let selectedNodes: Node[] = [];
 	function openContextMenu(e: MouseEvent) {
+		if (!factory.accumulating?.active()) {
+			factory.selector?.unselectAll();
+			factory.selectableNodes?.select(data.id, false);
+		}
 		spawnMoonMenu({
 			searchbar: false,
 			pos: { x: e.clientX, y: e.clientY },
