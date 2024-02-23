@@ -6,7 +6,7 @@ import { $socketcolor } from './trash/vars';
 export const colorMap: { [key in SocketType]?: string } = {
 	string: '#d88cbb',
 	path: '#8B78E6',
-	integer: 'hsl(151.07deg 48.7% 45.1%)',
+	integer: 'hsl(151.07deg 48.7% 35.1%)',
 	pythonObject: '#616796',
 	pythonProperty: '#949cd3',
 	number: '#d8b38c',
@@ -19,7 +19,8 @@ export const colorMap: { [key in SocketType]?: string } = {
 	numericalMethod: '#d8b78c',
 	geometry: '#d8d08c',
 	mesh: '#ad8c71',
-	vector: '#efec78'
+	vector: 'hsl(58 87% 44% / 1)',
+	groupNameRef: '#5165b2'
 };
 
 export function assignColor(s: Socket): string {
