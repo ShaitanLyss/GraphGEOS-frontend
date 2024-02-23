@@ -286,6 +286,9 @@
         "label": "Edit",
         "description": "Edit this comment"
       }
+    },
+    "delete-selected": {
+      "descr": "Delete selected elements"
     }
   },
   "remote-explorer": {

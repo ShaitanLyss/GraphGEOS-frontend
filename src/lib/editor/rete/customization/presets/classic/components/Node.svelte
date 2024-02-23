@@ -142,7 +142,7 @@
 					label: $_('menu.node.delete.label'),
 					description: $_('menu.node.delete.descr'),
 					executeAction: async () => {
-						await factory.deleteSelectedNodes();
+						await factory.deleteSelectedElements();
 					}
 				})
 			],

@@ -1,9 +1,15 @@
 <script lang="ts">
-	import type { Position } from '../../../types';
-	import type { ClassicScheme } from '../types';
+	import { ErrorWNotif } from '$lib/global';
+	import { createActionMenuItem } from '$lib/menu';
+	import { spawnMoonMenu } from '$lib/menu/context-menu/moonContextMenu';
+	import type { NodeFactory } from '$rete';
+	import type { Schemes } from '$rete/node/Schemes';
+	import type { Position } from 'rete-render-utils/_types/types';
+	import { _ } from '$lib/global';
 
 	// svelte-ignore unused-export-let
-	// export let data: ClassicScheme['Connection'] & { isLoop?: boolean };
+	export let data: Schemes['Connection'] & { isLoop?: boolean };
+
 	// svelte-ignore unused-export-let
 	export let start: Position;
 	// svelte-ignore unused-export-let
@@ -22,10 +28,55 @@
 	export let id: string;
 	// svelte-ignore unused-export-let
 	export let path: string;
+
+	export let selected: boolean | undefined;
+
+	export let factory: NodeFactory | undefined;
+
+	function onClick() {
+		if (!factory) throw new ErrorWNotif('No factory');
+		factory.selectConnection(id);
+	}
+
+	function openContextMenu(event: MouseEvent) {
+		spawnMoonMenu({
+			pos: { x: event.clientX, y: event.clientY },
+			items: [
+				createActionMenuItem({
+					label: $_('button.delete'),
+					description: $_('menu.delete-selected.descr'),
+					executeAction: () => {
+						if (!factory) throw new ErrorWNotif('No factory');
+						factory.deleteSelectedElements();
+					}
+				})
+			]
+		});
+	}
 </script>
 
-<svg data-testid="connection">
-	<path d={path} />
+<svg
+	data-testid="connection"
+	class="group hover:cursor-pointer"
+	role="button"
+	tabindex="-1"
+	on:pointerdown|stopPropagation
+	on:click|stopPropagation={() => onClick()}
+	on:keypress={(e) => {
+		if (e.key === 'Enter') {
+			e.stopPropagation();
+			onClick();
+		}
+	}}
+	on:contextmenu|preventDefault|stopPropagation={openContextMenu}
+>
+	<path class="stroke-transparent pointer-events-auto" d={path} fill="none" stroke-width={'20px'} />
+	<path
+		class="visible-path pointers-events-none"
+		class:group-hover:brightness-150={!selected}
+		d={path}
+		class:!stroke-primary-400={selected}
+	/>
 </svg>
 
 <style>
@@ -38,10 +89,10 @@
 		height: 9999px;
 	}
 
-	svg path {
+	svg path.visible-path {
 		fill: none;
 		stroke-width: 5px;
 		stroke: steelblue;
-		pointer-events: auto;
+		pointer-events: none;
 	}
 </style>

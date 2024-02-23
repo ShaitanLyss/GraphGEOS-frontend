@@ -38,8 +38,6 @@
 		canRedo = factory.history.canRedo;
 		canUndo = factory.history.canUndo;
 	}
-	$: console.log('canRedo', $canRedo);
-	$: console.log('canUndo', $canUndo);
 
 	$: if (!connectionPathTypes.includes($connectionPathType)) {
 		$connectionPathType = defaultConnectionPath;

@@ -182,6 +182,7 @@ export class CommentPlugin<
 			comment.nested.textContent = get(_)('graph-editor.comment.default-text');
 			comment.text = '';
 		}
+		comment.element.classList.add('pointer-events-none	');
 		comment.nested.classList.add('!rounded-container-token', 'truncate', 'select-none');
 		comment.nested.title = comment.text;
 		comment.element.addEventListener('dblclick', () => {

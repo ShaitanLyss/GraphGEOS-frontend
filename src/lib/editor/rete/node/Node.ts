@@ -416,7 +416,31 @@ export class Node<
 	}
 }
 
+export type ConnectionSaveData = {
+	id: string;
+	source: string;
+	target: string;
+	sourceOutput: string;
+	targetInput: string;
+};
 export class Connection<
 	A extends Node = Node,
 	B extends Node = Node
-> extends ClassicPreset.Connection<A, B> {}
+> extends ClassicPreset.Connection<A, B> {
+	// constructor(source: A, sourceOutput: keyof A['outputs'], target: B, targetInput: keyof B['inputs']) {
+	// 	super(source, sourceOutput, target, targetInput);
+
+	// }
+	selected?: boolean;
+	factory?: NodeFactory;
+
+	toJSON(): ConnectionSaveData {
+		return {
+			id: this.id,
+			source: this.source,
+			target: this.target,
+			sourceOutput: this.sourceOutput as string,
+			targetInput: this.targetInput as string
+		};
+	}
+}

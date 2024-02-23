@@ -60,7 +60,8 @@ export async function setupEditor(params: {
 		selector,
 		arrange,
 		history,
-		modalStore
+		modalStore,
+		accumulating
 	});
 
 	// Setup comments

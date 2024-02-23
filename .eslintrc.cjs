@@ -32,6 +32,7 @@ module.exports = {
 		'@typescript-eslint/no-empty-function': 'off',
 		'no-case-declarations': 'off',
 		'svelte/no-inner-declarations': 'off',
+		'no-constant-condition': 'off',
 	},
 	overrides: [
 		{

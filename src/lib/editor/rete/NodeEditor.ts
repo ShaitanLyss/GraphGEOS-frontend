@@ -1,6 +1,6 @@
-import { NodeEditor as BaseNodeEditor } from 'rete';
+import { NodeEditor as BaseNodeEditor, type ConnectionBase } from 'rete';
 import type { Schemes } from './node/Schemes';
-import { Connection, Node, type NodeSaveData } from './node/Node';
+import { Connection, Node, type ConnectionSaveData, type NodeSaveData } from './node/Node';
 import { newLocalId } from '$utils';
 import type { Variable } from '../overlay/variables-list';
 import { get, writable, type Writable } from 'svelte/store';
@@ -15,7 +15,7 @@ export type CommentSaveData = {
 
 export type NodeEditorSaveData = {
 	nodes: NodeSaveData[];
-	connections: Connection<Node, Node>[];
+	connections: ConnectionSaveData[];
 	editorName: string;
 	variables: Record<string, Variable>;
 	comments?: CommentSaveData[];
@@ -50,6 +50,11 @@ export class NodeEditor extends BaseNodeEditor<Schemes> {
 		return await this.addConnection(new Connection(source, sourceOutput, target, targetInput));
 	}
 
+	async addConnection(data: Connection): Promise<boolean> {
+		data.factory = this.factory;
+		return await super.addConnection(data);
+	}
+
 	addOnChangeNameListener(listener: (name: string) => void) {
 		this.onChangeNameListeners.push(listener);
 	}
@@ -63,7 +68,7 @@ export class NodeEditor extends BaseNodeEditor<Schemes> {
 
 		return {
 			nodes: this.getNodes().map((node) => node.toJSON()),
-			connections: this.getConnections(),
+			connections: this.getConnections().map((conn) => conn.toJSON()),
 			editorName: this.name,
 			variables,
 			comments: this.factory?.comment

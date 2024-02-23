@@ -297,7 +297,7 @@
 	use:keyboardShortcut={{
 		key: 'delete',
 		action() {
-			activeFactory?.deleteSelectedNodes();
+			activeFactory?.deleteSelectedElements();
 		}
 	}}
 	use:keyboardShortcut={{

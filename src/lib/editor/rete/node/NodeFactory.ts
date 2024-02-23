@@ -193,7 +193,15 @@ export class NodeFactory {
 		}
 
 		editorSaveData.connections.forEach(async (connectionSaveData) => {
-			await this.editor.addConnection(connectionSaveData);
+			const conn = new Connection(
+				this.editor.getNode(connectionSaveData.source),
+				connectionSaveData.sourceOutput,
+				this.editor.getNode(connectionSaveData.target),
+				connectionSaveData.targetInput
+			);
+			conn.id = connectionSaveData.id;
+			conn.factory = this;
+			await this.editor.addConnection(conn);
 		});
 		setTimeout(() => {
 			if (this.area) AreaExtensions.zoomAt(this.area, this.editor.getNodes());
@@ -206,6 +214,7 @@ export class NodeFactory {
 	public readonly dataflowEngine = createDataflowEngine();
 	private readonly controlflowEngine = createControlflowEngine();
 	public readonly selector?: AreaExtensions.Selector<SelectorEntity>;
+	public readonly accumulating?: ReturnType<typeof AreaExtensions.accumulateOnCtrl>;
 	public selectableNodes?: ReturnType<typeof AreaExtensions.selectableNodes>;
 	public readonly arrange?: AutoArrangePlugin<Schemes>;
 	public readonly history: HistoryPlugin<Schemes> | undefined;
@@ -219,10 +228,12 @@ export class NodeFactory {
 		history?: HistoryPlugin<Schemes>;
 		modalStore?: ReturnType<typeof getModalStore>;
 		comment?: CommentPlugin<Schemes, AreaExtra>;
+		accumulating?: ReturnType<typeof AreaExtensions.accumulateOnCtrl>;
 	}) {
 		const { editor, area, makutuClasses, selector, arrange } = params;
 		this.modalStore = params.modalStore;
 		this.comment = params.comment;
+		this.accumulating = params.accumulating;
 		this.history = params.history;
 		this.selector = selector;
 		this.area = area;
@@ -300,7 +311,32 @@ export class NodeFactory {
 		);
 	}
 
+	selectConnection(id: string) {
+		// const factory = this;
+		const selector = this.selector;
+		if (!selector) throw new ErrorWNotif('No selector');
+		const connection = this.getEditor().getConnection(id);
+		console.log('selecting', connection);
+		selector.add(
+			{
+				id,
+				label: 'connection',
+				translate() {},
+				unselect: () => {
+					connection.selected = false;
+					this?.getArea()?.update('connection', connection.id);
+				}
+			},
+			this.accumulating?.active() ?? false
+		);
+
+		connection.selected = true;
+		this?.getArea()?.update('connection', connection.id);
+	}
+
 	selectAll() {
+		const selector = this.selector;
+		if (!selector) throw new ErrorWNotif('Missing selector');
 		if (!this.selectableNodes) {
 			console.warn('No selector');
 			return;
@@ -308,9 +344,16 @@ export class NodeFactory {
 		this.editor.getNodes().forEach((node) => {
 			this.selectableNodes?.select(node.id, true);
 		});
+		this.editor.getConnections().forEach((conn) => {
+			this.selectConnection(conn.id);
+		});
+		this.comment?.comments.forEach((comment) => {
+			this.comment?.select(comment.id);
+		});
 	}
 
-	async deleteSelectedNodes(): Promise<void> {
+	/** Delete all selected elements */
+	async deleteSelectedElements(): Promise<void> {
 		const selector = this.selector;
 		const editor = this.getEditor();
 		const selectedNodes = this.getSelectedNodes() || [];
@@ -318,16 +361,53 @@ export class NodeFactory {
 			console.warn('No selected nodes to delete');
 			return;
 		}
-		console.log('to delete', selectedNodes);
-		for (const selectedNode of selectedNodes) {
-			const node = editor.getNode(selectedNode.id);
-			if (!node) continue;
-			console.log('connections', node.getConnections());
-			for (const conn of node.getConnections()) {
-				if (editor.getConnection(conn.id)) await editor.removeConnection(conn.id);
+		if (!selector) throw new ErrorWNotif('Missing selector');
+		const allComments = wu(selector.entities.values()).every(({ label }) => label === 'comment');
+		for (const { id, label } of selector.entities.values()) {
+			switch (label) {
+				case 'comment':
+					const comment = this.comment?.comments.get(id);
+					if (!comment) throw new ErrorWNotif('Comment not found');
+					const commentText = comment.text;
+					const links = comment.links;
+					const commentId = comment.id;
+					const redo = () => {
+						this.comment?.delete(id);
+					};
+					if (allComments)
+						this.history?.add({
+							redo,
+							undo: () => {
+								this.comment?.addFrame(commentText, links, { id: commentId });
+							}
+						});
+					redo();
+					// this.comment?.delete(id);
+					break;
 			}
-			await editor.removeNode(node.id);
 		}
+		// this.history?.separate();
+
+		for (const { id, label } of selector.entities.values()) {
+			switch (label) {
+				case 'connection':
+					if (editor.getConnection(id)) await editor.removeConnection(id);
+					break;
+				case 'node':
+					const node = editor.getNode(id);
+					for (const conn of node.getConnections()) {
+						if (editor.getConnection(conn.id)) await editor.removeConnection(conn.id);
+					}
+					await editor.removeNode(id);
+					break;
+				// case 'comment':
+				// 	this.comment?.delete(id);
+				// 	break;
+				default:
+					console.warn(`Delete: Unknown label ${label}`);
+			}
+		}
+		// this.history?.separate();
 	}
 
 	enable() {

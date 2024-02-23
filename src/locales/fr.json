@@ -40,7 +40,7 @@
     "rename": "Renommer",
     "login": "Se connecter",
     "logout": "Se déconnecter",
-    "delete": "supprimer"
+    "delete": "Supprimer"
   },
   "form": {
     "input": {
@@ -282,6 +282,9 @@
         "label": "Modifier",
         "description": "Modifier ce commentaire"
       }
+    },
+    "delete-selected": {
+      "descr": "Supprimer les éléments sélectionnés"
     }
   },
   "remote-explorer": {
