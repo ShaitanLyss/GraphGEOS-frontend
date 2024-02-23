@@ -283,7 +283,7 @@
 			</div>
 		{/if}
 	</div>
-	<div class="space-y-0.5 {isVariable ? 'absolute top-0 right-0' : ''}">
+	<div style="top:2px;" class="space-y-0.5 {isVariable ? 'absolute right-0' : ''}">
 		<!-- Outputs -->
 		{#each outputs as [key, output]}
 			<div class="output" data-testid={'output-' + key}>

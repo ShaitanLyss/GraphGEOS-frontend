@@ -15,5 +15,6 @@ export const possibleTypes: SocketType[] = [
 	'boolean',
 	'vector',
 	'path',
-	'integer'
+	'integer',
+	'groupNameRef'
 ];
