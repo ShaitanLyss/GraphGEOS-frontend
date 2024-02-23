@@ -12,7 +12,8 @@ export type InputControlTypes =
 	| 'vector'
 	| 'unknown'
 	| 'file'
-	| 'remote-file';
+	| 'remote-file'
+	| 'group-name-ref';
 export type InputControlValueType<T extends InputControlTypes> = T extends 'text'
 	? string
 	: T extends 'number'
@@ -23,13 +24,17 @@ export type InputControlValueType<T extends InputControlTypes> = T extends 'text
 				? string
 				: T extends 'checkbox'
 					? boolean
-					: T extends 'textarea'
+					: T extends 'select'
 						? string
-						: T extends unknown
-							? unknown
-							: T extends 'vector'
-								? { x: number; y: number; z: number }
-								: never;
+						: T extends 'group-name-ref'
+							? string
+							: T extends 'textarea'
+								? string
+								: T extends unknown
+									? unknown
+									: T extends 'vector'
+										? { x: number; y: number; z: number }
+										: never;
 
 export type InputControlOptions<N> = {
 	readonly?: boolean;
@@ -89,6 +94,11 @@ export class InputControl<
 				case 'select':
 					initial = options?.options ? options.options[0] : '';
 					break;
+				case 'group-name-ref':
+					initial = '';
+					break;
+				default:
+					initial = '';
 			}
 			if (this.options?.change) this.options.change(initial);
 		}

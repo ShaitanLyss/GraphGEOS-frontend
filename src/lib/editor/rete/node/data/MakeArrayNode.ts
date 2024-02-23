@@ -94,7 +94,7 @@ export class MakeArrayNode extends AddPinNode {
 				this.changeInputType(input, to);
 			}
 		}
-		this.loadInitialValues();
+		// this.loadInitialValues();
 		const outArray = this.outputs['array'];
 		if (outArray) outArray.socket.type = to;
 		// console.log('Changing type to ' + to);
@@ -104,13 +104,15 @@ export class MakeArrayNode extends AddPinNode {
 	changeInputType(input: ClassicPreset.Input<Socket>, to: SocketType) {
 		input.socket.type = to || 'any';
 		const controlType = assignControl(to, 'text');
+		const currentValue = (input.control as InputControl | null)?.value;
 		input.removeControl();
 		if (controlType)
 			input.addControl(
 				new InputControl(controlType, {
 					debouncedOnChange: (value) => {
 						this.getDataflowEngine().reset(this.id);
-					}
+					},
+					initial: currentValue
 				})
 			);
 	}
@@ -141,7 +143,7 @@ export class MakeArrayNode extends AddPinNode {
 		});
 		this.height += 57;
 		this.changeInputType(this.inputs[`data-${index}`] as Input<Socket>, this.state.type);
-		this.loadInitialValues();
+		// this.loadInitialValues();
 
 		// this.getDataflowEngine().reset(this.id);
 		// this.factory.dataflowEngine?.reset(this.id);

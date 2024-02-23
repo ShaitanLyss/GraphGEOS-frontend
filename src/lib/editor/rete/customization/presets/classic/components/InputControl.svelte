@@ -367,6 +367,31 @@
 		{options}
 		on:change={onFileChange}
 	/> -->
+{:else if type === 'group-name-ref'}
+	<label class="label">
+		{#if options?.label}
+			<div class="truncate w-full">
+				<span
+					title={options.label}
+					class="text-white
+					">{options?.label ? options?.label : ''}</span
+				>
+			</div>
+		{/if}
+		<input
+			on:dblclick|stopPropagation
+			type="text"
+			class="{inputTextSize} hover:bg-surface-50-900-token focus:bg-surface-50-900-token {width} rounded-token bg-surface-200-700-token
+			
+			 text-surface-900-50-token border-token
+			 focus:border-primary-500 focus:ring-primary-500 transition-colors"
+			placeholder="groupName"
+			{value}
+			on:input={onChangeFromEvent}
+			{readonly}
+			on:pointerdown|stopPropagation={() => false}
+		/>
+	</label>
 {:else}
 	Unsupported control type&nbsp: '{type}'
 {/if}

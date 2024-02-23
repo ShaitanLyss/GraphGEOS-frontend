@@ -55,11 +55,10 @@
 	}
 </script>
 
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <svg
 	data-testid="connection"
 	class="group hover:cursor-pointer"
-	role="button"
-	tabindex="-1"
 	on:pointerdown|stopPropagation
 	on:click|stopPropagation={() => onClick()}
 	on:keypress={(e) => {

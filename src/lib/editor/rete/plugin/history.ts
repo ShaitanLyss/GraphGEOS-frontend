@@ -11,7 +11,7 @@ export class HistoryPlugin<Schemes extends BaseSchemes> extends BaseHistoryPlugi
 
 	add(action: HistoryAction): void {
 		console.log('time', Date.now() - this.lastMoveTime);
-		if (Date.now() - this.lastMoveTime < 500) return;
+		if (Date.now() - this.lastMoveTime < 100) return;
 		if (this.isRedoing || this.isUndoing) return;
 		console.log('Adding action to history', action);
 		super.add(action);
