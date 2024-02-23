@@ -53,7 +53,7 @@ export class MakeArrayNode extends AddPinNode {
 				// if (this.numConnections === 0) this.changeType('any');
 			} else if (context.type === 'connectioncreated') {
 				this.numConnections++;
-
+				if (this.numConnections !== 1) return context;
 				// if (this.state.type !== 'any') return context;
 
 				if (conn.target === this.id) {
@@ -103,7 +103,7 @@ export class MakeArrayNode extends AddPinNode {
 
 	changeInputType(input: ClassicPreset.Input<Socket>, to: SocketType) {
 		input.socket.type = to || 'any';
-		const controlType = assignControl(to, 'text');
+		const controlType = assignControl(to);
 		const currentValue = (input.control as InputControl | null)?.value;
 		input.removeControl();
 		if (controlType)

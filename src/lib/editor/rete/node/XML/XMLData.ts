@@ -1,3 +1,5 @@
+import { ErrorWNotif } from '$lib/global';
+
 function arrayToXml(obj: object): string {
 	if (obj instanceof Array) {
 		return '{ ' + obj.map((value) => arrayToXml(value)).join(', ') + ' }';
@@ -44,9 +46,13 @@ export class XMLData {
 		if (this.children.length === 0) xml += '/>';
 		else {
 			xml += '>';
-			this.children.forEach((child) => {
-				xml += child.toXml();
-			});
+			try {
+				this.children.forEach((child) => {
+					xml += child.toXml();
+				});
+			} catch (e) {
+				throw new ErrorWNotif('Error generating XML, are you sure you connected everything ?');
+			}
 			xml += `</${this.tag}>`;
 		}
 		return xml;

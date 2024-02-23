@@ -97,8 +97,8 @@ export class InputControl<
 				case 'group-name-ref':
 					initial = '';
 					break;
-				default:
-					initial = '';
+				// default:
+				// 	initial = '';
 			}
 			if (this.options?.change) this.options.change(initial);
 		}
