@@ -173,8 +173,8 @@ devDependencies:
     specifier: ^13.4.1
     version: 13.4.1
   houdini:
-    specifier: ^1.2.37
-    version: 1.2.37
+    specifier: ^1.2.42
+    version: 1.2.42
   houdini-svelte:
     specifier: ^1.2.37
     version: 1.2.37(@types/node@20.11.19)(sass@1.71.1)
@@ -5120,7 +5120,7 @@ packages:
       ast-types: 0.16.1
       estree-walker: 3.0.3
       graphql: 15.8.0
-      houdini: 1.2.37
+      houdini: 1.2.42
       recast: 0.23.4
       rollup: 3.29.4
       svelte: 3.59.2
@@ -5136,8 +5136,8 @@ packages:
       - terser
     dev: true
 
-  /houdini@1.2.37:
-    resolution: {integrity: sha512-nNxkSoDh8tbF+Mk5itDMebD1A9lIxXb8Jmi51h73YnGN/vg1cp9VT0FJvmG95uWGDxPz5+dctRAyv2EygRMK+A==}
+  /houdini@1.2.42:
+    resolution: {integrity: sha512-qKgEK1FrdI8Yco2ASZROZ/N2q+WB048z7RzCOLQS3NiKpZ1uWoO/OkVgKxQS6RBjJzcTY6ytQ/qDKenKZwOboQ==}
     hasBin: true
     dependencies:
       '@babel/parser': 7.23.9
