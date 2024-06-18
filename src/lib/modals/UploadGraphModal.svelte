@@ -42,16 +42,18 @@
 	$: editorName = $editorNameStore;
 	$: userId = session?.user.id as UUID;
 	$: userName = session?.user.name as string;
+	let resolved = false;
 	$: graphPromise = (async () => {
+		resolved = false;
 		const response = await new GraphFromAuthorAndNameStore().fetch({
 			variables: { authorId: userId, graphName: editorName }
 		});
 		console.log(response);
 		return response;
 	})();
-
 	$: graphPromise.then((res) => {
 		graphRes = res.data?.graph.graphWithAuthordAndNameExists;
+		resolved = true;
 	});
 	let graphRes: GraphFromAuthorAndName$result['graph']['graphWithAuthordAndNameExists'] | undefined;
 	console.log('upload graph : session : user ID', session?.user.id);
@@ -200,11 +202,6 @@
 				<!-- <button class="close" on:click={() => modalStore.set(null)}>×</button> -->
 			</header>
 			<section class="p-4 space-y-4 transition-all">
-				{#await graphPromise}
-					<div class="w-32 placeholder placeholde animate-pulse" />
-				{:catch error}
-					error
-				{/await}
 				{#if graphRes}
 					{#if graphRes.exists}
 						<aside class="alert variant-filled-tertiary">
@@ -216,29 +213,38 @@
 							</div>
 						</aside>
 					{/if}
-					<GraphForm {editor} {userName} graph={graphRes.graph} bind:formElement />
+					<div class:animate-pulse={!resolved}>
+						<GraphForm {editor} {userName} graph={graphRes.graph} bind:formElement />
+					</div>
+				{:else}
+					{#await graphPromise}
+						<div class="w-32 placeholder placeholde animate-pulse" />
+					{:catch error}
+						error
+					{/await}
 				{/if}
 				<footer class="modal-footer flex justify-end space-x-2">
 					<button class="btn variant-ghost-surface" on:click={() => modalStore.close()}
 						>{$_('button.cancel')}</button
 					>
-					{#await graphPromise}
+					<!-- {#await graphPromise}
 						<div class="w-32 h-auto placeholder placeholde animate-pulse" />
-					{:then graph}
+					{:then graph} -->
+					{#if graphRes}
 						<button
 							class="btn variant-filled"
+							disabled={!resolved}
 							on:click={() => {
 								handleSubmit(new Event('submit'));
 							}}
 							>{capitalize(
-								graph.data?.graph.graphWithAuthordAndNameExists.exists === false
-									? $_('button.upload')
-									: $_('form.graph.button.update')
+								graphRes.exists === false ? $_('button.upload') : $_('form.graph.button.update')
 							)}</button
 						>
-					{:catch error}
+					{/if}
+					<!-- {:catch error}
 						{error}
-					{/await}
+					{/await} -->
 				</footer>
 			</section>
 		</div>

@@ -74,6 +74,7 @@
 	setContext('onSave', onSave);
 	if (browser)
 		document.addEventListener('keydown', (e) => {
+			if (e.key === undefined) return;
 			if (e.key.toLowerCase() === 's' && (e.ctrlKey || e.metaKey)) {
 				e.preventDefault();
 				onSave();

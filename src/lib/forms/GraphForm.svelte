@@ -120,7 +120,7 @@
 	}
 	const nameChangeListener = debounce((e: Event & { target: EventTarget & HTMLInputElement }) => {
 		editor.setName(e.target.value);
-	}, 500);
+	}, 150);
 </script>
 
 <div
