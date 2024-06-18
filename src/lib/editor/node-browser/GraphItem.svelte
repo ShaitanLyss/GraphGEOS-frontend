@@ -103,18 +103,14 @@
 	<div class="p-4 space-y-4 flex">
 		<!-- <h6 class="h6"><div class="placeholder w-24 h-2" /></h6> -->
 		<!-- <h3 class="h3"><div class="placeholder w-32" /></h3> -->
-		<h3 class="h5">{graph.name}</h3>
+		<h3 class="h5 truncate" title={graph.name}>{graph.name}</h3>
 	</div>
 
 	<hr class="opacity-50" />
 	<footer class="p-4 flex justify-start items-center space-x-2">
 		<Fa icon={faUser} class="w-2" />
-		<div class="flex-auto flex justify-between items-center">
-			<h6
-				class="font-bold h-4 overflow-hidden text-ellipsis whitespace-nowrap"
-				style="width: 5.3rem;"
-				title={graph.authorName}
-			>
+		<div class="flex-auto flex justify-between items-center truncate">
+			<h6 class="font-bold h-4 truncate" style="width: 5.3rem;" title={graph.authorName}>
 				{$_('card.graphItem.by_author', { values: { name: graph.authorName } })}
 			</h6>
 			{#if graph.updatedAt && $locale}

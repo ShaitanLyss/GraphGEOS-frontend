@@ -41,7 +41,8 @@
     "login": "Login",
     "logout": "Logout",
     "delete": "Delete",
-    "submit": "Confirm"
+    "submit": "Confirm",
+    "add": "Add"
   },
   "form": {
     "input": {
@@ -52,8 +53,15 @@
         "name_placeholder": "graph name",
         "name": {
           "title": "Name"
+        },
+        "tags_placeholder": "Add a tag",
+        "tags": {
+          "title": "Tags",
+          "already_added": "This tag already exists.",
+          "empty_state": "Will create tag {tag}"
         }
-      }
+      },
+      "add_favorite": "Favorite"
     },
     "graph": {
       "button": {

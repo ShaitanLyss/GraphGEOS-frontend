@@ -4,8 +4,10 @@ query GetGraph($id: String!) @cache(policy: NetworkOnly) {
 			id
 			version
 			name
+			tags
 			description
 			public
+			favoriteOf
 			editorData
 		}
 	}

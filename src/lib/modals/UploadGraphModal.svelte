@@ -10,14 +10,15 @@
 	import { capitalize, words } from '$utils/string';
 	import { onMount } from 'svelte';
 	import { getBackendAddress } from '$utils/config';
-	import type { UploadGraphModalMeta } from './types';
+	import type { GraphFormData, UploadGraphModalMeta } from './types';
 
 	import {
 		GetGraphStore,
 		type SessionAndUser$result,
 		UpdateGraphStore,
 		UploadGraphModalCreateStore,
-		GraphFromAuthorAndNameStore
+		GraphFromAuthorAndNameStore,
+		type UpdateGraphInput
 	} from '$houdini';
 
 	import GraphForm from '$lib/forms/GraphForm.svelte';
@@ -28,7 +29,7 @@
 	const modalStore = getModalStore();
 
 	let formElement: HTMLFormElement;
-
+	const geosSchemaVersion = '1.0.0';
 	// const session: SessionAndUser$result['session'] | undefined = $page.data.session;
 
 	const session = getContext('session');
@@ -94,48 +95,52 @@
 
 		// Perform any validation or data manipulation here
 		const formData = new FormData(formElement);
-		const data: Record<string, unknown> = {};
+		const tmpdata: Record<string, unknown> = {};
 
 		for (const [key, value] of formData) {
-			data[key] = value;
+			tmpdata[key] = value;
 		}
+
+		const data = tmpdata as {
+			data: string;
+			tags: string;
+			is_public?: 'on' | 'off';
+			description: string;
+			favorite?: 'on' | 'off';
+		};
+
+		const sharedRes: Omit<UpdateGraphInput, 'id'> = {
+			geosVersion: geosSchemaVersion,
+			authorId: userId,
+			public: 'is_public' in data ? data.is_public === 'on' : false,
+			description: data.description,
+			tags: data.tags.split(',').map((tag: string) => tag.trim()),
+			editorData: JSON.parse(data.data as string),
+			favorite: 'favorite' in data ? data.favorite === 'on' : false
+		};
+
+		console.log('favorite', sharedRes.favorite);
 
 		// Submit the form data to the API endpoint
 
 		try {
 			let requestSuccess = true;
 			if (graphExistsRes.exists === true) {
-				if (!Object.prototype.hasOwnProperty.call(data, 'is_public')) {
-					data['is_public'] = false;
-				} else {
-					data['is_public'] = data['is_public'] === 'on';
-				}
-				console.log();
-
 				const response = await new UpdateGraphStore().mutate({
 					updateGraphInput: {
 						id: graphExistsRes.id as string,
-						description: data.description as string,
-						public: data['is_public'] as boolean,
-						editorData: JSON.parse(data.data as string)
+						...sharedRes
 					}
 				});
 				console.log('update graph response', response);
 				requestSuccess = response.errors === null;
 			} else {
-				if (!Object.prototype.hasOwnProperty.call(data, 'is_public')) {
-					data['is_public'] = false;
-				} else {
-					data['is_public'] = data['is_public'] === 'on';
-				}
 				const createStore = new UploadGraphModalCreateStore();
 				const gqlResponse = await createStore.mutate({
 					graph: {
-						editorData: JSON.parse(data.data as string),
+						...sharedRes,
 						title: editorName,
 						authorId: userId,
-						public: data.is_public as boolean,
-						description: data.description as string,
 						authorName: session?.user.name
 					}
 				});
@@ -181,7 +186,7 @@
 
 {#if session}
 	{#if $modalStore}
-		<div class="card">
+		<div class="card w-[40rem]">
 			<header class="card-header text-2xl font-bold text-center">
 				<h2>{words($_('modal.title.graph.upload'))}</h2>
 				<!-- <button class="close" on:click={() => modalStore.set(null)}>×</button> -->

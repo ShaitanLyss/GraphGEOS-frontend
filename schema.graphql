@@ -27,6 +27,11 @@ type AccountType {
   userId: UUID!
 }
 
+type AssistantQuery {
+  health: HealthResponse!
+  test: String!
+}
+
 scalar Base64
 
 type BuiltinClassType {
@@ -36,7 +41,7 @@ type BuiltinClassType {
 union BuiltinClassTypeMakutuClassType = BuiltinClassType | MakutuClassType
 
 input CreateGraphESInput {
-  authorId: String = null
+  authorId: String!
   authorName: String = null
   description: String = null
   editorData: JSON = null
@@ -78,18 +83,20 @@ type GeosQuery {
 
 input GetGraphsInput {
   authorId: String = null
+  authors: [String!] = null
   favorite: Boolean = null
   public: Boolean = null
   query: String = null
   searchAsYouType: Boolean = false
   size: Int = 100
   skip: Int = null
+  tags: [String!] = null
   userId: String = null
 }
 
 type GraphESType {
   Score: Float
-  authorId: String
+  authorId: String!
   authorName: String
   createdAt: DateTime!
   description: String
@@ -115,6 +122,9 @@ type GraphFromAuthorAndNameResult {
 }
 
 type GraphMutation {
+  """Add tags."""
+  addTags(tags: [String!]!): [TagType!]!
+
   """Create a graph."""
   createGraph(graph: CreateGraphESInput!): GraphMutationResult!
 
@@ -149,15 +159,35 @@ input GraphSetFavoriteInput {
 type GraphType {
   author: UserType!
   authorId: UUID
+  createdAt: DateTime!
   data: String!
   description: String
   id: UUID!
   isPublic: Boolean!
   name: String!
+  props: [MacroBlockProp!]!
+  updatedAt: DateTime!
+}
+
+type HealthResponse {
+  slotsIdle: Int!
+  slotsProcessing: Int!
+  status: String!
 }
 
 """The `JSON` scalar type represents JSON values as specified by ECMA-404"""
 scalar JSON
+
+type MacroBlockProp {
+  default: JSON
+  label: String!
+  type: MacroBlockPropType!
+}
+
+enum MacroBlockPropType {
+  NUMBER
+  TEXT
+}
 
 type MakutuClassType {
   extends: [String!]!
@@ -166,6 +196,11 @@ type MakutuClassType {
   methods: [MethodType!]!
   name: String!
   parentClass: BuiltinClassTypeMakutuClassType!
+}
+
+input Message {
+  content: String!
+  role: String!
 }
 
 type MethodType {
@@ -194,6 +229,7 @@ input ProviderInput {
 }
 
 type Query {
+  assistant: AssistantQuery!
   geos: GeosQuery!
   graph: GraphQueryV2!
   makutuClass(name: String!): MakutuClassType!
@@ -201,6 +237,7 @@ type Query {
   remoteExplorer: RemoteExplorer!
   security: Security!
   session(sessionToken: String!): SessionType!
+  tags: [TagType!]!
   user(email: String = null, id: UUID = null, provider: ProviderInput = null): UserType
   users: [UserType!]!
 }
@@ -235,6 +272,15 @@ type SessionType {
   userId: UUID
 }
 
+type Subscription {
+  chat(messages: [Message!]!): String!
+}
+
+type TagType {
+  tag: String!
+  timesAdded: Int!
+}
+
 """TypesPaths give the types path for every element"""
 scalar TypesPaths
 
@@ -246,10 +292,11 @@ scalar TypesTree
 scalar UUID
 
 input UpdateGraphInput {
-  authorId: String = null
+  authorId: String!
   authorName: String = null
   description: String = null
   editorData: JSON = null
+  favorite: Boolean = null
   geosVersion: String = null
   id: String!
   inputTypes: [String!] = null

@@ -40,7 +40,8 @@
     "rename": "Renommer",
     "login": "Se connecter",
     "logout": "Se déconnecter",
-    "delete": "Supprimer"
+    "delete": "Supprimer",
+    "add": "Ajouter"
   },
   "form": {
     "input": {
@@ -50,8 +51,15 @@
         "name_placeholder": "Nom du graphe",
         "name": {
           "title": "Nom"
+        },
+        "tags_placeholder": "Ajouter une étiquette",
+        "tags": {
+          "already_added": "Cette étiquette existe déjà.",
+          "title": "étiquettes",
+          "empty_state": "Créera l'étiquette {tag}"
         }
-      }
+      },
+      "add_favorite": "Favori"
     },
     "graph": {
       "button": {

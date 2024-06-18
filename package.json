@@ -131,6 +131,7 @@
 	"type": "module",
 	"dependencies": {
 		"config": "^3.3.11",
+		"lodash-es": "^4.17.21",
 		"wu": "^2.1.0"
 	}
 }
