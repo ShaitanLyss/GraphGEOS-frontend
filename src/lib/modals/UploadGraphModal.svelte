@@ -14,6 +14,7 @@
 
 	import {
 		GetGraphStore,
+		type GraphFromAuthorAndName$result,
 		type SessionAndUser$result,
 		UpdateGraphStore,
 		UploadGraphModalCreateStore,
@@ -37,7 +38,8 @@
 	const formStore: Writable<Record<string, string>> = localStorageStore('uploadGraphForm', {});
 	const meta: UploadGraphModalMeta = $modalStore[0].meta;
 	$: editor = meta.editor;
-	$: editorName = editor.name;
+	$: editorNameStore = meta.editor.nameStore;
+	$: editorName = $editorNameStore;
 	$: userId = session?.user.id as UUID;
 	$: userName = session?.user.name as string;
 	$: graphPromise = (async () => {
@@ -47,8 +49,12 @@
 		console.log(response);
 		return response;
 	})();
-	console.log('upload graph : session : user ID', session?.user.id);
 
+	$: graphPromise.then((res) => {
+		graphRes = res.data?.graph.graphWithAuthordAndNameExists;
+	});
+	let graphRes: GraphFromAuthorAndName$result['graph']['graphWithAuthordAndNameExists'] | undefined;
+	console.log('upload graph : session : user ID', session?.user.id);
 	const handleSubmit = async (event: Event) => {
 		event.preventDefault();
 		const showErrorNotif = () =>
@@ -104,12 +110,14 @@
 		const data = tmpdata as {
 			data: string;
 			tags: string;
+			name: string;
 			is_public?: 'on' | 'off';
 			description: string;
 			favorite?: 'on' | 'off';
 		};
 
 		const sharedRes: Omit<UpdateGraphInput, 'id'> = {
+			name: editorName,
 			geosVersion: geosSchemaVersion,
 			authorId: userId,
 			public: 'is_public' in data ? data.is_public === 'on' : false,
@@ -139,7 +147,6 @@
 				const gqlResponse = await createStore.mutate({
 					graph: {
 						...sharedRes,
-						title: editorName,
 						authorId: userId,
 						authorName: session?.user.name
 					}
@@ -174,6 +181,7 @@
 				variant: 'filled'
 			});
 			modalStore.close();
+			editor.setName(data.name);
 		} catch (error) {
 			showErrorNotif();
 			console.error(error);
@@ -194,8 +202,11 @@
 			<section class="p-4 space-y-4 transition-all">
 				{#await graphPromise}
 					<div class="w-32 placeholder placeholde animate-pulse" />
-				{:then graph}
-					{#if graph.data?.graph.graphWithAuthordAndNameExists.exists}
+				{:catch error}
+					error
+				{/await}
+				{#if graphRes}
+					{#if graphRes.exists}
 						<aside class="alert variant-filled-tertiary">
 							<!-- Icon -->
 							<Fa icon={faQuestionCircle} />
@@ -205,15 +216,8 @@
 							</div>
 						</aside>
 					{/if}
-					<GraphForm
-						{editor}
-						{userName}
-						graph={graph.data?.graph.graphWithAuthordAndNameExists.graph}
-						bind:formElement
-					/>
-				{:catch error}
-					error
-				{/await}
+					<GraphForm {editor} {userName} graph={graphRes.graph} bind:formElement />
+				{/if}
 				<footer class="modal-footer flex justify-end space-x-2">
 					<button class="btn variant-ghost-surface" on:click={() => modalStore.close()}
 						>{$_('button.cancel')}</button

@@ -20,6 +20,7 @@
 	import { browser } from '$app/environment';
 	import Fa from 'svelte-fa';
 	import { faXmark } from '@fortawesome/free-solid-svg-icons';
+	import { debounce } from 'lodash-es';
 
 	const localId = newLocalId();
 	export let formElement: HTMLFormElement | undefined = undefined;
@@ -39,6 +40,7 @@
 		$formStoreVersion = currentStoreVersion;
 	}
 	const formStore = localStorageStore<GraphFormData>('uploadGraphForm', {
+		name: editor.name,
 		tags: [],
 		description: '',
 		is_public: true,
@@ -116,6 +118,9 @@
 			tagInput.focus({});
 		}, 0);
 	}
+	const nameChangeListener = debounce((e: Event & { target: EventTarget & HTMLInputElement }) => {
+		editor.setName(e.target.value);
+	}, 500);
 </script>
 
 <div
@@ -146,7 +151,7 @@
 			name="name"
 			placeholder={words($_('form.input.graph.name_placeholder'))}
 			required
-			readonly
+			on:input={nameChangeListener}
 			value={editor.name}
 		/>
 	</label>

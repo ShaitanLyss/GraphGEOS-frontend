@@ -3,7 +3,7 @@ import type { Schemes } from './node/Schemes';
 import { Connection, Node, type ConnectionSaveData, type NodeSaveData } from './node/Node';
 import { newLocalId } from '$utils';
 import type { Variable } from '../overlay/variables-list';
-import { get, writable, type Writable } from 'svelte/store';
+import { get, readable, writable, type Readable, type Writable } from 'svelte/store';
 import { NodeFactory } from './node/NodeFactory';
 import wu from 'wu';
 
@@ -32,6 +32,19 @@ export class NodeEditor extends BaseNodeEditor<Schemes> {
 		if (triggerListeners) this.onChangeNameListeners.forEach((listener) => listener(name));
 	}
 	name = 'New Editor';
+	nameStore: Readable<string> = {
+		subscribe: (run, invalidate) => {
+			this.addOnChangeNameListener(run);
+			run(this.name);
+
+			return () => {
+				this.onChangeNameListeners.splice(
+					this.onChangeNameListeners.findIndex((v) => v === run),
+					1
+				);
+			};
+		}
+	};
 	onChangeNameListeners: ((name: string) => void)[] = [];
 	id = newLocalId('node-editor');
 

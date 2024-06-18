@@ -63,6 +63,7 @@
 	$: if ($newMoonItemsStore?.length > 0 && newMoonItems.length == 0) {
 		newMoonItems = $newMoonItemsStore;
 	}
+	const tabsContext = getContext('tabs');
 	const modalStore = getModalStore();
 	onMount(async () => {
 		await import('$rete/setup/appLaunch');
@@ -89,6 +90,12 @@
 			return ctx;
 		});
 	});
+
+	$: nameStore = editor?.nameStore;
+
+	$: if (nameStore) {
+		$tabsContext?.renameTab(id, $nameStore);
+	}
 
 	onDestroy(() => {
 		if (editor === undefined) return;
