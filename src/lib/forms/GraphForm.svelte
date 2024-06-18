@@ -149,7 +149,7 @@
 			type="text"
 			class="input"
 			name="name"
-			placeholder={words($_('form.input.graph.name_placeholder'))}
+			placeholder={capitalize($_('form.input.graph.name_placeholder'))}
 			required
 			on:input={nameChangeListener}
 			value={editor.name}
