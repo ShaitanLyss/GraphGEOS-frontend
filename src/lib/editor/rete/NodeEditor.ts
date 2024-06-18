@@ -6,6 +6,7 @@ import type { Variable } from '../overlay/variables-list';
 import { get, readable, writable, type Readable, type Writable } from 'svelte/store';
 import { NodeFactory } from './node/NodeFactory';
 import wu from 'wu';
+import { _ } from '$lib/global';
 
 export type CommentSaveData = {
 	id: string;
@@ -28,8 +29,8 @@ export class NodeEditor extends BaseNodeEditor<Schemes> {
 	// constructor() {
 	// }
 	setName(name: string, triggerListeners = true) {
-		this.name = name;
-		if (triggerListeners) this.onChangeNameListeners.forEach((listener) => listener(name));
+		this.name = name.trim() !== '' ? name : get(_)('editor.default-name');
+		if (triggerListeners) this.onChangeNameListeners.forEach((listener) => listener(this.name));
 	}
 	name = 'New Editor';
 	nameStore: Readable<string> = {

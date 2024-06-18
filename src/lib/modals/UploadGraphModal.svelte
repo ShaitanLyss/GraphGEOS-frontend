@@ -26,6 +26,7 @@
 	import type { UUID } from 'crypto';
 	import Fa from 'svelte-fa';
 	import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
+	import { fade, fly, scale, slide } from 'svelte/transition';
 
 	const modalStore = getModalStore();
 
@@ -203,17 +204,20 @@
 			</header>
 			<section class="p-4 space-y-4 transition-all">
 				{#if graphRes}
-					{#if graphRes.exists}
-						<aside class="alert variant-filled-tertiary">
-							<!-- Icon -->
-							<Fa icon={faQuestionCircle} />
-							<!-- Message -->
-							<div class="alert-message">
-								<p>{capitalize($_('modal.graph.already_exist.message'))}</p>
-							</div>
-						</aside>
-					{/if}
 					<div class:animate-pulse={!resolved}>
+						{#if graphRes.exists}
+							<aside
+								transition:slide={{ axis: 'y', duration: 120 }}
+								class="alert variant-filled-tertiary mb-4"
+							>
+								<!-- Icon -->
+								<Fa icon={faQuestionCircle} />
+								<!-- Message -->
+								<div class="alert-message">
+									<p>{capitalize($_('modal.graph.already_exist.message'))}</p>
+								</div>
+							</aside>
+						{/if}
 						<GraphForm {editor} {userName} graph={graphRes.graph} bind:formElement />
 					</div>
 				{:else}
