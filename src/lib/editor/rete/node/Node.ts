@@ -33,6 +33,7 @@ interface ControlParams<N> {
 export interface OutDataParams {
 	socketLabel?: string;
 	name: string;
+	displayLabel: boolean;
 	displayName?: string;
 	isArray?: boolean;
 	type?: SocketType;
@@ -290,11 +291,12 @@ export class Node<
 		name = 'data',
 		displayName = '',
 		socketLabel = '',
+		displayLabel = true,
 		isArray = false,
 		type = 'any'
 	}: OutDataParams) {
 		const output = new Output(
-			new Socket({ name: socketLabel, isArray: isArray, type: type, node: this }),
+			new Socket({ name: socketLabel, isArray: isArray, type: type, node: this, displayLabel }),
 			displayName
 		);
 		this.addOutput(name, output as unknown as Output<Exclude<Outputs[keyof Outputs], undefined>>);

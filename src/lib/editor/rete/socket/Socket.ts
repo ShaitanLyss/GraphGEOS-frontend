@@ -9,12 +9,14 @@ export class Socket extends ClassicPreset.Socket {
 	public value: unknown;
 	public selected: boolean;
 	public readonly node: Node;
+	public displayLabel: boolean;
 
 	constructor({
 		name = '',
 		isArray = false,
 		isRequired = false,
 		type = 'any',
+		displayLabel = true,
 		node
 	}: {
 		name?: string;
@@ -22,6 +24,7 @@ export class Socket extends ClassicPreset.Socket {
 		isRequired?: boolean;
 		type?: SocketType;
 		node: Node;
+		displayLabel: boolean;
 	}) {
 		super(name);
 		this.isArray = isArray;
@@ -29,6 +32,7 @@ export class Socket extends ClassicPreset.Socket {
 		this.type = type;
 		this.selected = false;
 		this.node = node;
+		this.displayLabel = displayLabel;
 	}
 
 	select() {

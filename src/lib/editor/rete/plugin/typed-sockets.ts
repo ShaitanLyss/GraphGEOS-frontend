@@ -2,34 +2,49 @@ import { type BaseSchemes, NodeEditor, type Root, Scope } from 'rete';
 import type { Connection } from '../node/Node';
 import type { Socket } from '../socket/Socket';
 import { ExecSocket } from '../socket/ExecSocket';
+import { ErrorWNotif } from '$lib/global';
 
-export type XMLAttrType = `xmlAttr:${attrName}`;
-export type XMLElementType = `xmlElement:${tag}`;
+export type XMLAttrType = `xmlAttr:${string}`;
+export type XMLElementType = `xmlElement:${string}`;
+const baseSocketTypes = [
+	'integer',
+	'exec',
+	'any',
+	'vector',
+	'number',
+	'string',
+	'boolean',
+	'path',
+	'options'
+] as const;
+export type BaseSocketType = (typeof baseSocketTypes)[number];
+
 export type SocketType =
-	// | string
-	| 'integer'
-	| 'exec'
-	| 'constitutive'
-	| 'elementRegion'
-	| 'numericalMethod'
-	| 'any'
-	| 'sameType'
-	| 'vector'
-	| 'number'
-	| 'string'
-	| 'boolean'
-	| 'mesh'
-	| 'geometry'
-	| 'fieldSpecification'
-	| 'output'
-	| 'pythonObject'
-	| 'pythonProperty'
-	| 'solver'
-	| 'xmlProblem'
-	| 'path'
-	| 'groupNameRef'
+	| BaseSocketType
+	// | 'constitutive'
+	// | 'elementRegion'
+	// | 'numericalMethod'
+	// | 'sameType'
+	// | 'mesh'
+	// | 'geometry'
+	// | 'fieldSpecification'
+	// | 'output'
+	// | 'pythonObject'
+	// | 'pythonProperty'
+	// | 'solver'
+	// | 'xmlProblem'
+	// | 'groupNameRef'
 	| XMLAttrType
 	| XMLElementType;
+
+export type ExportedSocketType = BaseSocketType | 'xmlAttr' | 'xmlElement';
+export function socketTypeExport(t: SocketType): ExportedSocketType {
+	if ((baseSocketTypes as readonly string[]).includes(t)) return t as BaseSocketType;
+	if (t.startsWith('xmlAttr')) return 'xmlAttr';
+	else if (t.startsWith('xmlElement')) return 'xmlElement';
+	else throw new ErrorWNotif('Invalid socket type');
+}
+
 export function isConnectionInvalid(outputSocket: Socket, inputSocket: Socket) {
 	const re = /(\w+):(.+)/;
 

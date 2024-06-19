@@ -118,8 +118,12 @@
 			tagInput.focus({});
 		}, 0);
 	}
-	const nameChangeListener = debounce((e: Event & { target: EventTarget & HTMLInputElement }) => {
-		editor.setName(e.target.value);
+	const nameChangeListener = debounce((e: Event & { target: EventTarget | null }) => {
+		if (e.target === null) {
+			console.error('Missing target');
+			return;
+		}
+		editor.setName((e.target as HTMLInputElement).value);
 	}, 150);
 </script>
 

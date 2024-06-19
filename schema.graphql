@@ -48,11 +48,13 @@ input CreateGraphESInput {
   favorite: Boolean = null
   geosVersion: String = null
   id: String = null
+  inputProps: [MacroBlockPropInput!] = []
   inputTypes: [String!] = null
-  name: String = null
+  name: String!
+  outputProps: [OutputPropInput!] = []
   outputTypes: [String!] = null
   public: Boolean = null
-  tags: [String!] = null
+  tags: [String!] = []
   title: String = null
 }
 
@@ -104,13 +106,15 @@ type GraphESType {
   favorite: Boolean
   favoriteOf: [String!]!
   geosVersion: String
-  id: String
-  inputTypes: [String!]
-  name: String
-  outputTypes: [String!]
+  id: String!
+  inputProps: [MacroBlockProp!]!
+  inputTypes: [String!]!
+  name: String!
+  outputProps: [OutputProp!]!
+  outputTypes: [String!]!
   public: Boolean
-  tags: [String!]
-  title: String
+  tags: [String!]!
+  title: String!
   updatedAt: DateTime!
   version: Int!
 }
@@ -179,14 +183,45 @@ type HealthResponse {
 scalar JSON
 
 type MacroBlockProp {
+  bearer: MacroBlockPropBearer
   default: JSON
+  isArray: Boolean!
+  key: String!
   label: String!
+  options: [String!]
   type: MacroBlockPropType!
+  xmlAttr: String
+  xmlElement: String
+}
+
+enum MacroBlockPropBearer {
+  node
+  variable
+}
+
+input MacroBlockPropInput {
+  bearer: MacroBlockPropBearer = null
+  default: JSON
+  isArray: Boolean!
+  key: String!
+  label: String!
+  options: [String!] = null
+  type: MacroBlockPropType!
+  xmlAttr: String = null
+  xmlElement: String = null
 }
 
 enum MacroBlockPropType {
-  NUMBER
-  TEXT
+  any
+  boolean
+  integer
+  number
+  options
+  path
+  string
+  vector
+  xmlAttr
+  xmlElement
 }
 
 type MakutuClassType {
@@ -216,6 +251,24 @@ type Mutation {
   deleteSession(sessionToken: String!): Boolean!
   graph: GraphMutation!
   updateSession(session: SessionCreateInput!): SessionType!
+}
+
+type OutputProp {
+  isArray: Boolean!
+  key: String!
+  label: String!
+  type: MacroBlockPropType!
+  xmlAttr: String
+  xmlElement: String
+}
+
+input OutputPropInput {
+  isArray: Boolean!
+  key: String!
+  label: String!
+  type: MacroBlockPropType!
+  xmlAttr: String = null
+  xmlElement: String = null
 }
 
 type ParameterType {
@@ -299,12 +352,14 @@ input UpdateGraphInput {
   favorite: Boolean = null
   geosVersion: String = null
   id: String!
+  inputProps: [MacroBlockPropInput!] = []
   inputTypes: [String!] = null
   keepNullKeys: [String!] = []
   name: String = null
+  outputProps: [OutputPropInput!] = []
   outputTypes: [String!] = null
   public: Boolean = null
-  tags: [String!] = null
+  tags: [String!] = []
   title: String = null
 }
 

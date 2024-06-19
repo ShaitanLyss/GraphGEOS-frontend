@@ -292,7 +292,7 @@
 		{#each outputs as [key, output]}
 			<div class="output" data-testid={'output-' + key}>
 				<div class="output-title" data-testid="output-title">
-					{output.label || ''}
+					{output.socket.displayLabel ? output.label || '' : ''}
 				</div>
 				<Ref
 					class="output-socket"

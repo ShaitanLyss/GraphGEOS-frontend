@@ -19,7 +19,9 @@
 		UpdateGraphStore,
 		UploadGraphModalCreateStore,
 		GraphFromAuthorAndNameStore,
-		type UpdateGraphInput
+		type UpdateGraphInput,
+		type MacroBlockPropInput,
+		type OutputPropInput
 	} from '$houdini';
 
 	import GraphForm from '$lib/forms/GraphForm.svelte';
@@ -27,6 +29,8 @@
 	import Fa from 'svelte-fa';
 	import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 	import { fade, fly, scale, slide } from 'svelte/transition';
+	import type { InputControl, InputControlTypes } from '$rete/control/Control';
+	import { socketTypeExport, type ExportedSocketType } from '$rete/plugin/typed-sockets';
 
 	const modalStore = getModalStore();
 
@@ -54,9 +58,11 @@
 	})();
 	$: graphPromise.then((res) => {
 		graphRes = res.data?.graph.graphWithAuthordAndNameExists;
+		errors = res.errors;
 		resolved = true;
 	});
 	let graphRes: GraphFromAuthorAndName$result['graph']['graphWithAuthordAndNameExists'] | undefined;
+	let errors: { message: string }[] | null;
 	console.log('upload graph : session : user ID', session?.user.id);
 	const handleSubmit = async (event: Event) => {
 		event.preventDefault();
@@ -119,6 +125,79 @@
 			favorite?: 'on' | 'off';
 		};
 
+		// Get graph props
+		const editorData = editor.toJSON();
+		const outputTypes: string[] = [];
+		const inputTypes: string[] = [];
+		const outputProps: OutputPropInput[] = [];
+		const inputProps: MacroBlockPropInput[] = [];
+		for (const nodeData of editorData.nodes) {
+			const node = editor.getNode(nodeData.id);
+			const inputVals = await node.fetchInputs();
+			const selected: ['input' | 'output', string][] = [
+				...nodeData.selectedInputs.map((k) => ['input', k] as ['input' | 'output', string]),
+				...nodeData.selectedOutputs.map((k) => ['output', k] as ['input' | 'output', string])
+			];
+			for (const [type, key] of selected) {
+				const inputOrOutput = type === 'input' ? node.inputs[key] : node.outputs[key];
+				if (!inputOrOutput) {
+					console.error(`Input or output not found '${key}'`);
+					continue;
+				}
+				const socket = inputOrOutput.socket;
+				const socketType = socketTypeExport(socket.type);
+				let xmlElement = null;
+				let xmlAttr = null;
+
+				switch (socketType) {
+					case 'xmlAttr':
+						xmlAttr = socket.type.split(':').slice(1).join(':');
+						break;
+					case 'xmlElement':
+						xmlElement = socket.type.split(':').slice(1).join(':');
+						break;
+					case 'exec':
+						throw new ErrorWNotif('Unsupported exec selected input');
+					// break;
+				}
+
+				(type === 'input' ? inputTypes : outputTypes).push(socket.type);
+				const outputProp: OutputPropInput = {
+					label: inputOrOutput.label ?? 'Missing label',
+					key: key,
+					type: socketType,
+					xmlElement,
+					xmlAttr,
+					isArray: socket.isArray
+				};
+				if (type === 'input') {
+					const inputProp: MacroBlockPropInput = {
+						...outputProp,
+						bearer: 'node',
+						default: JSON.stringify(node.getData(key, inputVals))
+					};
+					inputProps.push(inputProp);
+				} else {
+					outputProps.push(outputProp);
+				}
+			}
+		}
+		const unsupportedTypes: ExportedSocketType[] = ['xmlAttr', 'xmlElement', 'exec'] as const;
+		for (const [k, v] of Object.entries(editorData.variables)) {
+			if (!v.exposed) continue;
+			const socketType = socketTypeExport(v.type);
+			if (unsupportedTypes.includes(socketType)) {
+				throw new ErrorWNotif('Unsupported variable type');
+			}
+			inputProps.push({
+				bearer: 'variable',
+				type: socketType as Exclude<ExportedSocketType, 'xmlAttr' | 'xmlElement' | 'exec'>,
+				isArray: false,
+				key: k,
+				label: v.name,
+				default: JSON.stringify(v.value)
+			});
+		}
 		const sharedRes: Omit<UpdateGraphInput, 'id'> = {
 			name: editorName,
 			geosVersion: geosSchemaVersion,
@@ -127,7 +206,12 @@
 			description: data.description,
 			tags: data.tags.split(',').map((tag: string) => tag.trim()),
 			editorData: JSON.parse(data.data as string),
-			favorite: 'favorite' in data ? data.favorite === 'on' : false
+			favorite: 'favorite' in data ? data.favorite === 'on' : false,
+			inputProps,
+			outputTypes,
+			inputTypes,
+			outputProps,
+			authorName: userName
 		};
 
 		console.log('favorite', sharedRes.favorite);
@@ -150,8 +234,7 @@
 				const gqlResponse = await createStore.mutate({
 					graph: {
 						...sharedRes,
-						authorId: userId,
-						authorName: session?.user.name
+						authorId: userId
 					}
 				});
 				console.log('create graph response', gqlResponse);
@@ -203,6 +286,13 @@
 				<!-- <button class="close" on:click={() => modalStore.set(null)}>×</button> -->
 			</header>
 			<section class="p-4 space-y-4 transition-all">
+				{#if errors}
+					{#each errors as error}
+						<div class="alert variant-filled-error">
+							<p>{error.message}</p>
+						</div>
+					{/each}
+				{/if}
 				{#if graphRes}
 					<div class:animate-pulse={!resolved}>
 						{#if graphRes.exists}
