@@ -234,6 +234,7 @@
 				const gqlResponse = await createStore.mutate({
 					graph: {
 						...sharedRes,
+						name: sharedRes.name as string,
 						authorId: userId
 					}
 				});
