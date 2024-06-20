@@ -48,7 +48,7 @@ input CreateGraphESInput {
   favorite: Boolean = null
   geosVersion: String = null
   id: String = null
-  inputProps: [MacroBlockPropInput!] = []
+  inputProps: [MacroBlockInputPropInput!] = []
   inputTypes: [String!] = null
   name: String!
   outputProps: [OutputPropInput!] = []
@@ -107,7 +107,7 @@ type GraphESType {
   favoriteOf: [String!]!
   geosVersion: String
   id: String!
-  inputProps: [MacroBlockProp!]!
+  inputProps: [MacroBlockInputProp!]!
   inputTypes: [String!]!
   name: String!
   outputProps: [OutputProp!]!
@@ -169,7 +169,7 @@ type GraphType {
   id: UUID!
   isPublic: Boolean!
   name: String!
-  props: [MacroBlockProp!]!
+  props: [MacroBlockInputProp!]!
   updatedAt: DateTime!
 }
 
@@ -182,33 +182,39 @@ type HealthResponse {
 """The `JSON` scalar type represents JSON values as specified by ECMA-404"""
 scalar JSON
 
-type MacroBlockProp {
+type MacroBlockInputProp {
   bearer: MacroBlockPropBearer
   default: JSON
   isArray: Boolean!
   key: String!
   label: String!
   options: [String!]
+
+  """HTML props"""
+  props: JSON
   type: MacroBlockPropType!
   xmlAttr: String
   xmlElement: String
 }
 
-enum MacroBlockPropBearer {
-  node
-  variable
-}
-
-input MacroBlockPropInput {
+input MacroBlockInputPropInput {
   bearer: MacroBlockPropBearer = null
   default: JSON
   isArray: Boolean!
   key: String!
   label: String!
   options: [String!] = null
+
+  """HTML props"""
+  props: JSON = null
   type: MacroBlockPropType!
   xmlAttr: String = null
   xmlElement: String = null
+}
+
+enum MacroBlockPropBearer {
+  node
+  variable
 }
 
 enum MacroBlockPropType {
@@ -352,7 +358,7 @@ input UpdateGraphInput {
   favorite: Boolean = null
   geosVersion: String = null
   id: String!
-  inputProps: [MacroBlockPropInput!] = []
+  inputProps: [MacroBlockInputPropInput!] = []
   inputTypes: [String!] = null
   keepNullKeys: [String!] = []
   name: String = null

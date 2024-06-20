@@ -20,7 +20,7 @@
 		UploadGraphModalCreateStore,
 		GraphFromAuthorAndNameStore,
 		type UpdateGraphInput,
-		type MacroBlockPropInput,
+		type MacroBlockInputPropInput,
 		type OutputPropInput
 	} from '$houdini';
 
@@ -29,7 +29,7 @@
 	import Fa from 'svelte-fa';
 	import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 	import { fade, fly, scale, slide } from 'svelte/transition';
-	import type { InputControl, InputControlTypes } from '$rete/control/Control';
+	import { InputControl, type InputControlTypes } from '$rete/control/Control';
 	import { socketTypeExport, type ExportedSocketType } from '$rete/plugin/typed-sockets';
 
 	const modalStore = getModalStore();
@@ -130,7 +130,7 @@
 		const outputTypes: string[] = [];
 		const inputTypes: string[] = [];
 		const outputProps: OutputPropInput[] = [];
-		const inputProps: MacroBlockPropInput[] = [];
+		const inputProps: MacroBlockInputPropInput[] = [];
 		for (const nodeData of editorData.nodes) {
 			const node = editor.getNode(nodeData.id);
 			const inputVals = await node.fetchInputs();
@@ -171,10 +171,16 @@
 					isArray: socket.isArray
 				};
 				if (type === 'input') {
-					const inputProp: MacroBlockPropInput = {
+					// const inputControl = node.inputs[key]?.control;
+					// const htmlProps: Record<string, unknown> = {};
+					// if (inputControl instanceof InputControl) {
+					// 	inputControl.
+					// }
+					const inputProp: MacroBlockInputPropInput = {
 						...outputProp,
 						bearer: 'node',
-						default: JSON.stringify(node.getData(key, inputVals))
+						default: JSON.stringify(node.getData(key, inputVals)),
+						props: JSON.stringify({})
 					};
 					inputProps.push(inputProp);
 				} else {
