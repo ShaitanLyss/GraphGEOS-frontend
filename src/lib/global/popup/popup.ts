@@ -1,7 +1,7 @@
 import type { Action } from 'svelte/action';
+import { writable, type Writable } from 'svelte/store';
 import { type PopupSettings, popup } from '@skeletonlabs/skeleton';
 import type { ComponentType } from 'svelte';
-import { writable, type Writable } from 'svelte/store';
 
 export const globalPopupTarget = 'globalPopup';
 export const globalTooltipTarget = 'globalTooltip';

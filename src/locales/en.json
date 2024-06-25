@@ -1,329 +1,329 @@
 {
-  "enter": {
-    "name": "Enter Name"
-  },
-  "prompt": {
-    "provide": {
-      "name": {
-        "graph": "Provide a new name for the graph."
-      }
-    },
-    "comment": {
-      "edit": {
-        "title": "Edit comment",
-        "placeholder": "Comment",
-        "title-when-empty": "Comment"
-      }
-    }
-  },
-  "new": {
-    "editor": "New Editor"
-  },
-  "browser": {
-    "tab": {
-      "favorite": "Favorites",
-      "user": "User",
-      "shared": "Shared"
-    }
-  },
-  "title": {
-    "favorite": "Favorites",
-    "recent": "Recent",
-    "recents": "Recents",
-    "author": "Author",
-    "description": "Description"
-  },
-  "button": {
-    "cancel": "Cancel",
-    "confirm": "Confirm",
-    "upload": "Upload",
-    "rename": "Rename",
-    "login": "Login",
-    "logout": "Logout",
-    "delete": "Delete",
-    "submit": "Confirm",
-    "add": "Add"
-  },
-  "form": {
-    "input": {
-      "make_public": "Make public",
-      "description_placeholder": "Short description of your graph",
-      "graph": {
-        "description_placeholder": "Short description of your graph",
-        "name_placeholder": "graph name",
-        "name": {
-          "title": "Name"
-        },
-        "tags_placeholder": "Add a tag",
-        "tags": {
-          "title": "Tags",
-          "already_added": "This tag already exists.",
-          "empty_state": "Will create tag {tag}"
-        }
-      },
-      "add_favorite": "Favorite"
-    },
-    "graph": {
-      "button": {
-        "update": "update"
-      }
-    }
-  },
-  "modal": {
-    "title": {
-      "graph": {
-        "upload": "Upload Graph"
-      }
-    },
-    "graph": {
-      "already_exist": {
-        "message": "Graph already exists, it will be updated."
-      },
-      "upload": {
-        "you-must-be-logged-in": "You must be logged in to upload a macro block. You can login on the authentication page."
-      }
-    },
-    "graph_upload": {
-      "failed": {
-        "message": "There was an error uploading the graph."
-      },
-      "success": {
-        "message": "Graph uploaded successfully."
-      }
-    }
-  },
-  "card": {
-    "graphItem": {
-      "by_author": " {name}",
-      "on_date": "On {date}"
-    }
-  },
-  "python-mode": {
-    "generation": {
-      "success": {
-        "message": "Python code generation successful !"
-      },
-      "failure": {
-        "message": "Failure during the generation : Area is undefined"
-      }
-    },
-    "notification": {
-      "title": "Python mode",
-      "description": "Click on a node to generate python code"
-    }
-  },
-  "geos": {
-    "dash": {
-      "sources": "Sources",
-      "source": "Source",
-      "job_queue": "Queue",
-      "new_job": {
-        "btn": "New Job"
-      }
-    }
-  },
-  "notification": {
-    "save": {
-      "title": "Save",
-      "message": {
-        "ongoing": "Saving...",
-        "success": "Saved! Storage use : {storageUse, number, ::percent}",
-        "failure": "Some componenents failed to save. An error occured : {error}",
-        "success-no-storage-use": "Saved!"
-      }
-    },
-    "error": {
-      "title": "Error"
-    },
-    "success": {
-      "title": "Success"
-    },
-    "graph_loaded": {
-      "title": "Graph Loaded",
-      "message": "Successfully loaded the graph.",
-      "failure_msg": "Failed to load the graph."
-    }
-  },
-  "test": {
-    "hello": {
-      "world": "Hello World"
-    }
-  },
-  "editor": {
-    "button": {
-      "save": "Save opened editors (CTRL+S)",
-      "python-mode": {
-        "tooltip": "Generate python workflow (P)"
-      },
-      "toggle-geos": "Toggle geos panel",
-      "downloadGraph": {
-        "tooltip": "Save to a file"
-      },
-      "load-graph-from-file": "Load from file",
-      "error": {
-        "no_active_factory": "No active editor found",
-        "no_exec_function": "Missing feature"
-      },
-      "upload-graph": {
-        "tooltip": "Upload graph online"
-      },
-      "toggle-code-editor": {
-        "tooltip": "Toggle code editor (Shift+C)",
-        "close": "Close code editor"
-      },
-      "layout": "Auto layout (A)",
-      "undo": {
-        "tooltip": "Undo"
-      },
-      "redo": {
-        "tooltip": "Redo"
-      }
-    },
-    "notification": {
-      "title": "Editor"
-    },
-    "default-name": "New Editor"
-  },
-  "toggle-geos": {
-    "failure": {
-      "missing-toggle": "Error toggling the geos panel : Missing toggle function"
-    }
-  },
-  "notifications": {
-    "error": {
-      "title": "Error"
-    }
-  },
-  "page": {
-    "auth": {
-      "name": "Code Editor",
-      "message": {
-        "not-logged-in": "You are not logged in",
-        "logged-in-as": "You are logged in as"
-      },
-      "fake-login-explanation": "Currently, only personnal accounts logins are possible. If you don't want to, you can use the fake login below."
-    }
-  },
-  "header": {
-    "link": {
-      "auth": {
-        "tooltip": "Authentication (Alt+A)"
-      },
-      "code-editor": {
-        "tooltip": "Code Editor (Alt+C)"
-      },
-      "graph-editor": {
-        "tooltip": "Graph Editor (Alt+G)"
-      }
-    }
-  },
-  "main": {
-    "header": {
-      "button": {
-        "theme-switcher": {
-          "tooltip": "Change theme"
-        }
-      }
-    }
-  },
-  "code-editor-integration": {
-    "button": {
-      "download": {
-        "notification": {
-          "title": "Download",
-          "nothing-selected": {
-            "message": "There is nothing selected that can be downloaded.\nYou can download XML nodes or XML code."
-          }
-        }
-      }
-    },
-    "push-to-graph": {
-      "selected-node-dragging": {
-        "message": "Added nodes have been selected. They can be dragged using CTRL + Left mouse button."
-      }
-    }
-  },
-  "graph-editor": {
-    "notification": {
-      "title": "Graph editor"
-    },
-    "comment": {
-      "default-text": "Comment"
-    }
-  },
-  "menu": {
-    "context-menu": {
-      "delete-selected-nodes": "Delete",
-      "searchbar": {
-        "placeholder": "Search..."
-      }
-    },
-    "unexpose": "unexpose",
-    "expose": "expose",
-    "variable": {
-      "unexpose": {
-        "descr": "Unexpose this variable"
-      },
-      "expose": {
-        "descr": "Expose this variable to make it editable on a macro block"
-      },
-      "delete": {
-        "descr": "Delete this variable and the associated nodes"
-      }
-    },
-    "node": {
-      "delete": {
-        "descr": "Delete selected nodes",
-        "label": "Delete"
-      },
-      "comment": {
-        "label": "Comment",
-        "descr": "Comment selected nodes"
-      },
-      "duplicate": {
-        "label": "Duplicate",
-        "descr": "Duplicate selected nodes"
-      }
-    },
-    "comment": {
-      "delete": {
-        "label": "Delete",
-        "description": "Delete this comment"
-      },
-      "edit": {
-        "label": "Edit",
-        "description": "Edit this comment"
-      }
-    },
-    "delete-selected": {
-      "descr": "Delete selected elements"
-    }
-  },
-  "remote-explorer": {
-    "searchbar": {
-      "placeholder": "Search"
-    },
-    "title": "Remote explorer",
-    "auth-modal": {
-      "user": {
-        "title": "User",
-        "placeholder": "Linux user"
-      },
-      "password": {
-        "title": "Password"
-      }
-    },
-    "auth-btn": {
-      "label": {
-        "connect": "Connect"
-      }
-    }
-  },
-  "variable-item": {
-    "rename-prompt": {
-      "placeholder": "Variable name",
-      "title": "Rename variable"
-    }
-  },
-  "Unexpose this variable": "menu.variable.unexpose.descr"
+	"enter": {
+		"name": "Enter Name"
+	},
+	"prompt": {
+		"provide": {
+			"name": {
+				"graph": "Provide a new name for the graph."
+			}
+		},
+		"comment": {
+			"edit": {
+				"title": "Edit comment",
+				"placeholder": "Comment",
+				"title-when-empty": "Comment"
+			}
+		}
+	},
+	"new": {
+		"editor": "New Editor"
+	},
+	"browser": {
+		"tab": {
+			"favorite": "Favorites",
+			"user": "User",
+			"shared": "Shared"
+		}
+	},
+	"title": {
+		"favorite": "Favorites",
+		"recent": "Recent",
+		"recents": "Recents",
+		"author": "Author",
+		"description": "Description"
+	},
+	"button": {
+		"cancel": "Cancel",
+		"confirm": "Confirm",
+		"upload": "Upload",
+		"rename": "Rename",
+		"login": "Login",
+		"logout": "Logout",
+		"delete": "Delete",
+		"submit": "Confirm",
+		"add": "Add"
+	},
+	"form": {
+		"input": {
+			"make_public": "Make public",
+			"description_placeholder": "Short description of your graph",
+			"graph": {
+				"description_placeholder": "Short description of your graph",
+				"name_placeholder": "graph name",
+				"name": {
+					"title": "Name"
+				},
+				"tags_placeholder": "Add a tag",
+				"tags": {
+					"title": "Tags",
+					"already_added": "This tag already exists.",
+					"empty_state": "Will create tag {tag}"
+				}
+			},
+			"add_favorite": "Favorite"
+		},
+		"graph": {
+			"button": {
+				"update": "update"
+			}
+		}
+	},
+	"modal": {
+		"title": {
+			"graph": {
+				"upload": "Upload Graph"
+			}
+		},
+		"graph": {
+			"already_exist": {
+				"message": "Graph already exists, it will be updated."
+			},
+			"upload": {
+				"you-must-be-logged-in": "You must be logged in to upload a macro block. You can login on the authentication page."
+			}
+		},
+		"graph_upload": {
+			"failed": {
+				"message": "There was an error uploading the graph."
+			},
+			"success": {
+				"message": "Graph uploaded successfully."
+			}
+		}
+	},
+	"card": {
+		"graphItem": {
+			"by_author": " {name}",
+			"on_date": "On {date}"
+		}
+	},
+	"python-mode": {
+		"generation": {
+			"success": {
+				"message": "Python code generation successful !"
+			},
+			"failure": {
+				"message": "Failure during the generation : Area is undefined"
+			}
+		},
+		"notification": {
+			"title": "Python mode",
+			"description": "Click on a node to generate python code"
+		}
+	},
+	"geos": {
+		"dash": {
+			"sources": "Sources",
+			"source": "Source",
+			"job_queue": "Queue",
+			"new_job": {
+				"btn": "New Job"
+			}
+		}
+	},
+	"notification": {
+		"save": {
+			"title": "Save",
+			"message": {
+				"ongoing": "Saving...",
+				"success": "Saved! Storage use : {storageUse, number, ::percent}",
+				"failure": "Some componenents failed to save. An error occured : {error}",
+				"success-no-storage-use": "Saved!"
+			}
+		},
+		"error": {
+			"title": "Error"
+		},
+		"success": {
+			"title": "Success"
+		},
+		"graph_loaded": {
+			"title": "Graph Loaded",
+			"message": "Successfully loaded the graph.",
+			"failure_msg": "Failed to load the graph."
+		}
+	},
+	"test": {
+		"hello": {
+			"world": "Hello World"
+		}
+	},
+	"editor": {
+		"button": {
+			"save": "Save opened editors (CTRL+S)",
+			"python-mode": {
+				"tooltip": "Generate python workflow (P)"
+			},
+			"toggle-geos": "Toggle geos panel",
+			"downloadGraph": {
+				"tooltip": "Save to a file"
+			},
+			"load-graph-from-file": "Load from file",
+			"error": {
+				"no_active_factory": "No active editor found",
+				"no_exec_function": "Missing feature"
+			},
+			"upload-graph": {
+				"tooltip": "Upload graph online"
+			},
+			"toggle-code-editor": {
+				"tooltip": "Toggle code editor (Shift+C)",
+				"close": "Close code editor"
+			},
+			"layout": "Auto layout (A)",
+			"undo": {
+				"tooltip": "Undo"
+			},
+			"redo": {
+				"tooltip": "Redo"
+			}
+		},
+		"notification": {
+			"title": "Editor"
+		},
+		"default-name": "New Editor"
+	},
+	"toggle-geos": {
+		"failure": {
+			"missing-toggle": "Error toggling the geos panel : Missing toggle function"
+		}
+	},
+	"notifications": {
+		"error": {
+			"title": "Error"
+		}
+	},
+	"page": {
+		"auth": {
+			"name": "Code Editor",
+			"message": {
+				"not-logged-in": "You are not logged in",
+				"logged-in-as": "You are logged in as"
+			},
+			"fake-login-explanation": "Currently, only personnal accounts logins are possible. If you don't want to, you can use the fake login below."
+		}
+	},
+	"header": {
+		"link": {
+			"auth": {
+				"tooltip": "Authentication (Alt+A)"
+			},
+			"code-editor": {
+				"tooltip": "Code Editor (Alt+C)"
+			},
+			"graph-editor": {
+				"tooltip": "Graph Editor (Alt+G)"
+			}
+		}
+	},
+	"main": {
+		"header": {
+			"button": {
+				"theme-switcher": {
+					"tooltip": "Change theme"
+				}
+			}
+		}
+	},
+	"code-editor-integration": {
+		"button": {
+			"download": {
+				"notification": {
+					"title": "Download",
+					"nothing-selected": {
+						"message": "There is nothing selected that can be downloaded.\nYou can download XML nodes or XML code."
+					}
+				}
+			}
+		},
+		"push-to-graph": {
+			"selected-node-dragging": {
+				"message": "Added nodes have been selected. They can be dragged using CTRL + Left mouse button."
+			}
+		}
+	},
+	"graph-editor": {
+		"notification": {
+			"title": "Graph editor"
+		},
+		"comment": {
+			"default-text": "Comment"
+		}
+	},
+	"menu": {
+		"context-menu": {
+			"delete-selected-nodes": "Delete",
+			"searchbar": {
+				"placeholder": "Search..."
+			}
+		},
+		"unexpose": "unexpose",
+		"expose": "expose",
+		"variable": {
+			"unexpose": {
+				"descr": "Unexpose this variable"
+			},
+			"expose": {
+				"descr": "Expose this variable to make it editable on a macro block"
+			},
+			"delete": {
+				"descr": "Delete this variable and the associated nodes"
+			}
+		},
+		"node": {
+			"delete": {
+				"descr": "Delete selected nodes",
+				"label": "Delete"
+			},
+			"comment": {
+				"label": "Comment",
+				"descr": "Comment selected nodes"
+			},
+			"duplicate": {
+				"label": "Duplicate",
+				"descr": "Duplicate selected nodes"
+			}
+		},
+		"comment": {
+			"delete": {
+				"label": "Delete",
+				"description": "Delete this comment"
+			},
+			"edit": {
+				"label": "Edit",
+				"description": "Edit this comment"
+			}
+		},
+		"delete-selected": {
+			"descr": "Delete selected elements"
+		}
+	},
+	"remote-explorer": {
+		"searchbar": {
+			"placeholder": "Search"
+		},
+		"title": "Remote explorer",
+		"auth-modal": {
+			"user": {
+				"title": "User",
+				"placeholder": "Linux user"
+			},
+			"password": {
+				"title": "Password"
+			}
+		},
+		"auth-btn": {
+			"label": {
+				"connect": "Connect"
+			}
+		}
+	},
+	"variable-item": {
+		"rename-prompt": {
+			"placeholder": "Variable name",
+			"title": "Rename variable"
+		}
+	},
+	"Unexpose this variable": "menu.variable.unexpose.descr"
 }

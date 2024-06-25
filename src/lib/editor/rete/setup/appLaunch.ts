@@ -11,7 +11,7 @@ async function setupClasses() {
 	for (const [path, module] of Object.entries(modules)) {
 		const objects = await module();
 		const menuPath = path.slice('../node/'.length);
-
+		if (menuPath.includes('index')) continue;
 		// for (const file of nodeFiles) {
 		// 	const objects = await import(/* @vite-ignore */ `../../node/${file}`);
 

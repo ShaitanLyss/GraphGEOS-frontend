@@ -1,7 +1,7 @@
 import type { GeosSchema } from '$lib/geos';
 import { ErrorWNotif } from '$lib/global';
 import type { Action } from 'svelte/action';
-import { writable, type Writable } from 'svelte/store';
+import { type Writable, writable } from 'svelte/store';
 
 export interface ICodeEditor {
 	destroy(): void;

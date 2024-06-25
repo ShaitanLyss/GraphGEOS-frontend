@@ -60,6 +60,27 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		const { noName = false } = xmlConfig;
 		super({ ...xmlNodeParams, width: 220, height: 40 });
 
+		const { get, set } = this.factory.useState('XmlNode', 'pipeSetup', false);
+		if (!get()) {
+			set(true);
+			this.factory.getArea()?.addPipe((ctx) => {
+				if (ctx.type === 'contextmenu') {
+					const { context, event } = ctx.data;
+					if (!(context instanceof XmlNode)) return ctx;
+					const node = context;
+					if (!(event.target instanceof HTMLSpanElement)) return ctx;
+					const input = event.target.closest('.rete-input');
+					if (!(input instanceof HTMLElement)) return ctx;
+					const testid = input.dataset.testid;
+					if (!testid) return ctx;
+					const key = testid.split('-')[1];
+					node.removeOptionalAttribute(key);
+					return ctx;
+				}
+				return ctx;
+			});
+		}
+
 		if (!noName) {
 			this.height += 15;
 			if ('name' in initialValues) this.name = initialValues['name'] as string;
@@ -134,6 +155,22 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 		this.addInAttribute(prop);
 		this.updateElement();
 		console.log('updateElement', this.controls['addXmlAttr'].id);
+		this.updateElement('control', this.controls['addXmlAttr'].id);
+	}
+
+	removeOptionalAttribute(name: string) {
+		console.log('removeOptionalAttribute', name);
+		const prop = this.params.xmlConfig.xmlProperties?.find((prop) => prop.name === name);
+		if (prop?.required === true) {
+			throw new ErrorWNotif(`Property ${name} is required and cannot be removed`);
+		}
+		if (prop === undefined) throw new Error(`Property ${name} not found`);
+		const index = this.state.usedOptionalAttrs.indexOf(name);
+		if (index !== -1) this.state.usedOptionalAttrs.splice(index, 1);
+		console.log('index', index);
+		this.removeInput(name);
+		this.height -= prop.isArray ? 58 : 65.5;
+		this.updateElement();
 		this.updateElement('control', this.controls['addXmlAttr'].id);
 	}
 

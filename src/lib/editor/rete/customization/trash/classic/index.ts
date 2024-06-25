@@ -161,7 +161,7 @@ export function setup<Schemes extends ClassicScheme, K extends SvelteArea2D<Sche
 							props: {
 								data: payload
 							}
-					  }
+						}
 					: null;
 			}
 		}

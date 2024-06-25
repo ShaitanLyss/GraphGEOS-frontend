@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { NodeEditor, NodeEditorSaveData, NodeFactory, setupEditor } from '$rete';
+	import type { NodeEditor, NodeEditorSaveData, NodeFactory, setupEditor, Node } from '$rete';
 
 	import type { EditorExample } from '$rete/example/types';
 	import { capitalize, newLocalId, newUuid } from '$utils';
@@ -12,9 +12,9 @@
 	export let loadExample: EditorExample | undefined = undefined;
 	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
 	import { draw, fade } from 'svelte/transition';
+	import { get } from 'svelte/store';
 	import { isNodeEditorSaveData } from '$rete/utils';
 	import type { UUID } from 'crypto';
-	import type { Node } from '$rete';
 	import { GetGraphStore } from '$houdini';
 	import { translateNodeFromGlobal } from '$utils/html';
 	import type { ConnectionDropEvent } from '$rete/setup/ConnectionSetup';
@@ -24,7 +24,6 @@
 	import { createNodeMenuItem, type IBaseMenuItem, type INodeMenuItem } from '$lib/menu';
 	import { VariableNode } from '$rete/node/XML/VariableNode';
 	import { possibleTypes, type Variable } from './overlay/variables-list';
-	import { get } from 'svelte/store';
 	import { EditorType } from '.';
 	import { getModalStore } from '@skeletonlabs/skeleton';
 
@@ -292,6 +291,9 @@
 {/if}
 <div
 	bind:this={container}
+	on:pointerdown={() => {
+		window.getSelection()?.empty();
+	}}
 	class:opacity-0={!mounted || hidden}
 	class="{position} transition-opacity h-full w-full bg-none {hidden
 		? 'opacity-0 pointer-events-none'

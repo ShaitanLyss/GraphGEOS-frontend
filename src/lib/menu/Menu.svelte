@@ -8,7 +8,6 @@
 	import throttle from 'lodash.throttle';
 	import PopoverMenuItems from './PopoverMenuItems.svelte';
 	import { writable, type Writable } from 'svelte/store';
-	import type { Action } from 'svelte/action';
 
 	export let searchBar = true;
 	export let menuItems: IMenuItem[];
@@ -21,7 +20,8 @@
 
 	$: updateFilteredItems(menuItems);
 	onMount(() => {
-		if (type === 'tree') treeView.expandAll();
+		if (type === 'tree') treeView.collapseAll();
+		// if (type === 'tree') treeView.expandAll();
 	});
 
 	function updateFilteredItems(items: typeof menuItems) {
@@ -55,7 +55,9 @@
 
 	$: {
 		menu = collectMenuView(filteredMenuItems);
-		if (treeView) treeView.expandAll();
+		if (treeView)
+			if (query.trim() !== '') treeView.expandAll();
+			else treeView.collapseAll();
 	}
 
 	let focusedItem: Writable<IMenuItem | undefined> = writable(undefined);

@@ -2,19 +2,18 @@ query CodeEditorData @loading {
 	geos @loading {
 		xmlSchema @loading {
 			simpleTypes @loading {
-				name 
-				pattern 
+				name
+				pattern
 			}
 			complexTypes @loading {
-				name 
-				attributes  {
-					name 
-					type 
+				name
+				attributes {
+					name
+					type
 					required
 					default
-					
 				}
-				childTypes 
+				childTypes
 			}
 		}
 	}

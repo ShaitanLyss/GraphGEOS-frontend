@@ -18,8 +18,8 @@ export function getBackendAddress(path = ''): string {
 		('PUBLIC_BACKEND_ADDRESS' in env
 			? env.PUBLIC_BACKEND_ADDRESS
 			: typeof document !== 'undefined' && 'PUBLIC_BACKEND_ADDRESS' in getCookies()
-			? (getCookie('PUBLIC_BACKEND_ADDRESS') as string)
-			: 'http://127.0.0.1:8000') + path
+				? (getCookie('PUBLIC_BACKEND_ADDRESS') as string)
+				: 'http://127.0.0.1:8000') + path
 	);
 }
 

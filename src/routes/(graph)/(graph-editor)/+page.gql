@@ -5,19 +5,18 @@ query GraphEditorData {
 		xmlSchema @loading {
 			simpleTypes @loading {
 				enum
-				name 
+				name
 				pattern
-
 			}
 			complexTypes @loading {
 				link
-				name 
-				attributes  {
+				name
+				attributes {
 					description
-					name 
-					type 
-					required 
-					default 
+					name
+					type
+					required
+					default
 				}
 				childTypes
 			}

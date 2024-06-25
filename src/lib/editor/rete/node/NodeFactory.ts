@@ -13,17 +13,17 @@ import { PythonDataflowEngine } from '$rete/engine/PythonDataflowEngine';
 import type { MakutuClassRepository } from '$lib/backend-interaction/types';
 import { newLocalId } from '$utils';
 import type { SelectorEntity } from 'rete-area-plugin/_types/extensions/selectable';
-import { ErrorWNotif } from '$lib/global';
+import { ErrorWNotif, _ } from '$lib/global';
 import type { AutoArrangePlugin } from 'rete-auto-arrange-plugin';
 import wu from 'wu';
 import type History from 'rete-history-plugin/_types/history';
-
+import * as nodes from '.';
 import type { CommentPlugin } from '$rete/plugin/CommentPlugin';
-import { _ } from '$lib/global';
 import { localStorageStore, type getModalStore } from '@skeletonlabs/skeleton';
 
 import { defaultConnectionPath, type ConnectionPathType } from '$lib/editor';
 import type { HistoryPlugin } from '$rete/plugin/history';
+import { clone } from 'lodash-es';
 
 function createDataflowEngine() {
 	return new DataflowEngine<Schemes>(({ inputs, outputs }) => {
@@ -80,9 +80,44 @@ export class NodeFactory {
 	);
 	public readonly modalStore?: ReturnType<typeof getModalStore>;
 
-	private static classRegistry: Record<string, typeof Node> = {};
+	static get classRegistry(): Record<string, typeof Node> {
+		const res = {
+			MacroNode: nodes.MacroNode,
+			'XML/GetNameNode': nodes.GetNameNode,
+			'XML/VariableNode': nodes.VariableNode,
+			'XML/XmlNode': nodes.XmlNode,
+			'control/EveryNode': nodes.EveryNode,
+			'control/SequenceNode': nodes.SequenceNode,
+			'control/ForEachNode': nodes.ForEachNode,
+			'control/StartNode': nodes.StartNode,
+			'control/TimeLoopNode': nodes.TimeLoopNode,
+			'data/MakeArrayNode': nodes.MakeArrayNode,
+			'data/NumberNode': nodes.NumberNode,
+			'data/StringNode': nodes.StringNode,
+			'io/AppendNode': nodes.AppendNode,
+			'io/DisplayNode': nodes.DisplayNode,
+			'io/DownloadNode': nodes.DownloadNode,
+			'io/FormatNode': nodes.FormatNode,
+			'io/LogNode': nodes.LogNode,
+			'makutu/acquisition/SEGYAcquisitionNode': nodes.SEGYAcquisitionNode,
+			'makutu/acquisition/BreakNode': nodes.BreakNode,
+			'makutu/solver/AcousticSEMNode': nodes.AcousticSEMNode,
+			'makutu/solver/ApplyInitialConditionsNode': nodes.ApplyInitialConditionsNode,
+			'makutu/solver/ExecuteNode': nodes.ExecuteNode,
+			'makutu/solver/GetPressureAtReceiversNode': nodes.GetPressuresAtReceiversNode,
+			'makutu/solver/InitializeSolverNode': nodes.InitializeSolverNode,
+			'makutu/solver/OutputVtk': nodes.OutputVtkNode,
+			'makutu/solver/ReinitSolverNode': nodes.ReinitSolverNode,
+			'makutu/solver/SolverAPINode': nodes.SolverAPINode,
+			'makutu/solver/SolverLoopNode': nodes.SolverLoopNode,
+			'makutu/solver/UpdateSourceAndReceivers': nodes.UpdateSourcesAndReceiversNode,
+			'makutu/solver/UpdateVtkOutput': nodes.UpdateVtkOutputNode,
+			'math/AddNode': nodes.AddNode
+		};
+		return clone(res) as Record<string, typeof Node>;
+	}
 	static registerClass(id: string, nodeClass: typeof Node) {
-		this.classRegistry[id] = nodeClass;
+		// this.classRegistry[id] = nodeClass;
 	}
 	private state: Map<string, unknown> = new Map();
 

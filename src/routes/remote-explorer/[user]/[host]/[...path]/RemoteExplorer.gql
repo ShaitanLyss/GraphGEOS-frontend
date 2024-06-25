@@ -1,9 +1,9 @@
 query RemoteExplorer($explorerInput: RemoteExplorerInput!) {
 	remoteExplorer {
-		files(remoteExplorerInput: $explorerInput){
+		files(remoteExplorerInput: $explorerInput) {
 			name
 			isDir
-			path 
+			path
 		}
 	}
 }

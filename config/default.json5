@@ -1,15 +1,25 @@
 {
-	App: {
-	},
+	App: {},
 	Houdini: {
-		schemaUrl: "http://localhost:8000/api/v1/graphql",
+		schemaUrl: 'http://localhost:8000/api/v1/graphql',
 		static: false,
-		watch: true,
+		watch: true
 	},
 	Public: {
 		title: 'GEOS',
 		themes: {
-			presets: ['crimson', 'gold-nouveau', 'hamlindigo', 'modern', 'rocket', 'sahara', 'seafoam', 'skeleton', 'vintage', 'wintry'],
+			presets: [
+				'crimson',
+				'gold-nouveau',
+				'hamlindigo',
+				'modern',
+				'rocket',
+				'sahara',
+				'seafoam',
+				'skeleton',
+				'vintage',
+				'wintry'
+			],
 			customs: []
 		},
 		fake_login: true,

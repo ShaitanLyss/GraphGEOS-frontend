@@ -33,7 +33,7 @@ export type SocketType =
 	// | 'pythonProperty'
 	// | 'solver'
 	// | 'xmlProblem'
-	// | 'groupNameRef'
+	| 'groupNameRef'
 	| XMLAttrType
 	| XMLElementType;
 

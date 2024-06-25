@@ -7,10 +7,10 @@ export * from './popup';
 
 import { browser } from '$app/environment';
 import { type Writable, writable, get } from 'svelte/store';
+import type { Action } from 'svelte/action';
 import LocaleSwitcher__SvelteComponent_ from './LocaleSwitcher.svelte';
 import ThemeSwitcher__SvelteComponent_ from './ThemeSwitcher.svelte';
 import { getCookie } from './cookies';
-import type { Action } from 'svelte/action';
 import { moonMenuVisibleStore } from '$lib/menu/context-menu/moonContextMenu';
 export { _, isLoading as isLocaleLoading, Localization } from './localization';
 export {

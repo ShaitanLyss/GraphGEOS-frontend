@@ -9,6 +9,7 @@
 	let remainingAttrNames = optAttrNames.filter(
 		(attrName) => !data.xmlNode.state.usedOptionalAttrs.includes(attrName)
 	);
+	console.log('Creat', remainingAttrNames);
 	let selectedPropName = remainingAttrNames[0];
 
 	function onClickAddAttribute(event: Event) {

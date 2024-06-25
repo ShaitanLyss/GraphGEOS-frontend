@@ -1,11 +1,10 @@
 <script lang="ts">
-	import { ErrorWNotif } from '$lib/global';
+	import { ErrorWNotif, _ } from '$lib/global';
 	import { createActionMenuItem } from '$lib/menu';
 	import { spawnMoonMenu } from '$lib/menu/context-menu/moonContextMenu';
 	import type { NodeFactory } from '$rete';
 	import type { Schemes } from '$rete/node/Schemes';
 	import type { Position } from 'rete-render-utils/_types/types';
-	import { _ } from '$lib/global';
 
 	// svelte-ignore unused-export-let
 	export let data: Schemes['Connection'] & { isLoop?: boolean };

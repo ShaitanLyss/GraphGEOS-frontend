@@ -3,12 +3,10 @@
 	import { popup, type PopupSettings } from '@skeletonlabs/skeleton';
 	import Fa, { type IconSize } from 'svelte-fa';
 	import type { ButtonExec, ButtonExecNoNeedFactory } from '.';
-	import { ErrorWNotif, getContext } from '$lib/global';
+	import { ErrorWNotif, getContext, _, keyboardShortcut } from '$lib/global';
 	import newLocalId from 'locally-unique-id-generator';
-	import { _ } from '$lib/global';
 	import { fade, scale } from 'svelte/transition';
 
-	import { keyboardShortcut } from '$lib/global';
 	import type { ComponentProps } from 'svelte';
 	export let shortcut: string | undefined = undefined;
 

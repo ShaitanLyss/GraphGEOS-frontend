@@ -37,15 +37,15 @@ const config = {
 					fallback: 'index.html',
 					precompress: false,
 					strict: true
-			  }),
+				}),
 		csrf: {
 			checkOrigin: false
 		},
 		alias: {
 			$rete: 'src/lib/editor/rete',
+			$utils: 'src/lib/utils',
 			$houdini: '$houdini',
-			'$custom-components': 'src/lib/editor/rete/customization/presets/classic/components',
-			$utils: 'src/lib/utils'
+			'$custom-components': 'src/lib/editor/rete/customization/presets/classic/components'
 		}
 	}
 };

@@ -7,7 +7,7 @@
 	export let data: { session: Session | null } & PageData;
 	const session = data.session;
 
-	import { getCookie } from 'typescript-cookie';
+	import { getCookie, removeCookie, setCookie } from 'typescript-cookie';
 	import { onMount, setContext } from 'svelte';
 	import { notifications } from '@mantine/notifications';
 	let ready = false;
@@ -17,7 +17,6 @@
 	import { isTauri } from '$utils/tauri';
 	import { initials } from '$utils/string';
 	import { _, sessionTokenStore } from '$lib/global';
-	import { removeCookie, setCookie } from 'typescript-cookie';
 	import Fa from 'svelte-fa';
 	import { faHome } from '@fortawesome/free-solid-svg-icons';
 	import { env } from '$env/dynamic/public';

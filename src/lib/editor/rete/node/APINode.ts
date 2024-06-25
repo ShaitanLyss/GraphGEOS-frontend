@@ -1,7 +1,6 @@
 import { getBackendAddress } from '$utils/config';
 import { Node, type NodeParams } from './Node';
 // import { env } from '$env/dynamic/public';
-import { getCookie } from 'typescript-cookie';
 export interface APINodeParams extends NodeParams {
 	url: string;
 	defaultOutExec?: boolean;

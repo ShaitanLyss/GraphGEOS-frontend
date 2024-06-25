@@ -43,6 +43,11 @@ import { EditorType } from '$lib/editor';
 import { VariableNode } from '$rete/node/XML/VariableNode';
 import type { Variable } from '$lib/editor/overlay/variables-list';
 import { newUuid } from '$utils';
+import { FormatNode } from '$rete/node/io/FormatNode';
+import { SelectNode } from '$rete/node/data/SelectNode';
+import { DisplayNode } from '$rete/node/io/DisplayNode';
+import { MergeArrays } from '$rete/node/data/array';
+import { NotNode } from '$rete/node/data';
 
 type Entry = Map<string, Entry | (() => Node | Promise<Node>)>;
 function isClassConstructor(obj: unknown): boolean {
@@ -254,19 +259,70 @@ export class ContextMenuSetup extends Setup {
 					tags: ['name', 'get']
 				}),
 				createNodeMenuItem({
+					label: 'String',
+					addNode: stringNodeItem.action,
+					inTypes: [],
+					outTypes: ['string'],
+					description: 'Create a string',
+					tags: ['string', 'create', 'basic'],
+					menuPath: ['String']
+				}),
+				createNodeMenuItem({
+					label: 'Display',
+					addNode: (factory) => new DisplayNode({ factory }),
+					inTypes: ['*'],
+					tags: ['display', 'data', 'vizualization'],
+					description: 'Display the input',
+					menuPath: ['I/O']
+				}),
+				createNodeMenuItem({
+					label: 'Select',
+					addNode: (factory) => new SelectNode({ factory }),
+					inTypes: ['*'],
+					outTypes: ['*'],
+					tags: ['select', 'choice']
+				}),
+				createNodeMenuItem({
+					label: 'Format',
+					addNode: (factory) => new FormatNode({ factory }),
+					inTypes: ['*'],
+					outTypes: ['groupNameRef'],
+					tags: ['format', 'string']
+				}),
+				createNodeMenuItem({
 					label: 'Make Array',
 					addNode: makeArrayNodeItem.action,
 					inTypes: ['*'],
 					outTypes: ['array'],
 					description: 'Make an array from the input',
-					tags: ['array', 'make']
+					tags: ['array', 'make'],
+					menuPath: ['Array']
+				}),
+				createNodeMenuItem({
+					label: 'Not',
+					addNode: (factory) => new NotNode({ factory }),
+					inTypes: ['boolean'],
+					outTypes: ['boolean'],
+					description: 'Invert the input',
+					tags: ['boolean', 'invert', 'not', '!'],
+					menuPath: ['Boolean']
+				}),
+				createNodeMenuItem({
+					label: 'Merge Arrays',
+					addNode: (factory) => new MergeArrays({ factory }),
+					inTypes: ['*'],
+					outTypes: ['array'],
+					description: 'Make an array from the input',
+					tags: ['array', 'make'],
+					menuPath: ['Array']
 				}),
 				createNodeMenuItem({
 					label: 'Download',
 					addNode: downloadSchemaItem.action,
 					inTypes: [...geosContextV2.geosSchema.complexTypes.keys()],
 					description: 'Download the problem as xml',
-					tags: ['download', 'xml']
+					tags: ['download', 'xml'],
+					menuPath: ['I/O']
 				})
 			);
 

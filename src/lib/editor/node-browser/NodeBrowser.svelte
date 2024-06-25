@@ -1,15 +1,10 @@
 <script lang="ts">
-	import { faFilter, faStar, faUser, faGlobe, faSearch } from '@fortawesome/free-solid-svg-icons';
-	// import { faStar, faUser } from '@fortawesome/free-regular-svg-icons';
+	import { faStar, faUser, faGlobe } from '@fortawesome/free-solid-svg-icons';
 	import { AppRail, AppRailTile } from '@skeletonlabs/skeleton';
-	import { moonMenuVisibleStore } from '$lib/menu/context-menu/moonContextMenu';
 	import Fa from 'svelte-fa';
-	import { isLoading, _ } from 'svelte-i18n';
+	import { _ } from 'svelte-i18n';
 	import GraphSearchPanel from './GraphSearchPanel.svelte';
 	import { fade, slide } from 'svelte/transition';
-	import { flip } from 'svelte/animate';
-	import { browser } from '$app/environment';
-	import { onDestroy } from 'svelte';
 	import { getContext, keyboardShortcut } from '$lib/global';
 
 	const session = getContext('session');

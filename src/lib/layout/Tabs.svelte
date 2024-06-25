@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { ErrorWNotif } from '$lib/global';
-	import type { AddModel, AddModelProps, SetMainAddModel, TabContext, TabProps } from '$lib/layout';
+	import type { AddModelProps, TabContext, TabProps } from '$lib/layout';
 	import { faTimes } from '@fortawesome/free-solid-svg-icons';
-	import { Tab, TabGroup, localStorageStore } from '@skeletonlabs/skeleton';
+	import { Tab, TabGroup } from '@skeletonlabs/skeleton';
 	import Fa from 'svelte-fa';
 	import { flip } from 'svelte/animate';
-	import { writable, type Writable } from 'svelte/store';
-	import { fade, fly } from 'svelte/transition';
-	import { type DragOptions, draggable, type DragEventData } from '@neodrag/svelte';
+	import { fly } from 'svelte/transition';
 	import type { Action } from 'svelte/action';
+	import { writable, type Writable } from 'svelte/store';
+	import { type DragOptions, type DragEventData } from '@neodrag/svelte';
 
 	let tabs: Map<string, TabProps> = new Map();
 	let tabsOrder: string[] = [];
@@ -190,7 +190,7 @@
 						: Math.min(
 								Math.max(event.clientX, boundsRect.x + startPos.x - baseNodeRect.x),
 								mainButtonRect.x - (baseNodeRect.x + baseNodeRect.width - startPos.x)
-						  ) - startPos.x,
+							) - startPos.x,
 				y: axis === 'x' ? 0 : event.clientY - startPos.y
 			};
 		}

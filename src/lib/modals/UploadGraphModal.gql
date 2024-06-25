@@ -1,9 +1,9 @@
 mutation UploadGraphModalCreate($graph: CreateGraphESInput!) {
-    graph {
-        createGraph(graph: $graph) {
-            id
-            result
-            version
-        }
-    }
+	graph {
+		createGraph(graph: $graph) {
+			id
+			result
+			version
+		}
+	}
 }

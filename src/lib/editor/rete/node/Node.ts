@@ -18,7 +18,7 @@ import {
 	type InputControlTypes,
 	type InputControlValueType
 } from '../control/Control';
-import { NodeFactory } from './NodeFactory';
+import type { NodeFactory } from './NodeFactory';
 import type { ComponentSupportInterface } from '$rete/components/ComponentSupportInterface';
 import type { BaseComponent } from '$rete/components/BaseComponent';
 import { PythonNodeComponent } from '$rete/components/Python_NC';
@@ -33,7 +33,7 @@ interface ControlParams<N> {
 export interface OutDataParams {
 	socketLabel?: string;
 	name: string;
-	displayLabel: boolean;
+	displayLabel?: boolean;
 	displayName?: string;
 	isArray?: boolean;
 	type?: SocketType;

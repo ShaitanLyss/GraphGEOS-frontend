@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, createEventDispatcher } from 'svelte';
 	import type { Item as ItemType } from '../types';
 	import { debounce } from '../utils/debounce';
-	import { createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher();
 

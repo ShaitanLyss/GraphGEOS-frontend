@@ -4,10 +4,9 @@
 	import type { EditorContext } from '..';
 	import CodeEditorIntegrationButton from './CodeEditorIntegrationButton.svelte';
 	import { notifications } from '@mantine/notifications';
-	import { ErrorWNotif, getContext } from '$lib/global';
+	import { ErrorWNotif, getContext, _ } from '$lib/global';
 	import 'regenerator-runtime/runtime';
 	import wu from 'wu';
-	import { _ } from '$lib/global';
 	import { structures } from 'rete-structures';
 	import {
 		parseXml,
@@ -187,7 +186,6 @@
 					xmlAttributes[k] = array1d;
 					arrayAttrs.set(attrType.name, array1d);
 				}
-
 				const node = await tmp_factory.addNode(XmlNode, {
 					label: xmlTag,
 					initialValues: xmlAttributes,
@@ -227,7 +225,7 @@
 						console.log('attrType', attrType);
 						initialValues[`data-${i}`] = t;
 					}
-
+					console.log('zzzz');
 					const makeArrayNode = await tmp_factory.addNode(MakeArrayNode, {
 						initialValues,
 						numPins: a.length
