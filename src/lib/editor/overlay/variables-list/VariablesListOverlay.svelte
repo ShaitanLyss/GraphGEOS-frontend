@@ -111,6 +111,7 @@
 				[id]: {
 					name: `variable${nVarsCreated}`,
 					exposed: false,
+					isArray: false,
 					value: undefined,
 					type: $defaultType,
 					highlighted: false,

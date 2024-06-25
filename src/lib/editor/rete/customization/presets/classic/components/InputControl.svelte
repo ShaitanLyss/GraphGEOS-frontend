@@ -348,7 +348,6 @@
 		<input
 			on:dblclick|stopPropagation
 			on:pointerdown|stopPropagation
-			readonly
 			type="text"
 			title="remote file"
 			class="{inputTextSize} input"

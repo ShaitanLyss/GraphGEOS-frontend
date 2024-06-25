@@ -4,6 +4,7 @@ export type Variable = {
 	name: string;
 	value: unknown;
 	type: SocketType;
+	isArray: boolean;
 	exposed: boolean;
 	id: string;
 	highlighted: boolean;

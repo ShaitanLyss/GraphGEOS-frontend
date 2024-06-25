@@ -11,7 +11,9 @@
 		type PopupSettings,
 		ListBox,
 		ListBoxItem,
-		getModalStore
+		getModalStore,
+		type ModalComponent,
+		type ModalSettings
 	} from '@skeletonlabs/skeleton';
 	import { newLocalId, capitalize } from '$utils';
 	import { createEventDispatcher } from 'svelte';
@@ -19,11 +21,13 @@
 	import type { Point } from '$lib/types/Point';
 	import { createActionMenuItem } from '$lib/menu';
 	import { ErrorWNotif, _ } from '$lib/global';
+	import ArrayEditor from './ArrayEditorModal.svelte';
 
 	let v: Variable;
 	export { v as variable };
 
 	const modalStore = getModalStore();
+
 	const dispatch = createEventDispatcher<{
 		changetype: { type: SocketType };
 		delete: { variable: Variable };
@@ -119,6 +123,22 @@
 			}
 		});
 	}
+	const arrayEditor: ModalComponent = { ref: ArrayEditor };
+
+	function openArrayEditor() {
+		const arrayEditorModal: ModalSettings = {
+			type: 'component',
+			component: arrayEditor,
+			meta: { array: v.value, type: v.type, title: 'Edit array' },
+			response(a) {
+				console.log('ArrayEdit: Modal response', a);
+				if (a !== undefined) {
+					v.value = a;
+				}
+			}
+		};
+		modalStore.trigger(arrayEditorModal);
+	}
 </script>
 
 <div class="bg-surface-50-900-token rounded-container-token p-2" data-popup={id}>
@@ -142,7 +162,12 @@
 <div class="flex items-center justify-between h-10">
 	<div class="flex items-center gap-2 pe-2">
 		<button type="button" class="btn px-0 pb-0 py-1" use:popup={popupSettings}>
-			<div class="rectangle-3d" title={v.type} use:cssVars={{ color }} />
+			<div
+				class:rectangle-3d={!v.isArray}
+				class:array={v.isArray}
+				title={v.type}
+				use:cssVars={{ color }}
+			/>
 		</button>
 		<button
 			type="button"
@@ -155,7 +180,7 @@
 				e.dataTransfer.setData('application/graph-variable', JSON.stringify(v));
 			}}
 			class:outline-dashed={v.exposed}
-			class="outline-2 outline-primary-400 text-start text-ellipsis w-20 overflow-hidden pointer-events-auto hover:bg-surface-200-700-token rounded-token py-1 px-2"
+			class="outline-2 outline-primary-400 text-start text-ellipsis w-[7.8rem] overflow-hidden pointer-events-auto hover:bg-surface-200-700-token rounded-token py-1 px-2"
 			on:contextmenu|preventDefault|stopPropagation={(e) =>
 				openContextMenu({ pos: { x: e.clientX, y: e.clientY } })}
 			on:click={() => openRenamePrompt()}
@@ -164,11 +189,25 @@
 		</button>
 	</div>
 	{#if inputControl}
-		<InputControlComponent data={inputControl} width="w-56" />
+		{#if v.isArray}
+			<button
+				type="button"
+				class="btn btn-sm variant-filled w-full"
+				on:click={() => openArrayEditor()}>Edit array</button
+			>
+		{:else}
+			<InputControlComponent data={inputControl} width="w-56" />
+		{/if}
 	{/if}
 </div>
 
 <style lang="scss">
+	.array {
+		width: 1.2rem;
+		height: 1.2rem;
+		border: 4px dashed var(--color);
+	}
+
 	.rectangle-3d {
 		width: 1.2rem; /* Width of the rectangle */
 		height: 0.6rem; /* Height of the rectangle */

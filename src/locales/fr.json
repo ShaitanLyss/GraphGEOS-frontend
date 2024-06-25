@@ -1,324 +1,329 @@
 {
-	"enter": {
-		"name": "Entrer un nom"
-	},
-	"prompt": {
-		"provide": {
-			"name": {
-				"graph": "Donnez un nouveau nom au graphique."
-			}
-		},
-		"comment": {
-			"edit": {
-				"title": "Modifier le commentaire",
-				"placeholder": "Commentaire",
-				"title-when-empty": "Commentaire"
-			}
-		}
-	},
-	"new": {
-		"editor": "Nouvel éditeur"
-	},
-	"browser": {
-		"tab": {
-			"favorite": "Favoris",
-			"user": "Utilisateur",
-			"shared": "Partagé"
-		}
-	},
-	"title": {
-		"favorite": "Favoris",
-		"recent": "Récent",
-		"recents": "Récents",
-		"author": "Auteur",
-		"description": "Description"
-	},
-	"button": {
-		"cancel": "Annuler",
-		"confirm": "Confirmer",
-		"upload": "Mettre en ligne",
-		"rename": "Renommer",
-		"login": "Se connecter",
-		"logout": "Se déconnecter",
-		"delete": "Supprimer",
-		"add": "Ajouter"
-	},
-	"form": {
-		"input": {
-			"make_public": "Rendre publique",
-			"graph": {
-				"description_placeholder": "Description courte du graphe",
-				"name_placeholder": "Nom du graphe",
-				"name": {
-					"title": "Nom"
-				},
-				"tags_placeholder": "Ajouter une étiquette",
-				"tags": {
-					"already_added": "Cette étiquette existe déjà.",
-					"title": "étiquettes",
-					"empty_state": "Créera l'étiquette {tag}"
-				}
-			},
-			"add_favorite": "Favori"
-		},
-		"graph": {
-			"button": {
-				"update": "mettre à jour"
-			}
-		}
-	},
-	"modal": {
-		"title": {
-			"graph": {
-				"upload": "Mettre graphe en ligne"
-			}
-		},
-		"graph": {
-			"already_exist": {
-				"message": "Le graphe existe déjà, il sera mis à jour."
-			},
-			"upload": {
-				"you-must-be-logged-in": "Vous devez être connecté pour mettre un macro bloc en ligne. Vous pouvez le faire sur la page d'authentification."
-			}
-		},
-		"graph_upload": {
-			"failed": {
-				"message": "Il y a une erreur durant la mise en ligne du graphe."
-			},
-			"success": {
-				"message": "Mise en ligne réussie."
-			}
-		}
-	},
-	"card": {
-		"graphItem": {
-			"by_author": " {name}",
-			"on_date": "Le {date}"
-		}
-	},
-	"python-mode": {
-		"generation": {
-			"success": {
-				"message": "Génération du code python réussie !"
-			},
-			"failure": {
-				"message": "Echec de la génération : Area is undefined"
-			}
-		},
-		"notification": {
-			"title": "Mode python",
-			"description": "Cliquez sur un noeud pour générer le code python"
-		}
-	},
-	"geos": {
-		"dash": {
-			"job_queue": "Jobs",
-			"new_job": {
-				"btn": "nouveau job"
-			}
-		}
-	},
-	"notification": {
-		"save": {
-			"title": "Sauvegarde",
-			"message": {
-				"ongoing": "Sauvegarde en cours...",
-				"success": "Sauvegardé ! Utilisation stockage : {storageUse, number, ::percent}",
-				"failure": "Échec de la sauvegarde. {error}.",
-				"success-no-storage-use": "Sauvegardé !"
-			}
-		},
-		"error": {
-			"title": "Erreur"
-		},
-		"success": {
-			"title": "Succès"
-		},
-		"graph_loaded": {
-			"title": "Chargement graphe",
-			"message": "Graphe chargé avec succès.",
-			"failure_msg": "Échec du chargement de graphe."
-		}
-	},
-	"test": {
-		"hello": {
-			"world": "Bonjour Monde"
-		}
-	},
-	"editor": {
-		"button": {
-			"save": "Sauvegarder les éditeurs ouverts (CTRL+S)",
-			"python-mode": {
-				"tooltip": "Générer un workflow python (P)"
-			},
-			"toggle-geos": "Montrer / Cacher le panneau geos",
-			"downloadGraph": {
-				"tooltip": "Sauvegarder vers un fichier"
-			},
-			"load-graph-from-file": "Charger un fichier",
-			"error": {
-				"no_active_factory": "Pas de graphe ouvert",
-				"no_exec_function": "Fonctionnalité manquante"
-			},
-			"upload-graph": {
-				"tooltip": "Mettre en ligne le graphe"
-			},
-			"toggle-code-editor": {
-				"tooltip": "Ouvrir / Fermer l'éditeur de code (Shift+C)",
-				"close": "Fermer l'éditeur de code"
-			},
-			"layout": "Arrangement automatique (A)",
-			"redo": {
-				"tooltip": "Refaire"
-			},
-			"undo": {
-				"tooltip": "Annuler "
-			}
-		},
-		"notification": {
-			"title": "Éditeur"
-		},
-		"default-name": "Nouvel éditeur"
-	},
-	"toggle-geos": {
-		"failure": {
-			"missing-toggle": "Erreur pour changer l'affichage du panneau geos : Missing toggle function"
-		}
-	},
-	"notifications": {
-		"error": {
-			"title": "Erreur"
-		}
-	},
-	"page": {
-		"auth": {
-			"name": "Éditeur de code",
-			"message": {
-				"not-logged-in": "Vous n'êtes pas connecté",
-				"logged-in-as": "Connecté en tant que"
-			},
-			"fake-login-explanation": "Actuellement, seules les connexions aux comptes personnels sont possibles. Si vous ne le souhaitez pas, vous pouvez utiliser le 'fake login' ci-dessous."
-		}
-	},
-	"header": {
-		"link": {
-			"auth": {
-				"tooltip": "Authentification (Alt+A)"
-			},
-			"code-editor": {
-				"tooltip": "Éditeur de code (Alt+C)"
-			},
-			"graph-editor": {
-				"tooltip": "Éditeur de graphe (Alt+G)"
-			}
-		}
-	},
-	"main": {
-		"header": {
-			"button": {
-				"theme-switcher": {
-					"tooltip": "Changer de thème"
-				}
-			}
-		}
-	},
-	"code-editor-integration": {
-		"button": {
-			"download": {
-				"notification": {
-					"title": "Téléchargement",
-					"nothing-selected": {
-						"message": "Il n'y a rien de sélectionné qui puisse être téléchargé.\nLes éléments téléchargeables sont les noeuds XML et le code XML."
-					}
-				}
-			}
-		},
-		"push-to-graph": {
-			"selected-node-dragging": {
-				"message": "Les nœuds ajoutés ont été sélectionnés. Ils peuvent être déplacés à l'aide de CTRL + Bouton gauche de la souris."
-			}
-		}
-	},
-	"graph-editor": {
-		"notification": {
-			"title": "Éditeur de graphes"
-		},
-		"comment": {
-			"default-text": "Commentaire"
-		}
-	},
-	"menu": {
-		"context-menu": {
-			"delete-selected-nodes": "Supprimer",
-			"searchbar": {
-				"placeholder": "Chercher..."
-			}
-		},
-		"unexpose": "désexposer",
-		"expose": "exposer",
-		"variable": {
-			"unexpose": {
-				"descr": "Masquer cette variable depuis l'extérieur"
-			},
-			"expose": {
-				"descr": "Exposer cette variable pour la rendre éditable depuis l'extérieur"
-			},
-			"delete": {
-				"descr": "Supprimer cette variable et les noeuds associés"
-			}
-		},
-		"node": {
-			"delete": {
-				"descr": "Supprimer les nœuds sélectionnés",
-				"label": "Supprimer"
-			},
-			"comment": {
-				"label": "Commenter",
-				"descr": "Commenter les nœuds sélectionnés"
-			},
-			"duplicate": {
-				"descr": "Dupliquer les nœuds sélectionnés",
-				"label": "Dupliquer"
-			}
-		},
-		"comment": {
-			"delete": {
-				"label": "Supprimer",
-				"description": "Supprimer ce commentaire"
-			},
-			"edit": {
-				"label": "Modifier",
-				"description": "Modifier ce commentaire"
-			}
-		},
-		"delete-selected": {
-			"descr": "Supprimer les éléments sélectionnés"
-		}
-	},
-	"remote-explorer": {
-		"searchbar": {
-			"placeholder": "Chercher"
-		},
-		"title": "Explorateur distant",
-		"auth-modal": {
-			"user": {
-				"title": "Utilisateur",
-				"placeholder": "Utilisateur linux"
-			},
-			"password": {
-				"title": "Mot de passe"
-			}
-		},
-		"auth-btn": {
-			"label": {
-				"connect": "Se connecter"
-			}
-		}
-	},
-	"variable-item": {
-		"rename-prompt": {
-			"placeholder": "Nom de la variable",
-			"title": "Renommer la variable"
-		}
-	}
+  "enter": {
+    "name": "Entrer un nom"
+  },
+  "prompt": {
+    "provide": {
+      "name": {
+        "graph": "Donnez un nouveau nom au graphique."
+      }
+    },
+    "comment": {
+      "edit": {
+        "title": "Modifier le commentaire",
+        "placeholder": "Commentaire",
+        "title-when-empty": "Commentaire"
+      }
+    }
+  },
+  "new": {
+    "editor": "Nouvel éditeur"
+  },
+  "browser": {
+    "tab": {
+      "favorite": "Favoris",
+      "user": "Utilisateur",
+      "shared": "Partagé"
+    }
+  },
+  "title": {
+    "favorite": "Favoris",
+    "recent": "Récent",
+    "recents": "Récents",
+    "author": "Auteur",
+    "description": "Description"
+  },
+  "button": {
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "upload": "Mettre en ligne",
+    "rename": "Renommer",
+    "login": "Se connecter",
+    "logout": "Se déconnecter",
+    "delete": "Supprimer",
+    "add": "Ajouter",
+    "search": "Rechercher"
+  },
+  "form": {
+    "input": {
+      "make_public": "Rendre publique",
+      "graph": {
+        "description_placeholder": "Description courte du graphe",
+        "name_placeholder": "Nom du graphe",
+        "name": {
+          "title": "Nom"
+        },
+        "tags_placeholder": "Ajouter une étiquette",
+        "tags": {
+          "already_added": "Cette étiquette existe déjà.",
+          "title": "étiquettes",
+          "empty_state": "Créera l'étiquette {tag}"
+        }
+      },
+      "add_favorite": "Favori"
+    },
+    "graph": {
+      "button": {
+        "update": "mettre à jour"
+      }
+    }
+  },
+  "modal": {
+    "title": {
+      "graph": {
+        "upload": "Mettre graphe en ligne"
+      }
+    },
+    "graph": {
+      "already_exist": {
+        "message": "Le graphe existe déjà, il sera mis à jour."
+      },
+      "upload": {
+        "you-must-be-logged-in": "Vous devez être connecté pour mettre un macro bloc en ligne. Vous pouvez le faire sur la page d'authentification."
+      }
+    },
+    "graph_upload": {
+      "failed": {
+        "message": "Il y a une erreur durant la mise en ligne du graphe."
+      },
+      "success": {
+        "message": "Mise en ligne réussie."
+      }
+    }
+  },
+  "card": {
+    "graphItem": {
+      "by_author": " {name}",
+      "on_date": "Le {date}"
+    }
+  },
+  "python-mode": {
+    "generation": {
+      "success": {
+        "message": "Génération du code python réussie !"
+      },
+      "failure": {
+        "message": "Echec de la génération : Area is undefined"
+      }
+    },
+    "notification": {
+      "title": "Mode python",
+      "description": "Cliquez sur un noeud pour générer le code python"
+    }
+  },
+  "geos": {
+    "dash": {
+      "job_queue": "Jobs",
+      "new_job": {
+        "btn": "nouveau job"
+      }
+    }
+  },
+  "notification": {
+    "save": {
+      "title": "Sauvegarde",
+      "message": {
+        "ongoing": "Sauvegarde en cours...",
+        "success": "Sauvegardé ! Utilisation stockage : {storageUse, number, ::percent}",
+        "failure": "Échec de la sauvegarde. {error}.",
+        "success-no-storage-use": "Sauvegardé !"
+      }
+    },
+    "error": {
+      "title": "Erreur"
+    },
+    "success": {
+      "title": "Succès"
+    },
+    "graph_loaded": {
+      "title": "Chargement graphe",
+      "message": "Graphe chargé avec succès.",
+      "failure_msg": "Échec du chargement de graphe."
+    }
+  },
+  "test": {
+    "hello": {
+      "world": "Bonjour Monde"
+    }
+  },
+  "editor": {
+    "button": {
+      "save": "Sauvegarder les éditeurs ouverts (CTRL+S)",
+      "python-mode": {
+        "tooltip": "Générer un workflow python (P)"
+      },
+      "toggle-geos": "Montrer / Cacher le panneau geos",
+      "downloadGraph": {
+        "tooltip": "Sauvegarder vers un fichier"
+      },
+      "load-graph-from-file": "Charger un fichier",
+      "error": {
+        "no_active_factory": "Pas de graphe ouvert",
+        "no_exec_function": "Fonctionnalité manquante"
+      },
+      "upload-graph": {
+        "tooltip": "Mettre en ligne le graphe"
+      },
+      "toggle-code-editor": {
+        "tooltip": "Ouvrir / Fermer l'éditeur de code (Shift+C)",
+        "close": "Fermer l'éditeur de code"
+      },
+      "layout": "Arrangement automatique (A)",
+      "redo": {
+        "tooltip": "Refaire"
+      },
+      "undo": {
+        "tooltip": "Annuler "
+      }
+    },
+    "notification": {
+      "title": "Éditeur"
+    },
+    "default-name": "Nouvel éditeur"
+  },
+  "toggle-geos": {
+    "failure": {
+      "missing-toggle": "Erreur pour changer l'affichage du panneau geos : Missing toggle function"
+    }
+  },
+  "notifications": {
+    "error": {
+      "title": "Erreur"
+    }
+  },
+  "page": {
+    "auth": {
+      "name": "Éditeur de code",
+      "message": {
+        "not-logged-in": "Vous n'êtes pas connecté",
+        "logged-in-as": "Connecté en tant que"
+      },
+      "fake-login-explanation": "Actuellement, seules les connexions aux comptes personnels sont possibles. Si vous ne le souhaitez pas, vous pouvez utiliser le 'fake login' ci-dessous."
+    }
+  },
+  "header": {
+    "link": {
+      "auth": {
+        "tooltip": "Authentification (Alt+A)"
+      },
+      "code-editor": {
+        "tooltip": "Éditeur de code (Alt+C)"
+      },
+      "graph-editor": {
+        "tooltip": "Éditeur de graphe (Alt+G)"
+      }
+    }
+  },
+  "main": {
+    "header": {
+      "button": {
+        "theme-switcher": {
+          "tooltip": "Changer de thème"
+        }
+      }
+    }
+  },
+  "code-editor-integration": {
+    "button": {
+      "download": {
+        "notification": {
+          "title": "Téléchargement",
+          "nothing-selected": {
+            "message": "Il n'y a rien de sélectionné qui puisse être téléchargé.\nLes éléments téléchargeables sont les noeuds XML et le code XML."
+          }
+        }
+      }
+    },
+    "push-to-graph": {
+      "selected-node-dragging": {
+        "message": "Les nœuds ajoutés ont été sélectionnés. Ils peuvent être déplacés à l'aide de CTRL + Bouton gauche de la souris."
+      }
+    }
+  },
+  "graph-editor": {
+    "notification": {
+      "title": "Éditeur de graphes"
+    },
+    "comment": {
+      "default-text": "Commentaire"
+    },
+    "find-prompt": {
+      "title": "Rechercher un bloc",
+      "placeholder": "Rechercher"
+    }
+  },
+  "menu": {
+    "context-menu": {
+      "delete-selected-nodes": "Supprimer",
+      "searchbar": {
+        "placeholder": "Chercher..."
+      }
+    },
+    "unexpose": "désexposer",
+    "expose": "exposer",
+    "variable": {
+      "unexpose": {
+        "descr": "Masquer cette variable depuis l'extérieur"
+      },
+      "expose": {
+        "descr": "Exposer cette variable pour la rendre éditable depuis l'extérieur"
+      },
+      "delete": {
+        "descr": "Supprimer cette variable et les noeuds associés"
+      }
+    },
+    "node": {
+      "delete": {
+        "descr": "Supprimer les nœuds sélectionnés",
+        "label": "Supprimer"
+      },
+      "comment": {
+        "label": "Commenter",
+        "descr": "Commenter les nœuds sélectionnés"
+      },
+      "duplicate": {
+        "descr": "Dupliquer les nœuds sélectionnés",
+        "label": "Dupliquer"
+      }
+    },
+    "comment": {
+      "delete": {
+        "label": "Supprimer",
+        "description": "Supprimer ce commentaire"
+      },
+      "edit": {
+        "label": "Modifier",
+        "description": "Modifier ce commentaire"
+      }
+    },
+    "delete-selected": {
+      "descr": "Supprimer les éléments sélectionnés"
+    }
+  },
+  "remote-explorer": {
+    "searchbar": {
+      "placeholder": "Chercher"
+    },
+    "title": "Explorateur distant",
+    "auth-modal": {
+      "user": {
+        "title": "Utilisateur",
+        "placeholder": "Utilisateur linux"
+      },
+      "password": {
+        "title": "Mot de passe"
+      }
+    },
+    "auth-btn": {
+      "label": {
+        "connect": "Se connecter"
+      }
+    }
+  },
+  "variable-item": {
+    "rename-prompt": {
+      "placeholder": "Nom de la variable",
+      "title": "Renommer la variable"
+    }
+  }
 }

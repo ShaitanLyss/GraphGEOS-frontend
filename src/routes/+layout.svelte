@@ -13,13 +13,14 @@
 
 	import type { GeosDataContext, GeosSchema } from '$lib/geos';
 	import { writable } from 'svelte/store';
+	import type { GeosTypesTree } from '$lib/backend-interaction';
 
 	initializeStores();
 	setContext('publicConfig', data.publicConfig);
 	setContext('session', data.session);
 	const xmlSchema: GeosDataContext['xmlSchema'] = writable();
-	const typesTree: GeosDataContext['typesTree'] = writable();
-	const typesPaths: GeosDataContext['typesPaths'] = writable();
+	const typesTree: GeosDataContext['typesTree'] = writable<GeosTypesTree>({});
+	const typesPaths: GeosDataContext['typesPaths'] = writable<Record<string, string[]>>({});
 	setContext('geos', {
 		typesPaths,
 		xmlSchema,
@@ -29,7 +30,7 @@
 		complexTypes: new Map(),
 		simpleTypes: new Map()
 	};
-	const newGeosContext: resolveContext<'geos_v2'> = { geosSchema };
+	const newGeosContext: resolveContext<'geos_v2'> = { geosSchema, typesPaths, typesTree };
 	setContext('geos_v2', newGeosContext);
 </script>
 

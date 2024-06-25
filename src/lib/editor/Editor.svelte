@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { NodeEditor, NodeEditorSaveData, NodeFactory, setupEditor, Node } from '$rete';
+	import { XmlNode } from '$rete/node/XML/XmlNode';
 
 	import type { EditorExample } from '$rete/example/types';
 	import { capitalize, newLocalId, newUuid } from '$utils';
@@ -223,14 +224,21 @@
 				if (!factory) throw new Error('No factory');
 				const editor = factory.getEditor();
 				const node = editor.getNode(event.socketData.nodeId);
-				const value = node.getData(event.socketData.key);
+				const value =
+					node instanceof XmlNode
+						? node.state.attributeValues[event.socketData.key]
+						: node.getData(event.socketData.key);
+				console.log('promote to variable: node', node);
+				console.log('promote to variable: value', value);
+				console.log('promote to variable: event.socketData.payload', event.socketData.payload);
 				const variable: Variable = {
 					exposed: false,
 					highlighted: false,
 					id: newUuid('variable'),
 					name: event.socketData.payload.name,
 					type: event.socketData.payload.type,
-					value
+					value,
+					isArray: event.socketData.payload.isArray
 				};
 				factory.getEditor().variables.set({
 					...get(factory.getEditor().variables),

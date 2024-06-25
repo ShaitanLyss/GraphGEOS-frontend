@@ -260,6 +260,8 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 					this.getDataflowEngine().reset(this.id);
 				});
 			}
+		} else {
+			this.state.attributeValues[name] = initialValues[name];
 		}
 
 		this.height += isArray ? 58 : 65.5;

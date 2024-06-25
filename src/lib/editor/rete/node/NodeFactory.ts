@@ -17,7 +17,7 @@ import { ErrorWNotif, _ } from '$lib/global';
 import type { AutoArrangePlugin } from 'rete-auto-arrange-plugin';
 import wu from 'wu';
 import type History from 'rete-history-plugin/_types/history';
-import * as nodes from '.';
+import * as Nodes from '.';
 import type { CommentPlugin } from '$rete/plugin/CommentPlugin';
 import { localStorageStore, type getModalStore } from '@skeletonlabs/skeleton';
 
@@ -74,6 +74,7 @@ function createControlflowEngine() {
 type WithFactory<T extends Record<string, unknown>> = T & { factory: NodeFactory };
 type WithoutFactory<T> = Omit<T, 'factory'>;
 export class NodeFactory {
+	static classRegistrySetup = false;
 	public readonly connectionPathType: Writable<ConnectionPathType> = localStorageStore(
 		'connectionPathType',
 		defaultConnectionPath
@@ -81,40 +82,44 @@ export class NodeFactory {
 	public readonly modalStore?: ReturnType<typeof getModalStore>;
 
 	static get classRegistry(): Record<string, typeof Node> {
-		const res = {
-			MacroNode: nodes.MacroNode,
-			'XML/GetNameNode': nodes.GetNameNode,
-			'XML/VariableNode': nodes.VariableNode,
-			'XML/XmlNode': nodes.XmlNode,
-			'control/EveryNode': nodes.EveryNode,
-			'control/SequenceNode': nodes.SequenceNode,
-			'control/ForEachNode': nodes.ForEachNode,
-			'control/StartNode': nodes.StartNode,
-			'control/TimeLoopNode': nodes.TimeLoopNode,
-			'data/MakeArrayNode': nodes.MakeArrayNode,
-			'data/NumberNode': nodes.NumberNode,
-			'data/StringNode': nodes.StringNode,
-			'io/AppendNode': nodes.AppendNode,
-			'io/DisplayNode': nodes.DisplayNode,
-			'io/DownloadNode': nodes.DownloadNode,
-			'io/FormatNode': nodes.FormatNode,
-			'io/LogNode': nodes.LogNode,
-			'makutu/acquisition/SEGYAcquisitionNode': nodes.SEGYAcquisitionNode,
-			'makutu/acquisition/BreakNode': nodes.BreakNode,
-			'makutu/solver/AcousticSEMNode': nodes.AcousticSEMNode,
-			'makutu/solver/ApplyInitialConditionsNode': nodes.ApplyInitialConditionsNode,
-			'makutu/solver/ExecuteNode': nodes.ExecuteNode,
-			'makutu/solver/GetPressureAtReceiversNode': nodes.GetPressuresAtReceiversNode,
-			'makutu/solver/InitializeSolverNode': nodes.InitializeSolverNode,
-			'makutu/solver/OutputVtk': nodes.OutputVtkNode,
-			'makutu/solver/ReinitSolverNode': nodes.ReinitSolverNode,
-			'makutu/solver/SolverAPINode': nodes.SolverAPINode,
-			'makutu/solver/SolverLoopNode': nodes.SolverLoopNode,
-			'makutu/solver/UpdateSourceAndReceivers': nodes.UpdateSourcesAndReceiversNode,
-			'makutu/solver/UpdateVtkOutput': nodes.UpdateVtkOutputNode,
-			'math/AddNode': nodes.AddNode
+		const classRegistry = {
+			MacroNode: Nodes.MacroNode,
+			'XML/GetNameNode': Nodes.GetNameNode,
+			'XML/VariableNode': Nodes.VariableNode,
+			'XML/XmlNode': Nodes.XmlNode,
+			'control/EveryNode': Nodes.EveryNode,
+			'control/SequenceNode': Nodes.SequenceNode,
+			'control/ForEachNode': Nodes.ForEachNode,
+			'control/StartNode': Nodes.StartNode,
+			'control/TimeLoopNode': Nodes.TimeLoopNode,
+			'data/MakeArrayNode': Nodes.MakeArrayNode,
+			'data/NumberNode': Nodes.NumberNode,
+			'data/StringNode': Nodes.StringNode,
+			'io/AppendNode': Nodes.AppendNode,
+			'io/DisplayNode': Nodes.DisplayNode,
+			'io/DownloadNode': Nodes.DownloadNode,
+			'io/FormatNode': Nodes.FormatNode,
+			'io/LogNode': Nodes.LogNode,
+			'makutu/acquisition/SEGYAcquisitionNode': Nodes.SEGYAcquisitionNode,
+			'makutu/acquisition/BreakNode': Nodes.BreakNode,
+			'makutu/solver/AcousticSEMNode': Nodes.AcousticSEMNode,
+			'makutu/solver/ApplyInitialConditionsNode': Nodes.ApplyInitialConditionsNode,
+			'makutu/solver/ExecuteNode': Nodes.ExecuteNode,
+			'makutu/solver/GetPressureAtReceiversNode': Nodes.GetPressuresAtReceiversNode,
+			'makutu/solver/InitializeSolverNode': Nodes.InitializeSolverNode,
+			'makutu/solver/OutputVtk': Nodes.OutputVtkNode,
+			'makutu/solver/ReinitSolverNode': Nodes.ReinitSolverNode,
+			'makutu/solver/SolverAPINode': Nodes.SolverAPINode,
+			'makutu/solver/SolverLoopNode': Nodes.SolverLoopNode,
+			'makutu/solver/UpdateSourceAndReceivers': Nodes.UpdateSourcesAndReceiversNode,
+			'makutu/solver/UpdateVtkOutput': Nodes.UpdateVtkOutputNode,
+			'math/AddNode': Nodes.AddNode,
+			'boolean/Not': Nodes.NotNode,
+			'choice/Select': Nodes.SelectNode,
+			'array/MergeArray': Nodes.MergeArrays
 		};
-		return clone(res) as Record<string, typeof Node>;
+
+		return clone(classRegistry) as Record<string, typeof Node>;
 	}
 	static registerClass(id: string, nodeClass: typeof Node) {
 		// this.classRegistry[id] = nodeClass;
@@ -266,6 +271,13 @@ export class NodeFactory {
 		accumulating?: ReturnType<typeof AreaExtensions.accumulateOnCtrl>;
 	}) {
 		const { editor, area, makutuClasses, selector, arrange } = params;
+		if (!NodeFactory.classRegistrySetup) {
+			for (const [id, nodeClass] of Object.entries(NodeFactory.classRegistry)) {
+				nodeClass.id = id;
+				// console.log("registered", nodeClass, nodeClass.id)
+			}
+			NodeFactory.classRegistrySetup = true;
+		}
 		this.modalStore = params.modalStore;
 		this.comment = params.comment;
 		this.accumulating = params.accumulating;
@@ -499,6 +511,39 @@ export class NodeFactory {
 			.successors(node.id)
 			.nodes()
 			.forEach((n) => this.dataflowEngine.reset(n.id));
+	}
+
+	lastSearchNodeIndex = -1;
+	/**
+	 * Finds a node whose label or name matches the query.
+	 * Repeated calls will cycle through the nodes.
+	 * @param query
+	 * @returns found node or undefined
+	 */
+	findNode(query: string): Node | undefined {
+		console.log('mozza', this.lastSearchNodeIndex);
+		query = query.toLowerCase();
+		let nodes = this.editor.getNodes();
+		const m = Math.min(this.lastSearchNodeIndex + 1, nodes.length);
+		console.log('m', m);
+		nodes = [nodes.slice(m), nodes.slice(0, m)].flat();
+		console.log('mozza nodes', nodes);
+		const resIndex = nodes.findIndex((n) => {
+			return (
+				n.label.toLowerCase().includes(query) ||
+				(n instanceof Nodes.XmlNode && n.name && n.name.toLowerCase().includes(query))
+			);
+		});
+		this.lastSearchNodeIndex = resIndex === -1 ? -1 : (resIndex + m) % nodes.length;
+		return resIndex !== -1 ? nodes[resIndex] : undefined;
+	}
+
+	focusNode(node?: Node): void {
+		if (!node) {
+			console.warn('Tried to focus an undefined node.');
+			return;
+		}
+		if (this.area) AreaExtensions.zoomAt(this.area, [node], { scale: undefined });
 	}
 
 	process(node?: Node) {

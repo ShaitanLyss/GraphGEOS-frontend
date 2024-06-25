@@ -27,6 +27,7 @@
 	import { get } from 'svelte/store';
 	import type { XmlAttributeDefinition } from '$rete/node/XML/types';
 	import { MakeArrayNode } from '$rete/node/data/MakeArrayNode';
+	import { GetNameNode } from '$rete/node/XML/GetNameNode';
 
 	export let editorContext: EditorContext;
 	let codeEditorPromise: Promise<ICodeEditor>;
@@ -83,7 +84,8 @@
 	async function push() {
 		const { NodeEditor, NodeFactory } = await import('$rete');
 		const geosSchema = newGeosContext.geosSchema;
-
+		const rootTypes = ['Problem', ...Object.keys(get(newGeosContext.typesTree)['Problem'] ?? {})];
+		console.log('pizza', get(newGeosContext.typesTree));
 		const factory = editorContext.getActiveFactory();
 		if (!factory) throw new ErrorWNotif('No active editor');
 		const editor = factory.getEditor();
@@ -105,7 +107,12 @@
 			editor: tmp_editor,
 			area: tmp_area
 		});
+		const nameToXmlNode = new Map<string, XmlNode>();
+		const groupNameLinks: { source: string; target: { node: Node; key: string } }[] = [];
 
+		/**
+		 * Recursively converts the parsed xml to editor nodes
+		 */
 		async function xmlToEditor(xml: ParsedXmlNodes, schema: GeosSchema, parent?: Node) {
 			for (const xmlNode of xml) {
 				const xmlTag = getElementFromParsedXml(xmlNode);
@@ -115,6 +122,7 @@
 					console.warn('Complex type not found');
 					continue;
 				}
+
 				if (!xmlTag) throw new ErrorWNotif('Missing xml tag in parsed xml node');
 				const hasNameAttribute = complexType.attributes.has('name');
 				const xmlAttributes: Record<string, unknown> = getXmlAttributes(
@@ -122,19 +130,24 @@
 				);
 				const arrayAttrs = new Map<string, string[]>();
 				for (const [k, v] of Object.entries(xmlAttributes as Record<string, string>)) {
-					const attrType = complexType.attributes.get(k);
+					const attrDef = complexType.attributes.get(k);
 
-					if (!attrType) {
+					if (!attrDef) {
 						console.warn('Attribute type not found', k, v);
 						continue;
 					}
-					if (attrType.type === 'R1Tensor') {
+
+					if (attrDef.type === 'R1Tensor') {
 						const a = v
 							.slice(1, -1)
 							.split(',')
 							.map((t) => t.trim());
 						console.log('R1Tensor', a, { x: a[0], y: a[1], z: a[2] });
 						xmlAttributes[k] = { x: a[0], y: a[1], z: a[2] };
+						continue;
+					}
+
+					if (attrDef.type.endsWith('Tensor')) {
 						continue;
 					}
 
@@ -156,14 +169,14 @@
 					) as XMLNestedArrays | undefined;
 
 					if (candidate === undefined) continue;
-					if (attrType.type.startsWith('real') && attrType.type.endsWith('array2d')) {
+					if (attrDef.type.startsWith('real') && attrDef.type.endsWith('array2d')) {
 						console.log('candidate', candidate);
 						xmlAttributes[k] = candidate.map((t) => {
 							if (typeof t === 'string')
 								throw new ErrorWNotif('Expected array for type real array2d');
 							return { x: t[0], y: t[1], z: t[2] };
 						});
-						arrayAttrs.set(attrType.name, xmlAttributes[k] as string[]);
+						arrayAttrs.set(attrDef.name, xmlAttributes[k] as string[]);
 						continue;
 					}
 					// put nested arrays back to xml notation
@@ -184,8 +197,9 @@
 					}
 					const array1d = candidate.map(arraysToXmlNotation);
 					xmlAttributes[k] = array1d;
-					arrayAttrs.set(attrType.name, array1d);
+					arrayAttrs.set(attrDef.name, array1d);
 				}
+				console.log('arrayAttrs', arrayAttrs);
 				const node = await tmp_factory.addNode(XmlNode, {
 					label: xmlTag,
 					initialValues: xmlAttributes,
@@ -217,20 +231,76 @@
 					}
 				});
 
+				// Automatically select output of root types like Solvers, Mesh...
+				if (rootTypes.includes(complexType.name.trim())) {
+					console.log('good pizza', complexType.name, rootTypes);
+					node.selectOutput('value');
+				}
+
+				if (hasNameAttribute) {
+					const name = xmlAttributes['name'] as string;
+					if (!nameToXmlNode.has(name)) {
+						nameToXmlNode.set(name, node);
+					}
+				}
 				for (const [k, a] of arrayAttrs.entries()) {
+					const attrDef = complexType.attributes.get(k);
+					if (!attrDef) throw new ErrorWNotif("Couldn't find simple type for array attribute");
 					const initialValues: Record<string, unknown> = {};
 					for (const [i, t] of a.entries()) {
-						const attrType = complexType.attributes.get(k);
-						if (!attrType) throw new ErrorWNotif("Couldn't find simple type for array attribute");
-						console.log('attrType', attrType);
 						initialValues[`data-${i}`] = t;
 					}
-					console.log('zzzz');
 					const makeArrayNode = await tmp_factory.addNode(MakeArrayNode, {
 						initialValues,
 						numPins: a.length
 					});
-					const conn = await tmp_editor.addNewConnection(makeArrayNode, 'array', node, k);
+
+					// Gather array group name links
+					if (attrDef.type === 'groupNameRef_array') {
+						for (const [inputKey, t] of Object.entries(initialValues)) {
+							if (typeof t !== 'string') {
+								console.error(
+									'Value of type groupNameRef should be of string type, type :',
+									typeof t
+								);
+								continue;
+							}
+							groupNameLinks.push({
+								source: t,
+								target: {
+									node: makeArrayNode,
+									key: inputKey
+								}
+							});
+						}
+					}
+
+					await tmp_editor.addNewConnection(makeArrayNode, 'array', node, k);
+				}
+
+				// Gather group name links
+				for (const [k, v] of Object.entries(xmlAttributes)) {
+					const attrDef = complexType.attributes.get(k);
+					if (!attrDef) {
+						console.warn('Attribute type not found', k, v);
+						continue;
+					}
+					if (attrDef.type.startsWith('groupNameRef')) {
+						const isArray = attrDef.type.endsWith('array');
+						if (!isArray) {
+							if (typeof v !== 'string') {
+								console.error(
+									'Value of type groupNameRef should be of string type, type :',
+									typeof v
+								);
+								continue;
+							}
+							groupNameLinks.push({
+								source: v,
+								target: { node, key: k }
+							});
+						}
+					}
 				}
 
 				if (parent) {
@@ -243,6 +313,23 @@
 		}
 		console.log('Download: full_xml', full_xml);
 		await xmlToEditor(full_xml, geosSchema);
+		// TODO: name connections
+
+		const getNameNodes = new Map<string, GetNameNode>();
+		for (const { source, target } of groupNameLinks) {
+			const sourceNode = nameToXmlNode.get(source);
+			if (!sourceNode) {
+				console.warn('Source node not found', source);
+				continue;
+			}
+			if (!getNameNodes.has(source)) {
+				const getNameNode = await tmp_factory.addNode(GetNameNode, {});
+				getNameNodes.set(source, getNameNode);
+				await tmp_editor.addNewConnection(sourceNode, 'value', getNameNode, 'xml');
+			}
+			const getNameNode = getNameNodes.get(source)!;
+			await tmp_editor.addNewConnection(getNameNode, 'name', target.node, target.key);
+		}
 		console.log(await arrange.layout());
 		const area = factory.getArea();
 		let leftBound = 0;

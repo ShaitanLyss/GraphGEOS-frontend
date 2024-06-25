@@ -7,6 +7,7 @@ import { InputControl } from '../../control/Control';
 import { assignControl } from '../../customization/utils';
 import type { NodeFactory } from '../NodeFactory';
 import { AddPinNode, type AddPinNodeState } from '../AddPinNode';
+import { ErrorWNotif } from '$lib/global';
 
 export type MakeArrayNodeState = {
 	// Add any additional properties that you need
@@ -37,6 +38,7 @@ export class MakeArrayNode extends AddPinNode {
 		this.initialValues = params.initialValues;
 
 		this.addOutData({ name: 'array', isArray: true, type: this.state.type });
+		this.changeType(this.state.type);
 		this.loadInitialValues();
 
 		this.getEditor().addPipe((context) => {
@@ -87,7 +89,8 @@ export class MakeArrayNode extends AddPinNode {
 		// if (this.state.type === to) return;
 		console.log('Changing type to ' + to);
 		this.state.type = to;
-		this.width = this.state.type === 'vector' ? 320 : 150;
+		this.width =
+			this.state.type === 'vector' ? 320 : this.state.type === 'groupNameRef' ? 230 : 150;
 
 		for (const input of Object.values(this.inputs)) {
 			if (input) {

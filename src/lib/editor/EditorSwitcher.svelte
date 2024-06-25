@@ -277,6 +277,7 @@
 			document.documentElement.classList.remove('hide-minimap');
 		}
 	}
+	let lastSearch = '';
 </script>
 
 <BoxSelection
@@ -287,6 +288,35 @@
 
 <div
 	bind:this={container}
+	use:keyboardShortcut={{
+		key: 'f',
+		ctrl: true,
+		action() {
+			modalStore.trigger({
+				type: 'prompt',
+				title: $_('graph-editor.find-prompt.title'),
+				value: '',
+				buttonTextCancel: $_('button.cancel'),
+				buttonTextSubmit: $_('button.search'),
+				valueAttr: { required: true, placeholder: $_('graph-editor.find-prompt.placeholder') },
+				response(r) {
+					lastSearch = typeof r === 'string' ? r.trim() : '';
+					if (typeof r === 'string' && r.trim()) {
+						const node = activeFactory?.findNode(r);
+						activeFactory?.focusNode(node);
+					}
+				}
+			});
+		}
+	}}
+	use:keyboardShortcut={{
+		key: 'n',
+
+		action() {
+			const node = activeFactory?.findNode(lastSearch);
+			activeFactory?.focusNode(node);
+		}
+	}}
 	use:keyboardShortcut={{
 		key: 'a',
 		ctrl: true,

@@ -198,7 +198,7 @@
 			inputProps.push({
 				bearer: 'variable',
 				type: socketType as Exclude<ExportedSocketType, 'xmlAttr' | 'xmlElement' | 'exec'>,
-				isArray: false,
+				isArray: v.isArray,
 				key: k,
 				label: v.name,
 				default: JSON.stringify(v.value)

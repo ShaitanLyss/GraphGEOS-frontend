@@ -15,7 +15,7 @@ import { ErrorWNotif } from './error';
 import type { Writable } from 'svelte/store';
 import type { GlobalPopupsContext } from './popup';
 import type { MoonMenuItem } from '$lib/menu/context-menu/moonContextMenu';
-import type { Session } from '$lib/backend-interaction';
+import type { GeosTypesTree, Session } from '$lib/backend-interaction';
 
 enum Context {
 	'editor' = 'Editor Context',
@@ -41,7 +41,11 @@ export type SaveHandler = {
 	save: () => void;
 };
 
-export type NewGeosContext = { geosSchema: GeosSchema };
+export type NewGeosContext = {
+	typesTree: Writable<GeosTypesTree>;
+	typesPaths: Writable<Record<string, string[]> | undefined>;
+	geosSchema: GeosSchema;
+};
 
 export type resolveContext<
 	K = keyof typeof Context,

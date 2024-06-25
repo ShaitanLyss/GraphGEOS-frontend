@@ -42,10 +42,11 @@
 				handler.save();
 			} catch (e) {
 				mistakesCounts++;
+				displaySuccess = false;
 				console.error(e);
 			}
 		});
-		if (displaySuccess) notifications.hide('save');
+		notifications.hide('save');
 		if (mistakesCounts > 0) {
 			notifications.show({
 				title: $_('notification.save.title'),

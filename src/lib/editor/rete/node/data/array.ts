@@ -4,7 +4,9 @@ import { Node, type NodeParams } from '../Node';
 export class MergeArrays extends Node {
 	constructor(params: NodeParams) {
 		super({
+			label: 'Merge Arrays',
 			width: 150,
+			height: 160,
 			...params
 		});
 		this.addInData({ name: 'a', displayName: 'A', socketLabel: 'A', isArray: true, type: 'any' });

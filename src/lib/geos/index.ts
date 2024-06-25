@@ -3,8 +3,8 @@ import type { GeosTypesTree } from '$lib/backend-interaction';
 import type { Writable } from 'svelte/store';
 
 export type GeosDataContext = {
-	typesTree: Writable<GeosTypesTree | undefined>;
-	typesPaths: Writable<Record<string, string[]> | undefined>;
+	typesTree: Writable<GeosTypesTree>;
+	typesPaths: Writable<Record<string, string[]>>;
 	xmlSchema: Writable<GraphEditorData$result['geos']['xmlSchema'] | undefined>;
 };
 

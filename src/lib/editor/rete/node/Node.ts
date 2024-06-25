@@ -24,6 +24,7 @@ import type { BaseComponent } from '$rete/components/BaseComponent';
 import { PythonNodeComponent } from '$rete/components/Python_NC';
 import { R_SocketSelection_NC } from '$rete/components/R_SocketSelection_NC';
 import { GraphVersionStore } from '$houdini';
+import { ErrorWNotif } from '$lib/global';
 
 interface ControlParams<N> {
 	type: InputControlTypes;
@@ -182,6 +183,12 @@ export class Node<
 	}
 
 	toJSON(): NodeSaveData {
+		if ((this.constructor as typeof Node).id === undefined) {
+			console.error('Node missing in registry', this);
+			throw new ErrorWNotif(
+				`A node can't be saved as it's missing in the node registry. Node : ${this.label}`
+			);
+		}
 		const inputControlValues: Record<string, unknown> = {};
 		const selectedInputs: string[] = [];
 		const selectedOutputs: string[] = [];
@@ -365,6 +372,7 @@ export class Node<
 		// if ()
 
 		const checkedInputs = inputs as Record<string, unknown[]>;
+		const isArray = this.inputs[key]?.socket.isArray;
 
 		if (checkedInputs && key in checkedInputs) {
 			// console.log(checkedInputs);
@@ -375,10 +383,6 @@ export class Node<
 			return checkedInputs[key][0] as N;
 		}
 
-		if (checkedInputs && key in checkedInputs) {
-			// console.log(checkedInputs);
-			return checkedInputs[key][0] as N;
-		}
 		const inputControl = this.inputs[key]?.control as InputControl<T, N>;
 
 		if (inputControl) {

@@ -4,7 +4,8 @@ export class NotNode extends Node {
 	constructor(params: NodeParams) {
 		super({
 			label: 'Not',
-			width: 150,
+			width: 100,
+			height: 135,
 			...params
 		});
 		this.addInData({ name: 'value', displayName: 'Value', socketLabel: 'Value', type: 'boolean' });
