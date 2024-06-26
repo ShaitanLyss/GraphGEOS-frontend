@@ -162,33 +162,36 @@ export class MacroNode extends Node {
 				name: v.id,
 				displayName: v.name,
 				initial: v.value,
-				control: {
-					type: controlType,
+				isArray: v.isArray,
+				control: v.isArray
+					? undefined
+					: {
+							type: controlType,
 
-					options: {
-						label: v.name,
-						initial: v.value,
-						change: (value) => {
-							try {
-								this.factory.dataflowEngine.reset(this.id);
-							} catch (e) {
-								console.error('bozo');
+							options: {
+								label: v.name,
+								initial: v.value,
+								change: (value) => {
+									try {
+										this.factory.dataflowEngine.reset(this.id);
+									} catch (e) {
+										console.warn('dataflow engine reset');
+									}
+									// Store variables values in state
+									// so it can be saved and restored
+									this.state.variablesValues[v.id] = value;
+									this.macroEditor.variables.set({
+										...get(this.macroEditor.variables),
+										[v.id]: { ...v, value }
+									});
+									wu(this.macroEditor.getNodes())
+										.filter((n) => n instanceof VariableNode && n.variableId === v.id)
+										.forEach((n) => {
+											this.macroFactory.dataflowEngine.reset(n.id);
+										});
+								}
 							}
-							// Store variables values in state
-							// so it can be saved and restored
-							this.state.variablesValues[v.id] = value;
-							this.macroEditor.variables.set({
-								...get(this.macroEditor.variables),
-								[v.id]: { ...v, value }
-							});
-							wu(this.macroEditor.getNodes())
-								.filter((n) => n instanceof VariableNode && n.variableId === v.id)
-								.forEach((n) => {
-									this.macroFactory.dataflowEngine.reset(n.id);
-								});
-						}
-					}
-				},
+						},
 				type: v.type,
 				socketLabel: v.name
 			});

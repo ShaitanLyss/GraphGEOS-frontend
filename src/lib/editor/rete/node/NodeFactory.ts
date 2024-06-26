@@ -8,7 +8,7 @@ import { structures } from 'rete-structures';
 import { Connection, Node, type NodeSaveData } from './Node';
 import { ClassicPreset } from 'rete';
 import { InputControl } from '$rete/control/Control';
-import { type Writable, writable, get } from 'svelte/store';
+import type { Writable } from 'svelte/store';
 import { PythonDataflowEngine } from '$rete/engine/PythonDataflowEngine';
 import type { MakutuClassRepository } from '$lib/backend-interaction/types';
 import { newLocalId } from '$utils';
@@ -16,7 +16,6 @@ import type { SelectorEntity } from 'rete-area-plugin/_types/extensions/selectab
 import { ErrorWNotif, _ } from '$lib/global';
 import type { AutoArrangePlugin } from 'rete-auto-arrange-plugin';
 import wu from 'wu';
-import type History from 'rete-history-plugin/_types/history';
 import * as Nodes from '.';
 import type { CommentPlugin } from '$rete/plugin/CommentPlugin';
 import { localStorageStore, type getModalStore } from '@skeletonlabs/skeleton';
