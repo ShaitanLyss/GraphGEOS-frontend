@@ -61,7 +61,7 @@
 
 	let tags: AutocompleteOption<string>[] = [];
 
-	$: if ($tagsStore.data) {
+	$: if ($tagsStore.data?.tags) {
 		tags = $tagsStore.data.tags
 			.filter((tag) => $formStore.tags == null || !$formStore.tags.includes(tag.tag))
 			.sort((a, b) => b.timesAdded - a.timesAdded)
