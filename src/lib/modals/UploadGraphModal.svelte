@@ -164,7 +164,7 @@
 				(type === 'input' ? inputTypes : outputTypes).push(socket.type);
 				const outputProp: OutputPropInput = {
 					label: inputOrOutput.label ?? 'Missing label',
-					key: key,
+					key: key + '¤' + nodeData.id,
 					type: socketType,
 					xmlElement,
 					xmlAttr,
@@ -179,7 +179,7 @@
 					const inputProp: MacroBlockInputPropInput = {
 						...outputProp,
 						bearer: 'node',
-						default: JSON.stringify(node.getData(key, inputVals)),
+						default: JSON.stringify(node.getData(key, inputVals) ?? socket.isArray ? [] : ''),
 						props: JSON.stringify({})
 					};
 					inputProps.push(inputProp);
@@ -210,7 +210,10 @@
 			authorId: userId,
 			public: 'is_public' in data ? data.is_public === 'on' : false,
 			description: data.description,
-			tags: data.tags.split(',').map((tag: string) => tag.trim()),
+			tags: data.tags
+				.split(',')
+				.map((tag: string) => tag.trim())
+				.filter((tag: string) => tag !== ''),
 			editorData: JSON.parse(data.data as string),
 			favorite: 'favorite' in data ? data.favorite === 'on' : false,
 			inputProps,

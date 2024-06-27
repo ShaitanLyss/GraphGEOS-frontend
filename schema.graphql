@@ -202,7 +202,7 @@ type MacroBlockInputProp {
 
 input MacroBlockInputPropInput {
   bearer: MacroBlockPropBearer = null
-  default: JSON
+  default: JSON = null
   isArray: Boolean!
   key: String!
   label: String!
