@@ -232,6 +232,7 @@ export class XmlNode extends Node<Record<string, Socket>, { value: Socket }> {
 			name: name,
 			displayName: titlelize(name),
 			socketLabel: titlelize(name),
+			isRequired: required,
 			type: type as SocketType,
 			isArray: isArray,
 			control: isArray
