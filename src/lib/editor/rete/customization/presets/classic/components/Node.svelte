@@ -362,7 +362,10 @@
 				/>
 				{#if !input.control || !input.showControl}
 					<div class="input-title" data-testid="input-title">
-						{input.label || ''}
+						{input.label || ''}{#if input.socket.isRequired}<span
+								class="ps-0.5 text-lg"
+								title="required">*</span
+							>{/if}
 					</div>
 				{/if}
 				{#if input.control && input.showControl}
