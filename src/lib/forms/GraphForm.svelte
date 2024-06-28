@@ -46,6 +46,7 @@
 		is_public: true,
 		favorite: false
 	});
+	$formStore.tags = $formStore.tags ?? [];
 
 	$: if (graph) {
 		console.log(graph);
